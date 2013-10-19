@@ -1,0 +1,21 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.github.abrarsyed.gmcp:GMCP:0.8.+'
+    }
+}
+
+apply plugin: 'gmcp'
+
+group = 'jk_5.nailed'
+version = '2.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile "junit:junit:4.11"
+}
