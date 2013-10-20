@@ -17,7 +17,7 @@ import java.util.Map;
 @SuppressWarnings("unused")
 public class PacketTransformer implements IClassTransformer {
 
-    private static final String eventFactory = "jk_5/nailed/NailedEventFactory";
+    private static final String packetListener = "jk_5/nailed/network/PacketListener";
     private static final String incoming = "handleIncoming";
     private static final String outgoing = "handleOutgoing";
 
@@ -46,7 +46,7 @@ public class PacketTransformer implements IClassTransformer {
                 InsnList injecting = new InsnList();
 
                 injecting.add(new VarInsnNode(Opcodes.ALOAD, 1));
-                injecting.add(new MethodInsnNode(Opcodes.INVOKESTATIC, eventFactory, outgoing, "(L" + data.get("packetName") + ";)L" + data.get("packetName") + ";"));
+                injecting.add(new MethodInsnNode(Opcodes.INVOKESTATIC, packetListener, outgoing, "(L" + data.get("packetName") + ";)L" + data.get("packetName") + ";"));
                 injecting.add(new VarInsnNode(Opcodes.ASTORE, 1));
                 injecting.add(lb1);
                 injecting.add(new VarInsnNode(Opcodes.ALOAD, 1));
@@ -66,7 +66,7 @@ public class PacketTransformer implements IClassTransformer {
                 InsnList injecting = new InsnList();
 
                 injecting.add(new VarInsnNode(Opcodes.ALOAD, 2));
-                injecting.add(new MethodInsnNode(Opcodes.INVOKESTATIC, eventFactory, incoming, "(L" + data.get("packetName") + ";)L" + data.get("packetName") + ";"));
+                injecting.add(new MethodInsnNode(Opcodes.INVOKESTATIC, packetListener, incoming, "(L" + data.get("packetName") + ";)L" + data.get("packetName") + ";"));
                 injecting.add(new VarInsnNode(Opcodes.ASTORE, 2));
                 injecting.add(lb1);
                 injecting.add(new VarInsnNode(Opcodes.ALOAD, 2));
@@ -75,13 +75,13 @@ public class PacketTransformer implements IClassTransformer {
                 injecting.add(new InsnNode(Opcodes.IRETURN));
                 injecting.add(lb2);
 
-                method.instructions.insertBefore(method.instructions.get(offset), injecting);
+                method.instructions.insert(method.instructions.get(offset), injecting);
                 System.out.println("Successfully patched TcpConnection.readPacket");
             }
         }
         System.out.println("Successfully patched TcpConnection");
 
-        ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+        ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
         node.accept(writer);
         return writer.toByteArray();
     }
