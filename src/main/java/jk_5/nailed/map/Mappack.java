@@ -33,8 +33,7 @@ public class Mappack {
             ZipEntry entry = zipStream.getNextEntry();
             while (entry != null){
                 if(entry.getName().equals("mappack.cfg")){
-                    //config = new ConfigFile(new InputStreamReader(zipStream)).setReadOnly();
-                    config = new ConfigFile(new File("dummyMappack" + nextId.get() + ".cfg"));
+                    config = new ConfigFile(new InputStreamReader(zipStream)).setReadOnly();
                     pack = new Mappack(file, config);
                 }else if(entry.getName().equals("gameinstructions.cfg")){
                     try{
@@ -84,5 +83,9 @@ public class Mappack {
     public Map createMap(){
         Map map = new Map(this);
         return map;
+    }
+
+    public TeleportOptions getEntryPoint(){
+        return new TeleportOptions(this.mappackConfig.getSpawnPoint(), 0);
     }
 }

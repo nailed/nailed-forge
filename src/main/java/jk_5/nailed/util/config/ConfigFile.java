@@ -13,9 +13,13 @@ public class ConfigFile extends ConfigTagParent {
     public static final byte[] lineend = new byte[]{0xD, 0xA};
 
     public ConfigFile(Reader reader){
+        try{
         this.reader = reader;
         this.file = null;
         this.loadConfig();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public ConfigFile(File file) {
@@ -56,7 +60,7 @@ public class ConfigFile extends ConfigTagParent {
                 }
             }
             loadChildren(reader);
-            reader.close();
+            if(this.file != null) reader.close();
 
         } catch (IOException e) {
             throw new RuntimeException(e);

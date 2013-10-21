@@ -98,4 +98,17 @@ public class MapLoader {
         }
         return null;
     }
+
+    public void addMap(Map map){
+        this.maps.add(map);
+    }
+
+    public Map getMap(int id){
+        for(Map map : this.maps){
+            if(map.getID() == id){
+                return map;
+            }
+        }
+        return null;
+    }
 }

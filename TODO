@@ -1,0 +1,2 @@
+Set world storage folder to /maps/ (See MinecraftServer.java constructor)
+Name default world to map0. Let it be an actual map, so it can use mappacks
