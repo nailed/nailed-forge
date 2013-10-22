@@ -2,6 +2,7 @@ package jk_5.nailed.map;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import net.minecraft.util.ChunkCoordinates;
 
 /**
@@ -10,9 +11,15 @@ import net.minecraft.util.ChunkCoordinates;
  * @author jk-5
  */
 @Data
-@AllArgsConstructor
 public class TeleportOptions {
 
     private ChunkCoordinates coordinates;
     private float yaw;
+    private boolean maintainMomentum = false;
+    private String sound = "";
+
+    public TeleportOptions(ChunkCoordinates coords, float yaw){
+        this.coordinates = new ChunkCoordinates(coords);
+        this.yaw = yaw;
+    }
 }

@@ -3,7 +3,10 @@ package jk_5.nailed.network;
 import cpw.mods.fml.common.network.IConnectionHandler;
 import cpw.mods.fml.common.network.Player;
 import jk_5.nailed.coremod.NailedModContainer;
+import jk_5.nailed.map.Map;
+import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.map.gen.NailedWorldProvider;
+import jk_5.nailed.network.packets.PacketRegisterDimension;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.NetLoginHandler;
@@ -24,6 +27,7 @@ public class NailedConnectionHandler implements IConnectionHandler {
      * Called when a player logs into the server
      *  SERVER SIDE
      */
+    @Override
     public void playerLoggedIn(Player p, NetHandler netHandler, INetworkManager manager){
         EntityPlayerMP player = (EntityPlayerMP) p;
         if(player.worldObj.provider instanceof NailedWorldProvider){
@@ -38,10 +42,11 @@ public class NailedConnectionHandler implements IConnectionHandler {
      *
      * SERVER SIDE
      */
+    @Override
     public String connectionReceived(NetLoginHandler netHandler, INetworkManager manager){
-        /*for(Map map : MapLoader.instance().getMaps()){
+        for(Map map : MapLoader.instance().getMaps()){
             if(map.getID() < 1 || map.getID() > 1) manager.addToSendQueue(new PacketRegisterDimension(map.getID()).getPacket());
-        }*/
+        }
         return null;
     }
 
@@ -49,6 +54,7 @@ public class NailedConnectionHandler implements IConnectionHandler {
      * Fired when a remote connection is opened
      * CLIENT SIDE
      */
+    @Override
     public void connectionOpened(NetHandler netClientHandler, String server, int port, INetworkManager manager){
         isConnected = true;
     }
@@ -58,6 +64,7 @@ public class NailedConnectionHandler implements IConnectionHandler {
      *
      * CLIENT SIDE
      */
+    @Override
     public void connectionOpened(NetHandler netClientHandler, MinecraftServer server, INetworkManager manager){
 
     }
@@ -67,8 +74,9 @@ public class NailedConnectionHandler implements IConnectionHandler {
      *
      * ALL SIDES
      *
-     * @param manager
+     * @param manager - The network manager
      */
+    @Override
     public void connectionClosed(INetworkManager manager){
         if(isConnected){
             NailedModContainer.unregisterDimensions();
@@ -81,6 +89,7 @@ public class NailedConnectionHandler implements IConnectionHandler {
      *
      * CLIENT SIDE
      */
+    @Override
     public void clientLoggedIn(NetHandler clientHandler, INetworkManager manager, Packet1Login login){
 
     }

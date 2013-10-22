@@ -12,6 +12,6 @@ public class LobbyMap extends Map {
 
     public LobbyMap(){
         super(MapLoader.instance().getMappack("lobby"), 0);
-        this.getMappack().unpack(new File(MapLoader.getMapsFolder(), this.getSaveFileName()));
+        if(this.getMappack() != null) this.getMappack().unpack(new File(MapLoader.getMapsFolder(), this.getSaveFileName()));
     }
 }

@@ -13,6 +13,7 @@ import cpw.mods.fml.common.network.FMLNetworkHandler;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkMod.VersionCheckHandler;
 import jk_5.nailed.NailedLog;
+import jk_5.nailed.blocks.NailedBlocks;
 import jk_5.nailed.client.ProxyClient;
 import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.map.gen.NailedWorldProvider;
@@ -82,6 +83,7 @@ public class NailedModContainer extends DummyModContainer {
         config = new ConfigFile(event.getSuggestedConfigurationFile()).setComment("Nailed main config file");
         proxy.initNetworkHandlers();
         proxy.registerEventHandlers();
+        NailedBlocks.init();
 
         ProxyCommon.providerID = NailedModContainer.config.getTag("providerId").setComment("The id for the nailed world provider").getIntValue(10);
         DimensionManager.registerProviderType(ProxyCommon.providerID, NailedWorldProvider.class, false);

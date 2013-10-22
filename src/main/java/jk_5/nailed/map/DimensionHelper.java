@@ -1,6 +1,7 @@
 package jk_5.nailed.map;
 
 import com.google.common.collect.Lists;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import jk_5.nailed.NailedLog;
@@ -110,6 +111,7 @@ public class DimensionHelper {
             player.playerNetServerHandler.sendPacketToPlayer(new Packet43Experience(player.experience, player.experienceTotal, player.experienceLevel));
         }
         entity.setLocationAndAngles(spawnCoords.posX + 0.5D, spawnCoords.posY, spawnCoords.posZ + 0.5D, options.getYaw(), entity.rotationPitch);
+        GameRegistry.onPlayerChangedDimension((EntityPlayer) entity);
         if(mount != null){
             if(entity instanceof EntityPlayerMP){
                 destination.getWorld().updateEntityWithOptionalForce(entity, true);

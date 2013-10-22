@@ -20,6 +20,12 @@ minecraft{
     accessTransformers += 'src/main/resources/nailed_at.cfg'
 }
 
+jar {
+    manifest {
+        attributes 'FMLCorePlugin': 'jk_5.nailed.coremod.NailedPlugin'
+    }
+}
+
 repositories {
     mavenCentral()
 }

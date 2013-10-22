@@ -100,11 +100,6 @@ public class MapLoader {
         return null;
     }
 
-    public void setupLobby(){
-        //WorldServer server = DimensionManager.getWorld(0);
-        //this.lobby = new LobbyMap(server, this.getMappack("lobby"));
-    }
-
     public Mappack getMappack(String internalName){
         for(Mappack pack : this.mappacks){
             if(pack.getInternalName().equals(internalName)){
