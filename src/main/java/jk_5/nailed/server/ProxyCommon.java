@@ -1,18 +1,14 @@
 package jk_5.nailed.server;
 
 import com.google.common.eventbus.Subscribe;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
 import jk_5.nailed.coremod.NailedModContainer;
 import jk_5.nailed.map.MapLoader;
-import jk_5.nailed.map.gen.NailedWorldProvider;
+import jk_5.nailed.network.NailedConnectionHandler;
 import jk_5.nailed.server.command.CommandGoto;
-import lombok.Getter;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 
 /**
@@ -31,6 +27,7 @@ public class ProxyCommon {
     @Subscribe
     public void serverPreInit(FMLPreInitializationEvent event){
         MapLoader.instance().loadMappacks();
+        MapLoader.instance().setupLobby();
     }
 
     @Subscribe
@@ -40,6 +37,7 @@ public class ProxyCommon {
 
     public void initNetworkHandlers(){
         NetworkRegistry.instance().registerChannel(new PacketHandlerServer(), "Nailed", Side.SERVER);
+        NetworkRegistry.instance().registerConnectionHandler(new NailedConnectionHandler());
     }
 
     public void registerEventHandlers(){

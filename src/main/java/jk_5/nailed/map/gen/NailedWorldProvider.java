@@ -2,6 +2,10 @@ package jk_5.nailed.map.gen;
 
 import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MapLoader;
+import jk_5.nailed.map.Mappack;
+import jk_5.nailed.map.MappackContainingWorldProvider;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.chunk.IChunkProvider;
 
@@ -10,7 +14,7 @@ import net.minecraft.world.chunk.IChunkProvider;
  *
  * @author jk-5
  */
-public class NailedWorldProvider extends WorldProvider {
+public class NailedWorldProvider extends WorldProvider implements MappackContainingWorldProvider {
 
     private int mapID;
     private Map map;
@@ -34,11 +38,35 @@ public class NailedWorldProvider extends WorldProvider {
 
     @Override
     public String getDimensionName(){
-        return "Nailed";
+        return "Nailed " + (this.hasMappack() ? this.getMappack().getName() : "") + " " + this.mapID;
     }
 
     @Override
     public String getSaveFolder(){
-        return "maps/map" + this.mapID + ""; //TODO: mappack name
+        return null;
+    }
+
+    @Override
+    public boolean hasMappack(){
+        return this.map.getMappack() != null;
+    }
+
+    @Override
+    public Mappack getMappack(){
+        return this.map.getMappack();
+    }
+
+    @Override
+    public ChunkCoordinates getRandomizedSpawnPoint(){
+        if(this.hasMappack()){
+            return new ChunkCoordinates(this.map.getMappack().getMappackConfig().spawnPoint);
+        }else{
+            return super.getRandomizedSpawnPoint();
+        }
+    }
+
+    @Override
+    public int getRespawnDimension(EntityPlayerMP player){
+        return player.dimension;
     }
 }

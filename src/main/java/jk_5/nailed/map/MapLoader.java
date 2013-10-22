@@ -3,6 +3,10 @@ package jk_5.nailed.map;
 import com.google.common.collect.Lists;
 import jk_5.nailed.NailedLog;
 import lombok.Getter;
+import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.ForgeSubscribe;
+import net.minecraftforge.event.world.WorldEvent;
 
 import java.io.*;
 import java.util.Enumeration;
@@ -21,11 +25,17 @@ public class MapLoader {
     @Getter private static final File mappackFolder = new File("mappacks");
     @Getter private static final File mapsFolder = new File("maps");
 
-    private final List<Map> maps = Lists.newArrayList();
+    @Getter private final List<Map> maps = Lists.newArrayList();
     private final List<Mappack> mappacks = Lists.newArrayList();
+
+    private LobbyMap lobby;
 
     public static MapLoader instance(){
         return INSTANCE;
+    }
+
+    public MapLoader(){
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     public void loadMappacks(){
@@ -90,6 +100,11 @@ public class MapLoader {
         return null;
     }
 
+    public void setupLobby(){
+        //WorldServer server = DimensionManager.getWorld(0);
+        //this.lobby = new LobbyMap(server, this.getMappack("lobby"));
+    }
+
     public Mappack getMappack(String internalName){
         for(Mappack pack : this.mappacks){
             if(pack.getInternalName().equals(internalName)){
@@ -101,6 +116,13 @@ public class MapLoader {
 
     public void addMap(Map map){
         this.maps.add(map);
+        NailedLog.info("Registered " + map.getSaveFileName());
+    }
+
+    public Map newMapServerFor(Mappack pack){
+        Map map = pack.createMap();
+        map.initMapServer();
+        return map;
     }
 
     public Map getMap(int id){
@@ -109,6 +131,17 @@ public class MapLoader {
                 return map;
             }
         }
-        return null;
+        if(DimensionManager.isDimensionRegistered(id)){
+            return new WrappedMap(id);
+        }else{
+            return null;
+        }
+    }
+
+    @ForgeSubscribe
+    public void onWorldLoad(WorldEvent.Load event){
+        Map map = this.getMap(event.world.provider.dimensionId);
+        if(map == null) return;
+        map.setWorld(event.world);
     }
 }

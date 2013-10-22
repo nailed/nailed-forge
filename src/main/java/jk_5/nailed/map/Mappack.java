@@ -60,7 +60,6 @@ public class Mappack {
         return pack;
     }
 
-    private final ConfigFile config;
     @Getter private final String internalName;
     @Getter private final String name;
     @Getter private final File mappackFile;
@@ -69,9 +68,8 @@ public class Mappack {
     @Setter private List<IInstruction> instructions;
 
     private Mappack(File mappackFile, ConfigFile config){
-        this.internalName = mappackFile.getName();
+        this.internalName = mappackFile.getName().substring(0, mappackFile.getName().length() - 8);
         this.name = config.getTag("map").getTag("name").getValue(this.internalName);
-        this.config = config;
         this.mappackFile = mappackFile;
         this.mappackConfig = new MappackConfig(config);
     }
@@ -82,6 +80,7 @@ public class Mappack {
 
     public Map createMap(){
         Map map = new Map(this);
+        this.unpack(new File(MapLoader.getMapsFolder(), map.getSaveFileName()));
         return map;
     }
 

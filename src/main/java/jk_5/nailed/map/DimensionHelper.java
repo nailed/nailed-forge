@@ -5,7 +5,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.map.gen.NailedWorldProvider;
-import jk_5.nailed.util.ChatColor;
 import net.minecraft.block.Block;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
@@ -18,10 +17,7 @@ import net.minecraft.network.packet.Packet43Experience;
 import net.minecraft.network.packet.Packet9Respawn;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ChatMessageComponent;
-import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
@@ -43,8 +39,8 @@ public class DimensionHelper {
         if(mcServer == null) return;
         WorldServer newWorld = (WorldServer) destination.getWorld();
         if(newWorld == null){
-            NailedLog.severe(new NullPointerException(), "Could not link entity %s to map %d, world object was not found");
-            if(entity instanceof ICommandSender) ((ICommandSender) entity).sendChatToPlayer(ChatMessageComponent.createFromText("Could not teleport to the map, it\'s world object was null. Look at the server log for more info").addFormatted(ChatColor.RED.toString()));
+            NailedLog.severe(new NullPointerException(), "Could not link entity %s to map %d, world object was not found", entity, destination.getID());
+            if(entity instanceof ICommandSender) ((ICommandSender) entity).sendChatToPlayer(ChatMessageComponent.createFromText("Could not teleport to the map, it\'s world object was null. Look at the server log for more info").setColor(EnumChatFormatting.RED));
         }
         teleportEntity(destination, entity, options);
     }

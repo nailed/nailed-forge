@@ -1,6 +1,5 @@
 package jk_5.nailed.network.packets;
 
-import jk_5.nailed.client.EventHandlerClient;
 import jk_5.nailed.server.ProxyCommon;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
@@ -36,6 +35,8 @@ public class PacketRegisterDimension extends NailedPacket {
 
     @Override
     public void processPacket(INetworkManager manager, EntityPlayer player){
-        DimensionManager.registerDimension(this.dimension, ProxyCommon.providerID);
+        if(!DimensionManager.isDimensionRegistered(this.dimension)){
+            DimensionManager.registerDimension(this.dimension, ProxyCommon.providerID);
+        }
     }
 }

@@ -28,7 +28,7 @@ public class CommandGoto extends CommandBase {
     public void processCommand(ICommandSender sender, String[] args){
         if(args[0].equals("create")){
             String type = args[1];
-            MapLoader.instance().getMappack(type).createMap();
+            MapLoader.instance().newMapServerFor(MapLoader.instance().getMappack(type));
         }else if(args[0].equals("tp")){
             Map map = MapLoader.instance().getMap(Integer.parseInt(args[1]));
             DimensionHelper.travelEntity(map, (EntityPlayerMP) sender, map.getMappack().getEntryPoint());

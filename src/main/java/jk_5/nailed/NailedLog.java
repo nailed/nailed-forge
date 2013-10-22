@@ -19,7 +19,7 @@ public class NailedLog {
     }
 
     public static void log(Level level, String format, Object... data) {
-        nailedLogger.log(level, format, data);
+        nailedLogger.log(level, String.format(format, data));
     }
 
     public static void log(Level level, Throwable ex, String format, Object... data) {

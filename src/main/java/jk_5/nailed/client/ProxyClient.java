@@ -1,7 +1,5 @@
 package jk_5.nailed.client;
 
-import com.google.common.eventbus.Subscribe;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
 import jk_5.nailed.server.ProxyCommon;
@@ -27,7 +25,7 @@ public class ProxyClient extends ProxyCommon {
 
     @Override
     public void registerEventHandlers(){
-        super.initNetworkHandlers();
+        super.registerEventHandlers();
 
         MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
     }

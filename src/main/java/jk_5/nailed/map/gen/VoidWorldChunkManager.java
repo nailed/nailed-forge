@@ -1,7 +1,7 @@
 package jk_5.nailed.map.gen;
 
-import cpw.mods.fml.common.FMLLog;
 import jk_5.nailed.NailedLog;
+import jk_5.nailed.map.MapLoader;
 import net.minecraft.block.Block;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.ChunkPosition;
@@ -28,7 +28,7 @@ public class VoidWorldChunkManager extends WorldChunkManager
             if (ret == null){
                 ret = new ChunkPosition(0, 0, 0);
             }
-            ChunkCoordinates spawn = new ChunkCoordinates(0, 64, 0);//MapLoader.getMapFromWorld(this.world).getSpawnPoint();
+            ChunkCoordinates spawn = MapLoader.instance().getMap(this.world.provider.dimensionId).getMappack().getMappackConfig().getSpawnPoint();
             NailedLog.info("Building spawn platform at: %d, %d, %d", spawn.posX, spawn.posY, spawn.posZ);
             world.setBlock(spawn.posX, spawn.posY, spawn.posZ, Block.bedrock.blockID);
         }

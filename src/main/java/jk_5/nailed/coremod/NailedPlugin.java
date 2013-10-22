@@ -1,7 +1,9 @@
 package jk_5.nailed.coremod;
 
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
-import cpw.mods.fml.relauncher.IFMLLoadingPlugin.*;
+import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
+import cpw.mods.fml.relauncher.IFMLLoadingPlugin.Name;
+import cpw.mods.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 
 import java.util.Map;
@@ -28,6 +30,7 @@ public class NailedPlugin implements IFMLLoadingPlugin {
     public String[] getASMTransformerClass(){
         return new String[]{
                 "jk_5.nailed.coremod.transformer.PacketTransformer",
+                "jk_5.nailed.coremod.transformer.StorageFolderTransformer",
                 "jk_5.nailed.coremod.transformer.NailedAccessTransformer"
         };
     }
