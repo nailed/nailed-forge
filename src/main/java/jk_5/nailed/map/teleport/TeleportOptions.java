@@ -1,4 +1,4 @@
-package jk_5.nailed.map;
+package jk_5.nailed.map.teleport;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

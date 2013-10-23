@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.IFMLLoadingPlugin.Name;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 
+import java.io.File;
 import java.util.Map;
 
 /**
@@ -20,6 +21,7 @@ import java.util.Map;
 public class NailedPlugin implements IFMLLoadingPlugin {
 
     public static LaunchClassLoader classLoader;
+    public static File nailedLocation;
 
     @Override
     public String[] getLibraryRequestClass(){
@@ -47,6 +49,6 @@ public class NailedPlugin implements IFMLLoadingPlugin {
 
     @Override
     public void injectData(Map<String, Object> data){
-
+        nailedLocation = (File) data.get("coremodLocation");
     }
 }

@@ -8,6 +8,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import jk_5.nailed.coremod.NailedModContainer;
 import jk_5.nailed.map.MapLoader;
+import jk_5.nailed.map.teleport.TeleportListener;
 import jk_5.nailed.network.NailedConnectionHandler;
 import jk_5.nailed.network.NailedPlayerTracker;
 import jk_5.nailed.server.command.CommandGoto;
@@ -44,5 +45,6 @@ public class ProxyCommon {
 
     public void registerEventHandlers(){
         MinecraftForge.EVENT_BUS.register(new EventHandlerServer());
+        MinecraftForge.EVENT_BUS.register(new TeleportListener());
     }
 }

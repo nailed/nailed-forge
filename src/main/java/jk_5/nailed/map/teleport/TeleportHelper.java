@@ -1,10 +1,10 @@
-package jk_5.nailed.map;
+package jk_5.nailed.map.teleport;
 
 import com.google.common.collect.Lists;
-import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import jk_5.nailed.NailedLog;
+import jk_5.nailed.map.Map;
 import jk_5.nailed.map.gen.NailedWorldProvider;
 import net.minecraft.block.Block;
 import net.minecraft.command.ICommandSender;
@@ -30,39 +30,43 @@ import java.util.List;
  * @author jk-5
  */
 @SideOnly(Side.SERVER)
-public class DimensionHelper {
+public class TeleportHelper {
 
     private static MinecraftServer mcServer = null;
 
     public static void travelEntity(Map destination, Entity entity, TeleportOptions options){
         if(options == null) return;
+        if(!TeleportEventFactory.isTeleportationPermitted(destination, entity, options)) return;
         if(mcServer == null) mcServer = MinecraftServer.getServer();
         if(mcServer == null) return;
         WorldServer newWorld = (WorldServer) destination.getWorld();
         if(newWorld == null){
             NailedLog.severe(new NullPointerException(), "Could not link entity %s to map %d, world object was not found", entity, destination.getID());
-            if(entity instanceof ICommandSender) ((ICommandSender) entity).sendChatToPlayer(ChatMessageComponent.createFromText("Could not teleport to the map, it\'s world object was null. Look at the server log for more info").setColor(EnumChatFormatting.RED));
+            if(entity instanceof ICommandSender) ((ICommandSender) entity).sendChatToPlayer(ChatMessageComponent.createFromText("Could not teleport you to the map, it\'s world object was null. Look at the server log for more info").setColor(EnumChatFormatting.RED));
         }
         teleportEntity(destination, entity, options);
     }
 
     private static Entity teleportEntity(Map destination, Entity entity, TeleportOptions options){
         if(options == null) return null;
+        if(!TeleportEventFactory.isTeleportationPermitted(destination, entity, options)) return null;
         Entity mount = entity.ridingEntity;
         if(mount != null){
             entity.mountEntity(null);
             mount = teleportEntity(destination, mount, options);
         }
-        boolean changingWorlds = entity.worldObj != destination.getWorld();
+        WorldServer newWorld = (WorldServer) destination.getWorld();
+        boolean changingWorlds = entity.worldObj != newWorld;
+        TeleportEventFactory.onStartTeleport(entity.worldObj, entity, options);
         entity.worldObj.updateEntityWithOptionalForce(entity, false);
         if(entity instanceof EntityPlayerMP){
             EntityPlayerMP player = (EntityPlayerMP) entity;
             player.closeScreen();
             if(changingWorlds){
                 player.dimension = destination.getID();
-                player.playerNetServerHandler.sendPacketToPlayer(new Packet9Respawn(player.dimension, (byte) player.worldObj.difficultySetting, destination.getWorld().getWorldInfo().getTerrainType(), destination.getWorld().getHeight(), player.theItemInWorldManager.getGameType()));
-                if(destination.getWorld().provider instanceof NailedWorldProvider){
-                    //TODO: send world data //NetworkHelper.sendMapData(destination.getWorld(), player, destination.getID());
+                player.playerNetServerHandler.sendPacketToPlayer(new Packet9Respawn(player.dimension, (byte) player.worldObj.difficultySetting, newWorld.getWorldInfo().getTerrainType(), newWorld.getHeight(), player.theItemInWorldManager.getGameType()));
+                if(newWorld.provider instanceof NailedWorldProvider){
+                    //TODO: send world data //NetworkHelper.sendMapData(newWorld, player, destination.getID());
                 }
                 ((WorldServer) entity.worldObj).getPlayerManager().removePlayer(player);
             }
@@ -70,10 +74,11 @@ public class DimensionHelper {
         if(changingWorlds){
             removeEntityFromWorld(entity.worldObj, entity);
         }
+        TeleportEventFactory.onExitWorld(entity, options);
 
         ChunkCoordinates spawnCoords = options.getCoordinates();
         entity.setLocationAndAngles(spawnCoords.posX + 0.5D, spawnCoords.posY, spawnCoords.posZ + 0.5D, options.getYaw(), entity.rotationPitch);
-        ((WorldServer) destination.getWorld()).theChunkProviderServer.loadChunk(options.getCoordinates().posX >> 4, options.getCoordinates().posZ >> 4);
+        newWorld.theChunkProviderServer.loadChunk(options.getCoordinates().posX >> 4, options.getCoordinates().posZ >> 4);
         while(getCollidingWorldGeometry(destination, entity).size() != 0){
             spawnCoords.posY ++;
             entity.setPosition(spawnCoords.posX + 0.5D, spawnCoords.posY, spawnCoords.posZ + 0.5D);
@@ -84,26 +89,27 @@ public class DimensionHelper {
                 entity.isDead = false;
                 entity.writeToNBTOptional(entityNBT);
                 entity.isDead = true;
-                entity = EntityList.createEntityFromNBT(entityNBT, destination.getWorld());
+                entity = EntityList.createEntityFromNBT(entityNBT, newWorld);
                 if(entity == null) return null;
-                entity.dimension = destination.getWorld().provider.dimensionId;
+                entity.dimension = newWorld.provider.dimensionId;
             }
-            destination.getWorld().spawnEntityInWorld(entity);
-            entity.setWorld(destination.getWorld());
+            newWorld.spawnEntityInWorld(entity);
+            entity.setWorld(newWorld);
         }
         entity.setLocationAndAngles(spawnCoords.posX + 0.5D, spawnCoords.posY, spawnCoords.posZ + 0.5D, options.getYaw(), entity.rotationPitch);
-        destination.getWorld().updateEntityWithOptionalForce(entity, false);
+        TeleportEventFactory.onEnterWorld(newWorld, entity, options);
+        newWorld.updateEntityWithOptionalForce(entity, false);
         entity.setLocationAndAngles(spawnCoords.posX + 0.5D, spawnCoords.posY, spawnCoords.posZ + 0.5D, options.getYaw(), entity.rotationPitch);
         if(entity instanceof EntityPlayerMP){
             EntityPlayerMP player = (EntityPlayerMP) entity;
-            if(changingWorlds) player.mcServer.getConfigurationManager().func_72375_a(player, (WorldServer) destination.getWorld());
+            if(changingWorlds) player.mcServer.getConfigurationManager().func_72375_a(player, newWorld);
             player.playerNetServerHandler.setPlayerLocation(spawnCoords.posX + 0.5D, spawnCoords.posY, spawnCoords.posZ + 0.5D, player.rotationYaw, player.rotationPitch);
         }
-        destination.getWorld().updateEntityWithOptionalForce(entity, false);
+        newWorld.updateEntityWithOptionalForce(entity, false);
         if(entity instanceof EntityPlayerMP && changingWorlds){
             EntityPlayerMP player = (EntityPlayerMP) entity;
-            player.theItemInWorldManager.setWorld((WorldServer) destination.getWorld());
-            player.mcServer.getConfigurationManager().updateTimeAndWeatherForPlayer(player, (WorldServer) destination.getWorld());
+            player.theItemInWorldManager.setWorld(newWorld);
+            player.mcServer.getConfigurationManager().updateTimeAndWeatherForPlayer(player, newWorld);
             player.mcServer.getConfigurationManager().syncPlayerInventory(player);
             for(PotionEffect effect : (Iterable<PotionEffect>) player.getActivePotionEffects()){
                 player.playerNetServerHandler.sendPacketToPlayer(new Packet41EntityEffect(player.entityId, effect));
@@ -111,10 +117,10 @@ public class DimensionHelper {
             player.playerNetServerHandler.sendPacketToPlayer(new Packet43Experience(player.experience, player.experienceTotal, player.experienceLevel));
         }
         entity.setLocationAndAngles(spawnCoords.posX + 0.5D, spawnCoords.posY, spawnCoords.posZ + 0.5D, options.getYaw(), entity.rotationPitch);
-        GameRegistry.onPlayerChangedDimension((EntityPlayer) entity);
+        TeleportEventFactory.onEndTeleport(newWorld, entity, options);
         if(mount != null){
             if(entity instanceof EntityPlayerMP){
-                destination.getWorld().updateEntityWithOptionalForce(entity, true);
+                newWorld.updateEntityWithOptionalForce(entity, true);
             }
             entity.mountEntity(mount);
         }

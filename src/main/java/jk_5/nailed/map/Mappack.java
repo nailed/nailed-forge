@@ -3,6 +3,7 @@ package jk_5.nailed.map;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.map.instruction.IInstruction;
 import jk_5.nailed.map.instruction.InstructionReader;
+import jk_5.nailed.map.teleport.TeleportOptions;
 import jk_5.nailed.util.config.ConfigFile;
 import lombok.Getter;
 import lombok.Setter;

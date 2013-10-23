@@ -11,6 +11,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
@@ -37,6 +38,16 @@ public class BlockPortalController extends BlockContainer {
     }
 
     @Override
+    public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9){
+        TileEntity tile = par1World.getBlockTileEntity(par2, par3, par4);
+        if(tile != null && tile instanceof TileEntityPortalController){
+            TileEntityPortalController controller = (TileEntityPortalController) tile;
+            controller.link();
+        }
+        return true;
+    }
+
+    @Override
     public CreativeTabs getCreativeTabToDisplayOn() {
         return NailedBlocks.creativeTab;
     }
@@ -60,7 +71,7 @@ public class BlockPortalController extends BlockContainer {
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister register) {
-        this.iconFace = register.registerIcon("nailed:crystal");
+        this.blockIcon = register.registerIcon("nailed:crystal");
         this.iconFace = register.registerIcon("nailed:controllerFront");
     }
 

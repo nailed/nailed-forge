@@ -1,6 +1,6 @@
 package jk_5.nailed.server.command;
 
-import jk_5.nailed.map.DimensionHelper;
+import jk_5.nailed.map.teleport.TeleportHelper;
 import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MapLoader;
 import net.minecraft.command.CommandBase;
@@ -31,7 +31,7 @@ public class CommandGoto extends CommandBase {
             MapLoader.instance().newMapServerFor(MapLoader.instance().getMappack(type));
         }else if(args[0].equals("tp")){
             Map map = MapLoader.instance().getMap(Integer.parseInt(args[1]));
-            DimensionHelper.travelEntity(map, (EntityPlayerMP) sender, map.getMappack().getEntryPoint());
+            TeleportHelper.travelEntity(map, (EntityPlayerMP) sender, map.getMappack().getEntryPoint());
         }
     }
 }

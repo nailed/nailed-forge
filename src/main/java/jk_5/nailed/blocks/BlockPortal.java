@@ -5,10 +5,10 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import jk_5.nailed.blocks.tileentity.TileEntityPortalController;
 import jk_5.nailed.coremod.NailedModContainer;
-import jk_5.nailed.map.DimensionHelper;
+import jk_5.nailed.map.teleport.TeleportHelper;
 import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MapLoader;
-import jk_5.nailed.map.TeleportOptions;
+import jk_5.nailed.map.teleport.TeleportOptions;
 import net.minecraft.block.BlockBreakable;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -35,12 +35,8 @@ public class BlockPortal extends BlockBreakable {
     public static BlockPortal instance;
 
     public BlockPortal(){
-        this("portal", Material.portal);
-    }
-
-    public BlockPortal(String name, Material material){
-        super(NailedModContainer.config.getTag("blocks").useBraces().getTag(name).useBraces().getTag("id").getIntValue(NailedBlock.nextId.getAndIncrement()), "portal", Material.portal, false);
-        this.setUnlocalizedName("nailed." + name);
+        super(NailedModContainer.config.getTag("blocks").useBraces().getTag("portal").useBraces().getTag("id").getIntValue(NailedBlock.nextId.getAndIncrement()), "portal", Material.portal, false);
+        this.setUnlocalizedName("nailed.portal");
         instance = this;
         this.setTickRandomly(true);
     }
@@ -155,7 +151,7 @@ public class BlockPortal extends BlockBreakable {
         }
         options.setMaintainMomentum(true);
         options.setSound("nailed:teleport.teleport-portal");
-        DimensionHelper.travelEntity(map, entity, options);
+        TeleportHelper.travelEntity(map, entity, options);
     }
 
     @Override
