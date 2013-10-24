@@ -1,6 +1,7 @@
 package jk_5.nailed.blocks;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import jk_5.nailed.blocks.tileentity.TileEntityPortalController;
 import net.minecraft.block.Block;
 
 /**
@@ -27,6 +28,8 @@ public class NailedBlocks {
         registerBlock(portalCrystal);
         registerBlock(portalController);
         registerBlock(portal);
+
+        GameRegistry.registerTileEntity(TileEntityPortalController.class, "nailed.portalController");
     }
 
     private static void registerBlock(Block block){

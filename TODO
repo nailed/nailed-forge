@@ -1,13 +1,2 @@
-Set world storage folder to /maps/ (See MinecraftServer.java constructor)
-Name default world to map0. Let it be an actual map, so it can use mappacks
-See AnvilSaveConverter.getSaveLoader
-See AnvilSaveHandler.getChunkLoader
-See MinecraftServer.loadAllWorlds - Changed
-See WorldProvider.getSaveFolder - Changed
-See DimensionManager.initDimension - Changed
-
-- L0
-LINENUMBER 301 L0
-ACONST_NULL                  InsnNode
-ARETURN                      InsnNode
-
+Transform MinecraftServer.loadAllWorlds
+Make mappack an interface for plugin system

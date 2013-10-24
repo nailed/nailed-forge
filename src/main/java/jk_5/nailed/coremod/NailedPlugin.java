@@ -32,7 +32,7 @@ public class NailedPlugin implements IFMLLoadingPlugin {
     public String[] getASMTransformerClass(){
         return new String[]{
                 "jk_5.nailed.coremod.transformer.PacketTransformer",
-                "jk_5.nailed.coremod.transformer.StorageFolderTransformer",
+                "jk_5.nailed.coremod.transformer.DimensionManagerTransformer",
                 "jk_5.nailed.coremod.transformer.NailedAccessTransformer"
         };
     }

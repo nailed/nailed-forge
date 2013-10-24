@@ -1,8 +1,10 @@
 package jk_5.nailed.map.teleport;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import jk_5.nailed.map.Map;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityMinecart;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeSubscribe;
 
@@ -37,6 +39,8 @@ public class TeleportListener {
         if(event.entity instanceof EntityMinecart){
             event.entity.motionX = 0;
             event.entity.motionZ = 0;
+        }else if(event.entity instanceof EntityPlayer){
+            GameRegistry.onPlayerChangedDimension((EntityPlayer) event.entity);
         }
     }
 
