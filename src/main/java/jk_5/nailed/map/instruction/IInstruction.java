@@ -1,5 +1,7 @@
 package jk_5.nailed.map.instruction;
 
+import jk_5.nailed.map.gameloop.GameInstructionController;
+
 /**
  * No description given
  *
@@ -7,4 +9,7 @@ package jk_5.nailed.map.instruction;
  */
 public interface IInstruction {
 
+    void injectArguments(String args);
+    IInstruction cloneInstruction();
+    void execute(GameController controller);
 }

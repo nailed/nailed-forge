@@ -51,6 +51,8 @@ public class MapLoader {
             try{
                 Mappack pack = Mappack.create(file);
                 this.mappacks.add(pack);
+            }catch (DiscardedMappackInitializationException e){
+                //Discard!
             }catch (MappackInitializationException e){
                 NailedLog.severe(e, "Error while loading mappack " + file.getName() + ", skipping it!");
             }

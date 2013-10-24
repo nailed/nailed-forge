@@ -1,7 +1,6 @@
-package jk_5.nailed.client;
+package jk_5.nailed.client.render;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.ForgeSubscribe;
@@ -11,8 +10,7 @@ import net.minecraftforge.event.ForgeSubscribe;
  *
  * @author jk-5
  */
-@SuppressWarnings("unused")
-public class EventHandlerClient {
+public class RenderEventHandler {
 
     private Minecraft mc = Minecraft.getMinecraft();
     public static String format = "";

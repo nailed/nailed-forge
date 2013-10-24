@@ -1,8 +1,7 @@
 package jk_5.nailed.map.teleport;
 
-import lombok.AllArgsConstructor;
+import jk_5.nailed.map.Map;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import net.minecraft.util.ChunkCoordinates;
 
 /**
@@ -15,10 +14,14 @@ public class TeleportOptions {
 
     private ChunkCoordinates coordinates;
     private float yaw;
+    private Map destination;
+    private int destinationID;
     private boolean maintainMomentum = false;
     private String sound = "";
 
-    public TeleportOptions(ChunkCoordinates coords, float yaw){
+    public TeleportOptions(Map destination, ChunkCoordinates coords, float yaw){
+        this.destination = destination;
+        this.destinationID = destination.getID();
         this.coordinates = new ChunkCoordinates(coords);
         this.yaw = yaw;
     }

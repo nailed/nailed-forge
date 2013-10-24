@@ -137,8 +137,6 @@ public class BlockPortal extends BlockBreakable {
     @Override
     public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity){
         if (world.isRemote) return;
-        Map map = MapLoader.instance().getMap(world.provider.dimensionId);
-        TeleportOptions options = map.getMappack().getEntryPoint();
         TileEntity tileentity = BlockPortalController.getTileEntity(world, x, y, z);
         if ((tileentity == null) || (!(tileentity instanceof TileEntityPortalController))) {
             world.setBlock(x, y, z, 0);
@@ -149,9 +147,10 @@ public class BlockPortal extends BlockBreakable {
             world.setBlock(x, y, z, 0);
             return;
         }
+        TeleportOptions options = container.getDestination();
         options.setMaintainMomentum(true);
         options.setSound("nailed:teleport.teleport-portal");
-        TeleportHelper.travelEntity(map, entity, options);
+        TeleportHelper.travelEntity(world, entity, options);
     }
 
     @Override

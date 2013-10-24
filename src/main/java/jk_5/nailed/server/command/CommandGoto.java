@@ -31,7 +31,7 @@ public class CommandGoto extends CommandBase {
             MapLoader.instance().newMapServerFor(MapLoader.instance().getMappack(type));
         }else if(args[0].equals("tp")){
             Map map = MapLoader.instance().getMap(Integer.parseInt(args[1]));
-            TeleportHelper.travelEntity(map, (EntityPlayerMP) sender, map.getMappack().getEntryPoint());
+            TeleportHelper.travelEntity(sender.getEntityWorld(), (EntityPlayerMP) sender, map.getSpawnTeleport());
         }
     }
 }

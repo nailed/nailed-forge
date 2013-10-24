@@ -1,16 +1,14 @@
 package jk_5.nailed.map;
 
 import jk_5.nailed.NailedLog;
-import jk_5.nailed.map.instruction.IInstruction;
-import jk_5.nailed.map.instruction.InstructionReader;
-import jk_5.nailed.map.teleport.TeleportOptions;
+import jk_5.nailed.map.instruction.InstructionList;
+import jk_5.nailed.map.instruction.InstructionParseException;
 import jk_5.nailed.util.config.ConfigFile;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -28,7 +26,7 @@ public class Mappack {
         Mappack pack = null;
         ConfigFile config = null;
         ZipInputStream zipStream = null;
-        List<IInstruction> instructionList = null;
+        InstructionList instructionList = null;
         try{
             zipStream = new ZipInputStream(new FileInputStream(file));
             ZipEntry entry = zipStream.getNextEntry();
@@ -37,27 +35,26 @@ public class Mappack {
                     config = new ConfigFile(new InputStreamReader(zipStream)).setReadOnly();
                     pack = new Mappack(file, config);
                 }else if(entry.getName().equals("gameinstructions.cfg")){
-                    try{
-                        instructionList = InstructionReader.readInstructions(new BufferedReader(new InputStreamReader(zipStream)));
-                    }catch(IOException e){
-                        NailedLog.severe(e, "Error while reading instructions for " + entry.getName());
-                        throw new MappackInitializationException(null, "Error while reading instructions!", e);
-                    }
+                    instructionList = InstructionList.readFrom(new BufferedReader(new InputStreamReader(zipStream)));
                 }
                 entry = zipStream.getNextEntry();
             }
+        }catch(InstructionParseException e){
+            NailedLog.severe("There was an error in your instruction syntax in " + file.getName());
+            NailedLog.severe(e.getMessage());
+            throw new DiscardedMappackInitializationException(null, "Instruction syntax error!", e);
         }catch(FileNotFoundException e){
             NailedLog.severe(e, "Discovered mappack file is gone now? This is impossible");
             throw new MappackInitializationException(null, "Mappack file disappeared!", e);
-        } catch (IOException e) {
+        }catch (IOException e) {
             throw new MappackInitializationException(null, "Mappack file could not be read", e);
-        } finally {
+        }finally {
             IOUtils.closeQuietly(zipStream);
         }
         if(config == null){
             throw new MappackInitializationException(null, "mappack.cfg was not found in mappack " + file.getName());
         }
-        if(instructionList != null) pack.setInstructions(instructionList);
+        if(instructionList != null) pack.setInstructionList(instructionList);
         return pack;
     }
 
@@ -66,7 +63,7 @@ public class Mappack {
     @Getter private final File mappackFile;
     @Getter private final int UID = nextId.getAndIncrement();
     @Getter private final MappackConfig mappackConfig;
-    @Setter private List<IInstruction> instructions;
+    @Getter @Setter private InstructionList instructionList;
 
     private Mappack(File mappackFile, ConfigFile config){
         this.internalName = mappackFile.getName().substring(0, mappackFile.getName().length() - 8);
@@ -83,9 +80,5 @@ public class Mappack {
         Map map = new Map(this);
         this.unpack(new File(MapLoader.getMapsFolder(), map.getSaveFileName()));
         return map;
-    }
-
-    public TeleportOptions getEntryPoint(){
-        return new TeleportOptions(this.mappackConfig.getSpawnPoint(), 0);
     }
 }

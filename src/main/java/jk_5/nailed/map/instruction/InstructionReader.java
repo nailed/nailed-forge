@@ -1,10 +1,16 @@
 package jk_5.nailed.map.instruction;
 
-import com.google.common.collect.Lists;
+import com.google.common.base.Strings;
+import com.google.common.collect.Maps;
+import jk_5.nailed.map.MappackInitializationException;
+import lombok.Getter;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.ForgeSubscribe;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * No description given
@@ -13,10 +19,49 @@ import java.util.List;
  */
 public class InstructionReader {
 
-    public static List<IInstruction> readInstructions(BufferedReader reader) throws IOException {
-        List<IInstruction> ret = Lists.newArrayList();
-        while(reader.ready()){
-            String line = reader.readLine();
+    private static InstructionReader INSTANCE = new InstructionReader();
+
+    @Getter private final Map<String, Class<?>> instructionMap = Maps.newHashMap();
+
+    public static InstructionReader instance(){
+        return INSTANCE;
+    }
+
+    @ForgeSubscribe
+    public void registerInstructionsFromEvent(RegisterInstructionEvent event){
+        //event.register("trigger", InstructionTrigger.class);
+    }
+
+    private InstructionReader(){
+        MinecraftForge.EVENT_BUS.register(this);
+    }
+
+    public InstructionList readInstructions(BufferedReader reader) throws MappackInitializationException, InstructionParseException {
+        InstructionList ret = new InstructionList();
+        int lineNumber = 1;
+        try{
+            while(reader.ready()){
+                String line = reader.readLine();
+                if(!Strings.isNullOrEmpty(line) && !line.startsWith("#")){
+                    String[] data = line.split(" ", 2);
+                    if(data.length > 0){
+                        if(this.instructionMap.containsKey(data[0].trim())){
+                            IInstruction instr = (IInstruction) this.instructionMap.get(data[0].trim()).newInstance();
+                            if(instr != null && data.length == 2) instr.injectArguments(data[1]);
+                            ret.add(instr);
+                            lineNumber ++;
+                        }else{
+                            throw new InstructionParseException(lineNumber, "Unknown instruction");
+                        }
+                    }
+                }
+            }
+        }catch(IOException e){
+            throw new MappackInitializationException(null, "IOException while reading instructions", e);
+        }catch(InstructionParseException e){
+            throw e;
+        }catch(Exception e){
+            throw new MappackInitializationException(null, "Exception while reading instructions", e);
         }
         return ret;
     }

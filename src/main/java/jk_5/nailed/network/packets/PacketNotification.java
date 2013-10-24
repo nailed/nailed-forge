@@ -1,6 +1,6 @@
 package jk_5.nailed.network.packets;
 
-import jk_5.nailed.client.render.RenderEventHandler;
+import jk_5.nailed.client.render.NotificationRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 
@@ -13,27 +13,27 @@ import java.io.IOException;
  *
  * @author jk-5
  */
-public class PacketTimeTracker extends NailedPacket {
+public class PacketNotification extends NailedPacket {
 
-    private String format;
+    private String text;
 
-    public PacketTimeTracker(){}
-    public PacketTimeTracker(String format){
-        this.format = format;
+    public PacketNotification(){}
+    public PacketNotification(String text){
+        this.text = text;
     }
 
     @Override
-    public void writePacket(DataOutput data) throws IOException{
-        data.writeUTF(this.format);
+    public void writePacket(DataOutput data) throws IOException {
+        data.writeUTF(this.text);
     }
 
     @Override
     public void readPacket(DataInput data) throws IOException {
-        this.format = data.readUTF();
+        this.text = data.readUTF();
     }
 
     @Override
     public void processPacket(INetworkManager manager, EntityPlayer player){
-        RenderEventHandler.format = this.format;
+        NotificationRenderer.addNotification(this.text);
     }
 }

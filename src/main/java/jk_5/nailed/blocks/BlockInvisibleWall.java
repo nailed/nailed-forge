@@ -22,6 +22,7 @@ public class BlockInvisibleWall extends NailedBlock {
         this.disableStats();
         this.setBlockUnbreakable();
         this.setStepSound(new StepSound("null", 0F, 0F));
+        this.setLightOpacity(15);
     }
 
     @Override

@@ -1,2 +1,3 @@
-Transform MinecraftServer.loadAllWorlds
-Make mappack an interface for plugin system
+- Transform MinecraftServer.loadAllWorlds
+- Make mappack an interface for plugin system
+- Should we be a tweaker instead of a coremod?

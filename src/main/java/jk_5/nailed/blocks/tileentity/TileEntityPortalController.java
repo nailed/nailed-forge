@@ -9,6 +9,7 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.DimensionManager;
 
 /**
  * No description given
@@ -30,13 +31,18 @@ public class TileEntityPortalController extends TileEntity {
     }
 
     public TeleportOptions getDestination(){
-        return MapLoader.instance().getMap(0).getMappack().getEntryPoint();
+        return MapLoader.instance().getMap(0).getSpawnTeleport();
     }
 
     public void link(){
         BlockPortalController.fire(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
         this.onInventoryChanged();
         this.color = 0xFF0000;
+    }
+
+    @Override
+    public boolean canUpdate() {
+        return false;   //We don't need ticks. Don't even bother giving us ticks
     }
 
     @Override

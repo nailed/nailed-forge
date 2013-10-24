@@ -5,6 +5,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.Event;
 
 /**
  * No description given
@@ -13,8 +14,9 @@ import net.minecraftforge.common.MinecraftForge;
  */
 public class TeleportEventFactory {
 
-    public static boolean isTeleportationPermitted(Map destination, Entity entity, TeleportOptions options) {
-        return !MinecraftForge.EVENT_BUS.post(new TeleportEvent.TeleportEventAllow(destination, entity, options));
+    public static boolean isTeleportationPermitted(World origin, Entity entity, TeleportOptions options) {
+        Event e = new TeleportEvent.TeleportEventAllow(origin, entity, options);
+        return !MinecraftForge.EVENT_BUS.post(e);
     }
 
     public static void onStartTeleport(World worldObj, Entity entity, TeleportOptions options) {

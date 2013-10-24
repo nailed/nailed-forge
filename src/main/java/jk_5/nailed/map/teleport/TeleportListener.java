@@ -19,12 +19,10 @@ public class TeleportListener {
     public void isPermitted(TeleportEvent.TeleportEventAllow event){
         Entity entity = event.entity;
         World world = event.origin;
-        Map destination = event.destinationMap;
+        World destination = event.destination;
         TeleportOptions options = event.options;
 
         if(entity.isDead || entity.worldObj != world || entity.riddenByEntity != null){
-            event.setCanceled(true);
-        }else if(entity.worldObj.provider.dimensionId == destination.getID()){
             event.setCanceled(true);
         }
     }

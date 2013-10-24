@@ -21,6 +21,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.MinecraftForge;
 
 import java.util.List;
 
@@ -34,28 +36,37 @@ public class TeleportHelper {
 
     private static MinecraftServer mcServer = null;
 
-    public static void travelEntity(Map destination, Entity entity, TeleportOptions options){
+    public static void travelEntity(World from, Entity entity, TeleportOptions options){
         if(options == null) return;
-        if(!TeleportEventFactory.isTeleportationPermitted(destination, entity, options)) return;
+        int toDimension = options.getDestinationID();
+        ChunkCoordinates coords = options.getCoordinates();
+        float yaw = options.getYaw();
+        if(from.isRemote || !TeleportEventFactory.isTeleportationPermitted(from, entity, options)) return;
         if(mcServer == null) mcServer = MinecraftServer.getServer();
         if(mcServer == null) return;
-        WorldServer newWorld = (WorldServer) destination.getWorld();
+        WorldServer newWorld = mcServer.worldServerForDimension(toDimension);
         if(newWorld == null){
-            NailedLog.severe(new NullPointerException(), "Could not link entity %s to map %d, world object was not found", entity, destination.getID());
+            NailedLog.severe(new NullPointerException(), "Could not link entity %s to map %d, world object was not found", entity, toDimension);
             if(entity instanceof ICommandSender) ((ICommandSender) entity).sendChatToPlayer(ChatMessageComponent.createFromText("Could not teleport you to the map, it\'s world object was null. Look at the server log for more info").setColor(EnumChatFormatting.RED));
         }
-        teleportEntity(destination, entity, options);
+        if(coords == null){
+            coords = newWorld.getSpawnPoint();
+            options.setCoordinates(coords);
+        }
+        TeleportEvent.TeleportEventAlter event = new TeleportEvent.TeleportEventAlter(from, newWorld, entity, options);
+        MinecraftForge.EVENT_BUS.post(event);
+        if(event.spawn != null) coords = event.spawn;
+        if(event.rotationYaw != null) yaw = event.rotationYaw;
+        teleportEntity(newWorld, entity, toDimension, coords, yaw, options);
     }
 
-    private static Entity teleportEntity(Map destination, Entity entity, TeleportOptions options){
-        if(options == null) return null;
-        if(!TeleportEventFactory.isTeleportationPermitted(destination, entity, options)) return null;
+    private static Entity teleportEntity(World newWorld, Entity entity, int toDimension, ChunkCoordinates spawnCoords, float yaw, TeleportOptions options){
+        if(!TeleportEventFactory.isTeleportationPermitted(entity.worldObj, entity, options)) return null;
         Entity mount = entity.ridingEntity;
         if(mount != null){
             entity.mountEntity(null);
-            mount = teleportEntity(destination, mount, options);
+            mount = teleportEntity(newWorld, entity, toDimension, spawnCoords, yaw, options);
         }
-        WorldServer newWorld = (WorldServer) destination.getWorld();
         boolean changingWorlds = entity.worldObj != newWorld;
         TeleportEventFactory.onStartTeleport(entity.worldObj, entity, options);
         entity.worldObj.updateEntityWithOptionalForce(entity, false);
@@ -63,7 +74,7 @@ public class TeleportHelper {
             EntityPlayerMP player = (EntityPlayerMP) entity;
             player.closeScreen();
             if(changingWorlds){
-                player.dimension = destination.getID();
+                player.dimension = toDimension;
                 player.playerNetServerHandler.sendPacketToPlayer(new Packet9Respawn(player.dimension, (byte) player.worldObj.difficultySetting, newWorld.getWorldInfo().getTerrainType(), newWorld.getHeight(), player.theItemInWorldManager.getGameType()));
                 if(newWorld.provider instanceof NailedWorldProvider){
                     //TODO: send world data //NetworkHelper.sendMapData(newWorld, player, destination.getID());
@@ -76,10 +87,9 @@ public class TeleportHelper {
         }
         TeleportEventFactory.onExitWorld(entity, options);
 
-        ChunkCoordinates spawnCoords = options.getCoordinates();
-        entity.setLocationAndAngles(spawnCoords.posX + 0.5D, spawnCoords.posY, spawnCoords.posZ + 0.5D, options.getYaw(), entity.rotationPitch);
-        newWorld.theChunkProviderServer.loadChunk(options.getCoordinates().posX >> 4, options.getCoordinates().posZ >> 4);
-        while(getCollidingWorldGeometry(destination, entity).size() != 0){
+        entity.setLocationAndAngles(spawnCoords.posX + 0.5D, spawnCoords.posY, spawnCoords.posZ + 0.5D, yaw, entity.rotationPitch);
+        ((WorldServer) newWorld).theChunkProviderServer.loadChunk(spawnCoords.posX >> 4, spawnCoords.posZ >> 4);
+        while(getCollidingWorldGeometry(newWorld, entity).size() != 0){
             spawnCoords.posY ++;
             entity.setPosition(spawnCoords.posX + 0.5D, spawnCoords.posY, spawnCoords.posZ + 0.5D);
         }
@@ -96,28 +106,29 @@ public class TeleportHelper {
             newWorld.spawnEntityInWorld(entity);
             entity.setWorld(newWorld);
         }
-        entity.setLocationAndAngles(spawnCoords.posX + 0.5D, spawnCoords.posY, spawnCoords.posZ + 0.5D, options.getYaw(), entity.rotationPitch);
-        TeleportEventFactory.onEnterWorld(newWorld, entity, options);
+        entity.setLocationAndAngles(spawnCoords.posX + 0.5D, spawnCoords.posY, spawnCoords.posZ + 0.5D, yaw, entity.rotationPitch);
+        TeleportEventFactory.onEnterWorld((WorldServer) newWorld, entity, options);
         newWorld.updateEntityWithOptionalForce(entity, false);
-        entity.setLocationAndAngles(spawnCoords.posX + 0.5D, spawnCoords.posY, spawnCoords.posZ + 0.5D, options.getYaw(), entity.rotationPitch);
+        entity.setLocationAndAngles(spawnCoords.posX + 0.5D, spawnCoords.posY, spawnCoords.posZ + 0.5D, yaw, entity.rotationPitch);
         if(entity instanceof EntityPlayerMP){
             EntityPlayerMP player = (EntityPlayerMP) entity;
-            if(changingWorlds) player.mcServer.getConfigurationManager().func_72375_a(player, newWorld);
+            ((WorldServer) entity.worldObj).getPlayerManager().addPlayer(player);
+            //if(changingWorlds) player.mcServer.getConfigurationManager().func_72375_a(player, null);
             player.playerNetServerHandler.setPlayerLocation(spawnCoords.posX + 0.5D, spawnCoords.posY, spawnCoords.posZ + 0.5D, player.rotationYaw, player.rotationPitch);
         }
         newWorld.updateEntityWithOptionalForce(entity, false);
         if(entity instanceof EntityPlayerMP && changingWorlds){
             EntityPlayerMP player = (EntityPlayerMP) entity;
-            player.theItemInWorldManager.setWorld(newWorld);
-            player.mcServer.getConfigurationManager().updateTimeAndWeatherForPlayer(player, newWorld);
+            player.theItemInWorldManager.setWorld((WorldServer) newWorld);
+            player.mcServer.getConfigurationManager().updateTimeAndWeatherForPlayer(player, (WorldServer) newWorld);
             player.mcServer.getConfigurationManager().syncPlayerInventory(player);
             for(PotionEffect effect : (Iterable<PotionEffect>) player.getActivePotionEffects()){
                 player.playerNetServerHandler.sendPacketToPlayer(new Packet41EntityEffect(player.entityId, effect));
             }
             player.playerNetServerHandler.sendPacketToPlayer(new Packet43Experience(player.experience, player.experienceTotal, player.experienceLevel));
         }
-        entity.setLocationAndAngles(spawnCoords.posX + 0.5D, spawnCoords.posY, spawnCoords.posZ + 0.5D, options.getYaw(), entity.rotationPitch);
-        TeleportEventFactory.onEndTeleport(newWorld, entity, options);
+        entity.setLocationAndAngles(spawnCoords.posX + 0.5D, spawnCoords.posY, spawnCoords.posZ + 0.5D, yaw, entity.rotationPitch);
+        TeleportEventFactory.onEndTeleport((WorldServer) newWorld, entity, options);
         if(mount != null){
             if(entity instanceof EntityPlayerMP){
                 newWorld.updateEntityWithOptionalForce(entity, true);
@@ -145,7 +156,7 @@ public class TeleportHelper {
         entity.isDead = true;
     }
 
-    private static List<AxisAlignedBB> getCollidingWorldGeometry(Map map, Entity entity){
+    private static List<AxisAlignedBB> getCollidingWorldGeometry(World world, Entity entity){
         List<AxisAlignedBB> ret = Lists.newArrayList();
         AxisAlignedBB bb = entity.boundingBox;
         int x1 = MathHelper.floor_double(bb.minX);
@@ -156,11 +167,11 @@ public class TeleportHelper {
         int z2 = MathHelper.floor_double(bb.maxZ + 1);
         for(int x = x1; x < x2; x++){
             for(int z = z1; z < z2; z++){
-                if(map.getWorld().blockExists(x, 64, z)){
+                if(world.blockExists(x, 64, z)){
                     for(int y = y1 - 1; y < y2; y++){
-                        Block block = Block.blocksList[map.getWorld().getBlockId(x, y, z)];
+                        Block block = Block.blocksList[world.getBlockId(x, y, z)];
                         if(block != null){
-                            block.addCollisionBoxesToList(map.getWorld(), x, y, z, bb, ret, entity);
+                            block.addCollisionBoxesToList(world, x, y, z, bb, ret, entity);
                         }
                     }
                 }

@@ -1,6 +1,5 @@
 package jk_5.nailed.map.teleport;
 
-import jk_5.nailed.map.Map;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
@@ -61,10 +60,8 @@ public abstract class TeleportEvent extends Event {
 
     @Cancelable
     public static class TeleportEventAllow extends TeleportEvent {
-        public Map destinationMap;
-        public TeleportEventAllow(Map destination, Entity entity, TeleportOptions info) {
-            super(null, destination.getWorld(), entity, info);
-            this.destinationMap = destination;
+        public TeleportEventAllow(World origin, Entity entity, TeleportOptions info) {
+            super(origin, info.getDestination().getWorld(), entity, info);
         }
     }
 }

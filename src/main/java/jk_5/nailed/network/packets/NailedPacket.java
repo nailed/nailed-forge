@@ -27,6 +27,7 @@ public abstract class NailedPacket {
     static {
         registerPacket(0, PacketTimeTracker.class);
         registerPacket(1, PacketRegisterDimension.class);
+        registerPacket(2, PacketNotification.class);
     }
 
     public final Packet250CustomPayload getPacket(){

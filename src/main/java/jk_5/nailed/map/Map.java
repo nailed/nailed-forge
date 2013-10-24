@@ -2,9 +2,11 @@ package jk_5.nailed.map;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 import jk_5.nailed.NailedLog;
+import jk_5.nailed.map.teleport.TeleportOptions;
 import jk_5.nailed.network.packets.PacketRegisterDimension;
 import jk_5.nailed.server.ProxyCommon;
 import lombok.Getter;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 
@@ -43,6 +45,10 @@ public class Map {
         PacketDispatcher.sendPacketToAllPlayers(new PacketRegisterDimension(this.getID()).getPacket());
     }
 
+    public void sendMessageToAllPlayers(String message){
+
+    }
+
     public void setWorld(World world){
         if(world == null) throw new NullPointerException("World should not be null!");
         this.world = world;
@@ -53,5 +59,9 @@ public class Map {
 
     public String getSaveFileName(){
         return "map" + (this.mappack == null ? "" : "_" + this.mappack.getInternalName()) + "_" + this.getID();
+    }
+
+    public TeleportOptions getSpawnTeleport(){
+        return new TeleportOptions(this, new ChunkCoordinates(this.mappack.getMappackConfig().getSpawnPoint()), 0);
     }
 }
