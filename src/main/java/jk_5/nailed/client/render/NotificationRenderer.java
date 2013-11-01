@@ -115,7 +115,6 @@ public class NotificationRenderer {
                 GL11.glTranslatef(k - 9, l - entry * 8 + shift - 6.0F, 0.0F);
                 GL11.glScalef(0.03125F, 0.03125F, 0.03125F);
                 mc.getTextureManager().bindTexture(li.image);
-                Tessellator tessellator = Tessellator.instance;
                 Color c = new Color(li.color);
                 GL11.glColor4f(c.getRed() / 255.0F, c.getGreen() / 255.0F, c.getBlue() / 255.0F, alpha / 511.0F);
                 RenderUtils.drawTexturedQuad(0, 0, 0, 0, 256, 256, -90.0D);
