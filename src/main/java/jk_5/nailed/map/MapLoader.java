@@ -2,6 +2,9 @@ package jk_5.nailed.map;
 
 import com.google.common.collect.Lists;
 import jk_5.nailed.NailedLog;
+import jk_5.nailed.map.mappack.DirectoryMappack;
+import jk_5.nailed.map.mappack.Mappack;
+import jk_5.nailed.map.mappack.ZipMappack;
 import lombok.Getter;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
@@ -22,13 +25,11 @@ import java.util.zip.ZipFile;
 public class MapLoader {
 
     private static final MapLoader INSTANCE = new MapLoader();
-    @Getter private static final File mappackFolder = new File("mappacks");
-    @Getter private static final File mapsFolder = new File("maps");
+    @SuppressWarnings("unused") @Getter private static final File mappackFolder = new File("mappacks");
+    @SuppressWarnings("unused") @Getter private static final File mapsFolder = new File("maps");
 
     @Getter private final List<Map> maps = Lists.newArrayList();
     private final List<Mappack> mappacks = Lists.newArrayList();
-
-    private LobbyMap lobby;
 
     public static MapLoader instance(){
         return INSTANCE;
@@ -42,15 +43,15 @@ public class MapLoader {
         NailedLog.info("Loading mappacks...");
         this.mappacks.clear();
         if(!mappackFolder.exists()) mappackFolder.mkdirs();
-        for(File file : mappackFolder.listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.endsWith(".mappack");
-            }
-        })){
+        File[] list = mappackFolder.listFiles();
+        if(list == null) return;
+        for(File file : list){
             try{
-                Mappack pack = Mappack.create(file);
-                this.mappacks.add(pack);
+                if(file.isFile() && (file.getName().endsWith(".zip") || file.getName().endsWith(".mappack"))){
+                    this.mappacks.add(ZipMappack.create(file));
+                }else if(file.isDirectory()){
+                    this.mappacks.add(DirectoryMappack.create(file));
+                }
             }catch (DiscardedMappackInitializationException e){
                 //Discard!
             }catch (MappackInitializationException e){
@@ -97,14 +98,14 @@ public class MapLoader {
             worldDir.renameTo(destDir);
             return destDir;
         }catch(IOException ioe){
-
+            NailedLog.severe(ioe, "Error while unpacking file");
         }
         return null;
     }
 
-    public Mappack getMappack(String internalName){
+    public Mappack getMappack(String mappackID){
         for(Mappack pack : this.mappacks){
-            if(pack.getInternalName().equals(internalName)){
+            if(pack.getMappackID().equals(mappackID)){
                 return pack;
             }
         }
@@ -117,7 +118,9 @@ public class MapLoader {
     }
 
     public Map newMapServerFor(Mappack pack){
-        Map map = pack.createMap();
+        PotentialMap potentialMap = new PotentialMap(pack);
+        pack.prepareWorld(potentialMap.getSaveFolder());
+        Map map = pack.createMap(potentialMap);
         map.initMapServer();
         return map;
     }
@@ -136,6 +139,7 @@ public class MapLoader {
     }
 
     @ForgeSubscribe
+    @SuppressWarnings("unused")
     public void onWorldLoad(WorldEvent.Load event){
         Map map = this.getMap(event.world.provider.dimensionId);
         if(map == null) return;

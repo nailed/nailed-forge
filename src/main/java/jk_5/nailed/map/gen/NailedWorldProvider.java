@@ -2,8 +2,8 @@ package jk_5.nailed.map.gen;
 
 import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MapLoader;
-import jk_5.nailed.map.Mappack;
 import jk_5.nailed.map.MappackContainingWorldProvider;
+import jk_5.nailed.map.mappack.Mappack;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.WorldProvider;
@@ -38,7 +38,7 @@ public class NailedWorldProvider extends WorldProvider implements MappackContain
 
     @Override
     public String getDimensionName(){
-        return "Nailed " + (this.hasMappack() ? this.getMappack().getName() : "") + " " + this.mapID;
+        return "Nailed " + (this.hasMappack() ? this.getMappack().getMappackMetadata().getName() : "") + " " + this.mapID;
     }
 
     @Override
@@ -59,7 +59,7 @@ public class NailedWorldProvider extends WorldProvider implements MappackContain
     @Override
     public ChunkCoordinates getRandomizedSpawnPoint(){
         if(this.hasMappack()){
-            return new ChunkCoordinates(this.map.getMappack().getMappackConfig().spawnPoint);
+            return new ChunkCoordinates(this.map.getMappack().getMappackMetadata().getSpawnPoint());
         }else{
             return super.getRandomizedSpawnPoint();
         }

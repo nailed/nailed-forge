@@ -2,10 +2,12 @@ package jk_5.nailed.map;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 import jk_5.nailed.NailedLog;
+import jk_5.nailed.map.mappack.Mappack;
 import jk_5.nailed.map.teleport.TeleportOptions;
 import jk_5.nailed.network.packets.PacketRegisterDimension;
 import jk_5.nailed.server.ProxyCommon;
 import lombok.Getter;
+import net.minecraft.network.packet.Packet3Chat;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
@@ -21,11 +23,6 @@ public class Map {
     @Getter private final Mappack mappack;
     @Getter private World world;
     @Getter private boolean isLoaded = false;
-
-    Map(Mappack mappack){
-        this.mappack = mappack;
-        MapLoader.instance().addMap(this);
-    }
 
     public Map(Mappack mappack, int id){
         this.ID = id;
@@ -46,7 +43,7 @@ public class Map {
     }
 
     public void sendMessageToAllPlayers(String message){
-
+        PacketDispatcher.sendPacketToAllPlayers(new Packet3Chat(message));
     }
 
     public void setWorld(World world){
@@ -58,10 +55,10 @@ public class Map {
     }
 
     public String getSaveFileName(){
-        return "map" + (this.mappack == null ? "" : "_" + this.mappack.getInternalName()) + "_" + this.getID();
+        return PotentialMap.getSaveFileName(this);
     }
 
     public TeleportOptions getSpawnTeleport(){
-        return new TeleportOptions(this, new ChunkCoordinates(this.mappack.getMappackConfig().getSpawnPoint()), 0);
+        return new TeleportOptions(this, new ChunkCoordinates(this.mappack.getMappackMetadata().getSpawnPoint()), 0);
     }
 }

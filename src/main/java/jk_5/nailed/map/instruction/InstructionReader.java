@@ -9,7 +9,6 @@ import net.minecraftforge.event.ForgeSubscribe;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -57,11 +56,11 @@ public class InstructionReader {
                 }
             }
         }catch(IOException e){
-            throw new MappackInitializationException(null, "IOException while reading instructions", e);
+            throw new MappackInitializationException("IOException while reading instructions", e);
         }catch(InstructionParseException e){
             throw e;
         }catch(Exception e){
-            throw new MappackInitializationException(null, "Exception while reading instructions", e);
+            throw new MappackInitializationException("Exception while reading instructions", e);
         }
         return ret;
     }

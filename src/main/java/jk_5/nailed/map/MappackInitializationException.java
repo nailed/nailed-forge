@@ -7,15 +7,13 @@ package jk_5.nailed.map;
  */
 public class MappackInitializationException extends Exception {
 
-    private final Mappack mappack;
-
-    public MappackInitializationException(Mappack mappack, String message){
+    @SuppressWarnings("unused")
+    public MappackInitializationException(String message){
         super(message);
-        this.mappack = mappack;
     }
 
-    public MappackInitializationException(Mappack mappack, String message, Throwable cause){
+    @SuppressWarnings("unused")
+    public MappackInitializationException(String message, Throwable cause){
         super(message, cause);
-        this.mappack = mappack;
     }
 }

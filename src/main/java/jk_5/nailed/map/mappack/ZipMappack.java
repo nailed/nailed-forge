@@ -1,6 +1,7 @@
-package jk_5.nailed.map;
+package jk_5.nailed.map.mappack;
 
 import jk_5.nailed.NailedLog;
+import jk_5.nailed.map.*;
 import jk_5.nailed.map.instruction.InstructionList;
 import jk_5.nailed.map.instruction.InstructionParseException;
 import jk_5.nailed.util.config.ConfigFile;
@@ -9,7 +10,6 @@ import lombok.Setter;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -18,12 +18,23 @@ import java.util.zip.ZipInputStream;
  *
  * @author jk-5
  */
-public class Mappack {
+public class ZipMappack implements Mappack {
 
-    private static AtomicInteger nextId = new AtomicInteger();
+    @Getter private final String mappackID;
+    @Getter private final String name;
+    @Getter private final File mappackFile;
+    @Getter private final MappackMetadata mappackMetadata;
+    @Getter @Setter private InstructionList instructionList;
+
+    private ZipMappack(File mappackFile, ConfigFile config){
+        this.mappackID = mappackFile.getName().substring(0, mappackFile.getName().length() - 8);
+        this.name = config.getTag("map").getTag("name").getValue(this.mappackID);
+        this.mappackFile = mappackFile;
+        this.mappackMetadata = new FileMappackMetadata(config);
+    }
 
     public static Mappack create(File file) throws MappackInitializationException {
-        Mappack pack = null;
+        ZipMappack pack = null;
         ConfigFile config = null;
         ZipInputStream zipStream = null;
         InstructionList instructionList = null;
@@ -33,7 +44,7 @@ public class Mappack {
             while (entry != null){
                 if(entry.getName().equals("mappack.cfg")){
                     config = new ConfigFile(new InputStreamReader(zipStream)).setReadOnly();
-                    pack = new Mappack(file, config);
+                    pack = new ZipMappack(file, config);
                 }else if(entry.getName().equals("gameinstructions.cfg")){
                     instructionList = InstructionList.readFrom(new BufferedReader(new InputStreamReader(zipStream)));
                 }
@@ -42,43 +53,29 @@ public class Mappack {
         }catch(InstructionParseException e){
             NailedLog.severe("There was an error in your instruction syntax in " + file.getName());
             NailedLog.severe(e.getMessage());
-            throw new DiscardedMappackInitializationException(null, "Instruction syntax error!", e);
+            throw new DiscardedMappackInitializationException("Instruction syntax error!", e);
         }catch(FileNotFoundException e){
-            NailedLog.severe(e, "Discovered mappack file is gone now? This is impossible");
-            throw new MappackInitializationException(null, "Mappack file disappeared!", e);
+            NailedLog.severe(e, "Discovered mappack file " + file.getPath() + " is gone now? This is impossible");
+            throw new DiscardedMappackInitializationException("Mappack file " + file.getPath() + " disappeared!", e);
         }catch (IOException e) {
-            throw new MappackInitializationException(null, "Mappack file could not be read", e);
+            throw new MappackInitializationException("Mappack file " + file.getPath() + " could not be read", e);
         }finally {
             IOUtils.closeQuietly(zipStream);
         }
         if(config == null){
-            throw new MappackInitializationException(null, "mappack.cfg was not found in mappack " + file.getName());
+            throw new MappackInitializationException("mappack.cfg was not found in mappack " + file.getName());
         }
         if(instructionList != null) pack.setInstructionList(instructionList);
         return pack;
     }
 
-    @Getter private final String internalName;
-    @Getter private final String name;
-    @Getter private final File mappackFile;
-    @Getter private final int UID = nextId.getAndIncrement();
-    @Getter private final MappackConfig mappackConfig;
-    @Getter @Setter private InstructionList instructionList;
-
-    private Mappack(File mappackFile, ConfigFile config){
-        this.internalName = mappackFile.getName().substring(0, mappackFile.getName().length() - 8);
-        this.name = config.getTag("map").getTag("name").getValue(this.internalName);
-        this.mappackFile = mappackFile;
-        this.mappackConfig = new MappackConfig(config);
-    }
-
-    public File unpack(File destinationDir){
+    @Override
+    public File prepareWorld(File destinationDir) {
         return MapLoader.instance().unzipMapFromMapPack(this.mappackFile, destinationDir);
     }
 
-    public Map createMap(){
-        Map map = new Map(this);
-        this.unpack(new File(MapLoader.getMapsFolder(), map.getSaveFileName()));
-        return map;
+    @Override
+    public Map createMap(PotentialMap potentialMap) {
+        return potentialMap.createMap();
     }
 }

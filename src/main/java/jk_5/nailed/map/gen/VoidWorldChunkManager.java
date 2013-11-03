@@ -32,7 +32,7 @@ public class VoidWorldChunkManager extends WorldChunkManager
             Map map = MapLoader.instance().getMap(this.world.provider.dimensionId);
             ChunkCoordinates spawn;
             if(map != null && map.getMappack() != null){
-                spawn = map.getMappack().getMappackConfig().getSpawnPoint();
+                spawn = map.getMappack().getMappackMetadata().getSpawnPoint();
             }else{
                 spawn = new ChunkCoordinates(0, 64, 0);
             }

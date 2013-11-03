@@ -2,7 +2,6 @@ package jk_5.nailed.players;
 
 import com.google.common.collect.Lists;
 import cpw.mods.fml.common.IPlayerTracker;
-import jk_5.nailed.NailedLog;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.List;
