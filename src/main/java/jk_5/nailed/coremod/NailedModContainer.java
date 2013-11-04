@@ -22,7 +22,6 @@ import jk_5.nailed.map.gen.NailedWorldProvider;
 import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.server.ProxyCommon;
 import jk_5.nailed.util.config.ConfigFile;
-import net.minecraftforge.classloading.FMLForgePlugin;
 import net.minecraftforge.common.DimensionManager;
 
 import java.io.File;
@@ -50,10 +49,7 @@ public class NailedModContainer extends DummyModContainer {
         super(new ModMetadata());
         this.getMetadata().modId = "Nailed";
         this.getMetadata().name = "Nailed";
-        this.getMetadata().authorList = Arrays.asList("jk-5");
-        this.getMetadata().credits = "Credits go to PostVillageCore for making the web interface";
-        this.getMetadata().version = "2.0.0-SNAPSHOT";
-        this.getMetadata().url = "http://github.com/nailed/nailed-forge/";
+        this.getMetadata().version = "1.2.3.4.5";
     }
 
     @Override
@@ -66,6 +62,7 @@ public class NailedModContainer extends DummyModContainer {
 
     @Subscribe
     public void construct(FMLConstructionEvent event){
+        NailedLog.info("Constructing nailed");
         if(event.getSide().isClient()){
             proxy = new ProxyClient();
         }else if(event.getSide().isServer()){
@@ -83,18 +80,33 @@ public class NailedModContainer extends DummyModContainer {
 
     @Subscribe
     public void preInit(FMLPreInitializationEvent event){
+        NailedLog.info("PreInit Nailed");
+        //NailedLog.info("Creating config file");
         config = new ConfigFile(event.getSuggestedConfigurationFile()).setComment("Nailed main config file");
+
+        //NailedLog.info("Initializing network and event handlers");
         proxy.initNetworkHandlers();
         proxy.registerEventHandlers();
+
+        //NailedLog.info("Registering blocks");
         NailedBlocks.init();
 
+        //NailedLog.info("Registering Nailed WorldProvider");
         ProxyCommon.providerID = NailedModContainer.config.getTag("providerId").setComment("The id for the nailed world provider").getIntValue(10);
         DimensionManager.registerProviderType(ProxyCommon.providerID, NailedWorldProvider.class, false);
+
+        //NailedLog.info("Overriding Default WorldProviders");
+        DimensionManager.unregisterProviderType(-1);
+        DimensionManager.unregisterProviderType(0);
+        DimensionManager.unregisterProviderType(1);
+        DimensionManager.registerProviderType(-1, NailedWorldProvider.class, false);
+        DimensionManager.registerProviderType(0, NailedWorldProvider.class, true);
+        DimensionManager.registerProviderType(1, NailedWorldProvider.class, false);
     }
 
     @Subscribe
     public void init(FMLInitializationEvent event){
-
+        NailedLog.info("Initializing Nailed");
     }
 
     @VersionCheckHandler
@@ -106,6 +118,7 @@ public class NailedModContainer extends DummyModContainer {
     private static List<Integer> getExistingMapList(){
         List<Integer> ret = Lists.newArrayList();
         File[] mapFiles = MapLoader.getMapsFolder().listFiles();
+        if(mapFiles == null) return ret;
         for(File file : mapFiles){
             if(file.isDirectory() && file.getName().startsWith("map")){
                 int id = Integer.parseInt(file.getName().substring(file.getName().lastIndexOf("_")));

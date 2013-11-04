@@ -63,7 +63,7 @@ public class ZipMappack implements Mappack {
             IOUtils.closeQuietly(zipStream);
         }
         if(config == null){
-            throw new MappackInitializationException("mappack.cfg was not found in mappack " + file.getName());
+            throw new DiscardedMappackInitializationException("mappack.cfg was not found in mappack " + file.getName());
         }
         if(instructionList != null) pack.setInstructionList(instructionList);
         return pack;

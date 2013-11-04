@@ -370,7 +370,7 @@ public class BlockPortalController extends BlockContainer {
 
     private static void onpulse(World world, int i, int j, int k) {
         List<ChunkCoordinates> set = Lists.newLinkedList();
-        Stack<ChunkCoordinates> validate = new Stack<>();
+        Stack<ChunkCoordinates> validate = new Stack<ChunkCoordinates>();
         addSurrounding(set, i, j, k);
         while (set.size() > 0) {
             ChunkCoordinates coords = set.remove(0);

@@ -49,11 +49,14 @@ public class MapLoader {
             try{
                 if(file.isFile() && (file.getName().endsWith(".zip") || file.getName().endsWith(".mappack"))){
                     this.mappacks.add(ZipMappack.create(file));
+                    NailedLog.info("Successfully loaded mappack " + file.getName());
                 }else if(file.isDirectory()){
                     this.mappacks.add(DirectoryMappack.create(file));
+                    NailedLog.info("Successfully loaded mappack " + file.getName());
                 }
             }catch (DiscardedMappackInitializationException e){
                 //Discard!
+                NailedLog.warning("An error was thrown while loading mappack " + file.getName() + ", skipping it!");
             }catch (MappackInitializationException e){
                 NailedLog.severe(e, "Error while loading mappack " + file.getName() + ", skipping it!");
             }

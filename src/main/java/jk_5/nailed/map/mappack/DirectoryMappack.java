@@ -28,7 +28,7 @@ public class DirectoryMappack implements Mappack {
     @Getter @Setter private InstructionList instructionList;
 
     private DirectoryMappack(File directory, ConfigFile config){
-        this.mappackID = directory.getName().substring(0, directory.getName().length() - 8);
+        this.mappackID = directory.getName();
         this.name = config.getTag("map").getTag("name").getValue(this.mappackID);
         this.mappackFolder = directory;
         this.mappackMetadata = new FileMappackMetadata(config);

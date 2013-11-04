@@ -1,0 +1,12 @@
+[{
+    "modid": "Nailed",
+    "name": "Nailed",
+    "description": "A PVP client and server for minecraftforge",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "authorList": [
+        "jk-5"
+    ],
+    "credits": "Credits go to PostVillageCore for making the webinterface",
+    "url": "http://github.com/nailed/nailed-forge/"
+}]
