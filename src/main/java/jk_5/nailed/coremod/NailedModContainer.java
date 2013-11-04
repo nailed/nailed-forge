@@ -129,9 +129,8 @@ public class NailedModContainer extends DummyModContainer {
         }
     }
 
-    /*@Override
+    @Override
     public File getSource(){
-        super.getSource()
         return NailedPlugin.nailedLocation;
     }
 
@@ -142,5 +141,5 @@ public class NailedModContainer extends DummyModContainer {
         }else{
             return FMLFileResourcePack.class;
         }
-    }*/
+    }
 }

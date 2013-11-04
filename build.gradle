@@ -16,7 +16,7 @@ sourceCompatibility = '1.6'
 
 minecraft{
     minecraftVersion = '1.6.4'
-    forgeVersion =  '934'
+    forgeVersion =  '942'
     accessTransformers += 'src/main/resources/nailed_at.cfg'
 }
 

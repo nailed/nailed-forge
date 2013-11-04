@@ -1,3 +1,52 @@
 - Transform MinecraftServer.loadAllWorlds
-- Make mappack an interface for plugin system
 - Should we be a tweaker instead of a coremod?
+
+
+MinecraftServer.loadAllWords modified:
+
+protected void loadAllWorlds(String par1Str, String par2Str, long par3, WorldType par5WorldType, String par6Str)
+    {
+        this.convertMapIfNeeded(par1Str);
+        this.setUserMessage("menu.loadingLevel");
+        LobbyMap lobby = new LobbyMap();
+        ISaveHandler isavehandler = this.anvilConverterForAnvilFile.getSaveLoader(lobby.getSaveFileName(), true);
+        WorldInfo worldinfo = isavehandler.loadWorldInfo();
+        WorldSettings worldsettings;
+
+        if (worldinfo == null)
+        {
+            worldsettings = new WorldSettings(par3, this.getGameType(), this.canStructuresSpawn(), this.isHardcore(), par5WorldType);
+            worldsettings.func_82750_a(par6Str);
+        }
+        else
+        {
+            worldsettings = new WorldSettings(worldinfo);
+        }
+
+        if (this.enableBonusChest)
+        {
+            worldsettings.enableBonusChest();
+        }
+
+        //WorldServer overWorld = (isDemo() ? new DemoWorldServer(this, isavehandler, par2Str, 0, theProfiler, getLogAgent()) : new WorldServer(this, isavehandler, par2Str, 0, worldsettings, theProfiler, getLogAgent()));
+        WorldServer overWorld = new WorldServer(this, isavehandler, lobby.getSaveFileName(), 0, worldsettings, theProfiler, getLogAgent());
+        for (int dim : DimensionManager.getStaticDimensionIDs())
+        {
+            //WorldServer world = (dim == 0 ? overWorld : new WorldServerMulti(this, isavehandler, par2Str, dim, worldsettings, overWorld, theProfiler, getLogAgent()));
+            WorldServer world = (dim == 0 ? overWorld : new WorldServer(this, this.anvilConverterForAnvilFile.getSaveLoader(MapLoader.instance().getMap(dim).getSaveFileName(), true), MapLoader.instance().getMap(dim).getSaveFileName(), dim, worldsettings, theProfiler, getLogAgent()));
+            world.addWorldAccess(new WorldManager(this, world));
+
+            if (!this.isSinglePlayer())
+            {
+                world.getWorldInfo().setGameType(this.getGameType());
+            }
+
+            this.serverConfigManager.setPlayerManager(this.worldServers);
+
+            MinecraftForge.EVENT_BUS.post(new WorldEvent.Load(world));
+        }
+
+        this.serverConfigManager.setPlayerManager(new WorldServer[]{ overWorld });
+        this.setDifficultyForAllWorlds(this.getDifficulty());
+        this.initialWorldChunkLoad();
+    }
