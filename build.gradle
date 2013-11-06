@@ -22,7 +22,7 @@ minecraft{
 
 jar {
     manifest {
-        attributes 'TweakClass': 'jk_5.nailed.tweaker.NailedTweaker'
+        attributes 'FMLCorePlugin': 'jk_5.nailed.coremod.NailedFMLPlugin'
         attributes 'FMLCorePluginContainsFMLMod': 'true'
     }
     doLast {
