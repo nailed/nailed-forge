@@ -22,7 +22,12 @@ minecraft{
 
 jar {
     manifest {
-        attributes 'FMLCorePlugin': 'jk_5.nailed.coremod.NailedPlugin'
+        attributes 'TweakClass': 'jk_5.nailed.tweaker.NailedTweaker'
+        attributes 'FMLCorePluginContainsFMLMod': 'true'
+    }
+    doLast {
+        //new File('build/signed').mkdirs()
+        ant.signjar(jar: jar.archivePath, alias: 'Nailed', keystore: nailedKeystoreLocation, storepass: nailedKeystorePassword)
     }
 }
 

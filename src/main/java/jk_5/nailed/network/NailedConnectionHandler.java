@@ -2,7 +2,7 @@ package jk_5.nailed.network;
 
 import cpw.mods.fml.common.network.IConnectionHandler;
 import cpw.mods.fml.common.network.Player;
-import jk_5.nailed.coremod.NailedModContainer;
+import jk_5.nailed.NailedModContainer;
 import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.map.gen.NailedWorldProvider;
@@ -79,7 +79,7 @@ public class NailedConnectionHandler implements IConnectionHandler {
     @Override
     public void connectionClosed(INetworkManager manager){
         if(isConnected){
-            NailedModContainer.unregisterDimensions();
+            NailedModContainer.getInstance().unregisterDimensions();
             isConnected = false;
         }
     }

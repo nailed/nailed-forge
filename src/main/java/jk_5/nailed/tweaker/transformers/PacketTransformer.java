@@ -1,4 +1,4 @@
-package jk_5.nailed.coremod.transformer;
+package jk_5.nailed.tweaker.transformers;
 
 import net.minecraft.launchwrapper.IClassTransformer;
 import org.objectweb.asm.ClassReader;

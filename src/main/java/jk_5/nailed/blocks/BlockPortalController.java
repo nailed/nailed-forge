@@ -4,8 +4,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import jk_5.nailed.NailedModContainer;
 import jk_5.nailed.blocks.tileentity.TileEntityPortalController;
-import jk_5.nailed.coremod.NailedModContainer;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -33,7 +33,7 @@ public class BlockPortalController extends BlockContainer {
     private Icon iconFace;
 
     public BlockPortalController(String name, Material material) {
-        super(NailedModContainer.config.getTag("blocks").useBraces().getTag(name).useBraces().getTag("id").getIntValue(NailedBlock.nextId.getAndIncrement()), material);
+        super(NailedModContainer.getConfig().getTag("blocks").useBraces().getTag(name).useBraces().getTag("id").getIntValue(NailedBlock.nextId.getAndIncrement()), material);
         this.setUnlocalizedName("nailed." + name);
     }
 

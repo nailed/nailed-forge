@@ -1,5 +1,4 @@
 - Transform MinecraftServer.loadAllWorlds
-- Should we be a tweaker instead of a coremod?
 
 
 MinecraftServer.loadAllWords modified:

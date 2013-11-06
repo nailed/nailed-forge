@@ -1,4 +1,4 @@
-package jk_5.nailed.coremod.transformer;
+package jk_5.nailed.tweaker.transformers;
 
 import com.google.common.collect.Maps;
 

@@ -3,11 +3,9 @@ package jk_5.nailed.blocks;
 import com.google.common.collect.Lists;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import jk_5.nailed.NailedModContainer;
 import jk_5.nailed.blocks.tileentity.TileEntityPortalController;
-import jk_5.nailed.coremod.NailedModContainer;
 import jk_5.nailed.map.teleport.TeleportHelper;
-import jk_5.nailed.map.Map;
-import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.map.teleport.TeleportOptions;
 import net.minecraft.block.BlockBreakable;
 import net.minecraft.block.material.Material;
@@ -35,7 +33,7 @@ public class BlockPortal extends BlockBreakable {
     public static BlockPortal instance;
 
     public BlockPortal(){
-        super(NailedModContainer.config.getTag("blocks").useBraces().getTag("portal").useBraces().getTag("id").getIntValue(NailedBlock.nextId.getAndIncrement()), "portal", Material.portal, false);
+        super(NailedModContainer.getConfig().getTag("blocks").useBraces().getTag("portal").useBraces().getTag("id").getIntValue(NailedBlock.nextId.getAndIncrement()), "portal", Material.portal, false);
         this.setUnlocalizedName("nailed.portal");
         instance = this;
         this.setTickRandomly(true);
