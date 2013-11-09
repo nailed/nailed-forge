@@ -1,0 +1,12 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile gradleApi()
+
+    compile 'org.projectlombok:lombok:1.12.2'
+}

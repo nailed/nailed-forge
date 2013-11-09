@@ -7,17 +7,47 @@ buildscript {
     }
 }
 
+repositories {
+    mavenCentral()
+}
+
 apply plugin: 'gmcp'
+apply plugin: 'nailed'
 
 group = 'jk_5.nailed'
 version = '2.0-SNAPSHOT'
 targetCompatibility = '1.6'
 sourceCompatibility = '1.6'
 
+configurations{
+    launcher {
+        extendsFrom compile
+        exclude module: 'org.projectlombok:lombok:1.12.2'
+    }
+    deployerJars
+}
+
+dependencies {
+    compile 'org.projectlombok:lombok:1.12.2'
+
+    testCompile 'junit:junit:4.11'
+
+    deployerJars 'org.apache.maven.wagon:wagon-ssh:2.2'
+}
+
 minecraft{
     minecraftVersion = '1.6.4'
     forgeVersion =  '942'
     accessTransformers += 'src/main/resources/nailed_at.cfg'
+}
+
+nailedInstaller {
+    version = '1.0'
+}
+
+nailedLauncher {
+    version = '1.0'
+    runtimeLibraries = configurations.launcher
 }
 
 jar {
@@ -26,17 +56,19 @@ jar {
         attributes 'FMLCorePluginContainsFMLMod': 'true'
     }
     doLast {
-        //new File('build/signed').mkdirs()
         ant.signjar(jar: jar.archivePath, alias: 'Nailed', keystore: nailedKeystoreLocation, storepass: nailedKeystorePassword)
     }
 }
 
-repositories {
-    mavenCentral()
+uploadArchives {
+    repositories.mavenDeployer {
+        configuration = configurations.deployerJars
+        repository(url: "scp://maven.reening.nl/media/maven/") {
+            authentication(userName: mavenUsername, password: mavenPassword)
+        }
+    }
 }
 
-dependencies {
-    compile 'org.projectlombok:lombok:1.12.2'
-
-    testCompile 'junit:junit:4.11'
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.6'
 }
