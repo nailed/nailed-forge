@@ -1,9 +1,9 @@
 .gradle
 build
 minecraft
-nailed-forge.iml
-nailed-forge.ipr
-nailed-forge.iws
+*.iml
+*.ipr
+*.iws
 out
 gradle.properties
 keystore.jks
