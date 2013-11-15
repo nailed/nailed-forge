@@ -12,7 +12,8 @@ repositories {
 }
 
 apply plugin: 'gmcp'
-apply plugin: 'nailed'
+apply plugin: 'maven'
+//apply plugin: 'nailed'
 
 group = 'jk_5.nailed'
 version = '2.0-SNAPSHOT'
@@ -29,6 +30,7 @@ configurations{
 
 dependencies {
     compile 'org.projectlombok:lombok:1.12.2'
+    compile 'pircbot:pircbot:1.5.0'
 
     testCompile 'junit:junit:4.11'
 
@@ -37,23 +39,26 @@ dependencies {
 
 minecraft{
     minecraftVersion = '1.6.4'
-    forgeVersion =  '942'
+    forgeVersion =  '952'
     accessTransformers += 'src/main/resources/nailed_at.cfg'
 }
 
-nailedInstaller {
+/*nailedInstaller {
     version = '1.0'
 }
 
 nailedLauncher {
     version = '1.0'
     runtimeLibraries = configurations.launcher
-}
+}*/
 
 jar {
     manifest {
         attributes 'FMLCorePlugin': 'jk_5.nailed.coremod.NailedFMLPlugin'
         attributes 'FMLCorePluginContainsFMLMod': 'true'
+        attributes 'Version': project.version
+        attributes 'MCVersion': project.minecraft.minecraftVersion
+        attributes 'ForgeVersion': project.minecraft.forgeVersion
     }
     doLast {
         ant.signjar(jar: jar.archivePath, alias: 'Nailed', keystore: nailedKeystoreLocation, storepass: nailedKeystorePassword)
