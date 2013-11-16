@@ -5,5 +5,5 @@ jdk:
   - openjdk6
 notifications:
   irc: "irc.reening.nl#server"
-before-script: gradle setupCIEnvironment
+before_script: gradle setupCIEnvironment
 script: gradle check
