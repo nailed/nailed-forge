@@ -61,7 +61,7 @@ jar {
         attributes 'ForgeVersion': project.minecraft.forgeVersion
     }
     doLast {
-        ant.signjar(jar: jar.archivePath, alias: 'Nailed', keystore: nailedKeystoreLocation, storepass: nailedKeystorePassword)
+        //ant.signjar(jar: jar.archivePath, alias: 'Nailed', keystore: nailedKeystoreLocation, storepass: nailedKeystorePassword)
     }
 }
 
