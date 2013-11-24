@@ -1,7 +1,6 @@
 package jk_5.nailed.server;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
-import jk_5.nailed.network.packets.PacketNotification;
+import jk_5.nailed.network.NailedSPH;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.ServerChatEvent;
 
@@ -15,6 +14,6 @@ public class EventHandlerServer {
 
     @ForgeSubscribe
     public void onChat(ServerChatEvent event){
-        PacketDispatcher.sendPacketToAllPlayers(new PacketNotification(event.message).getPacket());
+        NailedSPH.broadcastNotification(event.message);
     }
 }

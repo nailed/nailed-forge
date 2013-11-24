@@ -1,8 +1,9 @@
-package jk_5.nailed.gradle;
+package jk_5.nailed.gradle.extension;
 
 import lombok.Getter;
 import lombok.Setter;
 import org.gradle.api.Project;
+import org.gradle.api.internal.artifacts.configurations.DefaultConfiguration;
 
 /**
  * No description given
@@ -10,6 +11,10 @@ import org.gradle.api.Project;
  * @author jk-5
  */
 public class LauncherExtension {
+
+    public static LauncherExtension getInstance(Project project){
+        return project.getExtensions().getByType(LauncherExtension.class);
+    }
 
     private final Project project;
 

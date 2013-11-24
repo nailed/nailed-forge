@@ -1,7 +1,6 @@
 package jk_5.nailed.server.player;
 
-import jk_5.nailed.network.packets.NailedPacket;
-import jk_5.nailed.network.packets.PacketTimeTracker;
+import jk_5.nailed.network.NailedSPH;
 import jk_5.nailed.util.ChatColor;
 import jk_5.nailed.util.Utils;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -21,11 +20,7 @@ public class Player {
     }
 
     public void setTimeLeft(int seconds){
-        this.sendPacket(new PacketTimeTracker("Time left: " + ChatColor.GREEN + Utils.secondsToShortTimeString(seconds)));
-    }
-
-    public void sendPacket(NailedPacket packet){
-        this.getEntity().playerNetServerHandler.sendPacketToPlayer(packet.getPacket());
+        NailedSPH.sendTimeUpdate(this.getEntity(), "Time left: " + ChatColor.GREEN + Utils.secondsToShortTimeString(seconds));
     }
 
     public EntityPlayerMP getEntity(){

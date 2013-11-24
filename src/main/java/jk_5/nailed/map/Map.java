@@ -4,7 +4,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.map.mappack.Mappack;
 import jk_5.nailed.map.teleport.TeleportOptions;
-import jk_5.nailed.network.packets.PacketRegisterDimension;
+import jk_5.nailed.network.NailedSPH;
 import jk_5.nailed.server.ProxyCommon;
 import lombok.Getter;
 import net.minecraft.network.packet.Packet3Chat;
@@ -39,7 +39,7 @@ public class Map {
 
         this.setWorld(DimensionManager.getWorld(this.getID()));
 
-        PacketDispatcher.sendPacketToAllPlayers(new PacketRegisterDimension(this.getID()).getPacket());
+        NailedSPH.broadcastRegisterDimension(this.getID());
     }
 
     public void sendMessageToAllPlayers(String message){

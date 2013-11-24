@@ -1,64 +1,71 @@
 buildscript {
     repositories {
         mavenCentral()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
     }
     dependencies {
-        classpath 'com.github.abrarsyed.gmcp:GMCP:0.8.+'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.0-SNAPSHOT'
     }
 }
 
-repositories {
-    mavenCentral()
-}
-
-apply plugin: 'gmcp'
-apply plugin: 'maven'
-//apply plugin: 'nailed'
+apply plugin: 'nailed'
 
 group = 'jk_5.nailed'
 version = '2.0-SNAPSHOT'
-targetCompatibility = '1.6'
-sourceCompatibility = '1.6'
+archivesBaseName = 'nailed'
+
+minecraft{
+    version = '1.6.4-9.11.1.964'
+    assetDir = 'runtime/client/assets'
+    accessTransformers += 'src/main/resources/nailed_at.cfg'
+}
 
 configurations{
-    launcher {
-        extendsFrom compile
-        exclude module: 'org.projectlombok:lombok:1.12.2'
-    }
+    packed
+    compile.extendsFrom packed
     deployerJars
 }
 
 dependencies {
+    packed name: 'CodeChickenLib', version: '1.6.4-1.0.0.44', ext: 'jar'
+    packed 'pircbot:pircbot:1.5.0'
+
     compile 'org.projectlombok:lombok:1.12.2'
-    compile 'pircbot:pircbot:1.5.0'
 
     testCompile 'junit:junit:4.11'
 
     deployerJars 'org.apache.maven.wagon:wagon-ssh:2.2'
 }
 
-minecraft{
+nailed {
     minecraftVersion = '1.6.4'
-    forgeVersion =  '952'
-    accessTransformers += 'src/main/resources/nailed_at.cfg'
+    jsonLocation = 'dependencies.json'
 }
 
 /*nailedInstaller {
     version = '1.0'
-}
+}*/
 
 nailedLauncher {
     version = '1.0'
-    runtimeLibraries = configurations.launcher
-}*/
+}
 
 jar {
     manifest {
         attributes 'FMLCorePlugin': 'jk_5.nailed.coremod.NailedFMLPlugin'
         attributes 'FMLCorePluginContainsFMLMod': 'true'
         attributes 'Version': project.version
-        attributes 'MCVersion': project.minecraft.minecraftVersion
-        attributes 'ForgeVersion': project.minecraft.forgeVersion
+    }
+    from {
+        configurations.packed.collect {
+            it.isDirectory() ? it : zipTree(it).matching {
+                exclude "META-INF", "META-INF/**", "*META-INF*", "meta-inf"
+                exclude "**.jar", "**/*.jar", "*.jar"
+            }
+        }
     }
     doLast {
         ant.signjar(jar: jar.archivePath, alias: 'Nailed', keystore: nailedKeystoreLocation, storepass: nailedKeystorePassword)

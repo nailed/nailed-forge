@@ -195,9 +195,18 @@
     <option name="mySupportsUserInfoFilter" value="true" />
   </component>
   <component name="VcsDirectoryMappings">
-    <mapping directory="" vcs="" />
+    <mapping directory="$PROJECT_DIR$/.." vcs="Git" />
   </component>
   <component name="libraryTable">
+    <library name="6975da39a7040257bd51d21a231b76c915872d38-javax.inject-1.jar-javax.inject-1">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/javax.inject/javax.inject/1/jar/6975da39a7040257bd51d21a231b76c915872d38/javax.inject-1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/javax.inject/javax.inject/1/source/a00123f261762a7c5e0ec916a2c7c8298d29c400/javax.inject-1-sources.jar!/" />
+      </SOURCES>
+    </library>
     <library name="ant-1.9.2">
       <CLASSES>
         <root url="jar://$USER_HOME$/.gradle/wrapper/dists/gradle-1.8-bin/vruqmccc8532n7gr46qavsii8/gradle-1.8/lib/ant-1.9.2.jar!/" />
@@ -226,6 +235,33 @@
       <JAVADOC />
       <SOURCES />
     </library>
+    <library name="aopalliance-1.0">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/aopalliance/aopalliance/1.0/jar/235ba8b489512805ac13a8f9ea77a1ca5ebe3e8/aopalliance-1.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/aopalliance/aopalliance/1.0/source/4a4b6d692e17846a9f3da036438a7ac491d3c814/aopalliance-1.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="argo-3.4">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/net.sourceforge.argo/argo/3.4/jar/9cfa1016a55a92f7201cd43d60ff4032f9d815c4/argo-3.4.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/net.sourceforge.argo/argo/3.4/source/2b39738e65594d8487924a946dee0eae35af87ce/argo-3.4-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="asm-3.1">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/asm/asm/3.1/jar/c157def142714c544bdea2e6144645702adf7097/asm-3.1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/asm/asm/3.1/source/2eaa4de56203f433f287a6df5885ef9ad3c5bcae/asm-3.1-sources.jar!/" />
+      </SOURCES>
+    </library>
     <library name="asm-4.0">
       <CLASSES>
         <root url="jar://$USER_HOME$/.gradle/wrapper/dists/gradle-1.8-bin/vruqmccc8532n7gr46qavsii8/gradle-1.8/lib/asm-4.0.jar!/" />
@@ -239,6 +275,15 @@
       </CLASSES>
       <JAVADOC />
       <SOURCES />
+    </library>
+    <library name="asm-debug-all-4.1">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/org.ow2.asm/asm-debug-all/4.1/jar/dd6ba5c392d4102458494e29f54f70ac534ec2a2/asm-debug-all-4.1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/org.ow2.asm/asm-debug-all/4.1/source/1c218d5a0b8b932a1528b74069aa6973dcfcea74/asm-debug-all-4.1-sources.jar!/" />
+      </SOURCES>
     </library>
     <library name="bcpg-jdk15-1.46">
       <CLASSES>
@@ -268,6 +313,15 @@
       <JAVADOC />
       <SOURCES />
     </library>
+    <library name="cglib-2.2.1-v20090111">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/org.sonatype.sisu.inject/cglib/2.2.1-v20090111/jar/7ce5e983fd0e6c78346f4c9cbfa39d83049dda2/cglib-2.2.1-v20090111.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/org.sonatype.sisu.inject/cglib/2.2.1-v20090111/source/65030c30094de36e3fddbc22442d47cbf547741f/cglib-2.2.1-v20090111-sources.jar!/" />
+      </SOURCES>
+    </library>
     <library name="commons-cli-1.2">
       <CLASSES>
         <root url="jar://$USER_HOME$/.gradle/wrapper/dists/gradle-1.8-bin/vruqmccc8532n7gr46qavsii8/gradle-1.8/lib/plugins/commons-cli-1.2.jar!/" />
@@ -290,6 +344,20 @@
       <SOURCES />
     </library>
     <library name="commons-io-1.4">
+      <CLASSES />
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="commons-io-1.4-sources.jar-commons-io-1.4">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/commons-io/commons-io/1.4/jar/a8762d07e76cfde2395257a5da47ba7c1dbd3dce/commons-io-1.4.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/commons-io/commons-io/1.4/source/48753e43ff29409fbbeadfb36186cbe27e41b179/commons-io-1.4-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="commons-io-1.4.jar-commons-io-1.4">
       <CLASSES>
         <root url="jar://$USER_HOME$/.gradle/wrapper/dists/gradle-1.8-bin/vruqmccc8532n7gr46qavsii8/gradle-1.8/lib/commons-io-1.4.jar!/" />
       </CLASSES>
@@ -306,6 +374,22 @@
     <library name="core-3.1.1">
       <CLASSES>
         <root url="jar://$USER_HOME$/.gradle/wrapper/dists/gradle-1.8-bin/vruqmccc8532n7gr46qavsii8/gradle-1.8/lib/plugins/core-3.1.1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="diff4j-1.1">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/com.cloudbees/diff4j/1.1/jar/645329c0d4ebbea5f73758929c6e63bab9e77204/diff4j-1.1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/com.cloudbees/diff4j/1.1/source/e01e5168c15a325a548be3a0d18af5eac6f6343f/diff4j-1.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="ForgeGradle-1.0-SNAPSHOT">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/net.minecraftforge.gradle/ForgeGradle/1.0-SNAPSHOT/jar/154bb5d82d982166b6715c2a2c2a59a2178e204b/ForgeGradle-1.0-SNAPSHOT.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
@@ -569,12 +653,48 @@
       <JAVADOC />
       <SOURCES />
     </library>
+    <library name="gson-2.2.4">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/com.google.code.gson/gson/2.2.4/jar/a60a5e993c98c864010053cb901b7eab25306568/gson-2.2.4.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/com.google.code.gson/gson/2.2.4/source/a6dc5db8a12928e583bd3f23e72d3ab611ecd58f/gson-2.2.4-sources.jar!/" />
+      </SOURCES>
+    </library>
     <library name="guava-11.0.2">
       <CLASSES>
         <root url="jar://$USER_HOME$/.gradle/wrapper/dists/gradle-1.8-bin/vruqmccc8532n7gr46qavsii8/gradle-1.8/lib/guava-11.0.2.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
+    </library>
+    <library name="guava-14.0.1">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/com.google.guava/guava/14.0.1/bundle/69e12f4c6aeac392555f1ea86fab82b5e5e31ad4/guava-14.0.1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/com.google.guava/guava/14.0.1/source/169f11e28e3ed9a64e9fa895eaafb579e6a5aa6c/guava-14.0.1-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="guice-3.0">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/com.google.inject/guice/3.0/jar/9d84f15fe35e2c716a02979fb62f50a29f38aefa/guice-3.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/com.google.inject/guice/3.0/source/d117c4481f64955cb1862ed38cb568add2f5fe05/guice-3.0-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="guice-multibindings-3.0">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/com.google.inject.extensions/guice-multibindings/3.0/jar/5e670615a927571234df68a8b1fe1a16272be555/guice-multibindings-3.0.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/com.google.inject.extensions/guice-multibindings/3.0/source/1129825757fa4a2e87f381057bfb096aae410402/guice-multibindings-3.0-sources.jar!/" />
+      </SOURCES>
     </library>
     <library name="hamcrest-core-1.3">
       <CLASSES>
@@ -772,6 +892,15 @@
       <JAVADOC />
       <SOURCES />
     </library>
+    <library name="jAstyle-1.2">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/com.github.abrarsyed.jastyle/jAstyle/1.2/jar/642eada5efeb315295e21a5aea384b68dd191e5f/jAstyle-1.2.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/com.github.abrarsyed.jastyle/jAstyle/1.2/source/bad0011af16ee457fdfe30ab9683f278da0e8a39/jAstyle-1.2-sources.jar!/" />
+      </SOURCES>
+    </library>
     <library name="jatl-0.2.2">
       <CLASSES>
         <root url="jar://$USER_HOME$/.gradle/wrapper/dists/gradle-1.8-bin/vruqmccc8532n7gr46qavsii8/gradle-1.8/lib/plugins/jatl-0.2.2.jar!/" />
@@ -780,11 +909,18 @@
       <SOURCES />
     </library>
     <library name="javax.inject-1">
-      <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/wrapper/dists/gradle-1.8-bin/vruqmccc8532n7gr46qavsii8/gradle-1.8/lib/javax.inject-1.jar!/" />
-      </CLASSES>
+      <CLASSES />
       <JAVADOC />
       <SOURCES />
+    </library>
+    <library name="javaxdelta-2.0.1">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/com.nothome/javaxdelta/2.0.1/jar/d4f5d077f1b15c6f67595015d69572303ad3f66d/javaxdelta-2.0.1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/com.nothome/javaxdelta/2.0.1/source/c99bfecfaa91279b8a3d7d25a99cbbda107c903d/javaxdelta-2.0.1-sources.jar!/" />
+      </SOURCES>
     </library>
     <library name="jcifs-1.3.17">
       <CLASSES>
@@ -863,6 +999,15 @@
       <JAVADOC />
       <SOURCES />
     </library>
+    <library name="jopt-simple-4.5">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/net.sf.jopt-simple/jopt-simple/4.5/jar/6065cc95c661255349c1d0756657be17c29a4fd3/jopt-simple-4.5.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/net.sf.jopt-simple/jopt-simple/4.5/source/3cf4c3c1a6f565419bfd53a0e564d6fb128deeea/jopt-simple-4.5-sources.jar!/" />
+      </SOURCES>
+    </library>
     <library name="jsch-0.1.46">
       <CLASSES>
         <root url="jar://$USER_HOME$/.gradle/wrapper/dists/gradle-1.8-bin/vruqmccc8532n7gr46qavsii8/gradle-1.8/lib/jsch-0.1.46.jar!/" />
@@ -905,6 +1050,22 @@
       <JAVADOC />
       <SOURCES />
     </library>
+    <library name="lib-javax.inject-1.jar-javax.inject-1">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/wrapper/dists/gradle-1.8-bin/vruqmccc8532n7gr46qavsii8/gradle-1.8/lib/javax.inject-1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="localizer-1.12">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/org.jvnet.localizer/localizer/1.12/jar/6d456886a035b2c3f758059da1f91a823eaa4a62/localizer-1.12.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/org.jvnet.localizer/localizer/1.12/source/261a0e844fe30de1c30372135275fa0b299bdee4/localizer-1.12-sources.jar!/" />
+      </SOURCES>
+    </library>
     <library name="log4j-over-slf4j-1.7.2">
       <CLASSES>
         <root url="jar://$USER_HOME$/.gradle/wrapper/dists/gradle-1.8-bin/vruqmccc8532n7gr46qavsii8/gradle-1.8/lib/log4j-over-slf4j-1.7.2.jar!/" />
@@ -935,6 +1096,15 @@
         <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/org.projectlombok/lombok/1.12.2/source/552fe861a87ee16ace038c1109d96076c0e3dfc3/lombok-1.12.2-sources.jar!/" />
       </SOURCES>
     </library>
+    <library name="lzma-java-1.3">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/com.github.jponge/lzma-java/1.3/jar/a25db9d4d385ccda4825ae1b47a7a61d86e595af/lzma-java-1.3.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/com.github.jponge/lzma-java/1.3/source/c0f18880fb29c7bfc088a6e114c66fe30a5e8df2/lzma-java-1.3-sources.jar!/" />
+      </SOURCES>
+    </library>
     <library name="maven-ant-tasks-2.1.3">
       <CLASSES>
         <root url="jar://$USER_HOME$/.gradle/wrapper/dists/gradle-1.8-bin/vruqmccc8532n7gr46qavsii8/gradle-1.8/lib/plugins/maven-ant-tasks-2.1.3.jar!/" />
@@ -948,6 +1118,15 @@
       </CLASSES>
       <JAVADOC />
       <SOURCES />
+    </library>
+    <library name="named-regexp-0.2.3">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/com.github.tony19/named-regexp/0.2.3/jar/370846bf3837952d981deb8f91e81da8c65b09e1/named-regexp-0.2.3.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/com.github.tony19/named-regexp/0.2.3/source/74e99674da3dcbd04e30fc62e164073b4d95e8b9/named-regexp-0.2.3-sources.jar!/" />
+      </SOURCES>
     </library>
     <library name="native-platform-0.3-rc-2">
       <CLASSES>
@@ -1005,6 +1184,15 @@
       <JAVADOC />
       <SOURCES />
     </library>
+    <library name="opencsv-2.3">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/net.sf.opencsv/opencsv/2.3/jar/c23708cdb9e80a144db433e23344a788a1fd6599/opencsv-2.3.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/net.sf.opencsv/opencsv/2.3/source/235993117036d44d126f76db9ea2202ee4884682/opencsv-2.3-sources.jar!/" />
+      </SOURCES>
+    </library>
     <library name="plexus-component-annotations-1.5.2">
       <CLASSES>
         <root url="jar://$USER_HOME$/.gradle/wrapper/dists/gradle-1.8-bin/vruqmccc8532n7gr46qavsii8/gradle-1.8/lib/plugins/plexus-component-annotations-1.5.2.jar!/" />
@@ -1047,6 +1235,24 @@
       <JAVADOC />
       <SOURCES />
     </library>
+    <library name="shiro-all-1.2.2">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/org.apache.shiro/shiro-all/1.2.2/jar/185f530635ef72726ad95023dc60269fac0419d0/shiro-all-1.2.2.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/org.apache.shiro/shiro-all/1.2.2/source/2dbc7593c9242e60c3ff63ae4ceefe0d3090f720/shiro-all-1.2.2-sources.jar!/" />
+      </SOURCES>
+    </library>
+    <library name="shiro-guice-1.2.2">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/org.apache.shiro/shiro-guice/1.2.2/bundle/c82819cc7836bae884c979d782b428b69f349bd8/shiro-guice-1.2.2.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/org.apache.shiro/shiro-guice/1.2.2/source/ce3a1f5f9290fe0674c22412db5a0fe3e9063378/shiro-guice-1.2.2-sources.jar!/" />
+      </SOURCES>
+    </library>
     <library name="simple-4.1.21">
       <CLASSES>
         <root url="jar://$USER_HOME$/.gradle/wrapper/dists/gradle-1.8-bin/vruqmccc8532n7gr46qavsii8/gradle-1.8/lib/plugins/simple-4.1.21.jar!/" />
@@ -1082,9 +1288,25 @@
       <JAVADOC />
       <SOURCES />
     </library>
+    <library name="SpecialSource-1.6">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/net.md-5/SpecialSource/1.6/jar/1c3f64ff69cd215de8b9abddf57990c83ca15f24/SpecialSource-1.6.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/net.md-5/SpecialSource/1.6/source/95df07d9e1b1bc9550e10af92511e55fa45ad77d/SpecialSource-1.6-sources.jar!/" />
+      </SOURCES>
+    </library>
     <library name="testng-6.3.1">
       <CLASSES>
         <root url="jar://$USER_HOME$/.gradle/wrapper/dists/gradle-1.8-bin/vruqmccc8532n7gr46qavsii8/gradle-1.8/lib/plugins/testng-6.3.1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="trove-1.0.2">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/trove/trove/1.0.2/jar/112b40581ab9a4d3de4636d49985a7f686d181c8/trove-1.0.2.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
@@ -1110,47 +1332,6 @@
       <JAVADOC />
       <SOURCES />
     </library>
-  </component>
-  <component name="masterDetails">
-    <states>
-      <state key="ArtifactsStructureConfigurable.UI">
-        <UIState>
-          <splitter-proportions>
-            <SplitterProportionsDataImpl />
-          </splitter-proportions>
-          <settings />
-        </UIState>
-      </state>
-      <state key="Copyright.UI">
-        <UIState>
-          <splitter-proportions>
-            <SplitterProportionsDataImpl />
-          </splitter-proportions>
-        </UIState>
-      </state>
-      <state key="ProjectJDKs.UI">
-        <UIState>
-          <splitter-proportions>
-            <SplitterProportionsDataImpl>
-              <option name="proportions">
-                <list>
-                  <option value="0.2" />
-                </list>
-              </option>
-            </SplitterProportionsDataImpl>
-          </splitter-proportions>
-          <last-edited>1.6</last-edited>
-        </UIState>
-      </state>
-      <state key="ScopeChooserConfigurable.UI">
-        <UIState>
-          <splitter-proportions>
-            <SplitterProportionsDataImpl />
-          </splitter-proportions>
-          <settings />
-        </UIState>
-      </state>
-    </states>
   </component>
 </project>
 

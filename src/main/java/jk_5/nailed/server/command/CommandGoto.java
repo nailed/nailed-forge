@@ -1,8 +1,8 @@
 package jk_5.nailed.server.command;
 
-import jk_5.nailed.map.teleport.TeleportHelper;
 import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MapLoader;
+import jk_5.nailed.map.teleport.TeleportHelper;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -33,5 +33,10 @@ public class CommandGoto extends CommandBase {
             Map map = MapLoader.instance().getMap(Integer.parseInt(args[1]));
             TeleportHelper.travelEntity(sender.getEntityWorld(), (EntityPlayerMP) sender, map.getSpawnTeleport());
         }
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return this.getCommandName().compareTo(o.toString()); //FIXME!
     }
 }

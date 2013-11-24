@@ -3,10 +3,17 @@ apply plugin: 'idea'
 
 repositories {
     mavenCentral()
+    maven {
+        name 'forge'
+        url 'http://files.minecraftforge.net/maven'
+    }
 }
 
 dependencies {
     compile gradleApi()
 
     compile 'org.projectlombok:lombok:1.12.2'
+    compile 'com.google.guava:guava:14.0'
+    compile 'com.google.code.gson:gson:2.2.4'
+    compile 'net.minecraftforge.gradle:ForgeGradle:1.0-SNAPSHOT'
 }

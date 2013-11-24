@@ -1,10 +1,11 @@
 package jk_5.nailed.client;
 
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.relauncher.Side;
+import codechicken.lib.packet.PacketCustom;
 import jk_5.nailed.NailedLog;
+import jk_5.nailed.NailedModContainer;
 import jk_5.nailed.client.render.NotificationRenderer;
 import jk_5.nailed.client.render.RenderEventHandler;
+import jk_5.nailed.network.NailedCPH;
 import jk_5.nailed.server.ProxyCommon;
 import jk_5.nailed.util.updateNotifier.UpdateNotificationManager;
 import net.minecraftforge.common.MinecraftForge;
@@ -21,10 +22,10 @@ public class ProxyClient extends ProxyCommon {
     }
 
     @Override
-    public void initNetworkHandlers(){
+    public void initNetworkHandlers() {
         super.initNetworkHandlers();
 
-        NetworkRegistry.instance().registerChannel(new PacketHandlerClient(), "Nailed", Side.CLIENT);
+        PacketCustom.assignHandler(NailedModContainer.getInstance(), new NailedCPH());
     }
 
     @Override

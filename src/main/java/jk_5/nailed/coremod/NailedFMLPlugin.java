@@ -18,11 +18,6 @@ import java.util.Map;
 public class NailedFMLPlugin implements IFMLLoadingPlugin {
 
     @Override
-    public String[] getLibraryRequestClass() {
-        return new String[0];
-    }
-
-    @Override
     public String[] getASMTransformerClass() {
         return new String[]{
                 //"jk_5.nailed.coremod.transformers.PacketTransformer",

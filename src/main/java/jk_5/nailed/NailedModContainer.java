@@ -1,5 +1,6 @@
 package jk_5.nailed;
 
+import codechicken.lib.packet.PacketCustom.CustomTinyPacketHandler;
 import com.google.common.collect.Lists;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -10,6 +11,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkMod.VersionCheckHandler;
+import jk_5.nailed.achievement.NailedAchievements;
 import jk_5.nailed.blocks.NailedBlocks;
 import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.map.gen.NailedWorldProvider;
@@ -32,7 +34,7 @@ import java.util.List;
  * @author jk-5
  */
 @Mod(modid = NailedModContainer.modid, useMetadata = true, certificateFingerprint = "87401ecb3314a1a18fb267281b2432975a7e2e84")
-@NetworkMod(clientSideRequired = true, serverSideRequired = true)
+@NetworkMod(clientSideRequired = true, serverSideRequired = true, tinyPacketHandler = CustomTinyPacketHandler.class)
 public class NailedModContainer {
 
     @Getter protected static final String modid = "Nailed";
@@ -57,6 +59,9 @@ public class NailedModContainer {
     public void preInit(FMLPreInitializationEvent event){
         NailedLog.info("Creating config file");
         config = new ConfigFile(event.getSuggestedConfigurationFile()).setComment("Nailed main config file");
+
+        NailedLog.info("Loading achievements");
+        NailedAchievements.addAchievements();
 
         NailedLog.info("Initializing network and event handlers");
         proxy.initNetworkHandlers();
@@ -84,6 +89,9 @@ public class NailedModContainer {
     public void init(FMLInitializationEvent event){
         NailedLog.info("Initializing Nailed");
         MapLoader.instance().loadMappacks();
+
+        NailedLog.info("Registering achievements");
+        NailedAchievements.init();
     }
 
     @EventHandler

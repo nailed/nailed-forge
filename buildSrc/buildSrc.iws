@@ -1,12 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="effa8c5f-6c3b-4d54-a762-1fa2732fe9ea" name="Default" comment="" />
+    <list default="true" id="effa8c5f-6c3b-4d54-a762-1fa2732fe9ea" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/jk_5/nailed/achievement/AchievementEventListener.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/common/BasePlugin.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/Constants.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/delayed/DelayedBase.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/delayed/DelayedFile.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/delayed/DelayedFileTree.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/delayed/DelayedString.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/jk_5/nailed/api/IMappackRegistrar.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/extension/LauncherExtension.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/jk_5/nailed/api/NailedAPI.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/jk_5/nailed/achievement/NailedAchievements.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/jk_5/nailed/network/NailedCPH.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/extension/NailedExtension.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/jk_5/nailed/network/NailedSPH.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/jk_5/nailed/network/Packets.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/gradle-plugins/nailed.properties" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../src/main/java/jk_5/nailed/api/package-info.java" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/LauncherExtension.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../src/main/java/jk_5/nailed/client/PacketHandlerClient.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../src/main/java/jk_5/nailed/network/packets/NailedPacket.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../src/main/java/jk_5/nailed/network/packets/PacketNotification.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../src/main/java/jk_5/nailed/network/packets/PacketRegisterDimension.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../src/main/java/jk_5/nailed/network/packets/PacketTimeTracker.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/../src/main/java/jk_5/nailed/server/PacketHandlerServer.java" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/main/java/jk_5/nailed/server/command/CommandGoto.java" afterPath="$PROJECT_DIR$/../src/main/java/jk_5/nailed/server/command/CommandGoto.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/tasks/DeployLauncherProfileTask.java" afterPath="$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/tasks/DeployLauncherProfileTask.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/main/java/jk_5/nailed/server/EventHandlerServer.java" afterPath="$PROJECT_DIR$/../src/main/java/jk_5/nailed/server/EventHandlerServer.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/main/java/jk_5/nailed/map/Map.java" afterPath="$PROJECT_DIR$/../src/main/java/jk_5/nailed/map/Map.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/main/java/jk_5/nailed/network/NailedConnectionHandler.java" afterPath="$PROJECT_DIR$/../src/main/java/jk_5/nailed/network/NailedConnectionHandler.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/main/java/jk_5/nailed/coremod/NailedFMLPlugin.java" afterPath="$PROJECT_DIR$/../src/main/java/jk_5/nailed/coremod/NailedFMLPlugin.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/main/java/jk_5/nailed/NailedModContainer.java" afterPath="$PROJECT_DIR$/../src/main/java/jk_5/nailed/NailedModContainer.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/NailedPlugin.java" afterPath="$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/NailedPlugin.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/main/java/jk_5/nailed/server/player/Player.java" afterPath="$PROJECT_DIR$/../src/main/java/jk_5/nailed/server/player/Player.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/main/java/jk_5/nailed/client/ProxyClient.java" afterPath="$PROJECT_DIR$/../src/main/java/jk_5/nailed/client/ProxyClient.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../src/main/java/jk_5/nailed/server/ProxyCommon.java" afterPath="$PROJECT_DIR$/../src/main/java/jk_5/nailed/server/ProxyCommon.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../build.gradle" afterPath="$PROJECT_DIR$/../build.gradle" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build.gradle" afterPath="$PROJECT_DIR$/build.gradle" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/buildSrc.iml" afterPath="$PROJECT_DIR$/buildSrc.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/buildSrc.ipr" afterPath="$PROJECT_DIR$/buildSrc.ipr" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/buildSrc.iws" afterPath="$PROJECT_DIR$/buildSrc.iws" />
+    </list>
     <ignored path="buildSrc.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/build.gradle" changelist="effa8c5f-6c3b-4d54-a762-1fa2732fe9ea" time="1383936515425" ignored="false" />
-    <file path="/NailedPlugin.java" changelist="effa8c5f-6c3b-4d54-a762-1fa2732fe9ea" time="1383930263494" ignored="false" />
-    <file path="/LauncherExtension.java" changelist="effa8c5f-6c3b-4d54-a762-1fa2732fe9ea" time="1383930110344" ignored="false" />
+    <file path="/build.gradle" changelist="effa8c5f-6c3b-4d54-a762-1fa2732fe9ea" time="1385321619565" ignored="false" />
+    <file path="/NailedPlugin.java" changelist="effa8c5f-6c3b-4d54-a762-1fa2732fe9ea" time="1385319881224" ignored="false" />
+    <file path="/LauncherExtension.java" changelist="effa8c5f-6c3b-4d54-a762-1fa2732fe9ea" time="1385313085744" ignored="false" />
     <file path="/DeployLauncherProfile.java" changelist="effa8c5f-6c3b-4d54-a762-1fa2732fe9ea" time="1383930017513" ignored="false" />
     <file path="$PROJECT_DIR$/../../nailed-launcher/src/main/java/jk_5/nailed/launcher/UpdatingTweaker.java" changelist="effa8c5f-6c3b-4d54-a762-1fa2732fe9ea" time="1383939996963" ignored="false" />
     <file path="/UpdatingTweaker.java" changelist="effa8c5f-6c3b-4d54-a762-1fa2732fe9ea" time="1383939995368" ignored="false" />
@@ -37,6 +78,17 @@
     <file path="/install_profile.json" changelist="effa8c5f-6c3b-4d54-a762-1fa2732fe9ea" time="1383937357722" ignored="false" />
     <file path="/LauncherHandler.java" changelist="effa8c5f-6c3b-4d54-a762-1fa2732fe9ea" time="1383941846140" ignored="false" />
     <file path="/MinecraftHandler.java" changelist="effa8c5f-6c3b-4d54-a762-1fa2732fe9ea" time="1383941908777" ignored="false" />
+    <file path="/Dummy.txt" changelist="effa8c5f-6c3b-4d54-a762-1fa2732fe9ea" time="1385310726259" ignored="false" />
+    <file path="/nailed.properties" changelist="effa8c5f-6c3b-4d54-a762-1fa2732fe9ea" time="1385311864316" ignored="false" />
+    <file path="/DeployLauncherProfileTask.java" changelist="effa8c5f-6c3b-4d54-a762-1fa2732fe9ea" time="1385324276757" ignored="false" />
+    <file path="/NailedExtension.java" changelist="effa8c5f-6c3b-4d54-a762-1fa2732fe9ea" time="1385320513423" ignored="false" />
+    <file path="/dependencies.json" changelist="effa8c5f-6c3b-4d54-a762-1fa2732fe9ea" time="1385316156970" ignored="false" />
+    <file path="/BasePlugin.java" changelist="effa8c5f-6c3b-4d54-a762-1fa2732fe9ea" time="1385320857445" ignored="false" />
+    <file path="/DelayedBase.java" changelist="effa8c5f-6c3b-4d54-a762-1fa2732fe9ea" time="1385318387243" ignored="false" />
+    <file path="/DelayedString.java" changelist="effa8c5f-6c3b-4d54-a762-1fa2732fe9ea" time="1385318551796" ignored="false" />
+    <file path="/DelayedFile.java" changelist="effa8c5f-6c3b-4d54-a762-1fa2732fe9ea" time="1385318684650" ignored="false" />
+    <file path="/DelayedFileTree.java" changelist="effa8c5f-6c3b-4d54-a762-1fa2732fe9ea" time="1385318744023" ignored="false" />
+    <file path="/Constants.java" changelist="effa8c5f-6c3b-4d54-a762-1fa2732fe9ea" time="1385321946566" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,25 +149,22 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="NailedPlugin.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="NailedPlugin.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/NailedPlugin.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="25" column="4" selection-start="685" selection-end="685" vertical-scroll-proportion="0.41574278">
+            <state line="41" column="4" selection-start="1309" selection-end="1309" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#690#720#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LauncherExtension.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/LauncherExtension.java">
+      <file leaf-file-name="Constants.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/Constants.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="20" column="11" selection-start="346" selection-end="346" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state line="21" column="116" selection-start="655" selection-end="655" vertical-scroll-proportion="0.0">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -123,17 +172,95 @@
       <file leaf-file-name="build.gradle" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="9" column="0" selection-start="119" selection-end="119" vertical-scroll-proportion="0.0">
+            <state line="19" column="0" selection-start="412" selection-end="412" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DeployLauncherProfileTask.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="DelayedFile.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/delayed/DelayedFile.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="17" column="4" selection-start="381" selection-end="381" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#200#246#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DelayedFileTree.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/delayed/DelayedFileTree.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="44" column="0" selection-start="1343" selection-end="1343" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#519#563#0" expanded="true" />
+                <element signature="e#708#752#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="LauncherExtension.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/extension/LauncherExtension.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="28" column="0" selection-start="611" selection-end="611" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DeployLauncherProfileTask.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/tasks/DeployLauncherProfileTask.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="11" column="4" selection-start="184" selection-end="184" vertical-scroll-proportion="0.0">
-              <folding />
+            <state line="20" column="4" selection-start="473" selection-end="473" vertical-scroll-proportion="0.30875576">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BasePlugin.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/common/BasePlugin.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="64" column="46" selection-start="2154" selection-end="2154" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#1213#1382#0" expanded="true" />
+                <element signature="e#1371#1372#0" expanded="true" />
+                <element signature="e#1609#1827#0" expanded="true" />
+                <element signature="e#1816#1817#0" expanded="true" />
+                <element signature="e#1950#2178#0" expanded="true" />
+                <element signature="e#2167#2168#0" expanded="true" />
+                <element signature="e#2372#2402#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DelayedString.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/delayed/DelayedString.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="24" column="0" selection-start="566" selection-end="566" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="e#182#226#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="NailedExtension.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/extension/NailedExtension.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="24" column="4" selection-start="464" selection-end="464" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -144,6 +271,14 @@
     <FindUsagesManager>
       <setting name="OPEN_NEW_TAB" value="false" />
     </FindUsagesManager>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitLogSettings">
+    <option name="myDateState">
+      <MyDateState />
+    </option>
   </component>
   <component name="GradleLocalSettings">
     <option name="availableTasks">
@@ -212,20 +347,38 @@
     </option>
     <option name="expandStates">
       <map>
+        <entry key="ForgeGradle-1.0-SNAPSHOT/dependencies/buildSrc/buildSrc" value="false" />
         <entry key="buildSrc" value="true" />
         <entry key="buildSrc/buildSrc" value="true" />
         <entry key="dependencies/buildSrc/buildSrc" value="true" />
       </map>
     </option>
+    <option name="recentTasks">
+      <list>
+        <GradleTaskDescriptor>
+          <option name="executorId" value="Run" />
+          <option name="name" value="build" />
+        </GradleTaskDescriptor>
+      </list>
+    </option>
   </component>
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/build.gradle" />
         <option value="$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/tasks/DeployLauncherProfile.java" />
-        <option value="$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/tasks/DeployLauncherProfileTask.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/META-INF/gradle-plugins/nailed.properties" />
         <option value="$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/LauncherExtension.java" />
+        <option value="$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/delayed/DelayedBase.java" />
+        <option value="$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/delayed/DelayedString.java" />
+        <option value="$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/delayed/DelayedFile.java" />
+        <option value="$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/delayed/DelayedFileTree.java" />
+        <option value="$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/extension/NailedExtension.java" />
         <option value="$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/NailedPlugin.java" />
+        <option value="$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/common/BasePlugin.java" />
+        <option value="$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/extension/LauncherExtension.java" />
+        <option value="$PROJECT_DIR$/build.gradle" />
+        <option value="$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/Constants.java" />
+        <option value="$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/tasks/DeployLauncherProfileTask.java" />
       </list>
     </option>
   </component>
@@ -234,24 +387,22 @@
     <option name="LAST_EDITED_TAB_NAME" />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-218" />
-    <option name="y" value="-1028" />
-    <option name="width" value="1680" />
-    <option name="height" value="1028" />
+    <option name="width" value="1280" />
+    <option name="height" value="800" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
       <profile-state />
     </entry>
   </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
     <OptionsSetting value="true" id="Remove" />
     <OptionsSetting value="true" id="Checkout" />
     <OptionsSetting value="true" id="Update" />
     <OptionsSetting value="true" id="Status" />
     <OptionsSetting value="true" id="Edit" />
-    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="2" id="Add" />
     <ConfirmationsSetting value="0" id="Remove" />
   </component>
   <component name="ProjectReloadState">
@@ -270,12 +421,57 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
             <PATH_ELEMENT>
               <option name="myItemId" value="buildSrc" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="buildSrc" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ForgeGradle-1.0-SNAPSHOT" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ForgeGradle-1.0-SNAPSHOT.jar" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="buildSrc" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="External Libraries" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ForgeGradle-1.0-SNAPSHOT" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ForgeGradle-1.0-SNAPSHOT.jar" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gradle" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -285,6 +481,32 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="buildSrc" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="buildSrc" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="buildSrc" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gradle-plugins" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -344,30 +566,164 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="buildSrc" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="buildSrc" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gradle" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="extension" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="buildSrc" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="buildSrc" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gradle" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="delayed" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="buildSrc" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="buildSrc" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gradle" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="common" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="PackagesPane" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="project.structure.last.edited" value="Project" />
     <property name="GoToFile.includeJavaFiles" value="false" />
+    <property name="project.structure.proportion" value="0.15" />
     <property name="OverrideImplement.combined" value="true" />
-    <property name="GoToClass.toSaveIncludeLibraries" value="false" />
+    <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="recentsLimit" value="5" />
     <property name="MemberChooser.sorted" value="false" />
+    <property name="options.lastSelected" value="project.propVCSSupport.Mappings" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/build.gradle" />
+    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="MemberChooser.copyJavadoc" value="false" />
+    <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="FullScreen" value="true" />
     <property name="MemberChooser.showClasses" value="true" />
+    <property name="gradle.tool.window.active" value="Project" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="MemberChooser.copyJavadoc" value="false" />
+    <property name="dynamic.classpath" value="false" />
+    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Groovy.gradle:build">
+    <configuration default="false" name="gradle:build" type="GroovyScriptRunConfiguration" factoryName="Groovy" temporary="true">
+      <module name="buildSrc" />
+      <setting name="path" value="file://$PROJECT_DIR$/build.gradle" />
+      <setting name="vmparams" value="" />
+      <setting name="params" value="build" />
+      <setting name="workDir" value="file://$PROJECT_DIR$" />
+      <setting name="debug" value="false" />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method>
+        <option name="Make" enabled="false" />
+      </method>
+    </configuration>
+    <configuration default="true" type="GroovyScriptRunConfiguration" factoryName="Groovy">
+      <module name="" />
+      <setting name="path" value="" />
+      <setting name="vmparams" value="" />
+      <setting name="params" value="" />
+      <setting name="workDir" value="file://$PROJECT_DIR$" />
+      <setting name="debug" value="false" />
+      <method />
+    </configuration>
     <configuration default="true" type="Remote" factoryName="Remote">
       <option name="USE_SOCKET_TRANSPORT" value="true" />
       <option name="SERVER_MODE" value="false" />
       <option name="SHMEM_ADDRESS" value="javadebug" />
       <option name="HOST" value="localhost" />
       <option name="PORT" value="5005" />
+      <method />
+    </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
@@ -395,19 +751,6 @@
       <envs />
       <properties />
       <listeners />
-      <method />
-    </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -446,25 +789,35 @@
       <patterns />
       <method />
     </configuration>
-    <list size="0" />
+    <list size="1">
+      <item index="0" class="java.lang.String" itemvalue="Groovy.gradle:build" />
+    </list>
+    <recent_temporary>
+      <list size="1">
+        <item index="0" class="java.lang.String" itemvalue="Groovy.gradle:build" />
+      </list>
+    </recent_temporary>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
       <Host>localhost</Host>
       <Port>5050</Port>
     </configuration>
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
-  <component name="SvnConfiguration" maxAnnotateRevisions="500">
+  <component name="SvnConfiguration" maxAnnotateRevisions="500" myUseAcceleration="nothing" myAutoUpdateAfterCommit="false" cleanupOnStartRun="false" SSL_PROTOCOLS="sslv3">
     <option name="USER" value="" />
     <option name="PASSWORD" value="" />
+    <option name="mySSHConnectionTimeout" value="30000" />
+    <option name="mySSHReadTimeout" value="30000" />
     <option name="LAST_MERGED_REVISION" />
-    <option name="UPDATE_RUN_STATUS" value="false" />
     <option name="MERGE_DRY_RUN" value="false" />
     <option name="MERGE_DIFF_USE_ANCESTRY" value="true" />
     <option name="UPDATE_LOCK_ON_DEMAND" value="false" />
     <option name="IGNORE_SPACES_IN_MERGE" value="false" />
-    <option name="DETECT_NESTED_COPIES" value="true" />
+    <option name="CHECK_NESTED_FOR_QUICK_MERGE" value="false" />
     <option name="IGNORE_SPACES_IN_ANNOTATE" value="true" />
     <option name="SHOW_MERGE_SOURCES_IN_ANNOTATE" value="true" />
+    <option name="FORCE_UPDATE" value="false" />
+    <option name="IGNORE_EXTERNALS" value="false" />
     <myIsUseDefaultProxy>false</myIsUseDefaultProxy>
   </component>
   <component name="TaskManager">
@@ -476,32 +829,32 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-218" y="-1028" width="1680" height="1028" extended-state="6" />
-    <editor active="true" />
+    <frame x="0" y="0" width="1280" height="800" extended-state="0" />
+    <editor active="false" />
     <layout>
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32925338" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32901135" sideWeight="0.67094016" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="ASM" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Run with VisualVM" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="ASM" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run with VisualVM" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug with VisualVM" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Jenkins" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18849449" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug with VisualVM" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Jenkins" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18800648" sideWeight="0.67094016" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32905984" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -565,37 +918,108 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://$USER_HOME$/.gradle/wrapper/dists/gradle-1.8-bin/vruqmccc8532n7gr46qavsii8/gradle-1.8/lib/gradle-core-1.8.jar!/org/gradle/api/Plugin.class">
+    <entry file="file://$PROJECT_DIR$/src/main/resources/META-INF/gradle-plugins/nailed.properties">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="17" selection-start="161" selection-end="161" vertical-scroll-proportion="0.1155624">
+        <state line="1" column="0" selection-start="53" selection-end="53" vertical-scroll-proportion="0.035714287">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar://$USER_HOME$/.gradle/wrapper/dists/gradle-1.8-bin/vruqmccc8532n7gr46qavsii8/gradle-1.8/lib/gradle-core-1.8.jar!/org/gradle/api/plugins/ExtensionContainer.class">
+    <entry file="jar://$USER_HOME$/.gradle/wrapper/dists/gradle-1.8-bin/vruqmccc8532n7gr46qavsii8/gradle-1.8/lib/gradle-core-1.8.jar!/org/gradle/api/artifacts/repositories/ArtifactRepository.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="9" selection-start="315" selection-end="315" vertical-scroll-proportion="0.20524515">
+        <state line="10" column="38" selection-start="277" selection-end="277" vertical-scroll-proportion="0.20801233">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/build.gradle">
+    <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/net.minecraftforge.gradle/ForgeGradle/1.0-SNAPSHOT/jar/154bb5d82d982166b6715c2a2c2a59a2178e204b/ForgeGradle-1.0-SNAPSHOT.jar!/net/minecraftforge/gradle/CopyInto.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="0" selection-start="119" selection-end="119" vertical-scroll-proportion="0.0">
+        <state line="6" column="13" selection-start="168" selection-end="168" vertical-scroll-proportion="0.11792453">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/tasks/DeployLauncherProfileTask.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/delayed/DelayedString.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="4" selection-start="184" selection-end="184" vertical-scroll-proportion="0.0">
+        <state line="24" column="0" selection-start="566" selection-end="566" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="e#182#226#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/delayed/DelayedFile.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="17" column="4" selection-start="381" selection-end="381" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#200#246#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/net.minecraftforge.gradle/ForgeGradle/1.0-SNAPSHOT/jar/154bb5d82d982166b6715c2a2c2a59a2178e204b/ForgeGradle-1.0-SNAPSHOT.jar!/net/minecraftforge/gradle/ZipFileTree.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="11" selection-start="302" selection-end="302" vertical-scroll-proportion="0.19575857">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/LauncherExtension.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/delayed/DelayedFileTree.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="11" selection-start="346" selection-end="346" vertical-scroll-proportion="0.0">
+        <state line="44" column="0" selection-start="1343" selection-end="1343" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#519#563#0" expanded="true" />
+            <element signature="e#708#752#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/artifacts-26/filestore/net.minecraftforge.gradle/ForgeGradle/1.0-SNAPSHOT/jar/154bb5d82d982166b6715c2a2c2a59a2178e204b/ForgeGradle-1.0-SNAPSHOT.jar!/net/minecraftforge/gradle/user/UserConstants.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="34" selection-start="522" selection-end="522" vertical-scroll-proportion="0.24469821">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/common/BasePlugin.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="64" column="46" selection-start="2154" selection-end="2154" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1213#1382#0" expanded="true" />
+            <element signature="e#1371#1372#0" expanded="true" />
+            <element signature="e#1609#1827#0" expanded="true" />
+            <element signature="e#1816#1817#0" expanded="true" />
+            <element signature="e#1950#2178#0" expanded="true" />
+            <element signature="e#2167#2168#0" expanded="true" />
+            <element signature="e#2372#2402#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/extension/LauncherExtension.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="28" column="0" selection-start="611" selection-end="611" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/extension/NailedExtension.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="24" column="4" selection-start="464" selection-end="464" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/delayed/DelayedBase.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="22" selection-start="304" selection-end="304" vertical-scroll-proportion="-0.55172414">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -604,14 +1028,115 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/NailedPlugin.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="25" column="4" selection-start="685" selection-end="685" vertical-scroll-proportion="0.41574278">
+        <state line="41" column="4" selection-start="1309" selection-end="1309" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#690#720#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="19" column="0" selection-start="412" selection-end="412" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/Constants.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="21" column="116" selection-start="655" selection-end="655" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/jk_5/nailed/gradle/tasks/DeployLauncherProfileTask.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="20" column="4" selection-start="473" selection-end="473" vertical-scroll-proportion="0.30875576">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="Copyright.UI" />
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>No facets are configured</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>groovy-2.1.6</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.6</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>buildSrc</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectJDKs.UI" />
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>6975da39a7040257bd51d21a231b76c915872d38-javax.inject-1.jar-javax.inject-1</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ScopeChooserConfigurable.UI" />
+    </states>
   </component>
 </project>
 

@@ -6,7 +6,7 @@ import jk_5.nailed.NailedModContainer;
 import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.map.gen.NailedWorldProvider;
-import jk_5.nailed.network.packets.PacketRegisterDimension;
+import jk_5.nailed.server.ProxyCommon;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.NetLoginHandler;
@@ -45,7 +45,7 @@ public class NailedConnectionHandler implements IConnectionHandler {
     @Override
     public String connectionReceived(NetLoginHandler netHandler, INetworkManager manager){
         for(Map map : MapLoader.instance().getMaps()){
-            if(map.getID() < 1 || map.getID() > 1) manager.addToSendQueue(new PacketRegisterDimension(map.getID()).getPacket());
+            if(map.getID() < 1 || map.getID() > 1) NailedSPH.sendRegisterDimension(netHandler.getPlayer(), map.getID(), ProxyCommon.providerID);
         }
         return null;
     }
