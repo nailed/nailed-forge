@@ -10,7 +10,12 @@ import lombok.Setter;
  */
 public class NailedAPI {
 
+    /**
+     * If you want to register an custom mappack, use this
+     */
     @Getter
     @Setter
-    private IMappackRegistrar mappackRegistrar;
+    private static IMappackRegistrar mappackRegistrar;
+
+
 }

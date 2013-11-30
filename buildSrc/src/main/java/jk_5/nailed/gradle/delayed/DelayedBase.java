@@ -64,7 +64,7 @@ public abstract class DelayedBase<V> extends Closure<V> {
         String mcVersion = minecraftExtension.getVersion().split("-")[0];
 
         patern = patern.replace("{MC_VERSION}", mcVersion);
-        patern = patern.replace("{CACHE_DIR}", project.getGradle().getGradleUserHomeDir().getAbsolutePath().replace('\\', '/') + "/caches");
+        patern = patern.replace("{CACHE_DIR}", project.getGradle().getGradleUserHomeDir().getAbsolutePath().replace('\\', '/') + "/caches/nailed-forge");
         patern = patern.replace("{BUILD_DIR}", project.getBuildDir().getAbsolutePath().replace('\\', '/'));
         patern = patern.replace("{BUILD_NUM}", build);
         patern = patern.replace("{PROJECT}", project.getName());

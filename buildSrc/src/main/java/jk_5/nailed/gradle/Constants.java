@@ -1,6 +1,10 @@
 package jk_5.nailed.gradle;
 
 import argo.jdom.JdomParser;
+import com.google.common.collect.Lists;
+import com.google.gson.JsonObject;
+
+import java.util.List;
 
 /**
  * No description given
@@ -8,8 +12,6 @@ import argo.jdom.JdomParser;
  * @author jk-5
  */
 public class Constants {
-
-    public static final JdomParser PARSER = new JdomParser();
 
     public static final String NAILED_EXTENSION = "nailed";
     public static final String NAILED_LAUNCHER_EXTENSION = "nailedLauncher";

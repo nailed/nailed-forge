@@ -12,6 +12,7 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkMod.VersionCheckHandler;
 import jk_5.nailed.achievement.NailedAchievements;
+import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.blocks.NailedBlocks;
 import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.map.gen.NailedWorldProvider;
@@ -52,7 +53,7 @@ public class NailedModContainer {
     @Getter private static Collection<Integer> registeredDimensions;
 
     public NailedModContainer(){
-
+        NailedAPI.setMappackRegistrar(MapLoader.instance());
     }
 
     @EventHandler

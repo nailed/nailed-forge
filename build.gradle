@@ -29,6 +29,7 @@ configurations{
     packed
     compile.extendsFrom packed
     deployerJars
+    launcher
 }
 
 dependencies {
@@ -40,11 +41,14 @@ dependencies {
     testCompile 'junit:junit:4.11'
 
     deployerJars 'org.apache.maven.wagon:wagon-ssh:2.2'
+
+    launcher 'jk_5.nailed:launcher:1.0'
+    launcher 'jk_5.nailed.deploy:forge:1.0'
+    launcher 'jk_5.nailed.deploy:minecraft:1.0'
 }
 
 nailed {
     minecraftVersion = '1.6.4'
-    jsonLocation = 'dependencies.json'
 }
 
 /*nailedInstaller {
@@ -52,7 +56,20 @@ nailed {
 }*/
 
 nailedLauncher {
-    version = '1.0'
+    versionName = 'Nailed-2.0'
+    mainClass = 'net.minecraft.launchwrapper.Launch'
+
+    loadingMavenUrl = 'http://maven.reening.nl/'
+    loadingDependencies = configurations.launcher
+
+    tweakers += 'jk_5.nailed.launcher.UpdatingTweaker'
+    tweakers += 'cpw.mods.fml.common.launcher.FMLTweaker'
+
+    remoteProfileDir = 'nailed/'
+
+    deployHost = 'maven.reening.nl'
+    deployUsername = 'maven'
+    deployPassword = deployPassword
 }
 
 jar {

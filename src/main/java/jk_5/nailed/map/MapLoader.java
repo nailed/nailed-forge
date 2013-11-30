@@ -2,6 +2,7 @@ package jk_5.nailed.map;
 
 import com.google.common.collect.Lists;
 import jk_5.nailed.NailedLog;
+import jk_5.nailed.api.IMappackRegistrar;
 import jk_5.nailed.map.mappack.DirectoryMappack;
 import jk_5.nailed.map.mappack.Mappack;
 import jk_5.nailed.map.mappack.ZipMappack;
@@ -22,7 +23,7 @@ import java.util.zip.ZipFile;
  *
  * @author jk-5
  */
-public class MapLoader {
+public class MapLoader implements IMappackRegistrar {
 
     private static final MapLoader INSTANCE = new MapLoader();
     @SuppressWarnings("unused") @Getter private static final File mappackFolder = new File("mappacks");
@@ -147,5 +148,10 @@ public class MapLoader {
         Map map = this.getMap(event.world.provider.dimensionId);
         if(map == null) return;
         map.setWorld(event.world);
+    }
+
+    @Override
+    public void registerMappack(Mappack mappack) {
+        this.mappacks.add(mappack);
     }
 }

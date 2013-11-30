@@ -21,10 +21,6 @@ public class NailedExtension {
 
     @Getter
     @Setter
-    private String jsonLocation = null;
-
-    @Getter
-    @Setter
     private String minecraftVersion = null;
 
     public NailedExtension(Project project){

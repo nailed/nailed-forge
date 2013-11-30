@@ -16,4 +16,5 @@ dependencies {
     compile 'com.google.guava:guava:14.0'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'net.minecraftforge.gradle:ForgeGradle:1.0-SNAPSHOT'
+    compile 'com.jcraft:jsch:0.1.50'
 }
