@@ -14,7 +14,7 @@ import java.io.File;
 public interface Mappack {
 
     /**
-     * @return A unique, name for this mappack
+     * @return An unique name for this mappack
      */
     String getMappackID();
 

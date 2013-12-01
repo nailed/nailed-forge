@@ -15,12 +15,14 @@ import java.util.Map;
 @Name("Nailed|Core")
 @MCVersion("1.6.4")
 @TransformerExclusions({"jk_5.nailed.coremod.transformers."})
+@SuppressWarnings("unused")
 public class NailedFMLPlugin implements IFMLLoadingPlugin {
 
     @Override
     public String[] getASMTransformerClass() {
         return new String[]{
                 //"jk_5.nailed.coremod.transformers.PacketTransformer",
+                "jk_5.nailed.coremod.transformers.MinecraftServerTransformer",
                 "jk_5.nailed.coremod.transformers.NailedAccessTransformer"
         };
     }

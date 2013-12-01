@@ -10,6 +10,7 @@ import jk_5.nailed.map.instruction.InstructionParseException;
 import jk_5.nailed.util.config.ConfigFile;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
@@ -66,8 +67,13 @@ public class DirectoryMappack implements Mappack {
     public File prepareWorld(File destinationDir) {
         File world = new File(this.mappackFolder, "world");
         if(world.isDirectory() && world.exists()){
-            world.renameTo(destinationDir);
-            return destinationDir;
+            try{
+                FileUtils.copyDirectory(world, destinationDir);
+                return destinationDir;
+            }catch(IOException e){
+                e.printStackTrace();
+                return null;
+            }
         }
         return null;
     }
