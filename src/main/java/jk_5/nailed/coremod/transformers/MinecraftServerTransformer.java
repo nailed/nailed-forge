@@ -40,11 +40,6 @@ public class MinecraftServerTransformer implements IClassTransformer {
         }
         while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKESPECIAL) offset ++;
 
-        System.out.println("----------------------------------BEFORE");
-        System.out.println(ASMHelper.printInsnList(mnode.instructions));
-
-        //mnode.instructions.remove(mnode.instructions.get(offset - 2));
-
         InsnList list = new InsnList();
         list.add(new VarInsnNode(Opcodes.ALOAD, 0));
         list.add(new TypeInsnNode(Opcodes.NEW, "java/io/File"));
@@ -62,9 +57,6 @@ public class MinecraftServerTransformer implements IClassTransformer {
         while(mnode.instructions.get(offset).getOpcode() != Opcodes.ALOAD) offset ++;
         VarInsnNode varNode = (VarInsnNode) mnode.instructions.get(offset);
         varNode.var = 5;
-
-        System.out.println("----------------------------------AFTER");
-        System.out.println(ASMHelper.printInsnList(mnode.instructions));
 
         mnode = ASMHelper.findMethod(new ObfMapping("net/minecraft/server/MinecraftServer", "loadAllWorlds", "(Ljava/lang/String;Ljava/lang/String;JLnet/minecraft/world/WorldType;Ljava/lang/String;)V"), cnode);
         offset = 0;
@@ -89,6 +81,66 @@ public class MinecraftServerTransformer implements IClassTransformer {
         list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, MAP_CLASS, "getSaveFileName", "()Ljava/lang/String;"));
 
         mnode.instructions.insertBefore(mnode.instructions.get(offset), list);
+
+        list.clear();
+
+        while(!(mnode.instructions.get(offset).getOpcode() == Opcodes.INVOKESTATIC && ((MethodInsnNode) mnode.instructions.get(offset)).name.equals("getStaticDimensionIDs"))){
+            AbstractInsnNode node = mnode.instructions.get(offset);
+            if(node.getOpcode() == Opcodes.ALOAD){
+                VarInsnNode vnode = (VarInsnNode) node;
+                if(vnode.var == 2){
+                    list.add(new VarInsnNode(Opcodes.ALOAD, 12));
+                    list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, MAP_CLASS, "getSaveFileName", "()Ljava/lang/String;"));
+                    mnode.instructions.insert(vnode, list);
+                    mnode.instructions.remove(vnode);
+                    list.clear();
+                }
+            }
+            offset ++;
+        }
+
+        System.out.println("----------------------------------BEFORE");
+        System.out.println(ASMHelper.printInsnList(mnode.instructions));
+
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.IF_ICMPGE) offset ++;
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.ILOAD) offset ++;
+        offset ++;
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.ILOAD) offset ++;
+
+        list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "jk_5/nailed/map/MapLoader", "instance", "()Ljk_5/nailed/map/MapLoader;"));
+        list.add(new VarInsnNode(Opcodes.ILOAD, 14));
+        list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "jk_5/nailed/map/MapLoader", "getMap", "(I)Ljk_5/nailed/map/Map;"));
+        list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "jk_5/nailed/map/Map", "getSaveFileName", "()Ljava/lang/String;"));
+        list.add(new VarInsnNode(Opcodes.ASTORE, 17));
+
+        mnode.instructions.insertBefore(mnode.instructions.get(offset), list);
+        list.clear();
+
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.NEW) offset ++;
+        TypeInsnNode newMulti = (TypeInsnNode) mnode.instructions.get(offset);
+        newMulti.desc = "new/minecraft/world/WorldServer";
+
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.ALOAD) offset ++;
+        offset ++;
+
+        list.add(new VarInsnNode(Opcodes.ALOAD, 0));
+        list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/server/MinecraftServer", "anvilConverterForAnvilFile", "Lnet/minecraft/world/storage/ISaveFormat;"));
+        list.add(new VarInsnNode(Opcodes.ALOAD, 17));
+        list.add(new InsnNode(Opcodes.ICONST_1));
+        list.add(new MethodInsnNode(Opcodes.INVOKEINTERFACE, "net/minecraft/world/storage/ISaveFormat", "getSaveLoader", "(Ljava/lang/String;Z)Lnet/minecraft/world/storage/ISaveHandler;"));
+        //list.add(new VarInsnNode(Opcodes.ALOAD, 12));
+        //list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, MAP_CLASS, "getSaveFileName", "()Ljava/lang/String;"));
+
+        mnode.instructions.insert(mnode.instructions.get(offset), list);
+        mnode.instructions.remove(mnode.instructions.get(offset));
+        list.clear();
+
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKESPECIAL) offset ++;
+        MethodInsnNode initMulti = (MethodInsnNode) mnode.instructions.get(offset);
+        initMulti.owner = "new/minecraft/world/WorldServer";
+
+        System.out.println("----------------------------------AFTER");
+        System.out.println(ASMHelper.printInsnList(mnode.instructions));
 
         return ASMHelper.createBytes(cnode, ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
     }
