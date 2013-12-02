@@ -7,6 +7,7 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
@@ -82,17 +83,20 @@ public class NailedModContainer {
         DimensionManager.registerProviderType(-1, NailedWorldProvider.class, false);
         DimensionManager.registerProviderType(0, NailedWorldProvider.class, true);
         DimensionManager.registerProviderType(1, NailedWorldProvider.class, false);
-
-        MinecraftForge.EVENT_BUS.post(new RegisterInstructionEvent(InstructionReader.instance().getInstructionMap()));
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event){
-        NailedLog.info("Initializing Nailed");
-        MapLoader.instance().loadMappacks();
+        MinecraftForge.EVENT_BUS.post(new RegisterInstructionEvent(InstructionReader.instance().getInstructionMap()));
 
         NailedLog.info("Registering achievements");
         NailedAchievements.init();
+    }
+
+    @EventHandler
+    public void postInit(FMLPostInitializationEvent event){
+        NailedLog.info("Loading the mappacks");
+        MapLoader.instance().loadMappacks();
     }
 
     @EventHandler

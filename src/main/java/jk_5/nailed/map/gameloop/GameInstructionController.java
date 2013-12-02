@@ -12,7 +12,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * No description given
@@ -57,7 +56,7 @@ public class GameInstructionController extends Thread implements GameController 
         IInstruction current = null;
         Iterator<IInstruction> iterator = this.instructions.iterator();
         try{
-            while(this.isRunning() && this.winner == null && (this.isPaused() ? true : iterator.hasNext())){
+            while(this.isRunning() && this.winner == null && (this.isPaused() || iterator.hasNext())){
                 current = this.isPaused() ? current : iterator.next();
                 if(current instanceof TimedInstruction){
                     int ticks = 0;

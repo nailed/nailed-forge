@@ -15,7 +15,5 @@ public class NailedAPI {
      */
     @Getter
     @Setter
-    private static IMappackRegistrar mappackRegistrar;
-
-
+    private static IMappackRegistrar mappackRegistrar = new NoopMappackRegistrar();
 }

@@ -46,6 +46,7 @@ public class TeleportHelper {
         if(newWorld == null){
             NailedLog.severe(new NullPointerException(), "Could not link entity %s to map %d, world object was not found", entity, toDimension);
             if(entity instanceof ICommandSender) ((ICommandSender) entity).sendChatToPlayer(ChatMessageComponent.createFromText("Could not teleport you to the map, it\'s world object was null. Look at the server log for more info").setColor(EnumChatFormatting.RED));
+            return;
         }
         if(coords == null){
             coords = newWorld.getSpawnPoint();

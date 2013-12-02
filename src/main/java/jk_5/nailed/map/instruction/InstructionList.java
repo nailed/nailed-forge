@@ -14,6 +14,8 @@ import java.util.List;
  */
 public class InstructionList extends ForwardingList<IInstruction> {
 
+    private final List<IInstruction> instructions = Lists.newArrayList();
+
     public static InstructionList readFrom(BufferedReader reader) throws InstructionParseException, MappackInitializationException{
         return InstructionReader.instance().readInstructions(reader);
     }
@@ -28,6 +30,6 @@ public class InstructionList extends ForwardingList<IInstruction> {
 
     @Override
     public List<IInstruction> delegate(){
-        return Lists.newArrayList();
+        return this.instructions;
     }
 }
