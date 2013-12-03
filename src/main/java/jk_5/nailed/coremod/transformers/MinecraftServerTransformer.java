@@ -99,9 +99,6 @@ public class MinecraftServerTransformer implements IClassTransformer {
             offset ++;
         }
 
-        System.out.println("----------------------------------BEFORE");
-        System.out.println(ASMHelper.printInsnList(mnode.instructions));
-
         while(mnode.instructions.get(offset).getOpcode() != Opcodes.IF_ICMPGE) offset ++;
         while(mnode.instructions.get(offset).getOpcode() != Opcodes.ILOAD) offset ++;
         offset ++;
@@ -118,7 +115,7 @@ public class MinecraftServerTransformer implements IClassTransformer {
 
         while(mnode.instructions.get(offset).getOpcode() != Opcodes.NEW) offset ++;
         TypeInsnNode newMulti = (TypeInsnNode) mnode.instructions.get(offset);
-        newMulti.desc = "new/minecraft/world/WorldServer";
+        newMulti.desc = "net/minecraft/world/WorldServer";
 
         while(mnode.instructions.get(offset).getOpcode() != Opcodes.ALOAD) offset ++;
         offset ++;
@@ -128,16 +125,20 @@ public class MinecraftServerTransformer implements IClassTransformer {
         list.add(new VarInsnNode(Opcodes.ALOAD, 17));
         list.add(new InsnNode(Opcodes.ICONST_1));
         list.add(new MethodInsnNode(Opcodes.INVOKEINTERFACE, "net/minecraft/world/storage/ISaveFormat", "getSaveLoader", "(Ljava/lang/String;Z)Lnet/minecraft/world/storage/ISaveHandler;"));
-        //list.add(new VarInsnNode(Opcodes.ALOAD, 12));
-        //list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, MAP_CLASS, "getSaveFileName", "()Ljava/lang/String;"));
+        list.add(new VarInsnNode(Opcodes.ALOAD, 17));
 
         mnode.instructions.insert(mnode.instructions.get(offset), list);
         mnode.instructions.remove(mnode.instructions.get(offset));
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKEINTERFACE) offset ++;
+        mnode.instructions.remove(mnode.instructions.get(offset + 2));
+        mnode.instructions.remove(mnode.instructions.get(offset + 4));
         list.clear();
 
         while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKESPECIAL) offset ++;
         MethodInsnNode initMulti = (MethodInsnNode) mnode.instructions.get(offset);
-        initMulti.owner = "new/minecraft/world/WorldServer";
+        initMulti.owner = "net/minecraft/world/WorldServer";
+        initMulti.name = "<init>";
+        initMulti.desc = "(Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/world/storage/ISaveHandler;Ljava/lang/String;ILnet/minecraft/world/WorldSettings;Lnet/minecraft/profiler/Profiler;Lnet/minecraft/logging/ILogAgent;)V";
 
         System.out.println("----------------------------------AFTER");
         System.out.println(ASMHelper.printInsnList(mnode.instructions));
