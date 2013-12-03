@@ -140,9 +140,6 @@ public class MinecraftServerTransformer implements IClassTransformer {
         initMulti.name = "<init>";
         initMulti.desc = "(Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/world/storage/ISaveHandler;Ljava/lang/String;ILnet/minecraft/world/WorldSettings;Lnet/minecraft/profiler/Profiler;Lnet/minecraft/logging/ILogAgent;)V";
 
-        System.out.println("----------------------------------AFTER");
-        System.out.println(ASMHelper.printInsnList(mnode.instructions));
-
         return ASMHelper.createBytes(cnode, ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
     }
 }
