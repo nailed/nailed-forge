@@ -62,7 +62,6 @@ public class TeleportHelper {
     private static Entity teleportEntity(World newWorld, Entity entity, int toDimension, ChunkCoordinates spawnCoords, float yaw, TeleportOptions options){
         if(!TeleportEventFactory.isTeleportationPermitted(entity.worldObj, entity, options)) return null;
         Entity mount = entity.ridingEntity;
-        EntityPlayerMP player = null;
         if(mount != null){
             entity.mountEntity(null);
             mount = teleportEntity(newWorld, entity, toDimension, spawnCoords, yaw, options);
@@ -71,7 +70,7 @@ public class TeleportHelper {
         TeleportEventFactory.onStartTeleport(entity.worldObj, entity, options);
         entity.worldObj.updateEntityWithOptionalForce(entity, false);
         if(entity instanceof EntityPlayerMP){
-            player = (EntityPlayerMP) entity;
+            EntityPlayerMP player = (EntityPlayerMP) entity;
             player.closeScreen();
             if(changingWorlds){
                 player.dimension = toDimension;
@@ -83,23 +82,15 @@ public class TeleportHelper {
             }
         }
         if(changingWorlds){
-            removeEntityFromWorld(entity.worldObj, entity, true);
+            removeEntityFromWorld(entity.worldObj, entity);
         }
         TeleportEventFactory.onExitWorld(entity, options);
-        //FIXME
-        /////entity.setLocationAndAngles(spawnCoords.posX + 0.5D, spawnCoords.posY, spawnCoords.posZ + 0.5D, yaw, entity.rotationPitch);
-        /////((WorldServer) newWorld).theChunkProviderServer.loadChunk(spawnCoords.posX >> 4, spawnCoords.posZ >> 4);
-        //while(getCollidingWorldGeometry(newWorld, entity).size() != 0){
-        //    spawnCoords.posY ++;
-        //    entity.setPosition(spawnCoords.posX + 0.5D, spawnCoords.posY, spawnCoords.posZ + 0.5D);
-        //}
-        if(changingWorlds){
-            if(entity instanceof EntityPlayerMP){
-                player = (EntityPlayerMP) player;
-                entity.setLocationAndAngles(spawnCoords.posX + 0.5D, spawnCoords.posY, spawnCoords.posZ + 0.5D, yaw, entity.rotationPitch);
-                ((WorldServer) newWorld).theChunkProviderServer.loadChunk(spawnCoords.posX >> 4, spawnCoords.posZ >> 4);
-                entity.setPosition(spawnCoords.posX + 0.5D, spawnCoords.posY, spawnCoords.posZ + 0.5D);
-            }
+
+        entity.setLocationAndAngles(spawnCoords.posX + 0.5D, spawnCoords.posY, spawnCoords.posZ + 0.5D, yaw, entity.rotationPitch);
+        ((WorldServer) newWorld).theChunkProviderServer.loadChunk(spawnCoords.posX >> 4, spawnCoords.posZ >> 4);
+        while(getCollidingWorldGeometry(newWorld, entity).size() != 0){
+            spawnCoords.posY ++;
+            entity.setPosition(spawnCoords.posX + 0.5D, spawnCoords.posY, spawnCoords.posZ + 0.5D);
         }
         if(changingWorlds){
             if(!(entity instanceof EntityPlayer)){
@@ -114,23 +105,21 @@ public class TeleportHelper {
             newWorld.spawnEntityInWorld(entity);
             entity.setWorld(newWorld);
         }
-        if(changingWorlds && entity instanceof EntityPlayer){
-            entity.setLocationAndAngles(spawnCoords.posX + 0.5D, spawnCoords.posY, spawnCoords.posZ + 0.5D, yaw, entity.rotationPitch);
-        }
+        entity.setLocationAndAngles(spawnCoords.posX + 0.5D, spawnCoords.posY, spawnCoords.posZ + 0.5D, yaw, entity.rotationPitch);
         TeleportEventFactory.onEnterWorld((WorldServer) newWorld, entity, options);
         newWorld.updateEntityWithOptionalForce(entity, false);
         if(changingWorlds && entity instanceof EntityPlayer){
             entity.setLocationAndAngles(spawnCoords.posX + 0.5D, spawnCoords.posY, spawnCoords.posZ + 0.5D, yaw, entity.rotationPitch);
         }
         if(entity instanceof EntityPlayerMP){
-            player = (EntityPlayerMP) entity;
+            EntityPlayerMP player = (EntityPlayerMP) entity;
+            ((WorldServer) entity.worldObj).getPlayerManager().addPlayer(player);
             if(changingWorlds) player.mcServer.getConfigurationManager().func_72375_a(player, (WorldServer) newWorld);
-            //((WorldServer) entity.worldObj).getPlayerManager().addPlayer(player);
             player.playerNetServerHandler.setPlayerLocation(spawnCoords.posX + 0.5D, spawnCoords.posY, spawnCoords.posZ + 0.5D, player.rotationYaw, player.rotationPitch);
         }
         newWorld.updateEntityWithOptionalForce(entity, false);
         if(entity instanceof EntityPlayerMP && changingWorlds){
-            player = (EntityPlayerMP) entity;
+            EntityPlayerMP player = (EntityPlayerMP) entity;
             player.theItemInWorldManager.setWorld((WorldServer) newWorld);
             player.mcServer.getConfigurationManager().updateTimeAndWeatherForPlayer(player, (WorldServer) newWorld);
             player.mcServer.getConfigurationManager().syncPlayerInventory(player);
@@ -139,9 +128,7 @@ public class TeleportHelper {
             }
             player.playerNetServerHandler.sendPacketToPlayer(new Packet43Experience(player.experience, player.experienceTotal, player.experienceLevel));
         }
-        if(entity instanceof EntityPlayerMP){
-            entity.setLocationAndAngles(spawnCoords.posX + 0.5D, spawnCoords.posY, spawnCoords.posZ + 0.5D, yaw, entity.rotationPitch);
-        }
+        entity.setLocationAndAngles(spawnCoords.posX + 0.5D, spawnCoords.posY, spawnCoords.posZ + 0.5D, yaw, entity.rotationPitch);
         TeleportEventFactory.onEndTeleport((WorldServer) newWorld, entity, options);
         if(mount != null){
             if(entity instanceof EntityPlayerMP){
@@ -152,7 +139,7 @@ public class TeleportHelper {
         return entity;
     }
 
-    private static void removeEntityFromWorld(World world, Entity entity, boolean directlyRemove){
+    private static void removeEntityFromWorld(World world, Entity entity){
         if(entity instanceof EntityPlayer){
             EntityPlayer player = (EntityPlayer) entity;
             player.closeScreen();
@@ -164,10 +151,8 @@ public class TeleportHelper {
                 world.getChunkFromChunkCoords(chunkX, chunkZ).removeEntity(entity);
                 world.getChunkFromChunkCoords(chunkX, chunkZ).isModified = true;
             }
-            if(directlyRemove){
-                world.loadedEntityList.remove(entity);
-                world.onEntityRemoved(entity);
-            }
+            world.loadedEntityList.remove(entity);
+            world.onEntityRemoved(entity);
         }
         entity.isDead = true;
     }
