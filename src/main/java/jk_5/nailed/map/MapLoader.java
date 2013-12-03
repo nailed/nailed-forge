@@ -146,8 +146,7 @@ public class MapLoader implements IMappackRegistrar {
     @SuppressWarnings("unused")
     public void onWorldLoad(WorldEvent.Load event){
         Map map = this.getMap(event.world.provider.dimensionId);
-        if(map == null) return;
-        map.setWorld(event.world);
+        if(map != null) map.setWorld(event.world);
     }
 
     @Override

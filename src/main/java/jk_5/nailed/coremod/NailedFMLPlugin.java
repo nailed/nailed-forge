@@ -23,7 +23,8 @@ public class NailedFMLPlugin implements IFMLLoadingPlugin {
         //if(FMLCommonHandler.instance().getSide().isClient()) return new String[0];
         return new String[]{
                 //"jk_5.nailed.coremod.transformers.PacketTransformer",
-                "jk_5.nailed.coremod.transformers.MinecraftServerTransformer"
+                "jk_5.nailed.coremod.transformers.MinecraftServerTransformer",
+                "jk_5.nailed.coremod.transformers.DimensionManagerTransformer"
         };
     }
 

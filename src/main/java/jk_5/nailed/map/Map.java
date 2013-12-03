@@ -37,7 +37,7 @@ public class Map {
         DimensionManager.registerDimension(this.getID(), ProxyCommon.providerID);
         DimensionManager.initDimension(this.getID());
 
-        this.setWorld(DimensionManager.getWorld(this.getID()));
+        //this.setWorld(DimensionManager.getWorld(this.getID()));
 
         NailedSPH.broadcastRegisterDimension(this.getID());
     }

@@ -1,7 +1,8 @@
 package jk_5.nailed.map.teleport;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import jk_5.nailed.map.Map;
+import jk_5.nailed.players.Player;
+import jk_5.nailed.players.PlayerRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.player.EntityPlayer;
@@ -39,6 +40,10 @@ public class TeleportListener {
             event.entity.motionZ = 0;
         }else if(event.entity instanceof EntityPlayer){
             GameRegistry.onPlayerChangedDimension((EntityPlayer) event.entity);
+
+            //FIXME!
+            Player player = PlayerRegistry.instance().getPlayer(((EntityPlayer) event.entity).username);
+            player.sendNotification("You just teleported. Relog to fix the bugs!");
         }
     }
 

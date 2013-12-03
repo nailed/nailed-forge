@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatMessageComponent;
 
 /**
  * No description given
@@ -25,6 +26,14 @@ public class Player {
 
     public void sendNotification(String message){
         NailedSPH.sendNotification(this.getEntity(), message);
+    }
+
+    public void sendChat(String message){
+        this.sendChat(ChatMessageComponent.createFromText(message));
+    }
+
+    public void sendChat(ChatMessageComponent message){
+        this.getEntity().sendChatToPlayer(message);
     }
 
     public EntityPlayerMP getEntity(){
