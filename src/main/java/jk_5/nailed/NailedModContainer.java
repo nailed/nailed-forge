@@ -21,6 +21,7 @@ import jk_5.nailed.map.instruction.InstructionReader;
 import jk_5.nailed.map.instruction.RegisterInstructionEvent;
 import jk_5.nailed.server.ProxyCommon;
 import jk_5.nailed.server.command.CommandGoto;
+import jk_5.nailed.server.command.CommandTeam;
 import jk_5.nailed.util.config.ConfigFile;
 import lombok.Getter;
 import net.minecraftforge.common.DimensionManager;
@@ -102,6 +103,7 @@ public class NailedModContainer {
     @EventHandler
     public void serverStarting(FMLServerStartingEvent event){
         event.registerServerCommand(new CommandGoto());
+        event.registerServerCommand(new CommandTeam());
     }
 
     @VersionCheckHandler

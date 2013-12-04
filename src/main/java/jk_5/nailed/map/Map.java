@@ -1,13 +1,15 @@
 package jk_5.nailed.map;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
+import com.google.common.base.Preconditions;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.map.mappack.Mappack;
 import jk_5.nailed.map.teleport.TeleportOptions;
 import jk_5.nailed.network.NailedSPH;
+import jk_5.nailed.players.Player;
+import jk_5.nailed.players.PlayerRegistry;
 import jk_5.nailed.server.ProxyCommon;
 import lombok.Getter;
-import net.minecraft.network.packet.Packet3Chat;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
@@ -23,6 +25,7 @@ public class Map {
     @Getter private final Mappack mappack;
     @Getter private World world;
     @Getter private boolean isLoaded = false;
+    @Getter private final TeamManager teamManager = new TeamManager(this);
 
     public Map(Mappack mappack, int id){
         this.ID = id;
@@ -37,17 +40,11 @@ public class Map {
         DimensionManager.registerDimension(this.getID(), ProxyCommon.providerID);
         DimensionManager.initDimension(this.getID());
 
-        //this.setWorld(DimensionManager.getWorld(this.getID()));
-
         NailedSPH.broadcastRegisterDimension(this.getID());
     }
 
-    public void sendMessageToAllPlayers(String message){
-        PacketDispatcher.sendPacketToAllPlayers(new Packet3Chat(message));
-    }
-
     public void setWorld(World world){
-        if(world == null) throw new NullPointerException("World should not be null!");
+        Preconditions.checkNotNull(world);
         this.world = world;
         if(world.provider != null) this.ID = world.provider.dimensionId;
         this.isLoaded = true;
@@ -60,5 +57,17 @@ public class Map {
 
     public TeleportOptions getSpawnTeleport(){
         return new TeleportOptions(this, new ChunkCoordinates(this.mappack.getMappackMetadata().getSpawnPoint()), 0);
+    }
+
+    public void broadcastChatMessage(ChatMessageComponent message){
+        for(Player player : PlayerRegistry.instance().getPlayers()){
+            if(player.getCurrentMap() == this){
+                player.sendChat(message);
+            }
+        }
+    }
+
+    public void broadcastChatMessage(String message){
+        this.broadcastChatMessage(ChatMessageComponent.createFromText(message));
     }
 }

@@ -1,10 +1,12 @@
 package jk_5.nailed.players;
 
+import jk_5.nailed.map.Map;
 import jk_5.nailed.network.NailedSPH;
 import jk_5.nailed.util.ChatColor;
 import jk_5.nailed.util.Utils;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatMessageComponent;
@@ -17,8 +19,8 @@ import net.minecraft.util.ChatMessageComponent;
 @RequiredArgsConstructor
 public class Player {
 
-    @Getter
-    private final String username;
+    @Getter private final String username;
+    @Getter @Setter private Map currentMap;
 
     public void setTimeLeft(int seconds){
         NailedSPH.sendTimeUpdate(this.getEntity(), "Time left: " + ChatColor.GREEN + Utils.secondsToShortTimeString(seconds));
@@ -38,5 +40,37 @@ public class Player {
 
     public EntityPlayerMP getEntity(){
         return MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(this.username);
+    }
+
+    public boolean isOp(){
+        return MinecraftServer.getServer().getConfigurationManager().isPlayerOpped(this.username);
+    }
+
+    public String getChatPrefix(){
+        return this.getTeam().getColor() + (this.isOp() ? "@" : "") + this.username + ChatColor.RESET;
+    }
+
+    public Team getTeam(){
+        return this.currentMap.getTeamManager().getPlayerTeam(this);
+    }
+
+    public void setTeam(Team team){
+        this.currentMap.getTeamManager().setPlayerTeam(this, team);
+    }
+
+    public void onLogin() {
+
+    }
+
+    public void onLogout() {
+
+    }
+
+    public void onChangedDimension() {
+
+    }
+
+    public void onRespawn() {
+
     }
 }

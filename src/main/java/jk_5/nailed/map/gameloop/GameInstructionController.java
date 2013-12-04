@@ -71,9 +71,9 @@ public class GameInstructionController extends Thread implements GameController 
                 if(this.isPaused()) Thread.sleep(1000);
             }
         }catch(Exception e){
-            this.map.sendMessageToAllPlayers(ChatColor.RED + e.getClass().getName() + " was thrown in the game loop. Game stopped!");
-            if(current != null) this.map.sendMessageToAllPlayers(ChatColor.RED + "Current instruction: " + this.getClass().getName());
-            else this.map.sendMessageToAllPlayers(ChatColor.RED + "Current instruction seems te be null. That isn\'t supposed to happen!");
+            this.map.broadcastChatMessage(ChatColor.RED + e.getClass().getName() + " was thrown in the game loop. Game stopped!");
+            if(current != null) this.map.broadcastChatMessage(ChatColor.RED + "Current instruction: " + this.getClass().getName());
+            else this.map.broadcastChatMessage(ChatColor.RED + "Current instruction seems te be null. That isn\'t supposed to happen!");
             NailedLog.severe(e, "Exception in game loop for " + this.map.getSaveFileName());
         }
         this.running = false;
