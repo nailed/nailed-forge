@@ -86,9 +86,9 @@ jar {
             }
         }
     }
-    doLast {
-        ant.signjar(jar: jar.archivePath, alias: 'Nailed', keystore: nailedKeystoreLocation, storepass: nailedKeystorePassword)
-    }
+    //doLast {
+    //    ant.signjar(jar: jar.archivePath, alias: 'Nailed', keystore: nailedKeystoreLocation, storepass: nailedKeystorePassword)
+    //}
 }
 
 uploadArchives {
