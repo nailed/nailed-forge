@@ -1,13 +1,19 @@
 buildscript {
     repositories {
+        mavenLocal()
         mavenCentral()
         maven {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
         }
+        maven {
+            name = "reening"
+            url = "http://maven.reening.nl"
+        }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.0-SNAPSHOT'
+        classpath 'jk_5.nailed.gradle:Nailed-Gradle:1.0'
     }
 }
 
