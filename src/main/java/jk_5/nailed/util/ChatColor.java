@@ -1,10 +1,10 @@
 package jk_5.nailed.util;
 
-import java.util.Map;
-import java.util.regex.Pattern;
-
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.Validate;
+
+import java.util.Map;
+import java.util.regex.Pattern;
 
 public enum ChatColor {
     BLACK('0', 0x00),
@@ -39,6 +39,7 @@ public enum ChatColor {
     private final String toString;
     private final static Map<Integer, ChatColor> BY_ID = Maps.newHashMap();
     private final static Map<Character, ChatColor> BY_CHAR = Maps.newHashMap();
+    private final static Map<String, ChatColor> BY_NAME = Maps.newHashMap();
 
     private ChatColor(char code, int intCode) {
         this(code, intCode, false);
@@ -82,6 +83,10 @@ public enum ChatColor {
      */
     public static ChatColor getByChar(char code) {
         return BY_CHAR.get(code);
+    }
+
+    public static ChatColor getByName(String name) {
+        return BY_NAME.get(name);
     }
 
     /**
@@ -166,6 +171,7 @@ public enum ChatColor {
         for (ChatColor color : values()) {
             BY_ID.put(color.intCode, color);
             BY_CHAR.put(color.code, color);
+            BY_NAME.put(color.name(), color);
         }
     }
 }

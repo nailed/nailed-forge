@@ -3,6 +3,7 @@ package jk_5.nailed.map.instruction;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import jk_5.nailed.map.MappackInitializationException;
+import jk_5.nailed.map.instruction.instructions.InstructionCountdown;
 import lombok.Getter;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
@@ -28,7 +29,7 @@ public class InstructionReader {
 
     @ForgeSubscribe
     public void registerInstructionsFromEvent(RegisterInstructionEvent event){
-        //event.register("trigger", InstructionTrigger.class);
+        event.register("countdown", InstructionCountdown.class);
     }
 
     private InstructionReader(){

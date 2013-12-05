@@ -2,7 +2,6 @@ package jk_5.nailed.map.gameloop;
 
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.map.Map;
-import jk_5.nailed.map.instruction.GameController;
 import jk_5.nailed.map.instruction.IInstruction;
 import jk_5.nailed.map.instruction.InstructionList;
 import jk_5.nailed.map.instruction.TimedInstruction;
@@ -18,18 +17,19 @@ import java.util.Iterator;
  *
  * @author jk-5
  */
-public class GameInstructionController extends Thread implements GameController {
+public class InstructionController extends Thread {
 
     private final Map map;
     @Getter private boolean running = false;
     @Getter private boolean paused = false;
     @Getter @Setter private Team winner = null;
     private final InstructionList instructions;
+    private final InstructionGameController controller = new InstructionGameController(this);
 
-    public GameInstructionController(Map map){
+    public InstructionController(Map map){
         this.map = map;
         this.setDaemon(true);
-        this.setName("GameController-" + map.getSaveFileName());
+        this.setName("InstructionController-" + map.getSaveFileName());
         this.instructions = map.getMappack().getInstructionList().cloneList();
     }
 
@@ -58,15 +58,19 @@ public class GameInstructionController extends Thread implements GameController 
         try{
             while(this.isRunning() && this.winner == null && (this.isPaused() || iterator.hasNext())){
                 current = this.isPaused() ? current : iterator.next();
-                if(current instanceof TimedInstruction){
-                    int ticks = 0;
-                    TimedInstruction timed = (TimedInstruction) current;
-                    while(this.isRunning() && this.winner == null && (this.isPaused() ? true : timed.executeTimed(this, ticks))){
-                        if(!this.isPaused()) ticks ++;
-                        Thread.sleep(1000);
+                if(current != null){
+                    if(current instanceof TimedInstruction){
+                        int ticks = 0;
+                        TimedInstruction timed = (TimedInstruction) current;
+                        while(this.isRunning() && this.winner == null && (this.isPaused() ? true : timed.executeTimed(this.controller, ticks))){
+                            if(!this.isPaused()) ticks ++;
+                            Thread.sleep(1000);
+                        }
+                    }else{
+                        current.execute(this.controller);
                     }
                 }else{
-                    current.execute(this);
+                    NailedLog.warning("Current instruction is null at %s", this.map.getSaveFileName());
                 }
                 if(this.isPaused()) Thread.sleep(1000);
             }

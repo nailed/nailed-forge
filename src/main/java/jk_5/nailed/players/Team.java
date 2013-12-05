@@ -58,4 +58,27 @@ public class Team {
     public String getColoredName(){
         return this.color + this.name + ChatColor.RESET;
     }
+
+    public class TeamScoreboardWrapper extends net.minecraft.scoreboard.Team {
+
+        @Override
+        public String func_96661_b() {
+            return null;
+        }
+
+        @Override
+        public String func_142053_d(String s) {
+            return null;
+        }
+
+        @Override
+        public boolean func_98297_h() {
+            return false;
+        }
+
+        @Override
+        public boolean getAllowFriendlyFire() {
+            return false;
+        }
+    }
 }

@@ -1,7 +1,5 @@
 package jk_5.nailed.map.instruction;
 
-import jk_5.nailed.map.gameloop.GameInstructionController;
-
 /**
  * No description given
  *

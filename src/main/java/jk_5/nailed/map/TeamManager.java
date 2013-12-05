@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 import jk_5.nailed.event.PlayerChangedDimensionEvent;
 import jk_5.nailed.players.Player;
 import jk_5.nailed.players.Team;
+import jk_5.nailed.players.TeamBuilder;
 import lombok.Getter;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
@@ -21,13 +22,17 @@ public class TeamManager {
 
     @Getter private final Map map;
     @Getter private final Team defaultTeam;
-    private final List<Team> teams = Lists.newArrayList();
+    @Getter private final List<Team> teams = Lists.newArrayList();
 
     public TeamManager(Map map){
         this.map = map;
         this.defaultTeam = new Team(this.map, "unknown-" + this.map.getSaveFileName());
 
         MinecraftForge.EVENT_BUS.register(this);
+
+        for(TeamBuilder builder : this.map.getMappack().getMappackMetadata().getDefaultTeams()){
+            this.teams.add(builder.build(this.map));
+        }
     }
 
     private final BiMap<Player, Team> playerTeamMap = HashBiMap.create();
