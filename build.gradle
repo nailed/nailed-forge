@@ -41,6 +41,7 @@ configurations{
 dependencies {
     packed name: 'CodeChickenLib', version: '1.6.4-1.0.0.44', ext: 'jar'
     packed 'pircbot:pircbot:1.5.0'
+    packed 'io.netty:netty-all:4.0.14.Beta1'
 
     compile 'org.projectlombok:lombok:1.12.2'
 

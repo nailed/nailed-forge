@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import jk_5.nailed.map.instruction.GameController;
 import jk_5.nailed.players.Team;
 import lombok.RequiredArgsConstructor;
+import net.minecraft.util.ChatMessageComponent;
 
 import java.util.Map;
 
@@ -32,5 +33,21 @@ public class InstructionGameController implements GameController {
     @Override
     public void setWinner(Team team) {
         this.controller.setWinner(team);
+    }
+
+    @Override
+    public void broadcastTimeRemaining(String data) {
+    }
+
+    @Override
+    public void broadcastSound(String sound) {
+    }
+
+    @Override
+    public void broadcastNotification(String data) {
+    }
+
+    @Override
+    public void broadcastChatMessage(ChatMessageComponent message) {
     }
 }

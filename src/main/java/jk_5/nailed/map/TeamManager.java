@@ -30,6 +30,8 @@ public class TeamManager {
 
         MinecraftForge.EVENT_BUS.register(this);
 
+        if(this.map.getMappack() == null) return;
+
         for(TeamBuilder builder : this.map.getMappack().getMappackMetadata().getDefaultTeams()){
             this.teams.add(builder.build(this.map));
         }

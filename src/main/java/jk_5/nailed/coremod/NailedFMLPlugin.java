@@ -1,5 +1,6 @@
 package jk_5.nailed.coremod;
 
+import cpw.mods.fml.relauncher.FMLLaunchHandler;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.Name;
@@ -20,7 +21,7 @@ public class NailedFMLPlugin implements IFMLLoadingPlugin {
 
     @Override
     public String[] getASMTransformerClass() {
-        //if(FMLCommonHandler.instance().getSide().isClient()) return new String[0];
+        if(FMLLaunchHandler.side().isClient()) return new String[0];
         return new String[]{
                 //"jk_5.nailed.coremod.transformers.PacketTransformer",
                 "jk_5.nailed.coremod.transformers.MinecraftServerTransformer",
