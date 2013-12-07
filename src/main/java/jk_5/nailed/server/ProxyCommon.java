@@ -5,12 +5,14 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import jk_5.nailed.NailedModContainer;
 import jk_5.nailed.achievement.AchievementEventListener;
+import jk_5.nailed.gui.NailedGuiHandler;
 import jk_5.nailed.map.teleport.TeleportListener;
 import jk_5.nailed.map.teleport.TeleportListenerEffects;
 import jk_5.nailed.network.NailedConnectionHandler;
 import jk_5.nailed.network.NailedPlayerTracker;
 import jk_5.nailed.network.NailedSPH;
 import jk_5.nailed.players.PlayerRegistry;
+import lombok.NoArgsConstructor;
 import net.minecraftforge.common.MinecraftForge;
 
 /**
@@ -18,16 +20,14 @@ import net.minecraftforge.common.MinecraftForge;
  *
  * @author jk-5
  */
+@NoArgsConstructor
 public class ProxyCommon {
 
     public static int providerID;
 
-    public ProxyCommon(){
-
-    }
-
     public void initNetworkHandlers(){
         NetworkRegistry.instance().registerConnectionHandler(new NailedConnectionHandler());
+        NetworkRegistry.instance().registerGuiHandler(NailedModContainer.getInstance(), new NailedGuiHandler());
         GameRegistry.registerPlayerTracker(new NailedPlayerTracker());
         PacketCustom.assignHandler(NailedModContainer.getInstance(), new NailedSPH());
     }
