@@ -13,7 +13,7 @@ buildscript {
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.0-SNAPSHOT'
-        classpath 'jk_5.nailed.gradle:Nailed-Gradle:1.0'
+        classpath 'jk_5.nailed.gradle:Nailed-Gradle:1.1-SNAPSHOT'
     }
 }
 
@@ -72,7 +72,7 @@ nailedLauncher {
     tweakers += 'jk_5.nailed.launcher.UpdatingTweaker'
     tweakers += 'cpw.mods.fml.common.launcher.FMLTweaker'
 
-    remoteProfileDir = 'nailed/'
+    remoteProfileDir = 'nailed'
 
     deployHost = 'maven.reening.nl'
     deployUsername = 'maven'
