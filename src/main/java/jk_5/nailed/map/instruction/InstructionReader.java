@@ -34,12 +34,12 @@ public class InstructionReader {
         event.register("countdown", InstructionCountdown.class);
         event.register("disable", InstructionDisableStat.class);
         event.register("enable", InstructionEnableStat.class);
-        event.register("resetexperience", InstructionResetExperience.class);
+        event.register("clearexperience", InstructionResetExperience.class);
         event.register("resetspawnpoint", InstructionResetSpawnpoint.class);
         event.register("setdifficulty", InstructionSetDifficulty.class);
         event.register("setfoodlevel", InstructionSetFoodlevel.class);
         event.register("setgamemode", InstructionSetGamemode.class);
-        event.register("sethealth", InstructionSetGamemode.class);
+        event.register("sethealth", InstructionSetHealth.class);
         event.register("setspawn", InstructionSetSpawnpoint.class);
         event.register("settime", InstructionSetTime.class);
         event.register("setwinner", InstructionSetWinner.class);
@@ -67,12 +67,12 @@ public class InstructionReader {
                             IInstruction instr = (IInstruction) this.instructionMap.get(data[0].trim()).newInstance();
                             if(instr != null && data.length == 2) instr.injectArguments(data[1]);
                             ret.add(instr);
-                            lineNumber ++;
                         }else{
                             throw new InstructionParseException(lineNumber, "Unknown instruction");
                         }
                     }
                 }
+                lineNumber ++;
             }
         }catch(IOException e){
             throw new MappackInitializationException("IOException while reading instructions", e);
