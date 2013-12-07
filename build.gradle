@@ -20,7 +20,7 @@ buildscript {
 apply plugin: 'nailed'
 
 group = 'jk_5.nailed'
-version = '2.0-SNAPSHOT'
+version = '2.0'
 archivesBaseName = 'nailed'
 targetCompatibility = '1.7'
 sourceCompatibility = '1.7'
