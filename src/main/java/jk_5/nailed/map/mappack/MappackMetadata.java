@@ -15,4 +15,6 @@ public interface MappackMetadata {
     String getName();
     ChunkCoordinates getSpawnPoint();
     List<TeamBuilder> getDefaultTeams();
+    boolean isSpawnHostileMobs();
+    boolean isSpawnFriendlyMobs();
 }

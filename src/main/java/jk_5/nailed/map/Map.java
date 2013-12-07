@@ -1,8 +1,10 @@
 package jk_5.nailed.map;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.map.mappack.Mappack;
+import jk_5.nailed.map.stat.StatManager;
 import jk_5.nailed.map.teleport.TeleportOptions;
 import jk_5.nailed.network.NailedSPH;
 import jk_5.nailed.players.Player;
@@ -13,6 +15,8 @@ import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
+
+import java.util.List;
 
 /**
  * No description given
@@ -25,11 +29,14 @@ public class Map {
     @Getter private final Mappack mappack;
     @Getter private World world;
     @Getter private boolean isLoaded = false;
-    @Getter private final TeamManager teamManager = new TeamManager(this);
+    @Getter private final TeamManager teamManager;
+    @Getter private final StatManager statManager;
 
     public Map(Mappack mappack, int id){
         this.ID = id;
         this.mappack = mappack;
+        this.teamManager = new TeamManager(this);
+        this.statManager = new StatManager(this);
         MapLoader.instance().addMap(this);
     }
 
@@ -69,5 +76,15 @@ public class Map {
 
     public void broadcastChatMessage(String message){
         this.broadcastChatMessage(ChatMessageComponent.createFromText(message));
+    }
+
+    public List<Player> getPlayers(){
+        List<Player> ret = Lists.newArrayList();
+        for(Player player : PlayerRegistry.instance().getPlayers()){
+            if(player.getCurrentMap() == this){
+                ret.add(player);
+            }
+        }
+        return ret;
     }
 }

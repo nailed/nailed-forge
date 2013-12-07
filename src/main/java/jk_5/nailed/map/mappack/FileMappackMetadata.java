@@ -15,18 +15,24 @@ import java.util.List;
  *
  * @author jk-5
  */
+@Getter
 public class FileMappackMetadata implements MappackMetadata {
 
     private final ConfigFile config;
-    @Getter public String name;
-    @Getter public ChunkCoordinates spawnPoint;
-    @Getter private List<TeamBuilder> defaultTeams;
+    public String name;
+    public ChunkCoordinates spawnPoint;
+    private List<TeamBuilder> defaultTeams;
+    public boolean spawnFriendlyMobs;
+    public boolean spawnHostileMobs;
 
     public FileMappackMetadata(ConfigFile config){
         this.config = config;
         int spawnX = config.getTag("spawnpoint").getTag("x").getIntValue(0);
         int spawnY = config.getTag("spawnpoint").getTag("y").getIntValue(64);
         int spawnZ = config.getTag("spawnpoint").getTag("z").getIntValue(0);
+        this.name = config.getTag("map").getTag("name").getValue("");
+        this.spawnHostileMobs = config.getTag("map").getTag("spawn-hostile-mobs").getBooleanValue(true);
+        this.spawnFriendlyMobs = config.getTag("map").getTag("spawn-friendly-mobs").getBooleanValue(true);
         this.name = config.getTag("map").getTag("name").getValue("");
         this.spawnPoint = new ChunkCoordinates(spawnX, spawnY, spawnZ);
 

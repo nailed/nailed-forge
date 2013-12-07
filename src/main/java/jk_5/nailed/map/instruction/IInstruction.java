@@ -8,6 +8,11 @@ package jk_5.nailed.map.instruction;
 public interface IInstruction {
 
     void injectArguments(String args);
+
+    /**
+     * Note: The settings of the cloned instruction should be identical to the original instruction
+     * @return a copy of the instruction
+     */
     IInstruction cloneInstruction();
     void execute(GameController controller);
 }

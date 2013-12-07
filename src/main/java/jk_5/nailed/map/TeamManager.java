@@ -33,6 +33,8 @@ public class TeamManager {
         if(this.map.getMappack() == null) return;
 
         for(TeamBuilder builder : this.map.getMappack().getMappackMetadata().getDefaultTeams()){
+            Team team = builder.build(this.map);
+            System.out.println("Registering team " + team.getName());
             this.teams.add(builder.build(this.map));
         }
     }
@@ -58,7 +60,9 @@ public class TeamManager {
     }
 
     public Team getPlayerTeam(Player player) {
-        return this.playerTeamMap.get(player);
+        Team team = this.playerTeamMap.get(player);
+        if(team == null) return this.defaultTeam;
+        return team;
     }
 
     public void setPlayerTeam(Player player, Team team) {

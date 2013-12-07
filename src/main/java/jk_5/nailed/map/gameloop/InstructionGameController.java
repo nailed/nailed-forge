@@ -50,4 +50,9 @@ public class InstructionGameController implements GameController {
     @Override
     public void broadcastChatMessage(ChatMessageComponent message) {
     }
+
+    @Override
+    public jk_5.nailed.map.Map getMap() {
+        return this.controller.getMap();
+    }
 }

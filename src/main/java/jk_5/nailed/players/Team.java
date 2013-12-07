@@ -1,5 +1,6 @@
 package jk_5.nailed.players;
 
+import com.google.common.collect.Lists;
 import jk_5.nailed.map.Map;
 import jk_5.nailed.util.ChatColor;
 import lombok.Getter;
@@ -8,6 +9,8 @@ import lombok.Setter;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.ChunkCoordinates;
+
+import java.util.List;
 
 /**
  * No description given
@@ -21,10 +24,11 @@ public class Team {
     @Getter private final String teamId;
 
     @Getter @Setter private String name;
-    @Getter @Setter private ChatColor color;
+    @Getter @Setter private ChatColor color = ChatColor.RESET;
     @Getter @Setter private Player leader;
     @Getter private boolean ready = false;
     @Getter @Setter private boolean friendlyFireEnabled = false;
+    @Getter @Setter private boolean seeFriendlyInvisibles = false;
     @Getter @Setter private ScorePlayerTeam scoreboardTeam;
     @Getter @Setter private ChunkCoordinates spawnPoint;
 
@@ -59,26 +63,13 @@ public class Team {
         return this.color + this.name + ChatColor.RESET;
     }
 
-    public class TeamScoreboardWrapper extends net.minecraft.scoreboard.Team {
-
-        @Override
-        public String func_96661_b() {
-            return null;
+    public List<Player> getMembers(){
+        List<Player> ret = Lists.newArrayList();
+        for(Player player : this.map.getPlayers()){
+            if(player.getTeam() == this){
+                ret.add(player);
+            }
         }
-
-        @Override
-        public String func_142053_d(String s) {
-            return null;
-        }
-
-        @Override
-        public boolean func_98297_h() {
-            return false;
-        }
-
-        @Override
-        public boolean getAllowFriendlyFire() {
-            return false;
-        }
+        return ret;
     }
 }

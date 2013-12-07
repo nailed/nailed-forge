@@ -24,22 +24,22 @@ public class CommandTeam extends CommandBase {
 
     @Override
     public String getCommandUsage(ICommandSender iCommandSender) {
-        return "/team set <username> <team>";
+        return "/team join <username> <team>";
     }
 
     @Override
     public void processCommand(ICommandSender s, String[] strings) {
         if(!(s instanceof EntityPlayer)) throw new CommandException("This command can only be used by players");
         Player sender = PlayerRegistry.instance().getPlayer(((EntityPlayer) s).username);
-        if(strings.length == 0) throw new WrongUsageException("/team set <username> <team>");
-        if(strings[0].equalsIgnoreCase("set")){
-            if(strings.length == 1) throw new WrongUsageException("/team set <username> <team>");
+        if(strings.length == 0) throw new WrongUsageException("/team join <username> <team>");
+        if(strings[0].equalsIgnoreCase("join")){
+            if(strings.length == 1) throw new WrongUsageException("/team join <username> <team>");
             Player player = PlayerRegistry.instance().getPlayer(strings[1]);
             if(player == null) throw new CommandException("Unknown username " + strings[1]);
 
-            if(strings.length == 2) throw new WrongUsageException("/team set " + strings[1] + " <team>");
-            Team team = sender.getCurrentMap().getTeamManager().getTeam(strings[1]);
-            if(team == null) throw new CommandException("Unknown team name " + strings[1]);
+            if(strings.length == 2) throw new WrongUsageException("/team join " + strings[1] + " <team>");
+            Team team = sender.getCurrentMap().getTeamManager().getTeam(strings[2]);
+            if(team == null) throw new CommandException("Unknown team name " + strings[2]);
 
             if(strings.length == 3){
                 sender.getCurrentMap().getTeamManager().setPlayerTeam(player, team);

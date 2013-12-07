@@ -1,5 +1,6 @@
 package jk_5.nailed.map.instruction;
 
+import jk_5.nailed.map.Map;
 import jk_5.nailed.players.Team;
 import net.minecraft.util.ChatMessageComponent;
 
@@ -19,4 +20,6 @@ public interface GameController {
     void broadcastSound(String sound);
     void broadcastNotification(String data);
     void broadcastChatMessage(ChatMessageComponent message);
+
+    Map getMap();
 }

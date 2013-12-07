@@ -11,9 +11,12 @@ import java.util.List;
  *
  * @author jk-5
  */
+@Getter
 public class DefaultMappackMetadata implements MappackMetadata {
 
-    @Getter public String name;
-    @Getter public ChunkCoordinates spawnPoint;
-    @Getter public List<TeamBuilder> defaultTeams;
+    public String name;
+    public ChunkCoordinates spawnPoint;
+    public List<TeamBuilder> defaultTeams;
+    public boolean spawnFriendlyMobs;
+    public boolean spawnHostileMobs;
 }

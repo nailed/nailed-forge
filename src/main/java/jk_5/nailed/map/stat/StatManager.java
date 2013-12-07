@@ -13,5 +13,15 @@ public class StatManager {
 
     private final Map map;
 
+    public void disableStat(String stat) {
 
+    }
+
+    public void enableStat(String stat) {
+
+    }
+
+    public void triggerStat(String stat) {
+
+    }
 }

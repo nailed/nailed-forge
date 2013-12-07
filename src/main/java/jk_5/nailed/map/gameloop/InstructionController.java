@@ -19,7 +19,7 @@ import java.util.Iterator;
  */
 public class InstructionController extends Thread {
 
-    private final Map map;
+    @Getter private final Map map;
     @Getter private boolean running = false;
     @Getter private boolean paused = false;
     @Getter @Setter private Team winner = null;

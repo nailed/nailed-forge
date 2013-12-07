@@ -22,8 +22,8 @@ public class IpcManager {
     private static final IpcManager instance = new IpcManager();
     private Channel channel;
 
-    private String host = NailedModContainer.getConfig().getTag("IPC").useBraces().getTag("host").getValue("localhost");
-    private int port = NailedModContainer.getConfig().getTag("IPC").useBraces().getTag("port").getIntValue(5000);
+    private final String host = NailedModContainer.getConfig().getTag("IPC").useBraces().getTag("host").getValue("localhost");
+    private final int port = NailedModContainer.getConfig().getTag("IPC").useBraces().getTag("port").getIntValue(5000);
 
     public static IpcManager instance(){
         return instance;
@@ -35,7 +35,7 @@ public class IpcManager {
             IpcHandler handler = new IpcHandler();
             Bootstrap bootstrap = new Bootstrap().group(group).channel(NioServerSocketChannel.class);
             bootstrap.handler(new Pipeline(handler));
-            this.channel = bootstrap.connect().channel();
+            this.channel = bootstrap.connect(this.host, this.port).channel();
             this.channel.closeFuture().addListener(new ChannelFutureListener(){
                 @Override
                 public void operationComplete(ChannelFuture future) throws Exception {

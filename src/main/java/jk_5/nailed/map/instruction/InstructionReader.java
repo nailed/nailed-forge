@@ -3,7 +3,7 @@ package jk_5.nailed.map.instruction;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import jk_5.nailed.map.MappackInitializationException;
-import jk_5.nailed.map.instruction.instructions.InstructionCountdown;
+import jk_5.nailed.map.instruction.instructions.*;
 import lombok.Getter;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
@@ -29,7 +29,25 @@ public class InstructionReader {
 
     @ForgeSubscribe
     public void registerInstructionsFromEvent(RegisterInstructionEvent event){
+        event.register("clearinventory", InstructionClearInventory.class);
+        event.register("countup", InstructionCountUp.class);
         event.register("countdown", InstructionCountdown.class);
+        event.register("disable", InstructionDisableStat.class);
+        event.register("enable", InstructionEnableStat.class);
+        event.register("resetexperience", InstructionResetExperience.class);
+        event.register("resetspawnpoint", InstructionResetSpawnpoint.class);
+        event.register("setdifficulty", InstructionSetDifficulty.class);
+        event.register("setfoodlevel", InstructionSetFoodlevel.class);
+        event.register("setgamemode", InstructionSetGamemode.class);
+        event.register("sethealth", InstructionSetGamemode.class);
+        event.register("setspawn", InstructionSetSpawnpoint.class);
+        event.register("settime", InstructionSetTime.class);
+        event.register("setwinner", InstructionSetWinner.class);
+        event.register("startwinnerinterrupt", InstructionStartWinnerinterrupt.class);
+        event.register("stopwinnerinterrupt", InstructionStopWinnerinterrupt.class);
+        event.register("trigger", InstructionTriggerStat.class);
+        event.register("unwatchunready", InstructionUnwatchUnready.class);
+        event.register("watchunready", InstructionWatchUnready.class);
     }
 
     private InstructionReader(){
