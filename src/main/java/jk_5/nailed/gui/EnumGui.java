@@ -15,8 +15,7 @@ import java.util.Map;
 public enum EnumGui {
     STATEMITTER(1);
 
-    @Getter
-    private final int guiID;
+    @Getter private final int guiID;
 
     private static final Map<Integer, EnumGui> BY_ID = Maps.newHashMap();
 

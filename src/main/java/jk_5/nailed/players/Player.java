@@ -1,6 +1,7 @@
 package jk_5.nailed.players;
 
 import jk_5.nailed.map.Map;
+import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.network.NailedSPH;
 import jk_5.nailed.util.ChatColor;
 import jk_5.nailed.util.Utils;
@@ -20,7 +21,7 @@ import net.minecraft.util.ChatMessageComponent;
 public class Player {
 
     @Getter private final String username;
-    @Getter @Setter private Map currentMap;
+    @Setter private Map currentMap;
 
     public void setTimeLeft(int seconds){
         NailedSPH.sendTimeUpdate(this.getEntity(), "Time left: " + ChatColor.GREEN + Utils.secondsToShortTimeString(seconds));
@@ -51,11 +52,16 @@ public class Player {
     }
 
     public Team getTeam(){
-        return this.currentMap.getTeamManager().getPlayerTeam(this);
+        return this.getCurrentMap().getTeamManager().getPlayerTeam(this);
     }
 
     public void setTeam(Team team){
-        this.currentMap.getTeamManager().setPlayerTeam(this, team);
+        this.getCurrentMap().getTeamManager().setPlayerTeam(this, team);
+    }
+
+    public Map getCurrentMap(){
+        if(this.currentMap == null) this.currentMap = MapLoader.instance().getMap(0);
+        return this.currentMap;
     }
 
     public void onLogin() {

@@ -11,7 +11,9 @@ import lombok.Getter;
  */
 public enum Packets {
     TIME_UPDATE(1),
-    NOTIFICATION(2);
+    NOTIFICATION(2),
+    OPEN_GUI(3),
+    STATEMITTER_STAT(4);
 
     @Getter
     private final int ID;

@@ -4,6 +4,7 @@ import codechicken.lib.packet.PacketCustom;
 import codechicken.lib.packet.PacketCustom.IClientPacketHandler;
 import jk_5.nailed.client.render.NotificationRenderer;
 import jk_5.nailed.client.render.RenderEventHandler;
+import jk_5.nailed.gui.EnumGuiClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.NetClientHandler;
 import net.minecraft.util.ResourceLocation;
@@ -30,6 +31,9 @@ public class NailedCPH implements IClientPacketHandler {
                 break;
             case TIME_UPDATE:
                 RenderEventHandler.format = packet.readString();
+                break;
+            case OPEN_GUI:
+                minecraft.displayGuiScreen(EnumGuiClient.fromID(packet.readInt()).getGui().readData(packet));
                 break;
             default: break;
         }

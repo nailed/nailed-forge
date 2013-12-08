@@ -54,7 +54,7 @@ public class PlayerRegistry implements IPlayerTracker {
 
     @ForgeSubscribe
     public void formatPlayerName(PlayerEvent.NameFormat event){
-        Player player = this.getPlayer(event.username);
+        Player player = this.getOrCreatePlayer(event.username);
         if(player == null) return;
         event.displayname = player.getChatPrefix();
     }

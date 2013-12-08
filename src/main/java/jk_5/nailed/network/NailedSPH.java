@@ -5,10 +5,12 @@ import codechicken.lib.packet.PacketCustom.IServerPacketHandler;
 import com.google.common.base.Preconditions;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
+import jk_5.nailed.blocks.tileentity.TileEntityStatEmitter;
 import jk_5.nailed.server.ProxyCommon;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetServerHandler;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.network.ForgePacket;
 import net.minecraftforge.common.network.packet.DimensionRegisterPacket;
@@ -23,6 +25,10 @@ public class NailedSPH implements IServerPacketHandler {
     @Override
     public void handlePacket(PacketCustom packet, NetServerHandler netServerHandler, EntityPlayerMP entityPlayerMP) {
         switch (Packets.fromID(packet.getType())){
+            case STATEMITTER_STAT:
+                TileEntity tile = entityPlayerMP.worldObj.getBlockTileEntity(packet.readInt(), packet.readInt(), packet.readInt());
+                if(tile == null || !(tile instanceof TileEntityStatEmitter)) return;
+                ((TileEntityStatEmitter) tile).setStatName(packet.readString());
             default: break;
         }
     }
