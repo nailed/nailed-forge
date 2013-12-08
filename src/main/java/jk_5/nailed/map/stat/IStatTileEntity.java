@@ -9,5 +9,5 @@ public interface IStatTileEntity {
 
     public void enable();
     public void disable();
-    public String getStatName();
+    public Stat getStat();
 }

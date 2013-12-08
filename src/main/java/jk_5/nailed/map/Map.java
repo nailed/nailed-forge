@@ -3,6 +3,7 @@ package jk_5.nailed.map;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import jk_5.nailed.NailedLog;
+import jk_5.nailed.map.gameloop.InstructionController;
 import jk_5.nailed.map.mappack.Mappack;
 import jk_5.nailed.map.stat.StatManager;
 import jk_5.nailed.map.teleport.TeleportOptions;
@@ -31,12 +32,14 @@ public class Map {
     @Getter private boolean isLoaded = false;
     @Getter private final TeamManager teamManager;
     @Getter private final StatManager statManager;
+    @Getter private final InstructionController gameController;
 
     public Map(Mappack mappack, int id){
         this.ID = id;
         this.mappack = mappack;
         this.teamManager = new TeamManager(this);
         this.statManager = new StatManager(this);
+        this.gameController = new InstructionController(this);
         MapLoader.instance().addMap(this);
     }
 

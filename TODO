@@ -1,4 +1,7 @@
+Todo:
 - Add transformer obf mappings
-- Create the stat system
 - Port all the new instructions over from the non-forge nailed
 - Fix teleportation
+
+Bugs:
+- PULSE_OFF pulses on enable

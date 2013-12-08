@@ -1,27 +1,65 @@
 package jk_5.nailed.map.stat;
 
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import jk_5.nailed.map.Map;
-import lombok.RequiredArgsConstructor;
+import lombok.Getter;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.ForgeSubscribe;
+
+import java.util.List;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-@RequiredArgsConstructor
 public class StatManager {
 
     private final Map map;
+    @Getter private final StatConfig stats;
+    @Getter private final List<IStatTileEntity> statTiles = Lists.newArrayList();
 
-    public void disableStat(String stat) {
-
+    public StatManager(Map map){
+        this.map = map;
+        if(map.getMappack() != null){
+            Preconditions.checkNotNull(map.getMappack().getStatConfig(), "StatConfig may not be null!");
+            this.stats = this.map.getMappack().getStatConfig().clone();
+        }else{
+            this.stats = new StatConfig();
+        }
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
-    public void enableStat(String stat) {
-
+    public Stat getStat(String statName) {
+        return this.stats.getStat(statName);
     }
 
-    public void triggerStat(String stat) {
+    @ForgeSubscribe
+    @SuppressWarnings("unused")
+    public void onStatTileLoad(StatTileEntityEvent.Load event){
+        this.statTiles.add(event.tileEntity);
+    }
 
+    @ForgeSubscribe
+    @SuppressWarnings("unused")
+    public void onStatTileUnload(StatTileEntityEvent.Unload event){
+        this.statTiles.remove(event.tileEntity);
+    }
+
+    @ForgeSubscribe
+    @SuppressWarnings("unused")
+    public void onStatEnable(StatEvent.Enable event){
+        for(IStatTileEntity tile : this.statTiles){
+            if(tile.getStat() == event.stat) tile.enable();
+        }
+    }
+
+    @ForgeSubscribe
+    @SuppressWarnings("unused")
+    public void onStatDisable(StatEvent.Disable event){
+        for(IStatTileEntity tile : this.statTiles){
+            if(tile.getStat() == event.stat) tile.disable();
+        }
     }
 }

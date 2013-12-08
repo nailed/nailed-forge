@@ -3,6 +3,7 @@ package jk_5.nailed.map.mappack;
 import jk_5.nailed.map.Map;
 import jk_5.nailed.map.PotentialMap;
 import jk_5.nailed.map.instruction.InstructionList;
+import jk_5.nailed.map.stat.StatConfig;
 
 import java.io.File;
 
@@ -27,6 +28,11 @@ public interface Mappack {
      * @return An instructionlist with instructions for the game (may be empty)
      */
     InstructionList getInstructionList();
+
+    /**
+     * @return The config about which {@link jk_5.nailed.map.stat.IStatType}s should be available. May not be null!
+     */
+    StatConfig getStatConfig();
 
     /**
      * This method should prepare the game world at the given location

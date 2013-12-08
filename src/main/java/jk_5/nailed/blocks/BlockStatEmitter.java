@@ -39,7 +39,7 @@ public class BlockStatEmitter extends NailedBlock implements ITileEntityProvider
     public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side) {
         TileEntity tile = world.getBlockTileEntity(x, y, z);
         if(tile == null || !(tile instanceof TileEntityStatEmitter)) return 0;
-        return ((TileEntityStatEmitter) tile).isEnabled() ? 15 : 0;
+        return ((TileEntityStatEmitter) tile).isSignalEnabled() ? 15 : 0;
     }
 
     @Override

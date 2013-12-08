@@ -7,6 +7,7 @@ import jk_5.nailed.map.MappackInitializationException;
 import jk_5.nailed.map.PotentialMap;
 import jk_5.nailed.map.instruction.InstructionList;
 import jk_5.nailed.map.instruction.InstructionParseException;
+import jk_5.nailed.map.stat.StatConfig;
 import jk_5.nailed.util.config.ConfigFile;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,7 +27,8 @@ public class DirectoryMappack implements Mappack {
     @Getter private final String name;
     @Getter private final File mappackFolder;
     @Getter private final MappackMetadata mappackMetadata;
-    @Getter @Setter private InstructionList instructionList;
+    @Getter @Setter private InstructionList instructionList = new InstructionList();
+    @Getter @Setter private StatConfig statConfig = new StatConfig();
 
     private DirectoryMappack(File directory, ConfigFile config){
         this.mappackID = directory.getName();
@@ -37,11 +39,13 @@ public class DirectoryMappack implements Mappack {
 
     public static DirectoryMappack create(File directory) throws MappackInitializationException{
         DirectoryMappack pack;
-        ConfigFile config = null;
-        InstructionList instructionList = null;
+        ConfigFile config;
+        StatConfig statConfig = new StatConfig();
+        InstructionList instructionList = new InstructionList();
         try{
             File mappackConfig = new File(directory, "mappack.cfg");
             File instructionFile = new File(directory, "gameinstructions.cfg");
+            File statConfigFile = new File(directory, "stats.cfg");
             if(mappackConfig.isFile() && mappackConfig.exists()){
                 config = new ConfigFile(mappackConfig).setReadOnly();
                 pack = new DirectoryMappack(directory, config);
@@ -51,6 +55,9 @@ public class DirectoryMappack implements Mappack {
                 instructionList = InstructionList.readFrom(instructionReader);
                 IOUtils.closeQuietly(instructionReader);
             }
+            if(statConfigFile.isFile() && statConfigFile.exists()){
+                statConfig = new StatConfig(new ConfigFile(statConfigFile).setReadOnly());
+            }
         }catch(InstructionParseException e){
             NailedLog.severe("There was an error in your instruction syntax in " + directory.getName());
             NailedLog.severe(e.getMessage());
@@ -59,7 +66,8 @@ public class DirectoryMappack implements Mappack {
             NailedLog.severe(e, "Discovered mappack directory is gone now? This is impossible");
             throw new MappackInitializationException("Mappack directory disappeared!", e);
         }
-        if(instructionList != null) pack.setInstructionList(instructionList);
+        pack.setInstructionList(instructionList);
+        pack.setStatConfig(statConfig);
         return pack;
     }
 

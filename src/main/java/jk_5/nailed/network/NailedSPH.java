@@ -28,7 +28,7 @@ public class NailedSPH implements IServerPacketHandler {
             case STATEMITTER_STAT:
                 TileEntity tile = entityPlayerMP.worldObj.getBlockTileEntity(packet.readInt(), packet.readInt(), packet.readInt());
                 if(tile == null || !(tile instanceof TileEntityStatEmitter)) return;
-                ((TileEntityStatEmitter) tile).setStatName(packet.readString());
+                ((TileEntityStatEmitter) tile).readGuiData(packet);
             default: break;
         }
     }

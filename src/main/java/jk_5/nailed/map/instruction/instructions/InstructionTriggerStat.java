@@ -28,6 +28,6 @@ public class InstructionTriggerStat implements IInstruction {
 
     @Override
     public void execute(GameController controller) {
-        controller.getMap().getStatManager().triggerStat(this.stat);
+        controller.getMap().getStatManager().getStat(this.stat);//.trigger();
     }
 }

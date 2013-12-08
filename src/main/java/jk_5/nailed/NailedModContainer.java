@@ -19,8 +19,11 @@ import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.map.gen.NailedWorldProvider;
 import jk_5.nailed.map.instruction.InstructionReader;
 import jk_5.nailed.map.instruction.RegisterInstructionEvent;
+import jk_5.nailed.map.stat.RegisterStatTypeEvent;
+import jk_5.nailed.map.stat.StatTypeManager;
 import jk_5.nailed.server.ProxyCommon;
 import jk_5.nailed.server.command.CommandGoto;
+import jk_5.nailed.server.command.CommandStartGame;
 import jk_5.nailed.server.command.CommandTeam;
 import jk_5.nailed.util.config.ConfigFile;
 import lombok.Getter;
@@ -89,6 +92,7 @@ public class NailedModContainer {
     @EventHandler
     public void init(FMLInitializationEvent event){
         MinecraftForge.EVENT_BUS.post(new RegisterInstructionEvent(InstructionReader.instance().getInstructionMap()));
+        MinecraftForge.EVENT_BUS.post(new RegisterStatTypeEvent(StatTypeManager.instance().getStatTypes()));
 
         NailedLog.info("Registering achievements");
         NailedAchievements.init();
@@ -104,6 +108,7 @@ public class NailedModContainer {
     public void serverStarting(FMLServerStartingEvent event){
         event.registerServerCommand(new CommandGoto());
         event.registerServerCommand(new CommandTeam());
+        event.registerServerCommand(new CommandStartGame());
     }
 
     @VersionCheckHandler

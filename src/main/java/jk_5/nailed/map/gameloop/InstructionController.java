@@ -5,6 +5,8 @@ import jk_5.nailed.map.Map;
 import jk_5.nailed.map.instruction.IInstruction;
 import jk_5.nailed.map.instruction.InstructionList;
 import jk_5.nailed.map.instruction.TimedInstruction;
+import jk_5.nailed.map.stat.StatTypeManager;
+import jk_5.nailed.map.stat.types.StatTypeGameloopRunning;
 import jk_5.nailed.players.Team;
 import jk_5.nailed.util.ChatColor;
 import lombok.Getter;
@@ -30,11 +32,16 @@ public class InstructionController extends Thread {
         this.map = map;
         this.setDaemon(true);
         this.setName("InstructionController-" + map.getSaveFileName());
-        this.instructions = map.getMappack().getInstructionList().cloneList();
+        if(map.getMappack() != null){
+            this.instructions = map.getMappack().getInstructionList().cloneList();
+        }else{
+            this.instructions = new InstructionList();
+        }
     }
 
     public void startGame(){
         this.start();
+        StatTypeManager.instance().getStatType(StatTypeGameloopRunning.class).onStart(this);
     }
 
     public void stopGame(){
@@ -81,5 +88,6 @@ public class InstructionController extends Thread {
             NailedLog.severe(e, "Exception in game loop for " + this.map.getSaveFileName());
         }
         this.running = false;
+        StatTypeManager.instance().getStatType(StatTypeGameloopRunning.class).onEnd(this);
     }
 }

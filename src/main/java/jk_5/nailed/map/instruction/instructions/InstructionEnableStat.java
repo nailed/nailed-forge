@@ -28,6 +28,6 @@ public class InstructionEnableStat implements IInstruction {
 
     @Override
     public void execute(GameController controller) {
-        controller.getMap().getStatManager().enableStat(this.stat);
+        controller.getMap().getStatManager().getStat(this.stat);//.enable();
     }
 }
