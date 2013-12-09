@@ -2,11 +2,16 @@ package jk_5.nailed.blocks.tileentity;
 
 import codechicken.lib.data.MCDataInput;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import jk_5.nailed.gui.GuiStatEmitter;
+import jk_5.nailed.gui.NailedGui;
 import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.map.stat.IStatTileEntity;
 import jk_5.nailed.map.stat.Stat;
 import jk_5.nailed.map.stat.StatMode;
 import jk_5.nailed.map.stat.StatTileEntityEvent;
+import jk_5.nailed.players.Player;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,7 +19,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 
 /**
@@ -23,7 +27,7 @@ import net.minecraftforge.common.MinecraftForge;
  * @author jk-5
  */
 @NoArgsConstructor
-public class TileEntityStatEmitter extends TileEntity implements IStatTileEntity {
+public class TileEntityStatEmitter extends NailedTileEntity implements IStatTileEntity, IGuiTileEntity {
 
     @Getter private String programmedName = "";
     @Getter private boolean signalEnabled = false;
@@ -173,6 +177,21 @@ public class TileEntityStatEmitter extends TileEntity implements IStatTileEntity
             this.scheduleRedstoneUpdate();
             this.redstonePulseTicks = 0;
         }
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public NailedGui getGui() {
+        return new GuiStatEmitter();
+    }
+
+    @Override
+    public boolean canPlayerOpenGui(Player player) {
+        if(!player.isOp()){
+            player.sendChat("You need to be an OP to do that");
+            return false;
+        }
+        return true;
     }
 
     public void scheduleRedstoneUpdate(){

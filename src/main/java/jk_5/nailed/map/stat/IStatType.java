@@ -9,5 +9,5 @@ import jk_5.nailed.util.config.ConfigTag;
  */
 public interface IStatType {
 
-    void readAdditionalData(ConfigTag config);
+    void readAdditionalData(ConfigTag config, Stat stat);
 }

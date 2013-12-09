@@ -4,6 +4,7 @@ import jk_5.nailed.map.gameloop.InstructionController;
 import jk_5.nailed.map.stat.DefaultStat;
 import jk_5.nailed.map.stat.IStatType;
 import jk_5.nailed.map.stat.Stat;
+import jk_5.nailed.players.Team;
 import jk_5.nailed.util.config.ConfigTag;
 
 /**
@@ -11,27 +12,21 @@ import jk_5.nailed.util.config.ConfigTag;
  *
  * @author jk-5
  */
-public class StatTypeGameloopRunning implements IStatType {
+public class StatTypeIsWinner implements IStatType {
 
     @Override
     public void readAdditionalData(ConfigTag config, Stat stat) {
+        stat.store("watchingWinnerTeam", config.getTag("team").getValue(""));
     }
 
-    public void onStart(InstructionController controller) {
+    public void onWinnerSet(InstructionController controller, Team winner) {
         for(Stat stat : controller.getMap().getStatManager().getStats().getStats()){
             if(stat instanceof DefaultStat){
                 if(((DefaultStat) stat).getType() == this){
-                    stat.enable();
-                }
-            }
-        }
-    }
-
-    public void onEnd(InstructionController controller) {
-        for(Stat stat : controller.getMap().getStatManager().getStats().getStats()){
-            if(stat instanceof DefaultStat){
-                if(((DefaultStat) stat).getType() == this){
-                    stat.disable();
+                    Team team = controller.getMap().getTeamManager().getTeam((String) stat.load("watchingWinnerTeam"));
+                    if(team == winner){
+                        stat.enable();
+                    }
                 }
             }
         }

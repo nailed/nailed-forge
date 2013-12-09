@@ -11,13 +11,13 @@ import jk_5.nailed.util.config.ConfigTag;
  *
  * @author jk-5
  */
-public class StatTypeGameloopRunning implements IStatType {
+public class StatTypeGameHasWinner implements IStatType {
 
     @Override
     public void readAdditionalData(ConfigTag config, Stat stat) {
     }
 
-    public void onStart(InstructionController controller) {
+    public void onWin(InstructionController controller) {
         for(Stat stat : controller.getMap().getStatManager().getStats().getStats()){
             if(stat instanceof DefaultStat){
                 if(((DefaultStat) stat).getType() == this){
@@ -27,7 +27,7 @@ public class StatTypeGameloopRunning implements IStatType {
         }
     }
 
-    public void onEnd(InstructionController controller) {
+    public void reset(InstructionController controller) {
         for(Stat stat : controller.getMap().getStatManager().getStats().getStats()){
             if(stat instanceof DefaultStat){
                 if(((DefaultStat) stat).getType() == this){

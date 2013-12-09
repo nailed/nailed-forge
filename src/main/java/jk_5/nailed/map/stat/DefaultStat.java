@@ -1,10 +1,13 @@
 package jk_5.nailed.map.stat;
 
+import com.google.common.collect.Maps;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.minecraftforge.common.MinecraftForge;
+
+import java.util.Map;
 
 /**
  * No description given
@@ -18,6 +21,12 @@ public class DefaultStat implements Stat {
     @Getter private final String name;
     @Getter @Setter private IStatType type;
     @Getter private boolean enabled = false;
+    private Map<String, Object> storage = Maps.newHashMap();
+
+    @Override
+    public void setDefaultState(boolean defaultState){
+        this.enabled = defaultState;
+    }
 
     @Override
     public void enable() {
@@ -33,6 +42,16 @@ public class DefaultStat implements Stat {
 
     @Override
     public Stat clone() {
-        return new DefaultStat(this.name, this.type, this.enabled);
+        return new DefaultStat(this.name, this.type, this.enabled, this.storage);
+    }
+
+    @Override
+    public void store(String key, Object value){
+        this.storage.put(key, value);
+    }
+
+    @Override
+    public Object load(String key){
+        return this.storage.get(key);
     }
 }

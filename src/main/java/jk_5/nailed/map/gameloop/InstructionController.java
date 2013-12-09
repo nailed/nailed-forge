@@ -6,11 +6,10 @@ import jk_5.nailed.map.instruction.IInstruction;
 import jk_5.nailed.map.instruction.InstructionList;
 import jk_5.nailed.map.instruction.TimedInstruction;
 import jk_5.nailed.map.stat.StatTypeManager;
-import jk_5.nailed.map.stat.types.StatTypeGameloopRunning;
+import jk_5.nailed.map.stat.types.*;
 import jk_5.nailed.players.Team;
 import jk_5.nailed.util.ChatColor;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.Iterator;
 
@@ -24,7 +23,7 @@ public class InstructionController extends Thread {
     @Getter private final Map map;
     @Getter private boolean running = false;
     @Getter private boolean paused = false;
-    @Getter @Setter private Team winner = null;
+    @Getter private Team winner = null;
     private final InstructionList instructions;
     private final InstructionGameController controller = new InstructionGameController(this);
 
@@ -39,6 +38,14 @@ public class InstructionController extends Thread {
         }
     }
 
+    public void setWinner(Team winner){
+        this.winner = winner;
+        this.running = false;
+        this.stopGame();
+        StatTypeManager.instance().getStatType(StatTypeGameHasWinner.class).onWin(this);
+        StatTypeManager.instance().getStatType(StatTypeIsWinner.class).onWinnerSet(this, winner);
+    }
+
     public void startGame(){
         this.start();
         StatTypeManager.instance().getStatType(StatTypeGameloopRunning.class).onStart(this);
@@ -46,14 +53,18 @@ public class InstructionController extends Thread {
 
     public void stopGame(){
         this.running = false;
+        StatTypeManager.instance().getStatType(StatTypeGameloopStopped.class).onEnd(this);
+        StatTypeManager.instance().getStatType(StatTypeGameloopRunning.class).onEnd(this);
     }
 
     public void pauseGame(){
         this.paused = true;
+        StatTypeManager.instance().getStatType(StatTypeGameloopPaused.class).onPause(this);
     }
 
     public void resumeGame(){
         this.paused = false;
+        StatTypeManager.instance().getStatType(StatTypeGameloopPaused.class).onResume(this);
     }
 
     @Override

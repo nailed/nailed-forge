@@ -8,15 +8,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.DimensionManager;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-public class TileEntityPortalController extends TileEntity {
+public class TileEntityPortalController extends NailedTileEntity {
 
     public String title = "";
     public short yaw;

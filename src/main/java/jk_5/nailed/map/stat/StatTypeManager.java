@@ -1,7 +1,7 @@
 package jk_5.nailed.map.stat;
 
 import com.google.common.collect.Maps;
-import jk_5.nailed.map.stat.types.StatTypeGameloopRunning;
+import jk_5.nailed.map.stat.types.*;
 import lombok.Getter;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
@@ -27,10 +27,21 @@ public class StatTypeManager {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
+    @ForgeSubscribe
+    @SuppressWarnings("unused")
+    public void addStatTypesFromEvent(RegisterStatTypeEvent event){
+        event.register("gameloopRunning", new StatTypeGameloopRunning());
+        event.register("gameloopStopped", new StatTypeGameloopStopped());
+        event.register("gameloopPaused", new StatTypeGameloopPaused());
+        event.register("modifiable", new StatTypeModifiable());
+        event.register("iswinner", new StatTypeIsWinner());
+    }
+
     public IStatType getStatType(String name){
         return this.statTypes.get(name);
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T getStatType(Class<T> cl){
         for(IStatType type : this.statTypes.values()){
             if(type.getClass() == cl){
@@ -38,11 +49,5 @@ public class StatTypeManager {
             }
         }
         return null;
-    }
-
-    @ForgeSubscribe
-    @SuppressWarnings("unused")
-    public void addStatTypesFromEvent(RegisterStatTypeEvent event){
-        System.out.println(event.register("gameloopRunning", new StatTypeGameloopRunning()));
     }
 }

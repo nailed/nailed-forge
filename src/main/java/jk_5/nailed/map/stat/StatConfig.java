@@ -1,6 +1,7 @@
 package jk_5.nailed.map.stat;
 
 import com.google.common.collect.Lists;
+import jk_5.nailed.NailedLog;
 import jk_5.nailed.util.config.ConfigFile;
 import jk_5.nailed.util.config.ConfigTag;
 import lombok.Getter;
@@ -22,13 +23,16 @@ public class StatConfig {
     public StatConfig(ConfigFile file){
         for(ConfigTag tag : file.getSortedTagList()){
             tag.useBraces();
-            System.out.println(tag.name);
             DefaultStat stat = new DefaultStat(tag.name);
             ConfigTag typeTag = tag.getTag("type");
             if(typeTag != null){
-                System.out.println(typeTag.getValue());
-                stat.setType(StatTypeManager.instance().getStatType(typeTag.getValue()));
-                stat.getType().readAdditionalData(typeTag);
+                IStatType type = StatTypeManager.instance().getStatType(typeTag.getValue());
+                if(type == null){
+                    NailedLog.warning("Unknown stat type " + typeTag.getValue());
+                    continue;
+                }
+                stat.setType(type);
+                stat.getType().readAdditionalData(typeTag, stat);
             }
             this.stats.add(stat);
         }
