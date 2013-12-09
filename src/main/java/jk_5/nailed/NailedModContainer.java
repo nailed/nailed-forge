@@ -6,15 +6,13 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkMod.VersionCheckHandler;
 import jk_5.nailed.achievement.NailedAchievements;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.blocks.NailedBlocks;
+import jk_5.nailed.ipc.IpcManager;
 import jk_5.nailed.irc.IrcBot;
 import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.map.gen.NailedWorldProvider;
@@ -112,6 +110,11 @@ public class NailedModContainer {
         event.registerServerCommand(new CommandTeam());
         event.registerServerCommand(new CommandStartGame());
         event.registerServerCommand(new CommandIrc());
+    }
+
+    @EventHandler
+    public void serverAboutToStart(FMLServerAboutToStartEvent event){
+        IpcManager.instance().start();
     }
 
     @VersionCheckHandler

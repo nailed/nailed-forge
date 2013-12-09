@@ -32,7 +32,7 @@ public class MapLoader implements IMappackRegistrar {
     @SuppressWarnings("unused") @Getter private static final File mapsFolder = new File("maps");
 
     @Getter private final List<Map> maps = Lists.newArrayList();
-    private final List<Mappack> mappacks = Lists.newArrayList();
+    @Getter private final List<Mappack> mappacks = Lists.newArrayList();
 
     public static MapLoader instance(){
         return INSTANCE;

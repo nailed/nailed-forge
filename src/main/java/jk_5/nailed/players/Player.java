@@ -22,6 +22,7 @@ public class Player {
 
     @Getter private final String username;
     @Setter private Map currentMap;
+    @Getter private boolean online = false;
 
     public void setTimeLeft(int seconds){
         NailedSPH.sendTimeUpdate(this.getEntity(), "Time left: " + ChatColor.GREEN + Utils.secondsToShortTimeString(seconds));
@@ -65,11 +66,11 @@ public class Player {
     }
 
     public void onLogin() {
-
+        this.online = true;
     }
 
     public void onLogout() {
-
+        this.online = false;
     }
 
     public void onChangedDimension() {
