@@ -3,12 +3,12 @@ package jk_5.nailed.players;
 import com.google.common.collect.Lists;
 import cpw.mods.fml.common.IPlayerTracker;
 import cpw.mods.fml.common.registry.GameRegistry;
-import jk_5.nailed.event.PlayerChangedDimensionEvent;
-import jk_5.nailed.event.PlayerCreatedEvent;
+import jk_5.nailed.event.*;
 import lombok.Getter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
+import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 
 import java.util.List;
@@ -52,6 +52,7 @@ public class PlayerRegistry implements IPlayerTracker {
         return p;
     }
 
+    @SuppressWarnings("unused")
     @ForgeSubscribe
     public void formatPlayerName(PlayerEvent.NameFormat event){
         Player player = this.getOrCreatePlayer(event.username);
@@ -59,10 +60,19 @@ public class PlayerRegistry implements IPlayerTracker {
         event.displayname = player.getChatPrefix();
     }
 
+    @SuppressWarnings("unused")
+    @ForgeSubscribe
+    public void onPlayerChat(ServerChatEvent event){
+        Player player = this.getOrCreatePlayer(event.username);
+        if(player == null) return;
+        MinecraftForge.EVENT_BUS.post(new PlayerChatEvent(player, event.message));
+    }
+
     @Override
     public void onPlayerLogin(EntityPlayer ent){
         Player player = this.getOrCreatePlayer(ent.username);
         player.onLogin();
+        MinecraftForge.EVENT_BUS.post(new PlayerJoinEvent(player));
         for(Player p : this.players){
             if(p == player) continue;
             p.sendNotification(player.getUsername() + " joined");
@@ -73,6 +83,7 @@ public class PlayerRegistry implements IPlayerTracker {
     public void onPlayerLogout(EntityPlayer ent){
         Player player = this.getPlayer(ent.username);
         player.onLogout();
+        MinecraftForge.EVENT_BUS.post(new PlayerLeaveEvent(player));
         for(Player p : this.players){
             if(p == player) continue;
             p.sendNotification(player.getUsername() + " left");

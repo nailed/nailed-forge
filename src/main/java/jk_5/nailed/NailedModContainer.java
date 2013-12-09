@@ -15,6 +15,7 @@ import cpw.mods.fml.common.network.NetworkMod.VersionCheckHandler;
 import jk_5.nailed.achievement.NailedAchievements;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.blocks.NailedBlocks;
+import jk_5.nailed.irc.IrcBot;
 import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.map.gen.NailedWorldProvider;
 import jk_5.nailed.map.instruction.InstructionReader;
@@ -23,6 +24,7 @@ import jk_5.nailed.map.stat.RegisterStatTypeEvent;
 import jk_5.nailed.map.stat.StatTypeManager;
 import jk_5.nailed.server.ProxyCommon;
 import jk_5.nailed.server.command.CommandGoto;
+import jk_5.nailed.server.command.CommandIrc;
 import jk_5.nailed.server.command.CommandStartGame;
 import jk_5.nailed.server.command.CommandTeam;
 import jk_5.nailed.util.config.ConfigFile;
@@ -44,17 +46,13 @@ import java.util.List;
 public class NailedModContainer {
 
     @Getter protected static final String modid = "Nailed";
-
-    @Getter
-    private static ConfigFile config;
+    @Getter private static ConfigFile config;
 
     @SidedProxy(modId = modid, clientSide = "jk_5.nailed.client.ProxyClient", serverSide = "jk_5.nailed.server.ProxyCommon")
     public static ProxyCommon proxy;
 
-    @Getter
-    @Instance(modid)
-    private static NailedModContainer instance;
-
+    @Getter @Instance(modid) private static NailedModContainer instance;
+    @Getter private static IrcBot ircBot;
     @Getter private static Collection<Integer> registeredDimensions;
 
     public NailedModContainer(){
@@ -87,6 +85,8 @@ public class NailedModContainer {
         DimensionManager.registerProviderType(-1, NailedWorldProvider.class, false);
         DimensionManager.registerProviderType(0, NailedWorldProvider.class, true);
         DimensionManager.registerProviderType(1, NailedWorldProvider.class, false);
+
+        ircBot = new IrcBot();
     }
 
     @EventHandler
@@ -106,9 +106,12 @@ public class NailedModContainer {
 
     @EventHandler
     public void serverStarting(FMLServerStartingEvent event){
+        ircBot.connect();
+
         event.registerServerCommand(new CommandGoto());
         event.registerServerCommand(new CommandTeam());
         event.registerServerCommand(new CommandStartGame());
+        event.registerServerCommand(new CommandIrc());
     }
 
     @VersionCheckHandler

@@ -1,7 +1,17 @@
 Todo:
 - Add transformer obf mappings
-- Port all the new instructions over from the non-forge nailed
 - Fix teleportation
 
 Bugs:
 - PULSE_OFF pulses on enable
+- Countdown does not seem to work
+
+Command permission levels:  (See http://minecraft.gamepedia.com/Server.properties#Minecraft_server_properties)
+0. Everybody
+1. Ops can only bypass spawn protection
+2. OP & Commandblock
+3. OP Only
+4. Permission for /stop
+
+Op permission level is configurable
+Command block permission level is 2
