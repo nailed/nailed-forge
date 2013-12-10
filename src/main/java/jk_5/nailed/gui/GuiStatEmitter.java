@@ -1,14 +1,13 @@
 package jk_5.nailed.gui;
 
-import codechicken.lib.data.MCDataInput;
 import jk_5.nailed.blocks.tileentity.TileEntityStatEmitter;
 import jk_5.nailed.map.stat.StatMode;
 import jk_5.nailed.network.Packets;
+import lombok.RequiredArgsConstructor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.input.Keyboard;
 
 /**
@@ -16,9 +15,10 @@ import org.lwjgl.input.Keyboard;
  *
  * @author jk-5
  */
+@RequiredArgsConstructor
 public class GuiStatEmitter extends NailedGui {
 
-    private TileEntityStatEmitter statEmitter;
+    private final TileEntityStatEmitter statEmitter;
 
     private GuiTextField textField;
     private GuiButton doneBtn;
@@ -32,14 +32,6 @@ public class GuiStatEmitter extends NailedGui {
         this.textField.drawTextBox();
 
         super.drawScreen(mouseX, mouseY, partialTick);
-    }
-
-    @Override
-    public NailedGui readData(MCDataInput input) {
-        TileEntity tile = Minecraft.getMinecraft().theWorld.getBlockTileEntity(input.readInt(), input.readInt(), input.readInt());
-        if(tile == null || !(tile instanceof TileEntityStatEmitter)) return null;
-        this.statEmitter = (TileEntityStatEmitter) tile;
-        return this;
     }
 
     @Override

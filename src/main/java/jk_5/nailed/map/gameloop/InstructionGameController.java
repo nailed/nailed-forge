@@ -1,9 +1,12 @@
 package jk_5.nailed.map.gameloop;
 
 import com.google.common.collect.Maps;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import jk_5.nailed.map.instruction.GameController;
+import jk_5.nailed.network.Packets;
 import jk_5.nailed.players.Team;
 import lombok.RequiredArgsConstructor;
+import net.minecraft.network.packet.Packet3Chat;
 import net.minecraft.util.ChatMessageComponent;
 
 import java.util.Map;
@@ -37,6 +40,7 @@ public class InstructionGameController implements GameController {
 
     @Override
     public void broadcastTimeRemaining(String data) {
+        Packets.TIME_UPDATE.newPacket().writeString(data).sendToDimension(this.controller.getMap().getID());
     }
 
     @Override
@@ -45,10 +49,12 @@ public class InstructionGameController implements GameController {
 
     @Override
     public void broadcastNotification(String data) {
+        Packets.NOTIFICATION.newPacket().writeByte(0).writeString(data).sendToDimension(this.controller.getMap().getID());
     }
 
     @Override
     public void broadcastChatMessage(ChatMessageComponent message) {
+        PacketDispatcher.sendPacketToAllInDimension(new Packet3Chat(message), this.controller.getMap().getID());
     }
 
     @Override

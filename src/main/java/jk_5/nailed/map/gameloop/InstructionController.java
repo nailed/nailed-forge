@@ -80,7 +80,7 @@ public class InstructionController extends Thread {
                     if(current instanceof TimedInstruction){
                         int ticks = 0;
                         TimedInstruction timed = (TimedInstruction) current;
-                        while(this.isRunning() && this.winner == null && (this.isPaused() ? true : timed.executeTimed(this.controller, ticks))){
+                        while(this.isRunning() && this.winner == null && (this.isPaused() || !timed.executeTimed(this.controller, ticks))){
                             if(!this.isPaused()) ticks ++;
                             Thread.sleep(1000);
                         }
@@ -100,5 +100,6 @@ public class InstructionController extends Thread {
         }
         this.running = false;
         StatTypeManager.instance().getStatType(StatTypeGameloopRunning.class).onEnd(this);
+        this.controller.broadcastTimeRemaining("");
     }
 }

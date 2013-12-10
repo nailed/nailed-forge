@@ -35,6 +35,7 @@ public class StatTypeManager {
         event.register("gameloopPaused", new StatTypeGameloopPaused());
         event.register("modifiable", new StatTypeModifiable());
         event.register("iswinner", new StatTypeIsWinner());
+        event.register("gameHasWinner", new StatTypeGameHasWinner());
     }
 
     public IStatType getStatType(String name){

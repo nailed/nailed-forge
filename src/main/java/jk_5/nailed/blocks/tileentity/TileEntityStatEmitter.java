@@ -41,7 +41,7 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
     public void setStatName(String statName){
         this.programmedName = statName;
         if(this.worldObj == null) this.needsUpdate = true;
-        else{
+        else if(!this.worldObj.isRemote){
             this.stat = MapLoader.instance().getMap(this.worldObj.provider.dimensionId).getStatManager().getStat(this.programmedName);
             MinecraftForge.EVENT_BUS.post(new StatTileEntityEvent.Load(this));
             this.isLoaded = true;
@@ -182,7 +182,7 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
     @Override
     @SideOnly(Side.CLIENT)
     public NailedGui getGui() {
-        return new GuiStatEmitter();
+        return new GuiStatEmitter(this);
     }
 
     @Override

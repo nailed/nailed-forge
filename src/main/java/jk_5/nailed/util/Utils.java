@@ -24,6 +24,7 @@ public class Utils {
             append = true;
         }
         if(seconds != 0 || append){
+            if(seconds < 10 && !append) builder.append("0");
             builder.append(seconds);
             if(!append){
                 builder.append(ChatColor.RESET);
