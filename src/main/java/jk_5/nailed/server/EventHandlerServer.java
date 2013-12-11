@@ -8,4 +8,6 @@ package jk_5.nailed.server;
 @SuppressWarnings("unused")
 public class EventHandlerServer {
 
+    //@ForgeSubscribe
+    //public void onRespawn()
 }

@@ -18,7 +18,7 @@ import java.util.Random;
 public class BlockInvisibleWall extends NailedBlock {
 
     public BlockInvisibleWall(){
-        super("invisibleWall", Material.rock);
+        super("invisibleWall", Material.glass);
         this.disableStats();
         this.setBlockUnbreakable();
         this.setStepSound(new StepSound("null", 0F, 0F));
@@ -57,6 +57,11 @@ public class BlockInvisibleWall extends NailedBlock {
 
     @Override
     public boolean isOpaqueCube(){
+        return false;
+    }
+
+    @Override
+    public boolean renderAsNormalBlock(){
         return false;
     }
 

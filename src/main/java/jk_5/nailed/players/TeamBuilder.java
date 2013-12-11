@@ -26,7 +26,8 @@ public class TeamBuilder {
         Team team = new Team(map, this.internalName);
         team.setName(this.name);
         team.setColor(this.color);
-        //TODO: friendlyfire & friendlyInvisibles
+        team.setFriendlyFireEnabled(this.friendlyFire);
+        team.setSeeFriendlyInvisibles(this.seeFriendlyInvisibles);
         return team;
     }
 }
