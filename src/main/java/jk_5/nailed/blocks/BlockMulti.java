@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
  */
 public abstract class BlockMulti extends NailedBlock {
 
-    protected BlockMulti(String name, Material material) {
+    protected BlockMulti(String name, Material material){
         super(name, material);
     }
 

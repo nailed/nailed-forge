@@ -78,6 +78,9 @@ public class Player {
     }
 
     public void onRespawn() {
-
+        if(this.getTeam() instanceof TeamUndefined) return;
+        if(this.getTeam().shouldOverrideDefaultSpawnpoint()){
+            this.getEntity().setSpawnChunk(null, false);
+        }
     }
 }

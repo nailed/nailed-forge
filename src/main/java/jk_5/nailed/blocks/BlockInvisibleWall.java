@@ -1,8 +1,8 @@
 package jk_5.nailed.blocks;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.StepSound;
 import net.minecraft.block.material.Material;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
@@ -15,14 +15,24 @@ import java.util.Random;
  *
  * @author jk-5
  */
-public class BlockInvisibleWall extends NailedBlock {
+public class BlockInvisibleWall extends BlockMulti {
 
     public BlockInvisibleWall(){
-        super("invisibleWall", Material.glass);
+        super("invisibleBlock", Material.glass);
         this.disableStats();
         this.setBlockUnbreakable();
-        this.setStepSound(new StepSound("null", 0F, 0F));
-        this.setLightOpacity(15);
+        this.setLightOpacity(0);
+        this.setResistance(6000000.0F);
+    }
+
+    @Override
+    public String getUnlocalizedName(ItemStack stack){
+        if(stack.getItemDamage() == 0){
+            return "invisibleWall";
+        }else if(stack.getItemDamage() == 1){
+            return "invisibleBlock";
+        }
+        return "";
     }
 
     @Override
@@ -47,7 +57,14 @@ public class BlockInvisibleWall extends NailedBlock {
 
     @Override
     public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z){
-        return super.getSelectedBoundingBoxFromPool(world, x, y, z);
+        if(world.getBlockMetadata(x, y, z) == 1) return null;
+        return super.getCollisionBoundingBoxFromPool(world, x, y, z);
+    }
+
+    @Override
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z){
+        if(world.getBlockMetadata(x, y, z) == 1) return null;
+        return super.getCollisionBoundingBoxFromPool(world, x, y, z);
     }
 
     @Override

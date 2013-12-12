@@ -29,10 +29,15 @@ import net.minecraftforge.common.MinecraftForge;
 @NoArgsConstructor
 public class TileEntityStatEmitter extends NailedTileEntity implements IStatTileEntity, IGuiTileEntity {
 
-    @Getter private String programmedName = "";
-    @Getter private boolean signalEnabled = false;
-    @Getter @Setter private StatMode mode = StatMode.NORMAL;
-    @Getter private Stat stat;
+    @Getter
+    private String programmedName = "";
+    @Getter
+    private boolean signalEnabled = false;
+    @Getter
+    @Setter
+    private StatMode mode = StatMode.NORMAL;
+    @Getter
+    private Stat stat;
     private boolean needsUpdate = false;
     private boolean isLoaded = false;
     private int redstonePulseTicks = -1;
@@ -42,7 +47,7 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
         this.programmedName = statName;
         if(this.worldObj == null) this.needsUpdate = true;
         else if(!this.worldObj.isRemote){
-            this.stat = MapLoader.instance().getMap(this.worldObj.provider.dimensionId).getStatManager().getStat(this.programmedName);
+            this.stat = MapLoader.instance().getMap(this.worldObj).getStatManager().getStat(this.programmedName);
             MinecraftForge.EVENT_BUS.post(new StatTileEntityEvent.Load(this));
             this.isLoaded = true;
             if(this.stat == null){
@@ -60,9 +65,9 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
     }
 
     @Override
-    public void updateEntity() {
+    public void updateEntity(){
         if(this.needsUpdate){
-            this.stat = MapLoader.instance().getMap(this.worldObj.provider.dimensionId).getStatManager().getStat(this.programmedName);
+            this.stat = MapLoader.instance().getMap(this.worldObj).getStatManager().getStat(this.programmedName);
             MinecraftForge.EVENT_BUS.post(new StatTileEntityEvent.Load(this));
             this.isLoaded = true;
             if(this.stat == null){
@@ -83,13 +88,13 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
                 this.scheduleRedstoneUpdate();
                 this.redstonePulseTicks = -1;
             }else{
-                this.redstonePulseTicks ++;
+                this.redstonePulseTicks++;
             }
         }
     }
 
     @Override
-    public void invalidate() {
+    public void invalidate(){
         super.invalidate();
         if(this.isLoaded){
             MinecraftForge.EVENT_BUS.post(new StatTileEntityEvent.Unload(this));
@@ -98,7 +103,7 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
     }
 
     @Override
-    public void onChunkUnload() {
+    public void onChunkUnload(){
         super.onChunkUnload();
         if(this.isLoaded){
             MinecraftForge.EVENT_BUS.post(new StatTileEntityEvent.Unload(this));
@@ -107,24 +112,24 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
     }
 
     @Override
-    public boolean canUpdate() {
+    public boolean canUpdate(){
         return FMLCommonHandler.instance().getEffectiveSide().isServer();
     }
 
     @Override
-    public Packet getDescriptionPacket() {
+    public Packet getDescriptionPacket(){
         NBTTagCompound tag = new NBTTagCompound();
         this.writeToNBT(tag);
         return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 0, tag);
     }
 
     @Override
-    public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt) {
+    public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt){
         this.readFromNBT(pkt.data);
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tag) {
+    public void readFromNBT(NBTTagCompound tag){
         super.readFromNBT(tag);
         this.setStatName(tag.getString("name"));
         this.mode = StatMode.values()[tag.getByte("mode")];
@@ -132,7 +137,7 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tag) {
+    public void writeToNBT(NBTTagCompound tag){
         super.writeToNBT(tag);
         tag.setString("name", this.programmedName);
         tag.setByte("mode", (byte) this.mode.ordinal());
@@ -140,7 +145,7 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
     }
 
     @Override
-    public void enable() {
+    public void enable(){
         if(this.stat == null && this.signalEnabled){
             this.signalEnabled = false;
             this.scheduleRedstoneUpdate();
@@ -160,7 +165,7 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
     }
 
     @Override
-    public void disable() {
+    public void disable(){
         if(this.stat == null && this.signalEnabled){
             this.signalEnabled = false;
             this.scheduleRedstoneUpdate();
@@ -181,12 +186,12 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
 
     @Override
     @SideOnly(Side.CLIENT)
-    public NailedGui getGui() {
+    public NailedGui getGui(){
         return new GuiStatEmitter(this);
     }
 
     @Override
-    public boolean canPlayerOpenGui(Player player) {
+    public boolean canPlayerOpenGui(Player player){
         if(!player.isOp()){
             player.sendChat("You need to be an OP to do that");
             return false;

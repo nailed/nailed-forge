@@ -29,7 +29,7 @@ public class NailedBlocks {
         portal = new BlockPortal();
         stat = new BlockStat();
 
-        registerBlock(invisibleWall);
+        registerBlock(invisibleWall, ItemBlockMulti.class);
         registerBlock(portalCrystal);
         registerBlock(portalController);
         registerBlock(portal);

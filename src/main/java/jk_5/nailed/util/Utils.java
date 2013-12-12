@@ -24,13 +24,15 @@ public class Utils {
             append = true;
         }
         if(seconds != 0 || append){
-            if(seconds < 10 && !append) builder.append("0");
+            if(seconds < 10 && append) builder.append("0");
             builder.append(seconds);
             if(!append){
                 builder.append(ChatColor.RESET);
-                builder.append(" Seconds");
+                builder.append(" Second");
+                if(seconds != 1) builder.append("s");
             }
         }
+        if(seconds == 0 && !append) builder.append("0 Seconds");
         return builder.toString();
     }
 

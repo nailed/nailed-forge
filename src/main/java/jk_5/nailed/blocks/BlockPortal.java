@@ -58,22 +58,22 @@ public class BlockPortal extends BlockBreakable {
         float ymax = 0.75F;
         float zmin = 0.25F;
         float zmax = 0.75F;
-        if (BlockPortalController.isValidLinkPortalBlock(blockAccess.getBlockId(x - 1, y, z)) > 0) {
+        if(BlockPortalController.isValidLinkPortalBlock(blockAccess.getBlockId(x - 1, y, z)) > 0){
             xmin = 0.0F;
         }
-        if (BlockPortalController.isValidLinkPortalBlock(blockAccess.getBlockId(x + 1, y, z)) > 0) {
+        if(BlockPortalController.isValidLinkPortalBlock(blockAccess.getBlockId(x + 1, y, z)) > 0){
             xmax = 1.0F;
         }
-        if (BlockPortalController.isValidLinkPortalBlock(blockAccess.getBlockId(x, y - 1, z)) > 0) {
+        if(BlockPortalController.isValidLinkPortalBlock(blockAccess.getBlockId(x, y - 1, z)) > 0){
             ymin = 0.0F;
         }
-        if (BlockPortalController.isValidLinkPortalBlock(blockAccess.getBlockId(x, y + 1, z)) > 0) {
+        if(BlockPortalController.isValidLinkPortalBlock(blockAccess.getBlockId(x, y + 1, z)) > 0){
             ymax = 1.0F;
         }
-        if (BlockPortalController.isValidLinkPortalBlock(blockAccess.getBlockId(x, y, z - 1)) > 0) {
+        if(BlockPortalController.isValidLinkPortalBlock(blockAccess.getBlockId(x, y, z - 1)) > 0){
             zmin = 0.0F;
         }
-        if (BlockPortalController.isValidLinkPortalBlock(blockAccess.getBlockId(x, y, z + 1)) > 0) {
+        if(BlockPortalController.isValidLinkPortalBlock(blockAccess.getBlockId(x, y, z + 1)) > 0){
             zmax = 1.0F;
         }
         this.setBlockBounds(xmin, ymin, zmin, xmax, ymax, zmax);
@@ -109,7 +109,7 @@ public class BlockPortal extends BlockBreakable {
     public int colorMultiplier(IBlockAccess blockAccess, int x, int y, int z){
         World world = Minecraft.getMinecraft().theWorld;
         TileEntity entity = BlockPortalController.getTileEntity(world, x, y, z);
-        if ((entity != null) && ((entity instanceof TileEntityPortalController))) {
+        if((entity != null) && ((entity instanceof TileEntityPortalController))){
             TileEntityPortalController controller = (TileEntityPortalController) entity;
             return controller.getColor();
         }
@@ -118,7 +118,7 @@ public class BlockPortal extends BlockBreakable {
 
     @Override
     public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5){
-        if (par1World.isRemote) return;
+        if(par1World.isRemote) return;
         validate(par1World, new ChunkCoordinates(par2, par3, par4));
     }
 
@@ -134,14 +134,14 @@ public class BlockPortal extends BlockBreakable {
 
     @Override
     public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity){
-        if (world.isRemote) return;
+        if(world.isRemote) return;
         TileEntity tileentity = BlockPortalController.getTileEntity(world, x, y, z);
-        if ((tileentity == null) || (!(tileentity instanceof TileEntityPortalController))) {
+        if((tileentity == null) || (!(tileentity instanceof TileEntityPortalController))){
             world.setBlock(x, y, z, 0);
             return;
         }
         TileEntityPortalController container = (TileEntityPortalController) tileentity;
-        if (container.getDestination() == null) {
+        if(container.getDestination() == null){
             world.setBlock(x, y, z, 0);
             return;
         }
@@ -153,24 +153,24 @@ public class BlockPortal extends BlockBreakable {
 
     @Override
     public void updateTick(World world, int i, int j, int k, Random rand){
-        if (world.isRemote) return;
+        if(world.isRemote) return;
         this.onNeighborBlockChange(world, i, j, k, 0);
     }
 
     public static void validate(World world, ChunkCoordinates start){
-        if (world.isRemote) return;
+        if(world.isRemote) return;
         List<ChunkCoordinates> blocks = Lists.newLinkedList();
         blocks.add(start);
-        while (blocks.size() > 0) {
+        while(blocks.size() > 0){
             ChunkCoordinates coords = blocks.remove(0);
-            if (world.getBlockId(coords.posX, coords.posY, coords.posZ) == instance.blockID){
+            if(world.getBlockId(coords.posX, coords.posY, coords.posZ) == instance.blockID){
                 validate(world, coords.posX, coords.posY, coords.posZ, blocks);
             }
         }
     }
 
-    private static void validate(World world, int i, int j, int k, Collection<ChunkCoordinates> blocks) {
-        if (!isValidPortal(world, i, j, k)) {
+    private static void validate(World world, int i, int j, int k, Collection<ChunkCoordinates> blocks){
+        if(!isValidPortal(world, i, j, k)){
             world.setBlock(i, j, k, 0);
             BlockPortalController.addSurrounding(blocks, i, j, k);
         }
@@ -178,26 +178,27 @@ public class BlockPortal extends BlockBreakable {
 
     @Override
     public CreativeTabs getCreativeTabToDisplayOn(){
+
         return NailedBlocks.creativeTab;
     }
 
     public static boolean isValidPortal(World world, int i, int j, int k){
-        if (world.isRemote) return true;
-        if (!checkPortalTension(world, i, j, k)) return false;
-        if (BlockPortalController.getTileEntity(world, i, j, k) == null) return false;
+        if(world.isRemote) return true;
+        if(!checkPortalTension(world, i, j, k)) return false;
+        if(BlockPortalController.getTileEntity(world, i, j, k) == null) return false;
         return true;
     }
 
-    public static boolean checkPortalTension(World world, int i, int j, int k) {
-        if (world.isRemote) return true;
+    public static boolean checkPortalTension(World world, int i, int j, int k){
+        if(world.isRemote) return true;
         int score = 0;
-        if ((BlockPortalController.isValidLinkPortalBlock(world.getBlockId(i + 1, j, k)) > 0) && (BlockPortalController.isValidLinkPortalBlock(world.getBlockId(i - 1, j, k)) > 0)) {
+        if((BlockPortalController.isValidLinkPortalBlock(world.getBlockId(i + 1, j, k)) > 0) && (BlockPortalController.isValidLinkPortalBlock(world.getBlockId(i - 1, j, k)) > 0)){
             score++;
         }
-        if ((BlockPortalController.isValidLinkPortalBlock(world.getBlockId(i, j + 1, k)) > 0) && (BlockPortalController.isValidLinkPortalBlock(world.getBlockId(i, j - 1, k)) > 0)) {
+        if((BlockPortalController.isValidLinkPortalBlock(world.getBlockId(i, j + 1, k)) > 0) && (BlockPortalController.isValidLinkPortalBlock(world.getBlockId(i, j - 1, k)) > 0)){
             score++;
         }
-        if ((BlockPortalController.isValidLinkPortalBlock(world.getBlockId(i, j, k + 1)) > 0) && (BlockPortalController.isValidLinkPortalBlock(world.getBlockId(i, j, k - 1)) > 0)) {
+        if((BlockPortalController.isValidLinkPortalBlock(world.getBlockId(i, j, k + 1)) > 0) && (BlockPortalController.isValidLinkPortalBlock(world.getBlockId(i, j, k - 1)) > 0)){
             score++;
         }
         return score > 1;

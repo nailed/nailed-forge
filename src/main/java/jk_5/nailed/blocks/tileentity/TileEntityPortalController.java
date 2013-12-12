@@ -19,7 +19,8 @@ public class TileEntityPortalController extends NailedTileEntity {
     public String title = "";
     public short yaw;
     public short pitch;
-    @Getter private int color;
+    @Getter
+    private int color;
 
     public TileEntityPortalController(){
         this.tileEntityInvalid = false;
@@ -39,7 +40,7 @@ public class TileEntityPortalController extends NailedTileEntity {
     }
 
     @Override
-    public boolean canUpdate() {
+    public boolean canUpdate(){
         return false;   //We don't need ticks. Don't even bother giving us ticks
     }
 
@@ -48,7 +49,7 @@ public class TileEntityPortalController extends NailedTileEntity {
         super.readFromNBT(nbttagcompound);
         this.yaw = nbttagcompound.getShort("Yaw");
         this.pitch = nbttagcompound.getShort("Pitch");
-        if (nbttagcompound.hasKey("Color")){
+        if(nbttagcompound.hasKey("Color")){
             this.color = nbttagcompound.getInteger("Color");
         }
     }

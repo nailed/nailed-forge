@@ -8,6 +8,7 @@ import jk_5.nailed.map.mappack.DirectoryMappack;
 import jk_5.nailed.map.mappack.Mappack;
 import jk_5.nailed.map.mappack.ZipMappack;
 import lombok.Getter;
+import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.EventPriority;
@@ -144,17 +145,21 @@ public class MapLoader implements IMappackRegistrar {
         }
     }
 
+    public Map getMap(World world){
+        return this.getMap(world.provider.dimensionId);
+    }
+
     @ForgeSubscribe
     @SuppressWarnings("unused")
     public void onWorldLoad(WorldEvent.Load event){
-        Map map = this.getMap(event.world.provider.dimensionId);
+        Map map = this.getMap(event.world);
         if(map != null) map.setWorld(event.world);
     }
 
     @ForgeSubscribe(priority = EventPriority.HIGHEST)
     @SuppressWarnings("unused")
     public void onPlayerChangedDimension(PlayerChangedDimensionEvent event){
-        Map map = this.getMap(event.player.getEntity().worldObj.provider.dimensionId);
+        Map map = this.getMap(event.player.getEntity().worldObj);
         if(map != null) event.player.setCurrentMap(map);
     }
 

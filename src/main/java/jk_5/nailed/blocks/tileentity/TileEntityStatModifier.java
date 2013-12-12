@@ -20,7 +20,7 @@ public class TileEntityStatModifier extends NailedTileEntity {
         this.programmedName = statName;
         if(this.worldObj == null) this.needsUpdate = true;
         else{
-            Stat stat = MapLoader.instance().getMap(this.worldObj.provider.dimensionId).getStatManager().getStat(this.programmedName);
+            Stat stat = MapLoader.instance().getMap(this.worldObj).getStatManager().getStat(this.programmedName);
             if(stat instanceof DefaultStat && ((DefaultStat) stat).getType() instanceof StatTypeModifiable){
                 this.stat = (DefaultStat) stat;
             }

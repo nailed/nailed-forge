@@ -26,7 +26,7 @@ public class BlockStat extends BlockMulti implements ITileEntityProvider {
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack stack) {
+    public String getUnlocalizedName(ItemStack stack){
         if(stack.getItemDamage() == 0){
             return "statEmitter";
         }else if(stack.getItemDamage() == 1){
@@ -36,7 +36,7 @@ public class BlockStat extends BlockMulti implements ITileEntityProvider {
     }
 
     @Override
-    public TileEntity createNewTileEntity(World world) {
+    public TileEntity createNewTileEntity(World world){
         return null;
     }
 
@@ -50,23 +50,23 @@ public class BlockStat extends BlockMulti implements ITileEntityProvider {
     }
 
     @Override
-    public boolean canConnectRedstone(IBlockAccess world, int x, int y, int z, int side) {
+    public boolean canConnectRedstone(IBlockAccess world, int x, int y, int z, int side){
         return true;
     }
 
     @Override
-    public int damageDropped(int meta) {
+    public int damageDropped(int meta){
         return meta;
     }
 
     @Override
-    public void getSubBlocks(int id, CreativeTabs tab, List list) {
+    public void getSubBlocks(int id, CreativeTabs tab, List list){
         list.add(new ItemStack(id, 1, 0));
         list.add(new ItemStack(id, 1, 1));
     }
 
     @Override
-    public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side) {
+    public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side){
         TileEntity tile = world.getBlockTileEntity(x, y, z);
         if(tile == null || !(tile instanceof TileEntityStatEmitter)) return 0;
         return ((TileEntityStatEmitter) tile).isSignalEnabled() ? 15 : 0;

@@ -12,8 +12,8 @@ import net.minecraft.world.biome.WorldChunkManager;
 import java.util.List;
 import java.util.Random;
 
-public class VoidWorldChunkManager extends WorldChunkManager
-{
+public class VoidWorldChunkManager extends WorldChunkManager {
+
     private World world;
     
     public VoidWorldChunkManager(World world){
@@ -29,7 +29,7 @@ public class VoidWorldChunkManager extends WorldChunkManager
             if (ret == null){
                 ret = new ChunkPosition(0, 0, 0);
             }
-            Map map = MapLoader.instance().getMap(this.world.provider.dimensionId);
+            Map map = MapLoader.instance().getMap(this.world);
             ChunkCoordinates spawn;
             if(map != null && map.getMappack() != null){
                 spawn = map.getMappack().getMappackMetadata().getSpawnPoint();

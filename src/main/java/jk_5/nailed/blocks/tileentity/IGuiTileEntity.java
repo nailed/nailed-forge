@@ -14,5 +14,6 @@ public interface IGuiTileEntity {
 
     @SideOnly(Side.CLIENT)
     public NailedGui getGui();
+
     public boolean canPlayerOpenGui(Player player);
 }
