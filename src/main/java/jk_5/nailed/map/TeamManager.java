@@ -68,9 +68,17 @@ public class TeamManager {
     public void setPlayerTeam(Player player, Team team) {
         if(this.playerTeamMap.get(player) == team) return;
         if(this.playerTeamMap.containsKey(player)){
+            team.onRemovePlayer(player);
             this.playerTeamMap.remove(player);
         }
         this.playerTeamMap.put(player, team);
+        team.onAddPlayer(player);
         player.getEntity().refreshDisplayName();
+    }
+
+    public void onWorldSet(){
+        for(Team team : this.teams){
+            team.onWorldSet();
+        }
     }
 }

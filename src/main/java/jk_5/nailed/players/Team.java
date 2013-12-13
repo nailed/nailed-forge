@@ -32,6 +32,17 @@ public class Team {
     @Getter @Setter private ScorePlayerTeam scoreboardTeam;
     @Getter @Setter private ChunkCoordinates spawnPoint;
 
+    public void onWorldSet(){
+        if(this instanceof TeamUndefined) return;
+        //this.scoreboardTeam = new ScorePlayerTeam(this.map.getWorld().getScoreboard(), "map" + this.map.getID() + this.teamId);
+        this.scoreboardTeam = this.map.getWorld().getScoreboard().createTeam("map" + this.map.getID() + this.teamId);
+        this.scoreboardTeam.setTeamName(this.name);
+        this.scoreboardTeam.setAllowFriendlyFire(this.friendlyFireEnabled);
+        this.scoreboardTeam.setSeeFriendlyInvisiblesEnabled(this.seeFriendlyInvisibles);
+        this.scoreboardTeam.setNamePrefix(this.color.toString() + "[" + this.name + "] ");
+        this.scoreboardTeam.setNameSuffix(ChatColor.RESET.toString());
+    }
+
     public void setReady(boolean ready){
         this.ready = ready;
         if(this.isReady()){
@@ -71,5 +82,15 @@ public class Team {
             }
         }
         return ret;
+    }
+
+    public void onAddPlayer(Player player){
+        if(this instanceof TeamUndefined) return;
+        this.map.getWorld().getScoreboard().addPlayerToTeam(player.getUsername(), this.scoreboardTeam);
+    }
+
+    public void onRemovePlayer(Player player){
+        if(this instanceof TeamUndefined) return;
+        this.map.getWorld().getScoreboard().removePlayerFromTeam(player.getUsername(), this.scoreboardTeam);
     }
 }

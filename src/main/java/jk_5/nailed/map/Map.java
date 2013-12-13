@@ -58,6 +58,7 @@ public class Map {
         this.world = world;
         if(world.provider != null) this.ID = world.provider.dimensionId;
         this.isLoaded = true;
+        this.teamManager.onWorldSet();
         NailedLog.info("Registered world " + world);
     }
 
