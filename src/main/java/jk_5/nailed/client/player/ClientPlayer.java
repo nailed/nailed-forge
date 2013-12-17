@@ -13,6 +13,4 @@ import net.minecraft.client.entity.EntityClientPlayerMP;
 public class ClientPlayer {
 
     @Getter private final EntityClientPlayerMP entity;
-
-
 }

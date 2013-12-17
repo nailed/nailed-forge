@@ -39,11 +39,13 @@ public class InstructionController extends Thread {
     }
 
     public void setWinner(Team winner){
+        if(!this.running || this.winner != null) return;
         this.winner = winner;
         this.running = false;
         this.stopGame();
         StatTypeManager.instance().getStatType(StatTypeGameHasWinner.class).onWin(this);
         StatTypeManager.instance().getStatType(StatTypeIsWinner.class).onWinnerSet(this, winner);
+        this.controller.broadcastNotification("Winner is " + winner.getColoredName());
     }
 
     public void startGame(){

@@ -9,7 +9,6 @@ import jk_5.nailed.blocks.tileentity.TileEntityPortalController;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -19,7 +18,10 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Stack;
 
 /**
  * No description given
@@ -31,6 +33,12 @@ public class BlockPortalController extends BlockContainer {
     public static BlockPortalController instance;
 
     private Icon iconFace;
+
+    public BlockPortalController(){
+        this("portalController", Material.glass);
+        instance = this;
+        this.setBlockBounds(0, 0, 0, 1, 1, 0.375F);
+    }
 
     public BlockPortalController(String name, Material material){
         super(NailedModContainer.getConfig().getTag("blocks").useBraces().getTag(name).useBraces().getTag("id").getIntValue(NailedBlock.nextId.getAndIncrement()), material);
@@ -45,17 +53,6 @@ public class BlockPortalController extends BlockContainer {
             controller.link();
         }
         return true;
-    }
-
-    @Override
-    public CreativeTabs getCreativeTabToDisplayOn(){
-        return NailedBlocks.creativeTab;
-    }
-
-    public BlockPortalController(){
-        this("portalController", Material.glass);
-        instance = this;
-        this.setBlockBounds(0, 0, 0, 1, 1, 0.375F);
     }
 
     @Override
@@ -83,21 +80,6 @@ public class BlockPortalController extends BlockContainer {
     @Override
     public boolean renderAsNormalBlock(){
         return false;
-    }
-
-    @Override
-    public int quantityDropped(Random par1Random){
-        return 1;
-    }
-
-    @Override
-    public int getRenderBlockPass(){
-        return 0;
-    }
-
-    @Override
-    public int getRenderType(){
-        return 0;
     }
 
     @Override

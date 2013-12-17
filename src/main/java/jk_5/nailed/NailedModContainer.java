@@ -21,10 +21,7 @@ import jk_5.nailed.map.instruction.RegisterInstructionEvent;
 import jk_5.nailed.map.stat.RegisterStatTypeEvent;
 import jk_5.nailed.map.stat.StatTypeManager;
 import jk_5.nailed.server.ProxyCommon;
-import jk_5.nailed.server.command.CommandGoto;
-import jk_5.nailed.server.command.CommandIrc;
-import jk_5.nailed.server.command.CommandStartGame;
-import jk_5.nailed.server.command.CommandTeam;
+import jk_5.nailed.server.command.*;
 import jk_5.nailed.util.config.ConfigFile;
 import lombok.Getter;
 import net.minecraftforge.common.DimensionManager;
@@ -110,6 +107,8 @@ public class NailedModContainer {
         event.registerServerCommand(new CommandTeam());
         event.registerServerCommand(new CommandStartGame());
         event.registerServerCommand(new CommandIrc());
+        event.registerServerCommand(new CommandMap());
+        event.registerServerCommand(new CommandSetWinner());
     }
 
     @EventHandler

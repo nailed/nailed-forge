@@ -96,6 +96,6 @@ public class Team {
 
     public void onRemovePlayer(Player player){
         if(this instanceof TeamUndefined) return;
-        this.map.getWorld().getScoreboard().removePlayerFromTeam(player.getUsername(), this.scoreboardTeam);
+        this.map.getWorld().getScoreboard().removePlayerFromTeams(player.getUsername());
     }
 }

@@ -17,6 +17,7 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -59,11 +60,22 @@ public class Map {
         if(world.provider != null) this.ID = world.provider.dimensionId;
         this.isLoaded = true;
         this.teamManager.onWorldSet();
-        NailedLog.info("Registered world " + world);
+        NailedLog.info("Registered map " + this.getSaveFileName());
+    }
+
+    public void unloadAndRemove(){
+        DimensionManager.unloadWorld(this.getID());
+        MapLoader.instance().getMaps().remove(this);
+        this.getSaveFolder().delete();
+        NailedLog.info("Unloaded map " + this.getSaveFileName());
     }
 
     public String getSaveFileName(){
         return PotentialMap.getSaveFileName(this);
+    }
+
+    public File getSaveFolder(){
+        return new File(MapLoader.getMapsFolder(), this.getSaveFileName());
     }
 
     public TeleportOptions getSpawnTeleport(){

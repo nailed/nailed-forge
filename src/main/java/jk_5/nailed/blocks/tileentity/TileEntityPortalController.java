@@ -19,14 +19,13 @@ public class TileEntityPortalController extends NailedTileEntity {
     public String title = "";
     public short yaw;
     public short pitch;
-    @Getter
-    private int color;
+    @Getter private int color;
 
     public TileEntityPortalController(){
         this.tileEntityInvalid = false;
         this.yaw = 0;
         this.pitch = 0;
-        this.color = 3355647;
+        this.color = 0x3333FF;
     }
 
     public TeleportOptions getDestination(){
@@ -41,7 +40,7 @@ public class TileEntityPortalController extends NailedTileEntity {
 
     @Override
     public boolean canUpdate(){
-        return false;   //We don't need ticks. Don't even bother giving us ticks
+        return false;
     }
 
     @Override

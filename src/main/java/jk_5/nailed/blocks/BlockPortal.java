@@ -11,7 +11,6 @@ import net.minecraft.block.BlockBreakable;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -99,12 +98,12 @@ public class BlockPortal extends BlockBreakable {
 
     @Override
     public int getBlockColor(){
-        return 0x3333FF; //3355647
+        return 0x3333FF;
     }
 
     @Override
     public int getRenderColor(int i){
-        return 0x3333FF; //3355647
+        return 0x3333FF;
     }
 
     @Override
@@ -182,17 +181,10 @@ public class BlockPortal extends BlockBreakable {
         }
     }
 
-    @Override
-    public CreativeTabs getCreativeTabToDisplayOn(){
-
-        return NailedBlocks.creativeTab;
-    }
-
     public static boolean isValidPortal(World world, int i, int j, int k){
         if(world.isRemote) return true;
         if(!checkPortalTension(world, i, j, k)) return false;
-        if(BlockPortalController.getTileEntity(world, i, j, k) == null) return false;
-        return true;
+        return BlockPortalController.getTileEntity(world, i, j, k) != null;
     }
 
     public static boolean checkPortalTension(World world, int i, int j, int k){

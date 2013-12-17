@@ -132,6 +132,15 @@ public class MapLoader implements IMappackRegistrar {
         return map;
     }
 
+    public Map getMapFromName(String name){
+        for(Map map : this.maps){
+            if(map.getSaveFileName().equalsIgnoreCase(name)){
+                return map;
+            }
+        }
+        return null;
+    }
+
     public Map getMap(int id){
         for(Map map : this.maps){
             if(map.getID() == id){
@@ -146,6 +155,7 @@ public class MapLoader implements IMappackRegistrar {
     }
 
     public Map getMap(World world){
+        if(world == null) return null;
         return this.getMap(world.provider.dimensionId);
     }
 

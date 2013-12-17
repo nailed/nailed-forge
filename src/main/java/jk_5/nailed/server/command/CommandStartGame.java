@@ -23,6 +23,11 @@ public class CommandStartGame extends CommandBase {
     }
 
     @Override
+    public int getRequiredPermissionLevel(){
+        return 3;
+    }
+
+    @Override
     public void processCommand(ICommandSender iCommandSender, String[] strings) {
         Player player = PlayerRegistry.instance().getPlayer(iCommandSender.getCommandSenderName());
         if(player == null) return;

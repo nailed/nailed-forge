@@ -29,15 +29,10 @@ import net.minecraftforge.common.MinecraftForge;
 @NoArgsConstructor
 public class TileEntityStatEmitter extends NailedTileEntity implements IStatTileEntity, IGuiTileEntity {
 
-    @Getter
-    private String programmedName = "";
-    @Getter
-    private boolean signalEnabled = false;
-    @Getter
-    @Setter
-    private StatMode mode = StatMode.NORMAL;
-    @Getter
-    private Stat stat;
+    @Getter private String programmedName = "";
+    @Getter private boolean signalEnabled = false;
+    @Getter @Setter private StatMode mode = StatMode.NORMAL;
+    @Getter private Stat stat;
     private boolean needsUpdate = false;
     private boolean isLoaded = false;
     private int redstonePulseTicks = -1;

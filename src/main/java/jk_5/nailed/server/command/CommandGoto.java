@@ -1,12 +1,18 @@
 package jk_5.nailed.server.command;
 
+import com.google.common.collect.Lists;
 import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.map.teleport.NailedTeleporter;
 import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * No description given
@@ -17,28 +23,39 @@ public class CommandGoto extends CommandBase {
 
     @Override
     public String getCommandName(){
-        return "map";
+        return "goto";
     }
 
     @Override
     public String getCommandUsage(ICommandSender sender){
-        return "Go to another map";
+        return "/goto <mapname> - Go to another map";
+    }
+
+    @Override
+    public int getRequiredPermissionLevel(){
+        return 3;
     }
 
     @Override
     public void processCommand(ICommandSender sender, String[] args){
-        if(args[0].equals("create")){
-            String type = args[1];
-            MapLoader.instance().newMapServerFor(MapLoader.instance().getMappack(type));
-        }else if(args[0].equals("tp")){
-            Map map = MapLoader.instance().getMap(Integer.parseInt(args[1]));
-            MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP) sender, map.getID(), new NailedTeleporter(map));
-            //TeleportHelper.travelEntity(sender.getEntityWorld(), (EntityPlayerMP) sender, map.getSpawnTeleport());
+        if(args.length == 0) throw new WrongUsageException("/goto <mapname>");
+        Map map = MapLoader.instance().getMapFromName(args[0]);
+        if(map == null) throw new CommandException("That map does not exist");
+        MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP) sender, map.getID(), new NailedTeleporter(map));
+    }
+
+    @Override
+    public List addTabCompletionOptions(ICommandSender sender, String[] strings){
+        if(strings.length != 1) return Arrays.asList();
+        List<String> ret = Lists.newArrayList();
+        for(Map map : MapLoader.instance().getMaps()){
+            ret.add(map.getSaveFileName());
         }
+        return getListOfStringsFromIterableMatchingLastWord(strings, ret);
     }
 
     @Override
     public int compareTo(Object o) {
-        return this.getCommandName().compareTo(o.toString()); //FIXME!
+        return 0;
     }
 }

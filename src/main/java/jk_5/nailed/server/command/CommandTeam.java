@@ -28,6 +28,11 @@ public class CommandTeam extends CommandBase {
     }
 
     @Override
+    public int getRequiredPermissionLevel(){
+        return 3;
+    }
+
+    @Override
     public void processCommand(ICommandSender s, String[] strings) {
         if(!(s instanceof EntityPlayer)) throw new CommandException("This command can only be used by players");
         Player sender = PlayerRegistry.instance().getPlayer(((EntityPlayer) s).username);
