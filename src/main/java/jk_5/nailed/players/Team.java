@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.minecraft.scoreboard.ScorePlayerTeam;
+import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.ChunkCoordinates;
 
@@ -34,13 +35,17 @@ public class Team {
 
     public void onWorldSet(){
         if(this instanceof TeamUndefined) return;
-        //this.scoreboardTeam = new ScorePlayerTeam(this.map.getWorld().getScoreboard(), "map" + this.map.getID() + this.teamId);
-        this.scoreboardTeam = this.map.getWorld().getScoreboard().createTeam("map" + this.map.getID() + this.teamId);
-        this.scoreboardTeam.setTeamName(this.name);
-        this.scoreboardTeam.setAllowFriendlyFire(this.friendlyFireEnabled);
-        this.scoreboardTeam.setSeeFriendlyInvisiblesEnabled(this.seeFriendlyInvisibles);
-        this.scoreboardTeam.setNamePrefix(this.color.toString() + "[" + this.name + "] ");
-        this.scoreboardTeam.setNameSuffix(ChatColor.RESET.toString());
+        String name = "map" + this.map.getID() + this.teamId;
+        Scoreboard scoreboard = this.map.getWorld().getScoreboard();
+        ScorePlayerTeam scoreplayerteam = scoreboard.func_96508_e(name);
+        if(scoreplayerteam == null){
+            this.scoreboardTeam = scoreboard.createTeam(name);
+            this.scoreboardTeam.setTeamName(this.name);
+            this.scoreboardTeam.setAllowFriendlyFire(this.friendlyFireEnabled);
+            this.scoreboardTeam.setSeeFriendlyInvisiblesEnabled(this.seeFriendlyInvisibles);
+            this.scoreboardTeam.setNamePrefix(this.color.toString() + "[" + this.name + "] ");
+            this.scoreboardTeam.setNameSuffix(ChatColor.RESET.toString());
+        }
     }
 
     public void setReady(boolean ready){

@@ -5,7 +5,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import jk_5.nailed.NailedModContainer;
 import jk_5.nailed.blocks.tileentity.TileEntityPortalController;
-import jk_5.nailed.map.teleport.TeleportHelper;
+import jk_5.nailed.map.teleport.NailedTeleporter;
 import jk_5.nailed.map.teleport.TeleportOptions;
 import net.minecraft.block.BlockBreakable;
 import net.minecraft.block.material.Material;
@@ -13,6 +13,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
@@ -148,7 +151,10 @@ public class BlockPortal extends BlockBreakable {
         TeleportOptions options = container.getDestination();
         options.setMaintainMomentum(true);
         options.setSound("nailed:teleport.teleport-portal");
-        TeleportHelper.travelEntity(world, entity, options);
+        //TeleportHelper.travelEntity(world, entity, options);
+        if(entity instanceof EntityPlayer){
+            MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP) entity, options.getDestinationID(), new NailedTeleporter(options.getDestination()));
+        }
     }
 
     @Override

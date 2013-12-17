@@ -13,7 +13,7 @@ buildscript {
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.0-SNAPSHOT'
-        classpath 'jk_5.nailed.gradle:Nailed-Gradle:1.1-SNAPSHOT'
+        classpath 'jk_5.nailed.gradle:nailed-gradle:1.1-SNAPSHOT'
     }
 }
 
@@ -55,7 +55,7 @@ dependencies {
     launcher 'jk_5.nailed:launcher:1.0'
     launcher 'jk_5.nailed.deploy:forge:1.0'
     launcher 'jk_5.nailed.deploy:minecraft:1.0'
-    launcher 'jk_5.nailed:nailed-forge:2.0'
+    //launcher 'jk_5.nailed:nailed-forge:2.0'
 }
 
 nailed {

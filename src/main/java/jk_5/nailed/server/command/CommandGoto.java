@@ -2,10 +2,11 @@ package jk_5.nailed.server.command;
 
 import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MapLoader;
-import jk_5.nailed.map.teleport.TeleportHelper;
+import jk_5.nailed.map.teleport.NailedTeleporter;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 
 /**
  * No description given
@@ -31,7 +32,8 @@ public class CommandGoto extends CommandBase {
             MapLoader.instance().newMapServerFor(MapLoader.instance().getMappack(type));
         }else if(args[0].equals("tp")){
             Map map = MapLoader.instance().getMap(Integer.parseInt(args[1]));
-            TeleportHelper.travelEntity(sender.getEntityWorld(), (EntityPlayerMP) sender, map.getSpawnTeleport());
+            MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP) sender, map.getID(), new NailedTeleporter(map));
+            //TeleportHelper.travelEntity(sender.getEntityWorld(), (EntityPlayerMP) sender, map.getSpawnTeleport());
         }
     }
 
