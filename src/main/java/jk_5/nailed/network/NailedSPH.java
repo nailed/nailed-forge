@@ -5,6 +5,7 @@ import codechicken.lib.packet.PacketCustom.IServerPacketHandler;
 import com.google.common.base.Preconditions;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
+import jk_5.nailed.blocks.tileentity.TileEntityElevator;
 import jk_5.nailed.blocks.tileentity.TileEntityPortalController;
 import jk_5.nailed.blocks.tileentity.TileEntityStatEmitter;
 import jk_5.nailed.server.ProxyCommon;
@@ -34,6 +35,10 @@ public class NailedSPH implements IServerPacketHandler {
                 TileEntity tile1 = entityPlayerMP.worldObj.getBlockTileEntity(packet.readInt(), packet.readInt(), packet.readInt());
                 if(tile1 == null || !(tile1 instanceof TileEntityPortalController)) return;
                 ((TileEntityPortalController) tile1).readGuiData(packet);
+            case MOVEMENT_EVENT:
+                TileEntity tile2 = entityPlayerMP.worldObj.getBlockTileEntity(packet.readInt(), packet.readInt(), packet.readInt());
+                if(tile2 == null || !(tile2 instanceof TileEntityElevator)) return;
+                ((TileEntityElevator) tile2).onMovementEvent(packet.readByte(), entityPlayerMP);
             default: break;
         }
     }

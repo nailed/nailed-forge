@@ -14,7 +14,8 @@ public enum Packets {
     NOTIFICATION(2),
     OPEN_GUI(3),
     STATEMITTER_STAT(4),
-    PORTALCONTROLLER_DESTINATION(5);
+    PORTALCONTROLLER_DESTINATION(5),
+    MOVEMENT_EVENT(6);
 
     @Getter
     private final int ID;

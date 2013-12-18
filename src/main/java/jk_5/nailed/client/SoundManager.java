@@ -20,5 +20,6 @@ public class SoundManager {
         event.manager.addSound("nailed:teleport/link-intra.ogg");
         event.manager.addSound("nailed:teleport/link-portal.ogg");
         event.manager.addSound("nailed:teleport/pop.wav");
+        event.manager.addSound("nailed:teleport.ogg");
     }
 }
