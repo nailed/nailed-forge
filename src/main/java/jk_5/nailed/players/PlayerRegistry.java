@@ -56,7 +56,7 @@ public class PlayerRegistry implements IPlayerTracker {
     @SuppressWarnings("unused")
     @ForgeSubscribe
     public void formatPlayerName(PlayerEvent.NameFormat event){
-        if(FMLCommonHandler.instance().getEffectiveSide().isServer()) return;
+        if(FMLCommonHandler.instance().getEffectiveSide().isClient()) return;
         Player player = this.getOrCreatePlayer(event.username);
         if(player == null) return;
         event.displayname = player.getChatPrefix();
