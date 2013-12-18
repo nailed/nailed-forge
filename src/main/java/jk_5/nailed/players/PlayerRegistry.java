@@ -1,6 +1,7 @@
 package jk_5.nailed.players;
 
 import com.google.common.collect.Lists;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.IPlayerTracker;
 import cpw.mods.fml.common.registry.GameRegistry;
 import jk_5.nailed.event.*;
@@ -55,6 +56,7 @@ public class PlayerRegistry implements IPlayerTracker {
     @SuppressWarnings("unused")
     @ForgeSubscribe
     public void formatPlayerName(PlayerEvent.NameFormat event){
+        if(FMLCommonHandler.instance().getEffectiveSide().isServer()) return;
         Player player = this.getOrCreatePlayer(event.username);
         if(player == null) return;
         event.displayname = player.getChatPrefix();
