@@ -4,13 +4,10 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import jk_5.nailed.NailedModContainer;
 import jk_5.nailed.blocks.tileentity.TileEntityPortalController;
-import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
@@ -28,31 +25,23 @@ import java.util.Stack;
  *
  * @author jk-5
  */
-public class BlockPortalController extends BlockContainer {
-
-    public static BlockPortalController instance;
+public class BlockPortalController extends NailedBlock {
 
     private Icon iconFace;
 
     public BlockPortalController(){
-        this("portalController", Material.glass);
-        instance = this;
+        super("portalController", Material.glass);
         this.setBlockBounds(0, 0, 0, 1, 1, 0.375F);
     }
 
-    public BlockPortalController(String name, Material material){
-        super(NailedModContainer.getConfig().getTag("blocks").useBraces().getTag(name).useBraces().getTag("id").getIntValue(NailedBlock.nextId.getAndIncrement()), material);
-        this.setUnlocalizedName("nailed." + name);
+    @Override
+    public boolean hasTileEntity(int metadata){
+        return true;
     }
 
     @Override
-    public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9){
-        TileEntity tile = par1World.getBlockTileEntity(par2, par3, par4);
-        if(tile != null && tile instanceof TileEntityPortalController){
-            TileEntityPortalController controller = (TileEntityPortalController) tile;
-            controller.link();
-        }
-        return true;
+    public TileEntity createTileEntity(World world, int metadata){
+        return new TileEntityPortalController();
     }
 
     @Override
@@ -428,15 +417,10 @@ public class BlockPortalController extends BlockContainer {
         return 0;
     }
 
-    @Override
-    public TileEntity createNewTileEntity(World world){
-        return new TileEntityPortalController();
-    }
-
     public static TileEntity getTileEntity(IBlockAccess blockaccess, int x, int y, int z){
         HashSet<ChunkCoordinates> visited = Sets.newHashSet();
         int blockId = blockaccess.getBlockId(x, y, z);
-        while(blockId != instance.blockID){
+        while(blockId != NailedBlocks.portalController.blockID){
             if(isValidLinkPortalBlock(blockId) == 0) return null;
             ChunkCoordinates pos = new ChunkCoordinates(x, y, z);
             if(!visited.add(pos)){

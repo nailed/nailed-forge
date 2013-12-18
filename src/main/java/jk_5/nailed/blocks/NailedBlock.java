@@ -38,4 +38,17 @@ public class NailedBlock extends Block {
         }
         return false;
     }
+
+    @Override
+    public void breakBlock(World world, int x, int y, int z, int oldID, int oldMeta){
+        super.breakBlock(world, x, y, z, oldID, oldMeta);
+        world.removeBlockTileEntity(x, y, z);
+    }
+
+    @Override
+    public boolean onBlockEventReceived(World world, int x, int y, int z, int eventID, int data){
+        super.onBlockEventReceived(world, x, y, z, eventID, data);
+        TileEntity tileentity = world.getBlockTileEntity(x, y, z);
+        return tileentity != null && tileentity.receiveClientEvent(eventID, data);
+    }
 }

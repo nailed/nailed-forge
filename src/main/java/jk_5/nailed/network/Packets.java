@@ -13,7 +13,8 @@ public enum Packets {
     TIME_UPDATE(1),
     NOTIFICATION(2),
     OPEN_GUI(3),
-    STATEMITTER_STAT(4);
+    STATEMITTER_STAT(4),
+    PORTALCONTROLLER_DESTINATION(5);
 
     @Getter
     private final int ID;

@@ -56,12 +56,6 @@ public class BlockInvisibleWall extends BlockMulti {
     }
 
     @Override
-    public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int x, int y, int z){
-        if(world.getBlockMetadata(x, y, z) == 1) return null;
-        return super.getCollisionBoundingBoxFromPool(world, x, y, z);
-    }
-
-    @Override
     public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z){
         if(world.getBlockMetadata(x, y, z) == 1) return null;
         return super.getCollisionBoundingBoxFromPool(world, x, y, z);
