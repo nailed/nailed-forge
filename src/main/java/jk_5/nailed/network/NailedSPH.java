@@ -76,6 +76,7 @@ public class NailedSPH implements IServerPacketHandler {
         Packets.NOTIFICATION.newPacket()
                 .writeByte(0)
                 .writeString(text)
+                .compressed()
                 .sendToClients();
     }
 
