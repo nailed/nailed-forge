@@ -91,7 +91,7 @@ public class Team {
 
     public void onAddPlayer(Player player){
         if(this instanceof TeamUndefined) return;
-        this.map.getWorld().getScoreboard().addPlayerToTeam(player.getUsername(), this.scoreboardTeam);
+        this.map.getWorld().getScoreboard().addPlayerToTeam(player.getUsername(), this.scoreboardTeam);    //TODO: something crashes the client when this triggers
     }
 
     public void onRemovePlayer(Player player){

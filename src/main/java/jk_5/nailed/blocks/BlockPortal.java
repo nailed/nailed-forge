@@ -39,6 +39,7 @@ public class BlockPortal extends BlockBreakable {
         this.setUnlocalizedName("nailed.portal");
         instance = this;
         this.setTickRandomly(true);
+        this.setLightValue(1);
     }
 
     @SideOnly(Side.CLIENT)

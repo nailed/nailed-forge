@@ -109,6 +109,7 @@ public class NailedModContainer {
         event.registerServerCommand(new CommandIrc());
         event.registerServerCommand(new CommandMap());
         event.registerServerCommand(new CommandSetWinner());
+        event.registerServerCommand(new CommandReloadMappacks());
     }
 
     @EventHandler

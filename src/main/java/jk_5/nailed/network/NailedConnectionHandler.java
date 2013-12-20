@@ -13,6 +13,8 @@ import net.minecraft.network.NetLoginHandler;
 import net.minecraft.network.packet.NetHandler;
 import net.minecraft.network.packet.Packet1Login;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.common.network.ForgePacket;
+import net.minecraftforge.common.network.packet.DimensionRegisterPacket;
 
 /**
  * No description given
@@ -45,7 +47,8 @@ public class NailedConnectionHandler implements IConnectionHandler {
     @Override
     public String connectionReceived(NetLoginHandler netHandler, INetworkManager manager){
         for(Map map : MapLoader.instance().getMaps()){
-            if(map.getID() < 1 || map.getID() > 1) NailedSPH.sendRegisterDimension(netHandler.getPlayer(), map.getID(), ProxyCommon.providerID);
+            manager.addToSendQueue(ForgePacket.makePacketSet(new DimensionRegisterPacket(map.getID(), ProxyCommon.providerID))[0]);
+            //if(map.getID() < 1 || map.getID() > 1) NailedSPH.sendRegisterDimension(netHandler.getPlayer(), map.getID(), ProxyCommon.providerID);
         }
         return null;
     }

@@ -31,14 +31,17 @@ public class NailedSPH implements IServerPacketHandler {
                 TileEntity tile = entityPlayerMP.worldObj.getBlockTileEntity(packet.readInt(), packet.readInt(), packet.readInt());
                 if(tile == null || !(tile instanceof TileEntityStatEmitter)) return;
                 ((TileEntityStatEmitter) tile).readGuiData(packet);
+                break;
             case PORTALCONTROLLER_DESTINATION:
                 TileEntity tile1 = entityPlayerMP.worldObj.getBlockTileEntity(packet.readInt(), packet.readInt(), packet.readInt());
                 if(tile1 == null || !(tile1 instanceof TileEntityPortalController)) return;
                 ((TileEntityPortalController) tile1).readGuiData(packet);
+                break;
             case MOVEMENT_EVENT:
                 TileEntity tile2 = entityPlayerMP.worldObj.getBlockTileEntity(packet.readInt(), packet.readInt(), packet.readInt());
                 if(tile2 == null || !(tile2 instanceof TileEntityElevator)) return;
                 ((TileEntityElevator) tile2).onMovementEvent(packet.readByte(), entityPlayerMP);
+                break;
             default: break;
         }
     }

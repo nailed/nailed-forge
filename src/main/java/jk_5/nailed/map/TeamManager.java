@@ -1,8 +1,7 @@
 package jk_5.nailed.map;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import jk_5.nailed.event.PlayerChangedDimensionEvent;
 import jk_5.nailed.players.Player;
 import jk_5.nailed.players.Team;
@@ -24,6 +23,8 @@ public class TeamManager {
     @Getter private final Team defaultTeam;
     @Getter private final List<Team> teams = Lists.newArrayList();
 
+    private final java.util.Map<Player, Team> playerTeamMap = Maps.newHashMap();
+
     public TeamManager(Map map){
         this.map = map;
         this.defaultTeam = new Team(this.map, "unknown-" + this.map.getSaveFileName());
@@ -38,8 +39,6 @@ public class TeamManager {
             this.teams.add(builder.build(this.map));
         }
     }
-
-    private final BiMap<Player, Team> playerTeamMap = HashBiMap.create();
 
     @ForgeSubscribe
     public void onPlayerChangedDimension(PlayerChangedDimensionEvent event){
