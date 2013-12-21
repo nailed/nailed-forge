@@ -8,7 +8,6 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.NetworkMod;
-import cpw.mods.fml.common.network.NetworkMod.VersionCheckHandler;
 import jk_5.nailed.achievement.NailedAchievements;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.blocks.NailedBlocks;
@@ -28,7 +27,9 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -58,6 +59,13 @@ public class NailedModContainer {
     public void preInit(FMLPreInitializationEvent event){
         NailedLog.info("Creating config file");
         config = new ConfigFile(event.getSuggestedConfigurationFile()).setComment("Nailed main config file");
+
+        if(MapLoader.getMapsFolder().exists()){
+            NailedLog.info("Clearing away old maps folder");
+            new File(".", "mapbackups").mkdirs();
+            File dest = new File(new File(".", "mapbackups"), new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()));
+            MapLoader.getMapsFolder().renameTo(dest);
+        }
 
         NailedLog.info("Loading achievements");
         NailedAchievements.addAchievements();
@@ -115,11 +123,6 @@ public class NailedModContainer {
     @EventHandler
     public void serverAboutToStart(FMLServerAboutToStartEvent event){
         IpcManager.instance().start();
-    }
-
-    @VersionCheckHandler
-    public boolean acceptClientVersion(String version){
-        return true;
     }
 
     private List<Integer> getExistingMapList(){

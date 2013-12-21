@@ -2,6 +2,7 @@ package jk_5.nailed.network;
 
 import com.google.common.collect.ArrayListMultimap;
 import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.Packet209SetPlayerTeam;
 
 /**
  * No description given
@@ -35,6 +36,9 @@ public class PacketListener {
 
     public static Packet handleOutgoing(Packet packet){
         if(packet == null) return null;
+        if(packet instanceof Packet209SetPlayerTeam){
+            System.out.println(((Packet209SetPlayerTeam) packet).mode);
+        }
         for(IPacketListener listener : listeners.get(packet.getPacketId())){
             packet = listener.handleOutgoing(packet);
             if(packet == null) return null;
