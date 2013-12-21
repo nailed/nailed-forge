@@ -20,6 +20,7 @@ public class BlockPortalCrystal extends NailedBlock {
     public BlockPortalCrystal(){
         super("portalCrystal", Material.glass);
         instance = this;
+        this.setBlockUnbreakable();
     }
 
     @Override

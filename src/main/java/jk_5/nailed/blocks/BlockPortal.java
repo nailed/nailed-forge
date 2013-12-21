@@ -36,10 +36,10 @@ public class BlockPortal extends BlockBreakable {
 
     public BlockPortal(){
         super(NailedModContainer.getConfig().getTag("blocks").useBraces().getTag("portal").useBraces().getTag("id").getIntValue(NailedBlock.nextId.getAndIncrement()), "portal", Material.portal, false);
-        this.setUnlocalizedName("nailed.portal");
         instance = this;
         this.setTickRandomly(true);
         this.setLightValue(1);
+        this.setBlockUnbreakable();
     }
 
     @SideOnly(Side.CLIENT)
