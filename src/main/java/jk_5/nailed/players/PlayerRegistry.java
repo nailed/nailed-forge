@@ -4,10 +4,14 @@ import com.google.common.collect.Lists;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.IPlayerTracker;
 import cpw.mods.fml.common.registry.GameRegistry;
+import jk_5.nailed.NailedLog;
 import jk_5.nailed.event.*;
+import jk_5.nailed.map.Map;
+import jk_5.nailed.map.MapLoader;
 import lombok.Getter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.EventPriority;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -70,9 +74,17 @@ public class PlayerRegistry implements IPlayerTracker {
         MinecraftForge.EVENT_BUS.post(new PlayerChatEvent(player, event.message));
     }
 
+    @ForgeSubscribe(priority = EventPriority.HIGHEST)
+    @SuppressWarnings("unused")
+    public void onPlayerChangedDimension(PlayerChangedDimensionEvent event){
+        Map map = MapLoader.instance().getMap(event.player.getEntity().worldObj);
+        if(map != null) event.player.setCurrentMap(map);
+    }
+
     @Override
     public void onPlayerLogin(EntityPlayer ent){
         Player player = this.getOrCreatePlayer(ent.username);
+        NailedLog.info("Player " + player.getUsername() + " logged in in world " + player.getCurrentMap().getSaveFileName());
         player.onLogin();
         MinecraftForge.EVENT_BUS.post(new PlayerJoinEvent(player));
         for(Player p : this.players){
@@ -95,12 +107,17 @@ public class PlayerRegistry implements IPlayerTracker {
     @Override
     public void onPlayerChangedDimension(EntityPlayer player){
         Player p = this.getPlayer(player.username);
+        NailedLog.info("Player " + player.username + " changed dimension");
+        NailedLog.info("   From: " + p.getCurrentMap().getSaveFileName());
+        NailedLog.info("   To:   " + MapLoader.instance().getMap(player.worldObj).getSaveFileName());
         p.onChangedDimension();
         MinecraftForge.EVENT_BUS.post(new PlayerChangedDimensionEvent(p));
     }
 
     @Override
     public void onPlayerRespawn(EntityPlayer player){
-        this.getPlayer(player.username).onRespawn();
+        Player p = this.getPlayer(player.username);
+        NailedLog.info("Player " + p.getUsername() + " respawned");
+        p.onRespawn();
     }
 }

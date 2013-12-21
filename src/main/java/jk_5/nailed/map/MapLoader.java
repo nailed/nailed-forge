@@ -3,7 +3,6 @@ package jk_5.nailed.map;
 import com.google.common.collect.Lists;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.api.IMappackRegistrar;
-import jk_5.nailed.event.PlayerChangedDimensionEvent;
 import jk_5.nailed.map.mappack.DirectoryMappack;
 import jk_5.nailed.map.mappack.Mappack;
 import jk_5.nailed.map.mappack.ZipMappack;
@@ -11,7 +10,6 @@ import lombok.Getter;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.EventPriority;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;
 
@@ -164,13 +162,6 @@ public class MapLoader implements IMappackRegistrar {
     public void onWorldLoad(WorldEvent.Load event){
         Map map = this.getMap(event.world);
         if(map != null) map.setWorld(event.world);
-    }
-
-    @ForgeSubscribe(priority = EventPriority.HIGHEST)
-    @SuppressWarnings("unused")
-    public void onPlayerChangedDimension(PlayerChangedDimensionEvent event){
-        Map map = this.getMap(event.player.getEntity().worldObj);
-        if(map != null) event.player.setCurrentMap(map);
     }
 
     @Override

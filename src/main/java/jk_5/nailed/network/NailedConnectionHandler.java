@@ -48,7 +48,6 @@ public class NailedConnectionHandler implements IConnectionHandler {
     public String connectionReceived(NetLoginHandler netHandler, INetworkManager manager){
         for(Map map : MapLoader.instance().getMaps()){
             manager.addToSendQueue(ForgePacket.makePacketSet(new DimensionRegisterPacket(map.getID(), ProxyCommon.providerID))[0]);
-            //if(map.getID() < 1 || map.getID() > 1) NailedSPH.sendRegisterDimension(netHandler.getPlayer(), map.getID(), ProxyCommon.providerID);
         }
         return null;
     }

@@ -23,6 +23,7 @@ import jk_5.nailed.server.ProxyCommon;
 import jk_5.nailed.server.command.*;
 import jk_5.nailed.util.config.ConfigFile;
 import lombok.Getter;
+import net.minecraft.command.CommandHandler;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -111,13 +112,15 @@ public class NailedModContainer {
     public void serverStarting(FMLServerStartingEvent event){
         ircBot.connect();
 
-        event.registerServerCommand(new CommandGoto());
-        event.registerServerCommand(new CommandTeam());
-        event.registerServerCommand(new CommandStartGame());
-        event.registerServerCommand(new CommandIrc());
-        event.registerServerCommand(new CommandMap());
-        event.registerServerCommand(new CommandSetWinner());
-        event.registerServerCommand(new CommandReloadMappacks());
+        CommandHandler ch = (CommandHandler) event.getServer().getCommandManager();
+
+        ch.registerCommand(new CommandGoto());
+        ch.registerCommand(new CommandTeam());
+        ch.registerCommand(new CommandStartGame());
+        ch.registerCommand(new CommandIrc());
+        ch.registerCommand(new CommandMap());
+        ch.registerCommand(new CommandSetWinner());
+        ch.registerCommand(new CommandReloadMappacks());
     }
 
     @EventHandler
