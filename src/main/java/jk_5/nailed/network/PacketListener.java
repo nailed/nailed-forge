@@ -27,6 +27,9 @@ public class PacketListener {
 
     public static Packet handleIncoming(Packet packet){
         if(packet == null) return null;
+        if(packet instanceof Packet209SetPlayerTeam){
+            System.out.println(((Packet209SetPlayerTeam) packet).mode);
+        }
         for(IPacketListener listener : listeners.get(packet.getPacketId())){
             packet = listener.handleIncoming(packet);
             if(packet == null) return null;
