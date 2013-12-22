@@ -15,11 +15,8 @@ import net.minecraft.world.World;
  */
 public class BlockPortalCrystal extends NailedBlock {
 
-    public static BlockPortalCrystal instance;
-
     public BlockPortalCrystal(){
         super("portalCrystal", Material.glass);
-        instance = this;
         this.setBlockUnbreakable();
     }
 

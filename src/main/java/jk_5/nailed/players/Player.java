@@ -29,7 +29,8 @@ public class Player {
     }
 
     public void sendNotification(String message){
-        NailedSPH.sendNotification(this.getEntity(), message);
+        EntityPlayerMP entity = this.getEntity();
+        if(entity != null) NailedSPH.sendNotification(this.getEntity(), message);
     }
 
     public void sendChat(String message){
@@ -37,7 +38,8 @@ public class Player {
     }
 
     public void sendChat(ChatMessageComponent message){
-        this.getEntity().sendChatToPlayer(message);
+        EntityPlayerMP entity = this.getEntity();
+        if(entity != null) this.getEntity().sendChatToPlayer(message);
     }
 
     public EntityPlayerMP getEntity(){

@@ -30,18 +30,15 @@ import java.util.Random;
  */
 public class BlockPortal extends NailedBlock {
 
-    public static BlockPortal instance;
-
     public BlockPortal(){
         super("portal", Material.portal);
-        instance = this;
         this.setTickRandomly(true);
         this.setLightValue(1);
         this.setBlockUnbreakable();
     }
 
-    @SideOnly(Side.CLIENT)
     @Override
+    @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister register){
         this.blockIcon = register.registerIcon("nailed:portal");
     }
@@ -174,7 +171,7 @@ public class BlockPortal extends NailedBlock {
         blocks.add(start);
         while(blocks.size() > 0){
             ChunkCoordinates coords = blocks.remove(0);
-            if(world.getBlockId(coords.posX, coords.posY, coords.posZ) == instance.blockID){
+            if(world.getBlockId(coords.posX, coords.posY, coords.posZ) == NailedBlocks.portal.blockID){
                 validate(world, coords.posX, coords.posY, coords.posZ, blocks);
             }
         }

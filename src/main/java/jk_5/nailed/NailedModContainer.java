@@ -56,6 +56,11 @@ public class NailedModContainer {
         NailedAPI.setMappackRegistrar(MapLoader.instance());
     }
 
+    @NetworkMod.VersionCheckHandler
+    public boolean acceptClientVersion(String version){
+        return true;
+    }
+
     @EventHandler
     public void preInit(FMLPreInitializationEvent event){
         NailedLog.info("Creating config file");
@@ -89,6 +94,8 @@ public class NailedModContainer {
         DimensionManager.registerProviderType(-1, NailedWorldProvider.class, false);
         DimensionManager.registerProviderType(0, NailedWorldProvider.class, true);
         DimensionManager.registerProviderType(1, NailedWorldProvider.class, false);
+        DimensionManager.unregisterDimension(-1);
+        DimensionManager.unregisterDimension(1);
 
         ircBot = new IrcBot();
     }
@@ -125,6 +132,9 @@ public class NailedModContainer {
         ch.registerCommand(new CommandSudo());
         ch.registerCommand(new CommandInvsee());
         ch.registerCommand(new CommandFirework());
+        ch.registerCommand(new CommandLobby());
+        ch.registerCommand(new CommandReloadMap());
+        ch.registerCommand(new CommandKickall());
     }
 
     @EventHandler

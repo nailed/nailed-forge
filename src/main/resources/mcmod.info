@@ -10,8 +10,8 @@
             "jk-5"
         ],
         "credits": "Credits go to PostVillageCore for making the webinterface",
-        "url": "http://github.com/nailed/nailed-forge/"
-        "requiredMods": [ "Forge" ],
+        "url": "http://github.com/nailed/nailed-forge/",
+        "requiredMods": ["Forge"],
         "useDependencyInformation": "true"
     }]
 }

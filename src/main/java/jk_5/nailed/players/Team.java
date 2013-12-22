@@ -43,7 +43,7 @@ public class Team {
             this.scoreboardTeam.setTeamName(this.name);
             this.scoreboardTeam.setAllowFriendlyFire(this.friendlyFireEnabled);
             this.scoreboardTeam.setSeeFriendlyInvisiblesEnabled(this.seeFriendlyInvisibles);
-            this.scoreboardTeam.setNamePrefix(this.color.toString() + "[" + this.name + "] ");
+            this.scoreboardTeam.setNamePrefix(this.color.toString());
             this.scoreboardTeam.setNameSuffix(ChatColor.RESET.toString());
         }
     }
@@ -91,11 +91,11 @@ public class Team {
 
     public void onAddPlayer(Player player){
         if(this instanceof TeamUndefined) return;
-        this.map.getWorld().getScoreboard().addPlayerToTeam(player.getUsername(), this.scoreboardTeam);    //TODO: something crashes the client when this triggers
+        //this.map.getWorld().getScoreboard().addPlayerToTeam(player.getUsername(), this.scoreboardTeam);    //TODO: something crashes the client when this triggers
     }
 
     public void onRemovePlayer(Player player){
         if(this instanceof TeamUndefined) return;
-        this.map.getWorld().getScoreboard().removePlayerFromTeams(player.getUsername());
+        //this.map.getWorld().getScoreboard().removePlayerFromTeams(player.getUsername());
     }
 }

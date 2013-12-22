@@ -1,5 +1,6 @@
 package jk_5.nailed.event;
 
+import jk_5.nailed.map.Map;
 import jk_5.nailed.players.Player;
 import lombok.RequiredArgsConstructor;
 import net.minecraftforge.event.Event;
@@ -13,4 +14,6 @@ import net.minecraftforge.event.Event;
 public class PlayerChangedDimensionEvent extends Event {
 
     public final Player player;
+    public final Map oldMap;
+    public final Map newMap;
 }

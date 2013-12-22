@@ -2,12 +2,15 @@ package jk_5.nailed.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Icon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -26,11 +29,19 @@ public class BlockInvisibleWall extends BlockMulti {
     }
 
     @Override
+    public int getLightValue(IBlockAccess world, int x, int y, int z){
+        int meta = world.getBlockMetadata(x, y, z);
+        return meta == 2 ? 15 : 0;
+    }
+
+    @Override
     public String getUnlocalizedName(ItemStack stack){
         if(stack.getItemDamage() == 0){
             return "invisibleWall";
         }else if(stack.getItemDamage() == 1){
             return "invisibleBlock";
+        }else if(stack.getItemDamage() == 2){
+            return "invisibleLight";
         }
         return "";
     }
@@ -79,5 +90,12 @@ public class BlockInvisibleWall extends BlockMulti {
     @Override
     public boolean isBlockSolidOnSide(World world, int x, int y, int z, ForgeDirection side){
         return false;
+    }
+
+    @Override
+    public void getSubBlocks(int id, CreativeTabs tab, List list){
+        list.add(new ItemStack(id, 1, 0));
+        //list.add(new ItemStack(id, 1, 1));
+        list.add(new ItemStack(id, 1, 2));
     }
 }

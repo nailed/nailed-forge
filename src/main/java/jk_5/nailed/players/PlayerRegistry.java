@@ -107,11 +107,13 @@ public class PlayerRegistry implements IPlayerTracker {
     @Override
     public void onPlayerChangedDimension(EntityPlayer player){
         Player p = this.getPlayer(player.username);
+        Map oldMap = p.getCurrentMap();
+        Map newMap = MapLoader.instance().getMap(player.worldObj);
         NailedLog.info("Player " + player.username + " changed dimension");
-        NailedLog.info("   From: " + p.getCurrentMap().getSaveFileName());
-        NailedLog.info("   To:   " + MapLoader.instance().getMap(player.worldObj).getSaveFileName());
+        NailedLog.info("   From: " + oldMap.getSaveFileName());
+        NailedLog.info("   To:   " + newMap.getSaveFileName());
         p.onChangedDimension();
-        MinecraftForge.EVENT_BUS.post(new PlayerChangedDimensionEvent(p));
+        MinecraftForge.EVENT_BUS.post(new PlayerChangedDimensionEvent(p, oldMap, newMap));
     }
 
     @Override

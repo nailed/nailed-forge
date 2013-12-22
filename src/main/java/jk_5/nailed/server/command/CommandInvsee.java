@@ -34,13 +34,13 @@ public class CommandInvsee extends CommandBase {
         if(args.length == 1){
             Player player = PlayerRegistry.instance().getPlayer(args[0]);
             if(player == null) throw new CommandException("That player is not online!");
-            EntityPlayerMP entity = player.getEntity();
+            EntityPlayerMP entity = (EntityPlayerMP) sender;
             if(entity.openContainer != entity.inventoryContainer){
                 entity.closeScreen();
             }
             entity.incrementWindowID();
 
-            InventoryOtherPlayer chest = new InventoryOtherPlayer(entity, (EntityPlayerMP) sender);
+            InventoryOtherPlayer chest = new InventoryOtherPlayer(player.getEntity(), (EntityPlayerMP) sender);
             entity.playerNetServerHandler.sendPacketToPlayer(new Packet100OpenWindow(entity.currentWindowId, 0, chest.getInvName(), chest.getSizeInventory(), true));
             entity.openContainer = new ContainerChest(entity.inventory, chest);
             entity.openContainer.windowId = entity.currentWindowId;

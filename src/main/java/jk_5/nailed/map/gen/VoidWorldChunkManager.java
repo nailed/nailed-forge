@@ -34,10 +34,10 @@ public class VoidWorldChunkManager extends WorldChunkManager {
             if(map != null && map.getMappack() != null){
                 spawn = map.getMappack().getMappackMetadata().getSpawnPoint();
             }else{
-                spawn = new ChunkCoordinates(0, 64, 0);
+                spawn = new ChunkCoordinates(0, 65, 0);
             }
-            NailedLog.info("Building spawn platform at: %d, %d, %d", spawn.posX, spawn.posY, spawn.posZ);
-            world.setBlock(spawn.posX, spawn.posY, spawn.posZ, Block.bedrock.blockID);
+            NailedLog.info("Building spawn platform at: %d, %d, %d", spawn.posX, spawn.posY - 1, spawn.posZ);
+            world.setBlock(spawn.posX, spawn.posY - 1, spawn.posZ, Block.bedrock.blockID);
         }
         return ret;
     }

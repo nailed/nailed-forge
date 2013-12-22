@@ -26,7 +26,7 @@ public class CommandFirework extends CommandBase {
     @Override
     public void processCommand(ICommandSender sender, String[] args){
         ChunkCoordinates coords = sender.getPlayerCoordinates();
-        sender.getEntityWorld().spawnEntityInWorld(new EntityFireworkRocket(sender.getEntityWorld(), coords.posX, coords.posY, coords.posZ, FireworkRed.getItemStack(0x00FF00)));
+        sender.getEntityWorld().spawnEntityInWorld(new EntityFireworkRocket(sender.getEntityWorld(), coords.posX, coords.posY, coords.posZ, FireworkRed.getItemStack(0xFF0000)));
     }
 
     @Override
