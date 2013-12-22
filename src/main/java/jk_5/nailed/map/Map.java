@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.map.gameloop.InstructionController;
 import jk_5.nailed.map.mappack.Mappack;
+import jk_5.nailed.map.mappack.MappackMetadata;
 import jk_5.nailed.map.stat.StatManager;
 import jk_5.nailed.map.teleport.TeleportOptions;
 import jk_5.nailed.network.NailedSPH;
@@ -14,6 +15,7 @@ import jk_5.nailed.server.ProxyCommon;
 import lombok.Getter;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 
@@ -60,6 +62,19 @@ public class Map {
         if(world.provider != null) this.ID = world.provider.dimensionId;
         this.isLoaded = true;
         this.teamManager.onWorldSet();
+
+        if(this.mappack != null){
+            MappackMetadata meta = this.mappack.getMappackMetadata();
+            GameRules rules = world.getGameRules();
+            for(java.util.Map.Entry<String, String> e : meta.getGameruleConfig().entrySet()){
+                if(rules.hasRule(e.getKey())){
+                    rules.setOrCreateGameRule(e.getKey(), e.getValue());
+                }
+            }
+            world.difficultySetting = meta.getDifficulty();
+            world.setAllowedSpawnTypes(meta.isSpawnHostileMobs() && world.difficultySetting > 0, meta.isSpawnFriendlyMobs());
+        }
+
         NailedLog.info("Registered map " + this.getSaveFileName());
     }
 

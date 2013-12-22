@@ -3,11 +3,9 @@ package jk_5.nailed.blocks;
 import com.google.common.collect.Lists;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import jk_5.nailed.NailedModContainer;
 import jk_5.nailed.blocks.tileentity.TileEntityPortalController;
 import jk_5.nailed.map.teleport.NailedTeleporter;
 import jk_5.nailed.map.teleport.TeleportOptions;
-import net.minecraft.block.BlockBreakable;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IconRegister;
@@ -30,12 +28,12 @@ import java.util.Random;
  *
  * @author jk-5
  */
-public class BlockPortal extends BlockBreakable {
+public class BlockPortal extends NailedBlock {
 
     public static BlockPortal instance;
 
     public BlockPortal(){
-        super(NailedModContainer.getConfig().getTag("blocks").useBraces().getTag("portal").useBraces().getTag("id").getIntValue(NailedBlock.nextId.getAndIncrement()), "portal", Material.portal, false);
+        super("portal", Material.portal);
         instance = this;
         this.setTickRandomly(true);
         this.setLightValue(1);
@@ -105,6 +103,13 @@ public class BlockPortal extends BlockBreakable {
     @Override
     public int getRenderColor(int i){
         return 0x3333FF;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side){
+        int id = world.getBlockId(x, y, z);
+        return id != this.blockID && super.shouldSideBeRendered(world, x, y, z, side);
     }
 
     @Override

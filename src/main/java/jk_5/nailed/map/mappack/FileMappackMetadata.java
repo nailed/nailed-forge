@@ -1,6 +1,7 @@
 package jk_5.nailed.map.mappack;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import jk_5.nailed.players.TeamBuilder;
 import jk_5.nailed.util.ChatColor;
 import jk_5.nailed.util.config.ConfigFile;
@@ -9,6 +10,7 @@ import lombok.Getter;
 import net.minecraft.util.ChunkCoordinates;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * No description given
@@ -24,6 +26,8 @@ public class FileMappackMetadata implements MappackMetadata {
     private List<TeamBuilder> defaultTeams;
     public boolean spawnFriendlyMobs;
     public boolean spawnHostileMobs;
+    public Map<String, String> gameruleConfig;
+    public int difficulty;
 
     public FileMappackMetadata(ConfigFile config){
         this.config = config;
@@ -34,6 +38,7 @@ public class FileMappackMetadata implements MappackMetadata {
         this.spawnHostileMobs = config.getTag("map").getTag("spawn-hostile-mobs").getBooleanValue(true);
         this.spawnFriendlyMobs = config.getTag("map").getTag("spawn-friendly-mobs").getBooleanValue(true);
         this.name = config.getTag("map").getTag("name").getValue("");
+        this.difficulty = config.getTag("map").getTag("difficulty").getIntValue(2);
         this.spawnPoint = new ChunkCoordinates(spawnX, spawnY, spawnZ);
 
         this.defaultTeams = Lists.newArrayList();
@@ -46,6 +51,14 @@ public class FileMappackMetadata implements MappackMetadata {
             team.setFriendlyFire(tag.getTag("friendlyfire").getBooleanValue(false));
             team.setSeeFriendlyInvisibles(tag.getTag("friendlyinvisibles").getBooleanValue(true));
             this.defaultTeams.add(team);
+        }
+
+        this.gameruleConfig = Maps.newHashMap();
+        ConfigTag gameruleTag = this.config.getTag("gamerule", false);
+        if(gameruleTag != null){
+            for(ConfigTag tag : gameruleTag.getSortedTagList()){
+                this.gameruleConfig.put(tag.name, tag.getValue());
+            }
         }
     }
 }

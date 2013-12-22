@@ -124,6 +124,7 @@ public class NailedModContainer {
         ch.registerCommand(new CommandTime());
         ch.registerCommand(new CommandSudo());
         ch.registerCommand(new CommandInvsee());
+        ch.registerCommand(new CommandFirework());
     }
 
     @EventHandler

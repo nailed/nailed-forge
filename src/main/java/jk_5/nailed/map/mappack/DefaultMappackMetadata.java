@@ -5,6 +5,7 @@ import lombok.Getter;
 import net.minecraft.util.ChunkCoordinates;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * No description given
@@ -19,4 +20,6 @@ public class DefaultMappackMetadata implements MappackMetadata {
     public List<TeamBuilder> defaultTeams;
     public boolean spawnFriendlyMobs;
     public boolean spawnHostileMobs;
+    public Map<String, String> gameruleConfig;
+    public int difficulty;
 }
