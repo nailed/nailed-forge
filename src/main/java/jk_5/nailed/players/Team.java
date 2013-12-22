@@ -34,7 +34,6 @@ public class Team {
     @Getter @Setter private ChunkCoordinates spawnPoint;
 
     public void onWorldSet(){
-        if(this instanceof TeamUndefined) return;
         String name = "map" + this.map.getID() + this.teamId;
         Scoreboard scoreboard = this.map.getWorld().getScoreboard();
         ScorePlayerTeam scoreplayerteam = scoreboard.func_96508_e(name);
@@ -90,12 +89,20 @@ public class Team {
     }
 
     public void onAddPlayer(Player player){
-        if(this instanceof TeamUndefined) return;
-        //this.map.getWorld().getScoreboard().addPlayerToTeam(player.getUsername(), this.scoreboardTeam);    //TODO: something crashes the client when this triggers
+        this.addPlayerToScoreboardTeam(player);
     }
 
     public void onRemovePlayer(Player player){
-        if(this instanceof TeamUndefined) return;
-        //this.map.getWorld().getScoreboard().removePlayerFromTeams(player.getUsername());
+        this.removePlayerFromScoreboardTeam(player);
+    }
+
+    public void addPlayerToScoreboardTeam(Player player){
+        if(this.scoreboardTeam == null) return;
+        this.map.getWorld().getScoreboard().addPlayerToTeam(player.getUsername(), this.scoreboardTeam);
+    }
+
+    public void removePlayerFromScoreboardTeam(Player player){
+        if(this.scoreboardTeam != null) return;
+        this.map.getWorld().getScoreboard().removePlayerFromTeams(player.getUsername());
     }
 }

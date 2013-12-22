@@ -1,8 +1,10 @@
 package jk_5.nailed.map;
 
 import com.google.common.collect.Lists;
+import cpw.mods.fml.common.FMLCommonHandler;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.api.IMappackRegistrar;
+import jk_5.nailed.event.PlayerChangedDimensionEvent;
 import jk_5.nailed.map.mappack.DirectoryMappack;
 import jk_5.nailed.map.mappack.Mappack;
 import jk_5.nailed.map.mappack.ZipMappack;
@@ -160,8 +162,17 @@ public class MapLoader implements IMappackRegistrar {
     @ForgeSubscribe
     @SuppressWarnings("unused")
     public void onWorldLoad(WorldEvent.Load event){
+        if(FMLCommonHandler.instance().getEffectiveSide().isClient()) return;
         Map map = this.getMap(event.world);
         if(map != null) map.setWorld(event.world);
+    }
+
+    @ForgeSubscribe
+    @SuppressWarnings("unused")
+    public void onChangeDimension(PlayerChangedDimensionEvent event){
+        if(FMLCommonHandler.instance().getEffectiveSide().isClient()) return;
+        event.oldMap.onPlayerLeft(event.player);
+        event.newMap.onPlayerJoined(event.player);
     }
 
     @Override

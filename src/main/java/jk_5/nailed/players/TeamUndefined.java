@@ -12,4 +12,9 @@ public class TeamUndefined extends Team {
     public TeamUndefined(Map map) {
         super(map, "undefined-" + map.getSaveFileName());
     }
+
+    @Override
+    public void onWorldSet(){
+        //NOOP
+    }
 }

@@ -12,6 +12,7 @@ import jk_5.nailed.network.NailedSPH;
 import jk_5.nailed.players.Player;
 import jk_5.nailed.players.PlayerRegistry;
 import jk_5.nailed.server.ProxyCommon;
+import jk_5.nailed.util.ChatColor;
 import lombok.Getter;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.ChunkCoordinates;
@@ -85,6 +86,24 @@ public class Map {
         NailedLog.info("Unloaded map " + this.getSaveFileName());
     }
 
+    public void reloadFromMappack(){
+        for(Player player : this.getPlayers()){
+            player.getEntity().playerNetServerHandler.kickPlayerFromServer("[" + ChatColor.GREEN + "Nailed" + ChatColor.RESET + "] Reloading the map you were in");
+        }
+        this.unloadAndRemove();
+        this.mappack.prepareWorld(this.getSaveFolder());
+        DimensionManager.registerDimension(this.getID(), ProxyCommon.providerID);
+        DimensionManager.initDimension(this.getID());
+    }
+
+    public void onPlayerJoined(Player player){
+        this.teamManager.onPlayerJoinedMap(player);
+    }
+
+    public void onPlayerLeft(Player player){
+        this.teamManager.onPlayerLeftMap(player);
+    }
+
     public String getSaveFileName(){
         return PotentialMap.getSaveFileName(this);
     }
@@ -94,6 +113,9 @@ public class Map {
     }
 
     public TeleportOptions getSpawnTeleport(){
+        if(this.mappack == null){
+            return new TeleportOptions(this, this.world.getSpawnPoint(), 0);
+        }
         return new TeleportOptions(this, new ChunkCoordinates(this.mappack.getMappackMetadata().getSpawnPoint()), 0);
     }
 

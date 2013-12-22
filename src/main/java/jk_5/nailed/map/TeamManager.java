@@ -2,13 +2,11 @@ package jk_5.nailed.map;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import jk_5.nailed.event.PlayerChangedDimensionEvent;
 import jk_5.nailed.players.Player;
 import jk_5.nailed.players.Team;
 import jk_5.nailed.players.TeamBuilder;
 import lombok.Getter;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.ForgeSubscribe;
+import net.minecraft.network.packet.Packet209SetPlayerTeam;
 
 import java.util.List;
 
@@ -29,23 +27,10 @@ public class TeamManager {
         this.map = map;
         this.defaultTeam = new Team(this.map, "unknown-" + this.map.getSaveFileName());
 
-        MinecraftForge.EVENT_BUS.register(this);
-
         if(this.map.getMappack() == null) return;
 
         for(TeamBuilder builder : this.map.getMappack().getMappackMetadata().getDefaultTeams()){
-            Team team = builder.build(this.map);
-            System.out.println("Registering team " + team.getName());
             this.teams.add(builder.build(this.map));
-        }
-    }
-
-    @ForgeSubscribe
-    public void onPlayerChangedDimension(PlayerChangedDimensionEvent event){
-        if(event.player.getCurrentMap() != this.map) return;
-        if(!this.playerTeamMap.containsKey(event.player)){
-            this.playerTeamMap.put(event.player, this.defaultTeam);
-            event.player.getEntity().refreshDisplayName();
         }
     }
 
@@ -78,6 +63,30 @@ public class TeamManager {
     public void onWorldSet(){
         for(Team team : this.teams){
             team.onWorldSet();
+        }
+    }
+
+    public void onPlayerJoinedMap(Player player){
+        if(!this.playerTeamMap.containsKey(player)){
+            this.playerTeamMap.put(player, this.defaultTeam);
+            player.getEntity().refreshDisplayName();
+        }
+        Team team = this.playerTeamMap.get(player);
+        if(team.getScoreboardTeam() != null){
+            player.sendPacket(new Packet209SetPlayerTeam(team.getScoreboardTeam(), 0));
+        }
+        team.addPlayerToScoreboardTeam(player);
+    }
+
+    public void onPlayerLeftMap(Player player){
+        if(!this.playerTeamMap.containsKey(player)){
+            this.playerTeamMap.put(player, this.defaultTeam);
+            player.getEntity().refreshDisplayName();
+        }
+        Team team = this.playerTeamMap.get(player);
+        team.removePlayerFromScoreboardTeam(player);
+        if(team.getScoreboardTeam() != null){
+            player.sendPacket(new Packet209SetPlayerTeam(team.getScoreboardTeam(), 1));
         }
     }
 }

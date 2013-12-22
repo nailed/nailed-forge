@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatMessageComponent;
 
@@ -40,6 +41,10 @@ public class Player {
     public void sendChat(ChatMessageComponent message){
         EntityPlayerMP entity = this.getEntity();
         if(entity != null) this.getEntity().sendChatToPlayer(message);
+    }
+
+    public void sendPacket(Packet packet){
+        this.getEntity().playerNetServerHandler.sendPacketToPlayer(packet);
     }
 
     public EntityPlayerMP getEntity(){
