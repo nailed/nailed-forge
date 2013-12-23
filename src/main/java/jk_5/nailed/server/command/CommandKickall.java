@@ -1,5 +1,6 @@
 package jk_5.nailed.server.command;
 
+import com.google.common.base.Joiner;
 import jk_5.nailed.util.ChatColor;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
@@ -27,8 +28,9 @@ public class CommandKickall extends CommandBase {
 
     @Override
     public void processCommand(ICommandSender icommandsender, String[] args){
+        String reason = Joiner.on(" ").join(args);
         for(EntityPlayerMP player : (List<EntityPlayerMP>) MinecraftServer.getServer().getConfigurationManager().playerEntityList){
-            player.playerNetServerHandler.kickPlayerFromServer("[" + ChatColor.GREEN + "Nailed" + ChatColor.RESET + "] " + args[0]);
+            player.playerNetServerHandler.kickPlayerFromServer("[" + ChatColor.GREEN + "Nailed" + ChatColor.RESET + "] " + reason);
         }
     }
 

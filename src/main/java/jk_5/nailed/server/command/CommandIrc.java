@@ -30,7 +30,7 @@ public class CommandIrc extends CommandBase {
 
     @Override
     public void processCommand(ICommandSender sender, String[] input) {
-        if(input.length == 0) throw new CommandException("See " + ChatColor.GOLD + "/irc help" + ChatColor.RESET + " for more information");
+        if(input.length == 0) throw new CommandException("See " + ChatColor.GOLD + "/irc help" + ChatColor.RED + " for more information");
         if(input.length == 1){
             if(input[0].equalsIgnoreCase("help")){
                 sender.sendChatToPlayer(ChatMessageComponent.createFromText("Command usage for /irc"));

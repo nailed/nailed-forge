@@ -10,6 +10,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.network.packet.Packet100OpenWindow;
+import net.minecraft.server.MinecraftServer;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * No description given
@@ -46,6 +50,12 @@ public class CommandInvsee extends CommandBase {
             entity.openContainer.windowId = entity.currentWindowId;
             entity.openContainer.addCraftingToCrafters(entity);
         }
+    }
+
+    @Override
+    public List addTabCompletionOptions(ICommandSender iCommandSender, String[] strings){
+        if(strings.length != 1) return Arrays.asList();
+        return getListOfStringsMatchingLastWord(strings, MinecraftServer.getServer().getAllUsernames());
     }
 
     @Override

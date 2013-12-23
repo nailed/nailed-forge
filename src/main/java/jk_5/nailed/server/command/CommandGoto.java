@@ -40,6 +40,13 @@ public class CommandGoto extends CommandBase {
     public void processCommand(ICommandSender sender, String[] args){
         if(args.length == 0) throw new WrongUsageException("/goto <mapname>");
         Map map = MapLoader.instance().getMapFromName(args[0]);
+        if(map == null) {
+            try{
+                map = MapLoader.instance().getMap(Integer.parseInt(args[0]));
+            }catch(NumberFormatException e){
+                throw new CommandException("That map does not exist");
+            }
+        }
         if(map == null) throw new CommandException("That map does not exist");
         MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP) sender, map.getID(), new NailedTeleporter(map));
     }

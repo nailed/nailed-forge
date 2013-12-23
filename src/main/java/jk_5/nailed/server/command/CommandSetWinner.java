@@ -1,5 +1,6 @@
 package jk_5.nailed.server.command;
 
+import com.google.common.collect.Lists;
 import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.players.Team;
@@ -25,11 +26,6 @@ public class CommandSetWinner extends CommandBase {
     }
 
     @Override
-    public List getCommandAliases(){
-        return Arrays.asList("cb");
-    }
-
-    @Override
     public String getCommandUsage(ICommandSender icommandsender){
         return "/setwinner <team>";
     }
@@ -48,6 +44,17 @@ public class CommandSetWinner extends CommandBase {
         Team team = map.getTeamManager().getTeam(teamName);
         map.getGameController().setWinner(team);
         sender.sendChatToPlayer(ChatMessageComponent.createFromText("Winner is set").setColor(EnumChatFormatting.GREEN));
+    }
+
+    @Override
+    public List addTabCompletionOptions(ICommandSender sender, String[] args){
+        if(args.length != 1) return Arrays.asList();
+        Map map = MapLoader.instance().getMap(sender.getEntityWorld());
+        List<String> teams = Lists.newArrayList();
+        for(Team team : map.getTeamManager().getTeams()){
+            teams.add(team.getTeamId());
+        }
+        return getListOfStringsFromIterableMatchingLastWord(args, teams);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package jk_5.nailed.server.command;
 
+import com.google.common.collect.Lists;
 import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MapLoader;
 import net.minecraft.command.CommandBase;
@@ -8,6 +9,9 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * No description given
@@ -39,6 +43,16 @@ public class CommandReloadMap extends CommandBase {
         if(map == null) throw new CommandException("Map does not exist");
         map.reloadFromMappack();
         sender.sendChatToPlayer(ChatMessageComponent.createFromText("Reloaded map " + map.getSaveFileName()).setColor(EnumChatFormatting.GREEN));
+    }
+
+    @Override
+    public List addTabCompletionOptions(ICommandSender sender, String[] args){
+        if(args.length != 1) return Arrays.asList();
+        List<String> ret = Lists.newArrayList();
+        for(Map map : MapLoader.instance().getMaps()){
+            ret.add(map.getSaveFileName());
+        }
+        return getListOfStringsFromIterableMatchingLastWord(args, ret);
     }
 
     @Override

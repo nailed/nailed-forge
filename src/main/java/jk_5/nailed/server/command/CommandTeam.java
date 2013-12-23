@@ -1,5 +1,8 @@
 package jk_5.nailed.server.command;
 
+import com.google.common.collect.Lists;
+import jk_5.nailed.map.Map;
+import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.players.Player;
 import jk_5.nailed.players.PlayerRegistry;
 import jk_5.nailed.players.Team;
@@ -9,6 +12,10 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.server.MinecraftServer;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * No description given
@@ -51,6 +58,26 @@ public class CommandTeam extends CommandBase {
                 sender.getCurrentMap().broadcastChatMessage(ChatColor.GREEN + "Player " + player.getUsername() + " is now in team " + team.getColoredName());
             }
         }
+    }
+
+    @Override
+    public List addTabCompletionOptions(ICommandSender iCommandSender, String[] strings){
+        Map map = MapLoader.instance().getMap(iCommandSender.getEntityWorld());
+        if(strings.length == 1) return getListOfStringsMatchingLastWord(strings, "join");
+        else if(strings.length == 2){
+            if(strings[0].equalsIgnoreCase("join")){
+                return getListOfStringsMatchingLastWord(strings, MinecraftServer.getServer().getAllUsernames());
+            }
+        }else if(strings.length == 3){
+            if(strings[0].equalsIgnoreCase("join")){
+                List<String> teams = Lists.newArrayList();
+                for(Team team : map.getTeamManager().getTeams()){
+                    teams.add(team.getTeamId());
+                }
+                return getListOfStringsFromIterableMatchingLastWord(strings, teams);
+            }
+        }
+        return Arrays.asList();
     }
 
     @Override
