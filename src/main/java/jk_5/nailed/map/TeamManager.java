@@ -73,6 +73,7 @@ public class TeamManager {
             player.getEntity().refreshDisplayName();
         }
         Team team = this.playerTeamMap.get(player);
+        if(true) return;
         if(team.getScoreboardTeam() != null){
             player.sendPacket(new Packet209SetPlayerTeam(team.getScoreboardTeam(), 0));
         }
@@ -86,6 +87,7 @@ public class TeamManager {
         }
         Team team = this.playerTeamMap.get(player);
         team.removePlayerFromScoreboardTeam(player);
+        if(true) return;
         if(team.getScoreboardTeam() != null){
             player.sendPacket(new Packet209SetPlayerTeam(team.getScoreboardTeam(), 1));
         }

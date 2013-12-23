@@ -19,7 +19,7 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'forge'
-//apply plugin: 'nailed'
+apply plugin: 'nailed'
 apply plugin: 'maven'
 
 group = 'jk_5.nailed'
@@ -65,7 +65,7 @@ dependencies {
     packed 'chickenbones:CodeChickenLib:1.6.4-1.0.0.44@jar'
     packed 'pircbot:pircbot:1.5.0'
     packed 'io.netty:netty-all:4.0.14.Final'
-    packed file('lib/TeamSpeak3API-r4.jar')
+    packed files('lib/TeamSpeak3API-r4.jar')
 
     compile 'org.projectlombok:lombok:1.12.2'
 
@@ -76,18 +76,18 @@ dependencies {
     launcher 'jk_5.nailed:launcher:1.0'
     launcher 'jk_5.nailed.deploy:forge:1.0'
     launcher 'jk_5.nailed.deploy:minecraft:1.0'
-    //launcher 'jk_5.nailed:nailed-forge:2.0'
+    launcher 'jk_5.nailed:nailed-forge:2.0'
 }
 
-/*nailed {
+nailed {
     minecraftVersion = '1.6.4'
-}*/
+}
 
 /*nailedInstaller {
     version = '1.0'
 }*/
 
-/*nailedLauncher {
+nailedLauncher {
     versionName = 'Nailed-2.0'
     mainClass = 'net.minecraft.launchwrapper.Launch'
 
@@ -102,7 +102,7 @@ dependencies {
     deployHost = 'maven.reening.nl'
     deployUsername = 'maven'
     deployPassword = mavenPassword
-}*/
+}
 
 jar {
     manifest {
@@ -123,14 +123,14 @@ jar {
     //}
 }
 
-/*uploadArchives {
+uploadArchives {
     repositories.mavenDeployer {
         configuration = configurations.deployerJars
         repository(url: "scp://maven.reening.nl/media/maven/") {
             authentication(userName: mavenUsername, password: mavenPassword)
         }
     }
-}*/
+}
 
 task wrapper(type: Wrapper) {
     gradleVersion = '1.8'
