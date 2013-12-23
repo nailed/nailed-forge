@@ -73,6 +73,7 @@ public class InstructionController extends Thread {
     public void run(){
         this.running = true;
         this.paused = false;
+        this.map.onGameStarted();
         IInstruction current = null;
         Iterator<IInstruction> iterator = this.instructions.iterator();
         try{
@@ -103,5 +104,6 @@ public class InstructionController extends Thread {
         this.running = false;
         StatTypeManager.instance().getStatType(StatTypeGameloopRunning.class).onEnd(this);
         this.controller.broadcastTimeRemaining("");
+        this.map.onGameEnded();
     }
 }

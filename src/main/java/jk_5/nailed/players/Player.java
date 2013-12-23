@@ -25,6 +25,7 @@ public class Player {
     @Getter private final String username;
     @Setter private Map currentMap;
     @Getter private boolean online = false;
+    @Getter @Setter private int teamSpeakClientID = -1;
 
     public void setTimeLeft(int seconds){
         NailedSPH.sendTimeUpdate(this.getEntity(), "Time left: " + ChatColor.GREEN + Utils.secondsToShortTimeString(seconds));

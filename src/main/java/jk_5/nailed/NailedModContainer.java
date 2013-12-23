@@ -21,6 +21,7 @@ import jk_5.nailed.map.stat.RegisterStatTypeEvent;
 import jk_5.nailed.map.stat.StatTypeManager;
 import jk_5.nailed.server.ProxyCommon;
 import jk_5.nailed.server.command.*;
+import jk_5.nailed.teamspeak.TeamspeakClient;
 import jk_5.nailed.util.config.ConfigFile;
 import lombok.Getter;
 import net.minecraft.command.CommandHandler;
@@ -50,6 +51,7 @@ public class NailedModContainer {
 
     @Getter @Instance(modid) private static NailedModContainer instance;
     @Getter private static IrcBot ircBot;
+    @Getter private static TeamspeakClient teamspeakClient;
     @Getter private static Collection<Integer> registeredDimensions;
 
     public NailedModContainer(){
@@ -98,6 +100,7 @@ public class NailedModContainer {
         DimensionManager.unregisterDimension(1);
 
         ircBot = new IrcBot();
+        teamspeakClient = new TeamspeakClient();
     }
 
     @EventHandler
@@ -118,6 +121,7 @@ public class NailedModContainer {
     @EventHandler
     public void serverStarting(FMLServerStartingEvent event){
         ircBot.connect();
+        teamspeakClient.connect();
 
         CommandHandler ch = (CommandHandler) event.getServer().getCommandManager();
 

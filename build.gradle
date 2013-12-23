@@ -23,7 +23,7 @@ apply plugin: 'forge'
 apply plugin: 'maven'
 
 group = 'jk_5.nailed'
-version = '2.0'
+version = '2.0-BETA1'
 archivesBaseName = 'nailed-forge'
 targetCompatibility = '1.7'
 sourceCompatibility = '1.7'
@@ -62,9 +62,10 @@ configurations{
 }
 
 dependencies {
-    packed name: 'CodeChickenLib', version: '1.6.4-1.0.0.44', ext: 'jar'
+    packed 'chickenbones:CodeChickenLib:1.6.4-1.0.0.44@jar'
     packed 'pircbot:pircbot:1.5.0'
-    packed 'io.netty:netty-all:4.0.14.Beta1'
+    packed 'io.netty:netty-all:4.0.14.Final'
+    packed file('lib/TeamSpeak3API-r4.jar')
 
     compile 'org.projectlombok:lombok:1.12.2'
 

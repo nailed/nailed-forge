@@ -40,7 +40,7 @@ public class CommandGoto extends NailedCommand {
             }
         }
         if(dest == null) throw new CommandException("That map does not exist");
-        sender.teleportToMap(map);
+        sender.teleportToMap(dest);
     }
 
     @Override

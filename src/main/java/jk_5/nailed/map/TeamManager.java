@@ -2,6 +2,7 @@ package jk_5.nailed.map;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import jk_5.nailed.NailedModContainer;
 import jk_5.nailed.players.Player;
 import jk_5.nailed.players.Team;
 import jk_5.nailed.players.TeamBuilder;
@@ -87,6 +88,24 @@ public class TeamManager {
         team.removePlayerFromScoreboardTeam(player);
         if(team.getScoreboardTeam() != null){
             player.sendPacket(new Packet209SetPlayerTeam(team.getScoreboardTeam(), 1));
+        }
+    }
+
+    public void onGameStarted(){
+        for(Team team : this.teams){
+            if(team.getTeamSpeakChannelID() == -1){
+                NailedModContainer.getTeamspeakClient().createChannelFor(team);
+            }
+            NailedModContainer.getTeamspeakClient().movePlayersIntoChannel(team);
+        }
+    }
+
+    public void onGameEnded(){
+        for(Team team : this.teams){
+            if(team.getTeamSpeakChannelID() != -1){
+                NailedModContainer.getTeamspeakClient().movePlayersToLobby(team);
+                NailedModContainer.getTeamspeakClient().removeChannel(team);
+            }
         }
     }
 }

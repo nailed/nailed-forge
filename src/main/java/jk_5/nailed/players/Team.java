@@ -32,6 +32,7 @@ public class Team {
     @Getter @Setter private boolean seeFriendlyInvisibles = false;
     @Getter @Setter private ScorePlayerTeam scoreboardTeam;
     @Getter @Setter private ChunkCoordinates spawnPoint;
+    @Getter @Setter private int teamSpeakChannelID = -1;
 
     public void onWorldSet(){
         String name = "map" + this.map.getID() + this.teamId;
@@ -98,11 +99,11 @@ public class Team {
 
     public void addPlayerToScoreboardTeam(Player player){
         if(this.scoreboardTeam == null) return;
-        this.map.getWorld().getScoreboard().addPlayerToTeam(player.getUsername(), this.scoreboardTeam);
+        //this.map.getWorld().getScoreboard().addPlayerToTeam(player.getUsername(), this.scoreboardTeam);
     }
 
     public void removePlayerFromScoreboardTeam(Player player){
         if(this.scoreboardTeam != null) return;
-        this.map.getWorld().getScoreboard().removePlayerFromTeams(player.getUsername());
+        //this.map.getWorld().getScoreboard().removePlayerFromTeams(player.getUsername());
     }
 }

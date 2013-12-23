@@ -140,4 +140,12 @@ public class Map {
         }
         return ret;
     }
+
+    public void onGameStarted(){
+        this.teamManager.onGameStarted();
+    }
+
+    public void onGameEnded(){
+        this.teamManager.onGameEnded();
+    }
 }
