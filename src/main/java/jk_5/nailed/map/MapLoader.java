@@ -35,6 +35,8 @@ public class MapLoader implements IMappackRegistrar {
     @Getter private final List<Map> maps = Lists.newArrayList();
     @Getter private final List<Mappack> mappacks = Lists.newArrayList();
 
+    @Getter private Map lobby;
+
     public static MapLoader instance(){
         return INSTANCE;
     }
@@ -120,6 +122,7 @@ public class MapLoader implements IMappackRegistrar {
     }
 
     public void addMap(Map map){
+        if(map.getID() == 0) this.lobby = map;
         this.maps.add(map);
         NailedLog.info("Registered " + map.getSaveFileName());
     }

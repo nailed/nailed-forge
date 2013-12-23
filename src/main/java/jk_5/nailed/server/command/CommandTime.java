@@ -2,18 +2,16 @@ package jk_5.nailed.server.command;
 
 import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MapLoader;
-import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.NumberInvalidException;
 import net.minecraft.util.ChatMessageComponent;
-import net.minecraft.world.World;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-public class CommandTime extends CommandBase {
+public class CommandTime extends NailedCommand {
 
     @Override
     public String getCommandName(){
@@ -21,15 +19,8 @@ public class CommandTime extends CommandBase {
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender){
-        return "/time - Change the time";
-    }
-
-    @Override
-    public void processCommand(ICommandSender sender, String[] args){
-        World world = sender.getEntityWorld();
-        boolean hasWorld = world != null;
-        Map map = MapLoader.instance().getMap(world);
+    public void processCommandWithMap(ICommandSender sender, Map map, String[] args){
+        boolean hasWorld = map.getWorld() != null;
         if(args.length > 0){
             if(args[0].equals("set")){
                 if(args.length > 1){
@@ -52,16 +43,11 @@ public class CommandTime extends CommandBase {
                         sender.sendChatToPlayer(ChatMessageComponent.createFromText("Current time in " + map.getSaveFileName() + ": " + map.getWorld().getWorldTime()));
                     }
                 }catch(NumberInvalidException e){
-
+                    //NOOP
                 }
             }
         }else if(hasWorld){
             sender.sendChatToPlayer(ChatMessageComponent.createFromText("Current time in " + map.getSaveFileName() + ": " + map.getWorld().getWorldTime()));
         }
-    }
-
-    @Override
-    public int compareTo(Object o){
-        return 0;
     }
 }

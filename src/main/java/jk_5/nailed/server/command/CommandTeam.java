@@ -7,11 +7,9 @@ import jk_5.nailed.players.Player;
 import jk_5.nailed.players.PlayerRegistry;
 import jk_5.nailed.players.Team;
 import jk_5.nailed.util.ChatColor;
-import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 
 import java.util.Arrays;
@@ -22,16 +20,11 @@ import java.util.List;
  *
  * @author jk-5
  */
-public class CommandTeam extends CommandBase {
+public class CommandTeam extends NailedCommand {
 
     @Override
     public String getCommandName() {
         return "team";
-    }
-
-    @Override
-    public String getCommandUsage(ICommandSender iCommandSender) {
-        return "/team join <username> <team>";
     }
 
     @Override
@@ -40,22 +33,20 @@ public class CommandTeam extends CommandBase {
     }
 
     @Override
-    public void processCommand(ICommandSender s, String[] strings) {
-        if(!(s instanceof EntityPlayer)) throw new CommandException("This command can only be used by players");
-        Player sender = PlayerRegistry.instance().getPlayer(((EntityPlayer) s).username);
-        if(strings.length == 0) throw new WrongUsageException("/team join <username> <team>");
-        if(strings[0].equalsIgnoreCase("join")){
-            if(strings.length == 1) throw new WrongUsageException("/team join <username> <team>");
-            Player player = PlayerRegistry.instance().getPlayer(strings[1]);
-            if(player == null) throw new CommandException("Unknown username " + strings[1]);
+    public void processCommandWithMap(ICommandSender sender, Map map, String[] args){
+        if(args.length == 0) throw new WrongUsageException("/team join <username> <team>");
+        if(args[0].equalsIgnoreCase("join")){
+            if(args.length == 1) throw new WrongUsageException("/team join <username> <team>");
+            Player player = PlayerRegistry.instance().getPlayer(args[1]);
+            if(player == null) throw new CommandException("Unknown username " + args[1]);
 
-            if(strings.length == 2) throw new WrongUsageException("/team join " + strings[1] + " <team>");
-            Team team = sender.getCurrentMap().getTeamManager().getTeam(strings[2]);
-            if(team == null) throw new CommandException("Unknown team name " + strings[2]);
+            if(args.length == 2) throw new WrongUsageException("/team join " + args[1] + " <team>");
+            Team team = map.getTeamManager().getTeam(args[2]);
+            if(team == null) throw new CommandException("Unknown team name " + args[2]);
 
-            if(strings.length == 3){
-                sender.getCurrentMap().getTeamManager().setPlayerTeam(player, team);
-                sender.getCurrentMap().broadcastChatMessage(ChatColor.GREEN + "Player " + player.getUsername() + " is now in team " + team.getColoredName());
+            if(args.length == 3){
+                map.getTeamManager().setPlayerTeam(player, team);
+                map.broadcastChatMessage(ChatColor.GREEN + "Player " + player.getUsername() + " is now in team " + team.getColoredName());
             }
         }
     }
@@ -78,10 +69,5 @@ public class CommandTeam extends CommandBase {
             }
         }
         return Arrays.asList();
-    }
-
-    @Override
-    public int compareTo(Object o) {
-        return 0;
     }
 }

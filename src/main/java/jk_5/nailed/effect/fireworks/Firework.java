@@ -10,7 +10,7 @@ import net.minecraft.nbt.NBTTagList;
  *
  * @author jk-5
  */
-public class FireworkRed {
+public class Firework {
 
     public static ItemStack getItemStack(int color){
         /*ItemStack firework = new ItemStack(Item.firework, 1);

@@ -1,8 +1,6 @@
 package jk_5.nailed.server.command;
 
-import jk_5.nailed.players.Player;
-import jk_5.nailed.players.PlayerRegistry;
-import net.minecraft.command.CommandBase;
+import jk_5.nailed.map.Map;
 import net.minecraft.command.ICommandSender;
 
 /**
@@ -10,16 +8,11 @@ import net.minecraft.command.ICommandSender;
  *
  * @author jk-5
  */
-public class CommandStartGame extends CommandBase {
+public class CommandStartGame extends NailedCommand {
 
     @Override
     public String getCommandName() {
         return "startgame";
-    }
-
-    @Override
-    public String getCommandUsage(ICommandSender iCommandSender) {
-        return "/startgame";
     }
 
     @Override
@@ -28,14 +21,7 @@ public class CommandStartGame extends CommandBase {
     }
 
     @Override
-    public void processCommand(ICommandSender iCommandSender, String[] strings) {
-        Player player = PlayerRegistry.instance().getPlayer(iCommandSender.getCommandSenderName());
-        if(player == null) return;
-        player.getCurrentMap().getGameController().startGame();
-    }
-
-    @Override
-    public int compareTo(Object o) {
-        return 0;
+    public void processCommandWithMap(ICommandSender sender, Map map, String[] args){
+        map.getGameController().startGame();
     }
 }

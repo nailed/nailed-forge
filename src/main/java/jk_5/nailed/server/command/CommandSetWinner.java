@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.players.Team;
-import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.util.ChatMessageComponent;
@@ -18,16 +17,11 @@ import java.util.List;
  *
  * @author jk-5
  */
-public class CommandSetWinner extends CommandBase {
+public class CommandSetWinner extends NailedCommand {
 
     @Override
     public String getCommandName(){
         return "setwinner";
-    }
-
-    @Override
-    public String getCommandUsage(ICommandSender icommandsender){
-        return "/setwinner <team>";
     }
 
     @Override
@@ -36,13 +30,9 @@ public class CommandSetWinner extends CommandBase {
     }
 
     @Override
-    public void processCommand(ICommandSender sender, String[] args){
+    public void processCommandWithMap(ICommandSender sender, Map map, String[] args){
         if(args.length == 0) throw new WrongUsageException("/setwinner <team>");
-        String teamName = args[0];
-        if(args[0].equalsIgnoreCase("setwinner") && args.length > 1) teamName = args[1];
-        Map map = MapLoader.instance().getMap(sender.getEntityWorld());
-        Team team = map.getTeamManager().getTeam(teamName);
-        map.getGameController().setWinner(team);
+        map.getGameController().setWinner(map.getTeamManager().getTeam(args[0]));
         sender.sendChatToPlayer(ChatMessageComponent.createFromText("Winner is set").setColor(EnumChatFormatting.GREEN));
     }
 
@@ -55,10 +45,5 @@ public class CommandSetWinner extends CommandBase {
             teams.add(team.getTeamId());
         }
         return getListOfStringsFromIterableMatchingLastWord(args, teams);
-    }
-
-    @Override
-    public int compareTo(Object o){
-        return 0;
     }
 }

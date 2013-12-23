@@ -1,7 +1,7 @@
 package jk_5.nailed.server.command;
 
-import jk_5.nailed.effect.fireworks.FireworkRed;
-import net.minecraft.command.CommandBase;
+import jk_5.nailed.effect.fireworks.Firework;
+import jk_5.nailed.map.Map;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.item.EntityFireworkRocket;
 import net.minecraft.util.ChunkCoordinates;
@@ -11,7 +11,7 @@ import net.minecraft.util.ChunkCoordinates;
  *
  * @author jk-5
  */
-public class CommandFirework extends CommandBase {
+public class CommandFirework extends NailedCommand {
 
     @Override
     public String getCommandName(){
@@ -19,18 +19,8 @@ public class CommandFirework extends CommandBase {
     }
 
     @Override
-    public String getCommandUsage(ICommandSender icommandsender){
-        return null;
-    }
-
-    @Override
-    public void processCommand(ICommandSender sender, String[] args){
+    public void processCommandWithMap(ICommandSender sender, Map map, String[] args){
         ChunkCoordinates coords = sender.getPlayerCoordinates();
-        sender.getEntityWorld().spawnEntityInWorld(new EntityFireworkRocket(sender.getEntityWorld(), coords.posX, coords.posY, coords.posZ, FireworkRed.getItemStack(0xFF0000)));
-    }
-
-    @Override
-    public int compareTo(Object o){
-        return 0;
+        map.getWorld().spawnEntityInWorld(new EntityFireworkRocket(map.getWorld(), coords.posX, coords.posY, coords.posZ, Firework.getItemStack(0xFF0000)));
     }
 }

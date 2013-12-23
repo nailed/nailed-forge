@@ -2,6 +2,7 @@ package jk_5.nailed.players;
 
 import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MapLoader;
+import jk_5.nailed.map.teleport.NailedTeleporter;
 import jk_5.nailed.network.NailedSPH;
 import jk_5.nailed.util.ChatColor;
 import jk_5.nailed.util.Utils;
@@ -89,5 +90,9 @@ public class Player {
         if(this.getTeam().shouldOverrideDefaultSpawnpoint()){
             this.getEntity().setSpawnChunk(null, false);
         }
+    }
+
+    public void teleportToMap(Map map){
+        MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension(this.getEntity(), map.getID(), new NailedTeleporter(map));
     }
 }

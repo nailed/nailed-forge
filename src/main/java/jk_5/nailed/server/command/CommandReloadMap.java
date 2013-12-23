@@ -3,7 +3,6 @@ package jk_5.nailed.server.command;
 import com.google.common.collect.Lists;
 import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MapLoader;
-import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -18,7 +17,7 @@ import java.util.List;
  *
  * @author jk-5
  */
-public class CommandReloadMap extends CommandBase {
+public class CommandReloadMap extends NailedCommand {
 
     @Override
     public String getCommandName(){
@@ -26,12 +25,7 @@ public class CommandReloadMap extends CommandBase {
     }
 
     @Override
-    public String getCommandUsage(ICommandSender icommandsender){
-        return "/reloadmap <mapname> - Restores the map from the mappack";
-    }
-
-    @Override
-    public void processCommand(ICommandSender sender, String[] args){
+    public void processCommandWithMap(ICommandSender sender, Map currentMap, String[] args){
         if(args.length == 0) throw new WrongUsageException("/reloadmap <mapname>");
         Map map = null;
         for(Map m : MapLoader.instance().getMaps()){
@@ -53,10 +47,5 @@ public class CommandReloadMap extends CommandBase {
             ret.add(map.getSaveFileName());
         }
         return getListOfStringsFromIterableMatchingLastWord(args, ret);
-    }
-
-    @Override
-    public int compareTo(Object o){
-        return 0;
     }
 }
