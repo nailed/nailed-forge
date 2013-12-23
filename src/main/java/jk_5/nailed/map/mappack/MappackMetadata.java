@@ -20,4 +20,5 @@ public interface MappackMetadata {
     boolean isSpawnFriendlyMobs();
     Map<String, String> getGameruleConfig();
     int getDifficulty();
+    String getGameType();
 }

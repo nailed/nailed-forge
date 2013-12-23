@@ -28,6 +28,7 @@ public class FileMappackMetadata implements MappackMetadata {
     public boolean spawnHostileMobs;
     public Map<String, String> gameruleConfig;
     public int difficulty;
+    public String gameType;
 
     public FileMappackMetadata(ConfigFile config){
         this.config = config;
@@ -39,6 +40,7 @@ public class FileMappackMetadata implements MappackMetadata {
         this.spawnFriendlyMobs = config.getTag("map").getTag("spawn-friendly-mobs").getBooleanValue(true);
         this.name = config.getTag("map").getTag("name").getValue("");
         this.difficulty = config.getTag("map").getTag("difficulty").getIntValue(2);
+        this.gameType = config.getTag("map").getTag("gametype").getValue("default");
         this.spawnPoint = new ChunkCoordinates(spawnX, spawnY, spawnZ);
 
         this.defaultTeams = Lists.newArrayList();

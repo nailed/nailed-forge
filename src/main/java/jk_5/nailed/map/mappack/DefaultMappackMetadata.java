@@ -22,4 +22,5 @@ public class DefaultMappackMetadata implements MappackMetadata {
     public boolean spawnHostileMobs;
     public Map<String, String> gameruleConfig;
     public int difficulty;
+    public String gameType;
 }

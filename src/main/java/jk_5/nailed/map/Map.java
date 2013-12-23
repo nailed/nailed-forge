@@ -80,10 +80,8 @@ public class Map {
     }
 
     public void unloadAndRemove(){
-        DimensionManager.unloadWorld(this.getID());
-        MapLoader.instance().getMaps().remove(this);
+        MapLoader.instance().removeMap(this);
         this.getSaveFolder().delete();
-        NailedLog.info("Unloaded map " + this.getSaveFileName());
     }
 
     public void reloadFromMappack(){

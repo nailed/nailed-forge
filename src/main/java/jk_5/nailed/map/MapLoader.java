@@ -5,6 +5,8 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.api.IMappackRegistrar;
 import jk_5.nailed.event.PlayerChangedDimensionEvent;
+import jk_5.nailed.map.event.MapCreatedEvent;
+import jk_5.nailed.map.event.MapRemovedEvent;
 import jk_5.nailed.map.mappack.DirectoryMappack;
 import jk_5.nailed.map.mappack.Mappack;
 import jk_5.nailed.map.mappack.ZipMappack;
@@ -132,6 +134,7 @@ public class MapLoader implements IMappackRegistrar {
         pack.prepareWorld(potentialMap.getSaveFolder());
         Map map = pack.createMap(potentialMap);
         map.initMapServer();
+        MinecraftForge.EVENT_BUS.post(new MapCreatedEvent(map));
         return map;
     }
 
@@ -181,5 +184,12 @@ public class MapLoader implements IMappackRegistrar {
     @Override
     public void registerMappack(Mappack mappack) {
         this.mappacks.add(mappack);
+    }
+
+    public void removeMap(Map map){
+        DimensionManager.unloadWorld(map.getID());
+        this.maps.remove(map);
+        MinecraftForge.EVENT_BUS.post(new MapRemovedEvent(map));
+        NailedLog.info("Unloaded map " + map.getSaveFileName());
     }
 }
