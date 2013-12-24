@@ -61,7 +61,7 @@ public class TileEntityElevator extends NailedTileEntity {
         int level = findLevel(dir);
         if (level >= 0) {
             player.setPositionAndUpdate(xCoord + 0.5, level + 1.1, zCoord + 0.5);
-            //worldObj.playSoundAtEntity(player, "nailed:teleport", 1F, 1F);
+            worldObj.playSoundAtEntity(player, "nailed:teleport", 1F, 1F);
         }
     }
 
