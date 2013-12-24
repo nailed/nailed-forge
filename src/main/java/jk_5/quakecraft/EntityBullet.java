@@ -68,9 +68,10 @@ public class EntityBullet extends Entity implements IProjectile {
         x *= yaw;
         y *= yaw;
         z *= yaw;
-        motionX = x;
-        motionY = y;
-        motionZ = z;
+        int speedMultiplier = 16;
+        motionX = x * 16;
+        motionY = y * 16;
+        motionZ = z * 16;
         float var10 = MathHelper.sqrt_double(x * x + z * z);
         prevRotationYaw = rotationYaw = (float) (Math.atan2(x, z) * 180.0D / Math.PI);
         prevRotationPitch = rotationPitch = (float) (Math.atan2(y, var10) * 180.0D / Math.PI);
@@ -259,11 +260,13 @@ public class EntityBullet extends Entity implements IProjectile {
             shootingEntity.attackEntityFrom(DamageSource.causePlayerDamage(shootingEntity), 1);
             this.setDead();
         }else{
-            if(mop instanceof EntityLivingBase){
+            if(mop instanceof EntityLivingBase && mop.isEntityAlive()){
                 mop.attackEntityFrom(new DamageSourceRailgun(this.shootingEntity), ((EntityLivingBase) mop).getMaxHealth());
+                this.worldObj.playSoundAtEntity(this, "mob.blaze.death", 2.0f, 4.0f);
+                this.worldObj.playSoundAtEntity(this, "random.explode", 2.0f, 4.0f);
             }else{
-                mop.attackEntityFrom(new DamageSourceRailgun(this.shootingEntity), 1);
-                mop.setDead();
+                //mop.attackEntityFrom(new DamageSourceRailgun(this.shootingEntity), 1);
+                //mop.setDead();
             }
         }
         spawnHitParticles("magicCrit", 8);
