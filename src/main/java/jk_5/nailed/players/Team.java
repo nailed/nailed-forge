@@ -103,7 +103,7 @@ public class Team {
     }
 
     public void removePlayerFromScoreboardTeam(Player player){
-        if(this.scoreboardTeam != null) return;
+        if(this.scoreboardTeam == null) return;
         this.map.getWorld().getScoreboard().removePlayerFromTeams(player.getUsername());
     }
 }

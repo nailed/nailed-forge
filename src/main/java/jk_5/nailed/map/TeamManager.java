@@ -7,7 +7,6 @@ import jk_5.nailed.players.Player;
 import jk_5.nailed.players.Team;
 import jk_5.nailed.players.TeamBuilder;
 import lombok.Getter;
-import net.minecraft.network.packet.Packet209SetPlayerTeam;
 
 import java.util.List;
 
@@ -74,7 +73,7 @@ public class TeamManager {
         }
         Team team = this.playerTeamMap.get(player);
         if(team.getScoreboardTeam() != null){
-            player.sendPacket(new Packet209SetPlayerTeam(team.getScoreboardTeam(), 0));
+            //player.sendPacket(new Packet209SetPlayerTeam(team.getScoreboardTeam(), 0));
         }
         team.addPlayerToScoreboardTeam(player);
     }
@@ -87,7 +86,7 @@ public class TeamManager {
         Team team = this.playerTeamMap.get(player);
         team.removePlayerFromScoreboardTeam(player);
         if(team.getScoreboardTeam() != null){
-            player.sendPacket(new Packet209SetPlayerTeam(team.getScoreboardTeam(), 1));
+            //player.sendPacket(new Packet209SetPlayerTeam(team.getScoreboardTeam(), 1));
         }
     }
 
