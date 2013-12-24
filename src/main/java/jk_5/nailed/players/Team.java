@@ -99,11 +99,11 @@ public class Team {
 
     public void addPlayerToScoreboardTeam(Player player){
         if(this.scoreboardTeam == null) return;
-        //this.map.getWorld().getScoreboard().addPlayerToTeam(player.getUsername(), this.scoreboardTeam);
+        this.map.getWorld().getScoreboard().addPlayerToTeam(player.getUsername(), this.scoreboardTeam);
     }
 
     public void removePlayerFromScoreboardTeam(Player player){
         if(this.scoreboardTeam != null) return;
-        //this.map.getWorld().getScoreboard().removePlayerFromTeams(player.getUsername());
+        this.map.getWorld().getScoreboard().removePlayerFromTeams(player.getUsername());
     }
 }

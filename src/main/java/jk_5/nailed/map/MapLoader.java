@@ -14,6 +14,7 @@ import lombok.Getter;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.EventPriority;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;
 
@@ -165,7 +166,7 @@ public class MapLoader implements IMappackRegistrar {
         return this.getMap(world.provider.dimensionId);
     }
 
-    @ForgeSubscribe
+    @ForgeSubscribe(priority = EventPriority.HIGH)
     @SuppressWarnings("unused")
     public void onWorldLoad(WorldEvent.Load event){
         if(FMLCommonHandler.instance().getEffectiveSide().isClient()) return;

@@ -60,6 +60,7 @@ public class Map {
     public void setWorld(World world){
         Preconditions.checkNotNull(world);
         this.world = world;
+        world.worldScoreboard = MapLoader.instance().getLobby().world.worldScoreboard;
         if(world.provider != null) this.ID = world.provider.dimensionId;
         this.isLoaded = true;
         this.teamManager.onWorldSet();
