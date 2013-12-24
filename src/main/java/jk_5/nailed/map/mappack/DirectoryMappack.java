@@ -11,10 +11,16 @@ import jk_5.nailed.map.stat.StatConfig;
 import jk_5.nailed.util.config.ConfigFile;
 import lombok.Getter;
 import lombok.Setter;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.MinecraftException;
+import net.minecraft.world.WorldServer;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * No description given
@@ -23,12 +29,22 @@ import java.io.*;
  */
 public class DirectoryMappack implements Mappack {
 
-    @Getter private final String mappackID;
-    @Getter private final String name;
-    @Getter private final File mappackFolder;
-    @Getter private final MappackMetadata mappackMetadata;
-    @Getter @Setter private InstructionList instructionList = new InstructionList();
-    @Getter @Setter private StatConfig statConfig = new StatConfig();
+    @Getter
+    private final String mappackID;
+    @Getter
+    private final String name;
+    @Getter
+    private final File mappackFolder;
+    @Getter
+    private final MappackMetadata mappackMetadata;
+    @Getter
+    @Setter
+    private InstructionList instructionList = new InstructionList();
+    @Getter
+    @Setter
+    private StatConfig statConfig = new StatConfig();
+
+    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     private DirectoryMappack(File directory, ConfigFile config){
         this.mappackID = directory.getName();
@@ -49,7 +65,8 @@ public class DirectoryMappack implements Mappack {
             if(mappackConfig.isFile() && mappackConfig.exists()){
                 config = new ConfigFile(mappackConfig).setReadOnly();
                 pack = new DirectoryMappack(directory, config);
-            }else throw new DiscardedMappackInitializationException("Directory " + directory.getPath() + " is not a mappack");
+            }else
+                throw new DiscardedMappackInitializationException("Directory " + directory.getPath() + " is not a mappack");
             if(instructionFile.isFile() && instructionFile.exists()){
                 BufferedReader instructionReader = new BufferedReader(new InputStreamReader(new FileInputStream(instructionFile)));
                 instructionList = InstructionList.readFrom(instructionReader);
@@ -72,7 +89,7 @@ public class DirectoryMappack implements Mappack {
     }
 
     @Override
-    public File prepareWorld(File destinationDir) {
+    public File prepareWorld(File destinationDir){
         File world = new File(this.mappackFolder, "world");
         if(world.isDirectory() && world.exists()){
             try{
@@ -87,7 +104,43 @@ public class DirectoryMappack implements Mappack {
     }
 
     @Override
-    public Map createMap(PotentialMap potentialMap) {
+    public Map createMap(PotentialMap potentialMap){
         return potentialMap.createMap();
+    }
+
+    @Override
+    public boolean saveAsMappack(Map map){
+        File worldDir = new File(this.mappackFolder, "world");
+        if(worldDir.isDirectory() && worldDir.exists()){
+            worldDir.renameTo(new File(this.mappackFolder, "world-backup-" + dateFormat.format(new Date())));
+        }
+
+        MinecraftServer server = MinecraftServer.getServer();
+
+        if(server.getConfigurationManager() != null){
+            server.getConfigurationManager().saveAllPlayerData();
+        }
+
+        try{
+            WorldServer world = (WorldServer) map.getWorld();
+            boolean notSaveEnabled = world.canNotSave;
+            world.canNotSave = false;
+            world.saveAllChunks(true, null);
+
+            world.canNotSave = true;
+
+            FileUtils.copyDirectory(map.getSaveFolder(), worldDir, new FileFilter() {
+                @Override
+                public boolean accept(File file){
+                    return file.getName().equals("level.dat") || file.getName().equals("region");
+                }
+            });
+
+            world.canNotSave = notSaveEnabled;
+        }catch(MinecraftException | IOException e){
+            throw new RuntimeException("Save failed", e);
+        }
+
+        return true;
     }
 }

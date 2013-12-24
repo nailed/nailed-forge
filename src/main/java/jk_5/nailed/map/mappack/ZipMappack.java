@@ -84,4 +84,9 @@ public class ZipMappack implements Mappack {
     public Map createMap(PotentialMap potentialMap) {
         return potentialMap.createMap();
     }
+
+    @Override
+    public boolean saveAsMappack(Map map){
+        return false;
+    }
 }

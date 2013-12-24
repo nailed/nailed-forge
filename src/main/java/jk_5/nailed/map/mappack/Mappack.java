@@ -53,4 +53,14 @@ public interface Mappack {
      * @return A map instance
      */
     Map createMap(PotentialMap potentialMap);
+
+    /**
+     * Save the world data of the given map as the new world content of this mappack
+     *
+     * If this operation is not supported, return {@code false}. Else, return {@code true}.
+     *
+     * @param map The map where you should copy the data from
+     * @return True if this operation is supported, false otherwise
+     */
+    boolean saveAsMappack(Map map);
 }

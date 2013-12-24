@@ -141,6 +141,7 @@ public class NailedModContainer {
         ch.registerCommand(new CommandLobby());
         ch.registerCommand(new CommandReloadMap());
         ch.registerCommand(new CommandKickall());
+        ch.registerCommand(new CommandSaveMappack());
     }
 
     @EventHandler
