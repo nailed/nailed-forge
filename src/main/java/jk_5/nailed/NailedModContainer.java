@@ -96,8 +96,10 @@ public class NailedModContainer {
         DimensionManager.registerProviderType(-1, NailedWorldProvider.class, false);
         DimensionManager.registerProviderType(0, NailedWorldProvider.class, true);
         DimensionManager.registerProviderType(1, NailedWorldProvider.class, false);
-        DimensionManager.unregisterDimension(-1);
-        DimensionManager.unregisterDimension(1);
+        if(event.getSide().isServer()){
+            DimensionManager.unregisterDimension(-1);
+            DimensionManager.unregisterDimension(1);
+        }
 
         ircBot = new IrcBot();
         teamspeakClient = new TeamspeakClient();
