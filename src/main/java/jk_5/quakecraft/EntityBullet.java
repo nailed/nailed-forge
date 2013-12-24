@@ -30,6 +30,10 @@ public class EntityBullet extends Entity implements IProjectile {
     public EntityPlayer shootingEntity;
     private int ticksInAir = 0;
 
+    public EntityBullet(World par1World){
+        super(par1World);
+    }
+
     public EntityBullet(World world, EntityPlayer player){
         super(world);
         this.shootingEntity = player;
