@@ -26,6 +26,6 @@ public class SoundManager {
 
     @ForgeSubscribe
     public void playSound(PlaySoundEvent event){
-        System.out.println(event.name + " " + event.volume + " " + event.pitch + " " + event.x + " " + event.y + " " + event.z);
+        //System.out.println(event.name + " " + event.volume + " " + event.pitch + " " + event.x + " " + event.y + " " + event.z);
     }
 }
