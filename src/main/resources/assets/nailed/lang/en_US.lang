@@ -17,5 +17,3 @@ commands.nailed.team.usage=/team join <username> <team>
 commands.nailed.time.usage=/time - Change the time
 commands.nailed.savemappack.usage=/time - Change the time
 commands.nailed.error.notValid=You can't use this command!
-
-death.attack.railgun=%s was gibbed by %s
