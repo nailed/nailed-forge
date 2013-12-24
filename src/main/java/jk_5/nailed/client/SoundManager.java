@@ -1,5 +1,6 @@
 package jk_5.nailed.client;
 
+import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.client.event.sound.SoundLoadEvent;
 import net.minecraftforge.event.ForgeSubscribe;
 
@@ -21,5 +22,10 @@ public class SoundManager {
         event.manager.addSound("nailed:teleport/link-portal.ogg");
         event.manager.addSound("nailed:teleport/pop.wav");
         event.manager.addSound("nailed:teleport.ogg");
+    }
+
+    @ForgeSubscribe
+    public void playSound(PlaySoundEvent event){
+        System.out.println(event.name + " " + event.volume + " " + event.pitch + " " + event.x + " " + event.y + " " + event.z);
     }
 }
