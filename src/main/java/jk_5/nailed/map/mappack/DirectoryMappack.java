@@ -29,20 +29,12 @@ import java.util.Date;
  */
 public class DirectoryMappack implements Mappack {
 
-    @Getter
-    private final String mappackID;
-    @Getter
-    private final String name;
-    @Getter
-    private final File mappackFolder;
-    @Getter
-    private final MappackMetadata mappackMetadata;
-    @Getter
-    @Setter
-    private InstructionList instructionList = new InstructionList();
-    @Getter
-    @Setter
-    private StatConfig statConfig = new StatConfig();
+    @Getter private final String mappackID;
+    @Getter private final String name;
+    @Getter private final File mappackFolder;
+    @Getter private final MappackMetadata mappackMetadata;
+    @Getter @Setter private InstructionList instructionList = new InstructionList();
+    @Getter @Setter private StatConfig statConfig = new StatConfig();
 
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -137,7 +129,9 @@ public class DirectoryMappack implements Mappack {
             });
 
             world.canNotSave = notSaveEnabled;
-        }catch(MinecraftException | IOException e){
+        }catch(MinecraftException e){
+            throw new RuntimeException("Save failed", e);
+        }catch(IOException e){
             throw new RuntimeException("Save failed", e);
         }
 

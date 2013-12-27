@@ -12,5 +12,6 @@ public class DamageSourceRailgun extends EntityDamageSource {
 
     public DamageSourceRailgun(Entity entity){
         super("railgun", entity);
+        this.setDamageBypassesArmor();
     }
 }

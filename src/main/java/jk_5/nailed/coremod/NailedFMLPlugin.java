@@ -21,12 +21,17 @@ public class NailedFMLPlugin implements IFMLLoadingPlugin {
 
     @Override
     public String[] getASMTransformerClass() {
-        if(FMLLaunchHandler.side().isClient()) return new String[0];
-        return new String[]{
-                "jk_5.nailed.coremod.transformers.PacketTransformer", //TODO: disable
-                "jk_5.nailed.coremod.transformers.MinecraftServerTransformer",
-                "jk_5.nailed.coremod.transformers.DimensionManagerTransformer"
-        };
+        if(FMLLaunchHandler.side().isClient()){
+            return new String[]{
+                    "jk_5.nailed.coremod.transformers.AbstractClientPlayerTransformer"
+            };
+        }else{
+            return new String[]{
+                    //"jk_5.nailed.coremod.transformers.PacketTransformer",
+                    "jk_5.nailed.coremod.transformers.MinecraftServerTransformer",
+                    "jk_5.nailed.coremod.transformers.DimensionManagerTransformer"
+            };
+        }
     }
 
     @Override

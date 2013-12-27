@@ -1,4 +1,4 @@
-package jk_5.nailed.teamspeak;
+/*package jk_5.nailed.teamspeak;
 
 import com.github.theholywaffle.teamspeak3.TS3Api;
 import com.github.theholywaffle.teamspeak3.TS3Query;
@@ -9,11 +9,6 @@ import com.google.common.collect.Maps;
 
 import java.util.HashMap;
 
-/**
- * No description given
- *
- * @author jk-5
- */
 public class TeamspeakClientBugged {
 
     private final TS3Api api;
@@ -48,4 +43,4 @@ public class TeamspeakClientBugged {
     public static void main(String[] args) throws Exception {
         new TeamspeakClientBugged();
     }
-}
+}*/

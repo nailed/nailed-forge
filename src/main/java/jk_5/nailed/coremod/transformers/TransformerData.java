@@ -17,6 +17,9 @@ public class TransformerData {
     public static final Map<String, String> minecraftServerObfuscated = Maps.newHashMap();
     public static final Map<String, String> minecraftServerDeobfuscated = Maps.newHashMap();
 
+    public static final Map<String, String> abstractClientPlayerObfuscated = Maps.newHashMap();
+    public static final Map<String, String> abstractClientPlayerDeobfuscated = Maps.newHashMap();
+
     static {
         tcpConnectionObfuscated.put("className", "ci");
         tcpConnectionObfuscated.put("targetMethod1", "a"); //func_74429_a
@@ -33,5 +36,13 @@ public class TransformerData {
 
         minecraftServerDeobfuscated.put("className", "net.minecraft.server.MinecraftServer");
         minecraftServerDeobfuscated.put("targetMethod1", "loadAllWorlds");
+
+        abstractClientPlayerObfuscated.put("className", "beu");
+        abstractClientPlayerObfuscated.put("method1", "d");
+        abstractClientPlayerObfuscated.put("method2", "e");
+
+        abstractClientPlayerDeobfuscated.put("className", "net.minecraft.client.entity.AbstractClientPlayer");
+        abstractClientPlayerDeobfuscated.put("method1", "getSkinUrl");
+        abstractClientPlayerDeobfuscated.put("method2", "getCapeUrl");
     }
 }
