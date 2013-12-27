@@ -2,10 +2,10 @@ package jk_5.nailed.map.stat;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import jk_5.nailed.map.Map;
 import lombok.Getter;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.ForgeSubscribe;
 
 import java.util.List;
 
@@ -35,19 +35,19 @@ public class StatManager {
         return this.stats.getStat(statName);
     }
 
-    @ForgeSubscribe
+    @SubscribeEvent
     @SuppressWarnings("unused")
     public void onStatTileLoad(StatTileEntityEvent.Load event){
         this.statTiles.add(event.tileEntity);
     }
 
-    @ForgeSubscribe
+    @SubscribeEvent
     @SuppressWarnings("unused")
     public void onStatTileUnload(StatTileEntityEvent.Unload event){
         this.statTiles.remove(event.tileEntity);
     }
 
-    @ForgeSubscribe
+    @SubscribeEvent
     @SuppressWarnings("unused")
     public void onStatEnable(StatEvent.Enable event){
         for(IStatTileEntity tile : this.statTiles){
@@ -55,7 +55,7 @@ public class StatManager {
         }
     }
 
-    @ForgeSubscribe
+    @SubscribeEvent
     @SuppressWarnings("unused")
     public void onStatDisable(StatEvent.Disable event){
         for(IStatTileEntity tile : this.statTiles){

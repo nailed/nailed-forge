@@ -2,6 +2,7 @@ package jk_5.nailed.map.mappack;
 
 import jk_5.nailed.players.TeamBuilder;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.world.EnumDifficulty;
 
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,6 @@ public interface MappackMetadata {
     boolean isSpawnHostileMobs();
     boolean isSpawnFriendlyMobs();
     Map<String, String> getGameruleConfig();
-    int getDifficulty();
+    EnumDifficulty getDifficulty();
     String getGameType();
 }

@@ -1,13 +1,11 @@
 package jk_5.nailed.map.gameloop;
 
 import com.google.common.collect.Maps;
-import cpw.mods.fml.common.network.PacketDispatcher;
 import jk_5.nailed.map.instruction.GameController;
 import jk_5.nailed.network.Packets;
 import jk_5.nailed.players.Team;
 import lombok.RequiredArgsConstructor;
-import net.minecraft.network.packet.Packet3Chat;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.IChatComponent;
 
 import java.util.Map;
 
@@ -53,7 +51,7 @@ public class InstructionGameController implements GameController {
     }
 
     @Override
-    public void broadcastChatMessage(ChatMessageComponent message) {
+    public void broadcastChatMessage(IChatComponent message) {
         PacketDispatcher.sendPacketToAllInDimension(new Packet3Chat(message), this.controller.getMap().getID());
     }
 

@@ -8,7 +8,7 @@ import jk_5.nailed.map.teleport.NailedTeleporter;
 import jk_5.nailed.map.teleport.TeleportOptions;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -39,8 +39,9 @@ public class BlockPortal extends NailedBlock {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerIcons(IconRegister register){
-        this.blockIcon = register.registerIcon("nailed:portal");
+    public void func_149651_a(IIconRegister register){
+        //this.blockIcon
+        this.field_149761_L = register.registerIcon("nailed:portal");
     }
 
     @Override

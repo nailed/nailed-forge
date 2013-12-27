@@ -2,7 +2,7 @@ package jk_5.nailed.map.instruction;
 
 import jk_5.nailed.map.Map;
 import jk_5.nailed.players.Team;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.IChatComponent;
 
 /**
  * No description given
@@ -19,7 +19,7 @@ public interface GameController {
     void broadcastTimeRemaining(String data);
     void broadcastSound(String sound);
     void broadcastNotification(String data);
-    void broadcastChatMessage(ChatMessageComponent message);
+    void broadcastChatMessage(IChatComponent message);
 
     Map getMap();
 }

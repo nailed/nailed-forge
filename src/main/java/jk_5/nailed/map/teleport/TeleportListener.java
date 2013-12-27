@@ -1,5 +1,6 @@
 package jk_5.nailed.map.teleport;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import jk_5.nailed.players.Player;
 import jk_5.nailed.players.PlayerRegistry;
@@ -7,7 +8,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
-import net.minecraftforge.event.ForgeSubscribe;
 
 /**
  * No description given
@@ -16,7 +16,7 @@ import net.minecraftforge.event.ForgeSubscribe;
  */
 public class TeleportListener {
 
-    @ForgeSubscribe
+    @SubscribeEvent
     public void isPermitted(TeleportEvent.TeleportEventAllow event){
         Entity entity = event.entity;
         World world = event.origin;
@@ -28,12 +28,12 @@ public class TeleportListener {
         }
     }
 
-    @ForgeSubscribe
+    @SubscribeEvent
     public void onExitWorld(TeleportEvent.TeleportEventExitWorld event){
         this.handleMomentum(event.entity, event.options);
     }
 
-    @ForgeSubscribe
+    @SubscribeEvent
     public void onEnd(TeleportEvent.TeleportEventEnd event){
         if(event.entity instanceof EntityMinecart){
             event.entity.motionX = 0;

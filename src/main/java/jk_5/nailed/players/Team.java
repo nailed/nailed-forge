@@ -8,8 +8,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Scoreboard;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.IChatComponent;
 
 import java.util.List;
 
@@ -60,10 +61,10 @@ public class Team {
     }
 
     public void broadcastChatMessage(String message){
-        this.broadcastChatMessage(ChatMessageComponent.createFromText(message));
+        this.broadcastChatMessage(new ChatComponentText(message));
     }
 
-    public void broadcastChatMessage(ChatMessageComponent message){
+    public void broadcastChatMessage(IChatComponent message){
         for(Player player : PlayerRegistry.instance().getPlayers()){
             if(player.getTeam() == this){
                 player.sendChat(message);

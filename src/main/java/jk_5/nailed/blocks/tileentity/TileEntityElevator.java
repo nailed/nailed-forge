@@ -6,7 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * No description given
@@ -59,9 +59,10 @@ public class TileEntityElevator extends NailedTileEntity {
 
     private void activate(EntityPlayer player, ForgeDirection dir) {
         int level = findLevel(dir);
-        if (level >= 0) {
-            player.setPositionAndUpdate(xCoord + 0.5, level + 1.1, zCoord + 0.5);
-            worldObj.playSoundAtEntity(player, "nailed:teleport", 1F, 1F);
+        if (level >= 0) {             //this.xCoord                             this.zCoord
+            player.setPositionAndUpdate(this.field_145851_c + 0.5, level + 1.1, this.field_145849_e + 0.5);
+            //this.worldObj
+            this.field_145850_b.playSoundAtEntity(player, "nailed:teleport", 1F, 1F);
         }
     }
 

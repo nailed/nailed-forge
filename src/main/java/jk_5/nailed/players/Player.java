@@ -10,9 +10,10 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.packet.Packet;
+import net.minecraft.network.Packet;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 
 /**
  * No description given
@@ -37,16 +38,16 @@ public class Player {
     }
 
     public void sendChat(String message){
-        this.sendChat(ChatMessageComponent.createFromText(message));
+        this.sendChat(new ChatComponentText(message));
     }
 
-    public void sendChat(ChatMessageComponent message){
+    public void sendChat(IChatComponent message){
         EntityPlayerMP entity = this.getEntity();
-        if(entity != null) this.getEntity().sendChatToPlayer(message);
+        if(entity != null) this.getEntity().func_145747_a(message); //sendChatToPlayer
     }
 
     public void sendPacket(Packet packet){
-        this.getEntity().playerNetServerHandler.sendPacketToPlayer(packet);
+        this.getEntity().playerNetServerHandler.func_147359_a(packet); //sendPacketToPlayer
     }
 
     public EntityPlayerMP getEntity(){

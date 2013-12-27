@@ -1,7 +1,7 @@
 package jk_5.nailed.map.stat;
 
+import cpw.mods.fml.common.eventhandler.Event;
 import lombok.RequiredArgsConstructor;
-import net.minecraftforge.event.Event;
 
 import java.util.Map;
 

@@ -6,7 +6,7 @@ import jk_5.nailed.blocks.BlockMulti;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 
 /**
  * No description given
@@ -15,11 +15,8 @@ import net.minecraft.util.Icon;
  */
 public class ItemBlockMulti extends ItemBlock {
 
-    private Block block;
-
-    public ItemBlockMulti(int id){
-        super(id);
-        this.block = Block.blocksList[this.getBlockID()];
+    public ItemBlockMulti(Block block){
+        super(block);
         this.setMaxDamage(0);
         this.setNoRepair();
         this.setHasSubtypes(true);
@@ -27,17 +24,18 @@ public class ItemBlockMulti extends ItemBlock {
 
     @Override
     public String getUnlocalizedName(ItemStack par1ItemStack) {
-        if(this.block == null || !(this.block instanceof BlockMulti)){
+        if(this.field_150939_a == null || !(this.field_150939_a instanceof BlockMulti)){
             return super.getUnlocalizedName(par1ItemStack);
         }else{
-            return super.getUnlocalizedName(par1ItemStack) + "." + ((BlockMulti) this.block).getUnlocalizedName(par1ItemStack);
+            return super.getUnlocalizedName(par1ItemStack) + "." + ((BlockMulti) this.field_150939_a).getUnlocalizedName(par1ItemStack);
         }
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public Icon getIconFromDamage(int meta){
-        return this.block.getIcon(2, meta);
+    public IIcon getIconFromDamage(int meta){
+        //this.block.getIcon(side, meta)
+        return this.field_150939_a.func_149691_a(2, meta);
     }
 
     @Override

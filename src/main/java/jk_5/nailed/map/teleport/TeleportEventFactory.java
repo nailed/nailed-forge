@@ -1,11 +1,10 @@
 package jk_5.nailed.map.teleport;
 
-import jk_5.nailed.map.Map;
+import cpw.mods.fml.common.eventhandler.Event;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.Event;
 
 /**
  * No description given

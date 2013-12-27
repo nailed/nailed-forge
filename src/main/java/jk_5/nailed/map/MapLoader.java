@@ -2,6 +2,8 @@ package jk_5.nailed.map;
 
 import com.google.common.collect.Lists;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.EventPriority;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.api.IMappackRegistrar;
 import jk_5.nailed.event.PlayerChangedDimensionEvent;
@@ -14,8 +16,6 @@ import lombok.Getter;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.EventPriority;
-import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;
 
 import java.io.*;
@@ -166,7 +166,7 @@ public class MapLoader implements IMappackRegistrar {
         return this.getMap(world.provider.dimensionId);
     }
 
-    @ForgeSubscribe(priority = EventPriority.HIGH)
+    @SubscribeEvent(priority = EventPriority.HIGH)
     @SuppressWarnings("unused")
     public void onWorldLoad(WorldEvent.Load event){
         if(FMLCommonHandler.instance().getEffectiveSide().isClient()) return;
@@ -174,7 +174,7 @@ public class MapLoader implements IMappackRegistrar {
         if(map != null) map.setWorld(event.world);
     }
 
-    @ForgeSubscribe
+    @SubscribeEvent
     @SuppressWarnings("unused")
     public void onChangeDimension(PlayerChangedDimensionEvent event){
         if(FMLCommonHandler.instance().getEffectiveSide().isClient()) return;

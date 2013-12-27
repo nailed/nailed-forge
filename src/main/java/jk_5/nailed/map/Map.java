@@ -14,8 +14,9 @@ import jk_5.nailed.players.PlayerRegistry;
 import jk_5.nailed.server.ProxyCommon;
 import jk_5.nailed.util.ChatColor;
 import lombok.Getter;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
@@ -60,7 +61,7 @@ public class Map {
     public void setWorld(World world){
         Preconditions.checkNotNull(world);
         this.world = world;
-        world.worldScoreboard = MapLoader.instance().getLobby().world.worldScoreboard;
+        //world.worldScoreboard = MapLoader.instance().getLobby().world.worldScoreboard; //TODO: re-enable
         if(world.provider != null) this.ID = world.provider.dimensionId;
         this.isLoaded = true;
         this.teamManager.onWorldSet();
@@ -73,8 +74,8 @@ public class Map {
                     rules.setOrCreateGameRule(e.getKey(), e.getValue());
                 }
             }
-            world.difficultySetting = meta.getDifficulty();
-            world.setAllowedSpawnTypes(meta.isSpawnHostileMobs() && world.difficultySetting > 0, meta.isSpawnFriendlyMobs());
+            world.difficultySetting = meta.getDifficulty();                                 //TODO: is this correct?
+            world.setAllowedSpawnTypes(meta.isSpawnHostileMobs() && world.difficultySetting.func_151525_a() > 0, meta.isSpawnFriendlyMobs());
         }
 
         NailedLog.info("Registered map " + this.getSaveFileName());
@@ -87,7 +88,7 @@ public class Map {
 
     public void reloadFromMappack(){
         for(Player player : this.getPlayers()){
-            player.getEntity().playerNetServerHandler.kickPlayerFromServer("[" + ChatColor.GREEN + "Nailed" + ChatColor.RESET + "] Reloading the map you were in");
+            player.getEntity().playerNetServerHandler.func_147360_c("[" + ChatColor.GREEN + "Nailed" + ChatColor.RESET + "] Reloading the map you were in"); //kickPlayerFromServer
         }
         this.unloadAndRemove();
         this.mappack.prepareWorld(this.getSaveFolder());
@@ -118,7 +119,7 @@ public class Map {
         return new TeleportOptions(this, new ChunkCoordinates(this.mappack.getMappackMetadata().getSpawnPoint()), 0);
     }
 
-    public void broadcastChatMessage(ChatMessageComponent message){
+    public void broadcastChatMessage(IChatComponent message){
         for(Player player : PlayerRegistry.instance().getPlayers()){
             if(player.getCurrentMap() == this){
                 player.sendChat(message);
@@ -127,7 +128,7 @@ public class Map {
     }
 
     public void broadcastChatMessage(String message){
-        this.broadcastChatMessage(ChatMessageComponent.createFromText(message));
+        this.broadcastChatMessage(new ChatComponentText(message));
     }
 
     public List<Player> getPlayers(){

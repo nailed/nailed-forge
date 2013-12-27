@@ -137,7 +137,9 @@ public class DirectoryMappack implements Mappack {
             });
 
             world.canNotSave = notSaveEnabled;
-        }catch(MinecraftException | IOException e){
+        }catch(MinecraftException e){
+            throw new RuntimeException("Save failed", e);
+        }catch(IOException e){
             throw new RuntimeException("Save failed", e);
         }
 

@@ -8,7 +8,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.ContainerChest;
-import net.minecraft.network.packet.Packet100OpenWindow;
+import net.minecraft.network.play.server.S2DPacketOpenWindow;
 import net.minecraft.server.MinecraftServer;
 
 import java.util.Arrays;
@@ -38,7 +38,7 @@ public class CommandInvsee extends NailedCommand {
             entity.incrementWindowID();
 
             InventoryOtherPlayer chest = new InventoryOtherPlayer(player.getEntity(), entity);
-            entity.playerNetServerHandler.sendPacketToPlayer(new Packet100OpenWindow(entity.currentWindowId, 0, chest.getInvName(), chest.getSizeInventory(), true));
+            entity.playerNetServerHandler.func_147359_a(new S2DPacketOpenWindow(entity.currentWindowId, 0, chest.getInvName(), chest.getSizeInventory(), true));
             entity.openContainer = new ContainerChest(entity.inventory, chest);
             entity.openContainer.windowId = entity.currentWindowId;
             entity.openContainer.addCraftingToCrafters(entity);

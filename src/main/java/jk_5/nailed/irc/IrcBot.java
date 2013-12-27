@@ -1,5 +1,6 @@
 package jk_5.nailed.irc;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.NailedModContainer;
 import jk_5.nailed.event.PlayerChatEvent;
@@ -11,9 +12,8 @@ import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.ServerConfigurationManager;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.ForgeSubscribe;
 import org.jibble.pircbot.PircBot;
 
 /**
@@ -48,19 +48,19 @@ public class IrcBot extends PircBot {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    @ForgeSubscribe
+    @SubscribeEvent
     @SuppressWarnings("unused")
     public void onChat(PlayerChatEvent event){
         this.sendMessage(this.channel, "<" + event.player.getUsername() + "> " + event.message);
     }
 
-    @ForgeSubscribe
+    @SubscribeEvent
     @SuppressWarnings("unused")
     public void onPlayerJoin(PlayerJoinEvent event){
         this.sendMessage(this.channel, "* " + event.player.getUsername() + " has joined the game");
     }
 
-    @ForgeSubscribe
+    @SubscribeEvent
     @SuppressWarnings("unused")
     public void onPlayerJoin(PlayerLeaveEvent event){
         this.sendMessage(this.channel, "* " + event.player.getUsername() + " has left the game");
@@ -88,48 +88,49 @@ public class IrcBot extends PircBot {
         if(message.equals("!list") || message.equals("!players")){
             this.sendMessage(channel, configManager.getCurrentPlayerCount() + " online players: " + configManager.getPlayerListAsString());
         }else{
-            configManager.sendChatMsg(ChatMessageComponent.createFromText(ChatColor.GRAY + "[" + channel + "]" + ChatColor.RESET + " <" + sender + "> " + message));
+            configManager.func_148539_a(new ChatComponentText(ChatColor.GRAY + "[" + channel + "]" + ChatColor.RESET + " <" + sender + "> " + message));
         }
     }
 
     @Override
     protected void onPrivateMessage(String sender, String login, String hostname, String message) {
-        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(ChatMessageComponent.createFromText(ChatColor.GRAY + "[" + sender + "]" + ChatColor.RESET + " <" + sender + "> " + message));
+                                                            //sendChatMsg - Broadcast chat
+        MinecraftServer.getServer().getConfigurationManager().func_148539_a(new ChatComponentText(ChatColor.GRAY + "[" + sender + "]" + ChatColor.RESET + " <" + sender + "> " + message));
     }
 
     @Override
     protected void onAction(String sender, String login, String hostname, String target, String action) {
-        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(ChatMessageComponent.createFromText(ChatColor.GRAY + "[" + channel + "]" + ChatColor.RESET + " * " + sender + " " + action));
+        MinecraftServer.getServer().getConfigurationManager().func_148539_a(new ChatComponentText(ChatColor.GRAY + "[" + channel + "]" + ChatColor.RESET + " * " + sender + " " + action));
     }
 
     @Override
     protected void onJoin(String channel, String sender, String login, String hostname) {
-        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(ChatMessageComponent.createFromText(ChatColor.GRAY + "[" + channel + "]" + ChatColor.RESET + " * " + sender + " joined the channel"));
+        MinecraftServer.getServer().getConfigurationManager().func_148539_a(new ChatComponentText(ChatColor.GRAY + "[" + channel + "]" + ChatColor.RESET + " * " + sender + " joined the channel"));
     }
 
     @Override
     protected void onPart(String channel, String sender, String login, String hostname) {
-        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(ChatMessageComponent.createFromText(ChatColor.GRAY + "[" + channel + "]" + ChatColor.RESET + " * " + sender + " left the channel"));
+        MinecraftServer.getServer().getConfigurationManager().func_148539_a(new ChatComponentText(ChatColor.GRAY + "[" + channel + "]" + ChatColor.RESET + " * " + sender + " left the channel"));
     }
 
     @Override
     protected void onNickChange(String oldNick, String login, String hostname, String newNick) {
-        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(ChatMessageComponent.createFromText(ChatColor.GRAY + "[" + channel + "]" + ChatColor.RESET + " * " + oldNick + " is now known as " + newNick));
+        MinecraftServer.getServer().getConfigurationManager().func_148539_a(new ChatComponentText(ChatColor.GRAY + "[" + channel + "]" + ChatColor.RESET + " * " + oldNick + " is now known as " + newNick));
     }
 
     @Override
     protected void onKick(String channel, String kickerNick, String kickerLogin, String kickerHostname, String recipientNick, String reason) {
-        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(ChatMessageComponent.createFromText(ChatColor.GRAY + "[" + channel + "]" + ChatColor.RESET + " * " + recipientNick + " was kicked by " + kickerNick + " (" + reason + ")"));
+        MinecraftServer.getServer().getConfigurationManager().func_148539_a(new ChatComponentText(ChatColor.GRAY + "[" + channel + "]" + ChatColor.RESET + " * " + recipientNick + " was kicked by " + kickerNick + " (" + reason + ")"));
     }
 
     @Override
     protected void onQuit(String sourceNick, String sourceLogin, String sourceHostname, String reason) {
-        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(ChatMessageComponent.createFromText(ChatColor.GRAY + "[" + channel + "]" + ChatColor.RESET + " * " + sourceNick + " left irc (" + reason + ")"));
+        MinecraftServer.getServer().getConfigurationManager().func_148539_a(new ChatComponentText(ChatColor.GRAY + "[" + channel + "]" + ChatColor.RESET + " * " + sourceNick + " left irc (" + reason + ")"));
     }
 
     @Override
     protected void onTopic(String channel, String topic, String setBy, long date, boolean changed) {
-        if(changed) MinecraftServer.getServer().getConfigurationManager().sendChatMsg(ChatMessageComponent.createFromText(ChatColor.GRAY + "[" + channel + "]" + ChatColor.RESET + " * " + setBy + " set the topic: " + topic));
+        if(changed) MinecraftServer.getServer().getConfigurationManager().func_148539_a(new ChatComponentText(ChatColor.GRAY + "[" + channel + "]" + ChatColor.RESET + " * " + setBy + " set the topic: " + topic));
     }
 
     private class ConnectThread extends Thread {

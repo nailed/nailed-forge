@@ -7,13 +7,17 @@ buildscript {
             url = "http://files.minecraftforge.net/maven"
         }
         maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+        /*maven {
             name = "reening"
             url = "http://maven.reening.nl"
-        }
+        }*/
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.0-SNAPSHOT'
-        classpath 'jk_5.nailed.gradle:nailed-gradle:1.1-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.1-SNAPSHOT'
+        //classpath 'jk_5.nailed.gradle:nailed-gradle:1.1-SNAPSHOT'
     }
 }
 
@@ -35,9 +39,17 @@ repositories{
         url = "http://files.minecraftforge.net/maven"
     }
     maven {
+        name = "sonatype"
+        url = "https://oss.sonatype.org/content/repositories/snapshots/"
+    }
+    maven {
+        name = "mojang"
+        url = "https://libraries.minecraft.net"
+    }
+    /*maven {
         name = "reening"
         url = "http://maven.reening.nl"
-    }
+    }*/
     ivy {
         name 'Forge Legacy'
         artifactPattern "http://files.minecraftforge.net/[module]/[module]-dev-[revision].[ext]"
@@ -49,7 +61,7 @@ repositories{
 }
 
 minecraft{
-    version = '1.6.4-9.11.1.964'
+    version = '1.7.2-10.12.0.968'
     assetDir = 'runtime/client/assets'
     accessTransformer = 'src/main/resources/nailed_at.cfg'
 }
@@ -62,7 +74,7 @@ configurations{
 }
 
 dependencies {
-    packed 'chickenbones:CodeChickenLib:1.6.4-1.0.0.44@jar'
+    //packed 'chickenbones:CodeChickenLib:1.6.4-1.0.0.44@jar'
     packed 'pircbot:pircbot:1.5.0'
     packed 'io.netty:netty-all:4.0.14.Final'
     packed files('lib/TeamSpeak3API-r4.jar')

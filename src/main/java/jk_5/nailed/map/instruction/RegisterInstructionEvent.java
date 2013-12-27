@@ -1,6 +1,6 @@
 package jk_5.nailed.map.instruction;
 
-import net.minecraftforge.event.Event;
+import cpw.mods.fml.common.eventhandler.Event;
 
 import java.util.Map;
 

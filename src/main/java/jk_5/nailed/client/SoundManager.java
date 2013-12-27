@@ -1,8 +1,8 @@
 package jk_5.nailed.client;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.client.event.sound.SoundLoadEvent;
-import net.minecraftforge.event.ForgeSubscribe;
 
 /**
  * No description given
@@ -12,7 +12,7 @@ import net.minecraftforge.event.ForgeSubscribe;
 @SuppressWarnings("unused")
 public class SoundManager {
 
-    @ForgeSubscribe
+    @SubscribeEvent
     public void onSoundLoad(SoundLoadEvent event){
         event.manager.addSound("nailed:teleport/link.ogg");
         event.manager.addSound("nailed:teleport/link-disarm.ogg");
@@ -24,7 +24,7 @@ public class SoundManager {
         event.manager.addSound("nailed:teleport.ogg");
     }
 
-    @ForgeSubscribe
+    @SubscribeEvent
     public void playSound(PlaySoundEvent event){
         //System.out.println(event.name + " " + event.volume + " " + event.pitch + " " + event.x + " " + event.y + " " + event.z);
     }

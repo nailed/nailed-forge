@@ -2,7 +2,6 @@ package jk_5.nailed.server;
 
 import codechicken.lib.packet.PacketCustom;
 import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 import jk_5.nailed.NailedModContainer;
 import jk_5.nailed.achievement.AchievementEventListener;
