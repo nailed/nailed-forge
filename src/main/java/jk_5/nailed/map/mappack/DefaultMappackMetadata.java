@@ -23,4 +23,5 @@ public class DefaultMappackMetadata implements MappackMetadata {
     public Map<String, String> gameruleConfig;
     public int difficulty;
     public String gameType;
+    public boolean preventingBlockBreak;
 }

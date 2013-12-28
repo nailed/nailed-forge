@@ -29,6 +29,7 @@ public class FileMappackMetadata implements MappackMetadata {
     public Map<String, String> gameruleConfig;
     public int difficulty;
     public String gameType;
+    public boolean preventingBlockBreak;
 
     public FileMappackMetadata(ConfigFile config){
         this.config = config;
@@ -41,6 +42,7 @@ public class FileMappackMetadata implements MappackMetadata {
         this.name = config.getTag("map").getTag("name").getValue("");
         this.difficulty = config.getTag("map").getTag("difficulty").getIntValue(2);
         this.gameType = config.getTag("map").getTag("gametype").getValue("default");
+        this.preventingBlockBreak = config.getTag("map").getTag("preventBlockBreak").getBooleanValue(false);
         this.spawnPoint = new ChunkCoordinates(spawnX, spawnY, spawnZ);
 
         this.defaultTeams = Lists.newArrayList();

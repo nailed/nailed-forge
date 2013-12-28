@@ -1,5 +1,8 @@
 package jk_5.nailed.map.mappack;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufOutputStream;
+import io.netty.buffer.Unpooled;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.map.DiscardedMappackInitializationException;
 import jk_5.nailed.map.Map;
@@ -17,6 +20,8 @@ import net.minecraft.world.WorldServer;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -31,6 +36,7 @@ public class DirectoryMappack implements Mappack {
 
     @Getter private final String mappackID;
     @Getter private final String name;
+    @Getter private final String iconFile;
     @Getter private final File mappackFolder;
     @Getter private final MappackMetadata mappackMetadata;
     @Getter @Setter private InstructionList instructionList = new InstructionList();
@@ -41,6 +47,7 @@ public class DirectoryMappack implements Mappack {
     private DirectoryMappack(File directory, ConfigFile config){
         this.mappackID = directory.getName();
         this.name = config.getTag("map").getTag("name").getValue(this.mappackID);
+        this.iconFile = config.getTag("map").getTag("iconFile").getValue("icon.png");
         this.mappackFolder = directory;
         this.mappackMetadata = new FileMappackMetadata(config);
     }
@@ -136,5 +143,17 @@ public class DirectoryMappack implements Mappack {
         }
 
         return true;
+    }
+
+    @Override
+    public ByteBuf getMappackIcon(){
+        ByteBuf buf = Unpooled.buffer();
+        try{
+            BufferedImage image = ImageIO.read(new File(this.mappackFolder, this.iconFile));
+            ImageIO.write(image, "PNG", new ByteBufOutputStream(buf));
+        }catch(IOException e){
+
+        }
+        return buf;
     }
 }

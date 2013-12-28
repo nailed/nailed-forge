@@ -29,7 +29,8 @@ public class NailedFMLPlugin implements IFMLLoadingPlugin {
             return new String[]{
                     //"jk_5.nailed.coremod.transformers.PacketTransformer",
                     "jk_5.nailed.coremod.transformers.MinecraftServerTransformer",
-                    "jk_5.nailed.coremod.transformers.DimensionManagerTransformer"
+                    "jk_5.nailed.coremod.transformers.DimensionManagerTransformer",
+                    "jk_5.nailed.coremod.transformers.EntityPlayerMPTransformer"
             };
         }
     }

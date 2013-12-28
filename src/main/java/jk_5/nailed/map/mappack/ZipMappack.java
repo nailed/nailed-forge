@@ -1,5 +1,8 @@
 package jk_5.nailed.map.mappack;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufOutputStream;
+import io.netty.buffer.Unpooled;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.map.*;
 import jk_5.nailed.map.instruction.InstructionList;
@@ -10,6 +13,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.io.IOUtils;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -23,6 +28,7 @@ public class ZipMappack implements Mappack {
 
     @Getter private final String mappackID;
     @Getter private final String name;
+    @Getter private final String iconFile;
     @Getter private final File mappackFile;
     @Getter private final MappackMetadata mappackMetadata;
     @Getter @Setter private InstructionList instructionList;
@@ -31,6 +37,7 @@ public class ZipMappack implements Mappack {
     private ZipMappack(File mappackFile, ConfigFile config){
         this.mappackID = mappackFile.getName().substring(0, mappackFile.getName().length() - 8);
         this.name = config.getTag("map").getTag("name").getValue(this.mappackID);
+        this.iconFile = config.getTag("map").getTag("iconFile").getValue("icon.png");
         this.mappackFile = mappackFile;
         this.mappackMetadata = new FileMappackMetadata(config);
     }
@@ -88,5 +95,27 @@ public class ZipMappack implements Mappack {
     @Override
     public boolean saveAsMappack(Map map){
         return false;
+    }
+
+    @Override
+    public ByteBuf getMappackIcon(){
+        ByteBuf buf = Unpooled.buffer();
+        ZipInputStream zipStream = null;
+        try{
+            zipStream = new ZipInputStream(new FileInputStream(new File(this.mappackFile, this.iconFile)));
+            ZipEntry entry = zipStream.getNextEntry();
+            while(entry != null){
+                if(entry.getName().equals(this.iconFile)){
+                    BufferedImage image = ImageIO.read(zipStream);
+                    ImageIO.write(image, "PNG", new ByteBufOutputStream(buf));
+                }
+                entry = zipStream.getNextEntry();
+            }
+        }catch(IOException e){
+
+        }finally{
+            IOUtils.closeQuietly(zipStream);
+        }
+        return buf;
     }
 }

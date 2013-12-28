@@ -1,5 +1,6 @@
 package jk_5.nailed.map.mappack;
 
+import io.netty.buffer.ByteBuf;
 import jk_5.nailed.map.Map;
 import jk_5.nailed.map.PotentialMap;
 import jk_5.nailed.map.instruction.InstructionList;
@@ -63,4 +64,9 @@ public interface Mappack {
      * @return True if this operation is supported, false otherwise
      */
     boolean saveAsMappack(Map map);
+
+    /**
+     * @return The data from the mappack icon (PNG) used for displaying in the webinterface and ingame
+     */
+    ByteBuf getMappackIcon();
 }

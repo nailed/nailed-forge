@@ -16,6 +16,7 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.EventPriority;
 import net.minecraftforge.event.ForgeSubscribe;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.WorldEvent;
 
 import java.io.*;
@@ -180,6 +181,16 @@ public class MapLoader implements IMappackRegistrar {
         if(FMLCommonHandler.instance().getEffectiveSide().isClient()) return;
         event.oldMap.onPlayerLeft(event.player);
         event.newMap.onPlayerJoined(event.player);
+    }
+
+    @ForgeSubscribe
+    @SuppressWarnings("unused")
+    public void onBlockBreak(BlockEvent.BreakEvent event){
+        if(FMLCommonHandler.instance().getEffectiveSide().isClient()) return;
+        Mappack mappack = this.getMap(event.world).getMappack();
+        if(mappack != null && mappack.getMappackMetadata().isPreventingBlockBreak()){
+            event.setCanceled(true);
+        }
     }
 
     @Override

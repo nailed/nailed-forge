@@ -28,6 +28,7 @@ public class WebsocketHandler extends SimpleChannelInboundHandler<Object> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
+        logger.info("Trying to complete handshake");
         if(!this.handshaker.isHandshakeComplete()){
             this.handshaker.finishHandshake(ctx.channel(), (FullHttpResponse) msg);
             logger.info("Connected to IPC server!");
@@ -36,17 +37,20 @@ public class WebsocketHandler extends SimpleChannelInboundHandler<Object> {
             return;
         }
         if(msg instanceof CloseWebSocketFrame){
+            logger.info("Closed it, got close frame");
             ctx.close();
         }
     }
 
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
+        logger.info("Added the handler");
         this.handshakeFuture = ctx.newPromise();
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        logger.info("Trying to perform the handshake");
         this.handshaker.handshake(ctx.channel());
     }
 

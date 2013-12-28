@@ -21,4 +21,5 @@ public interface MappackMetadata {
     Map<String, String> getGameruleConfig();
     int getDifficulty();
     String getGameType();
+    boolean isPreventingBlockBreak();
 }
