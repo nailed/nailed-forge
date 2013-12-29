@@ -113,9 +113,10 @@ public class Map {
 
     public TeleportOptions getSpawnTeleport(){
         if(this.mappack == null){
-            return new TeleportOptions(this, this.world.getSpawnPoint(), 0);
+            return new TeleportOptions(this, this.world.getSpawnPoint(), 0, 0);
         }
-        return new TeleportOptions(this, new ChunkCoordinates(this.mappack.getMappackMetadata().getSpawnPoint()), 0);
+        MappackMetadata meta = this.mappack.getMappackMetadata();
+        return new TeleportOptions(this, new ChunkCoordinates(meta.getSpawnPoint()), meta.getSpawnYaw(), meta.getSpawnPitch());
     }
 
     public void broadcastChatMessage(ChatMessageComponent message){

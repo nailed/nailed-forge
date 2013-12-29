@@ -7,6 +7,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 import jk_5.nailed.map.MapLoader;
+import jk_5.nailed.util.ChatColor;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityFireworkRocket;
@@ -16,12 +17,16 @@ import net.minecraft.item.ItemHoe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.player.PlayerDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 import java.util.List;
@@ -93,6 +98,31 @@ public class QuakecraftPlugin {
                     }
                     this.reloadCooldown.put(event.entityPlayer.username, 0);
                 }
+            }
+        }
+    }
+
+    @ForgeSubscribe
+    @SuppressWarnings("unused")
+    public void onPlayerDrop(PlayerDropsEvent event){
+        if(this.isQuakecraft(event.entity.worldObj)){
+            event.setCanceled(true);
+        }
+    }
+
+    @ForgeSubscribe
+    @SuppressWarnings("unused")
+    public void onEntitySpawn(EntityJoinWorldEvent event){
+        if(event.entity instanceof EntityPlayer){
+            EntityPlayer player = (EntityPlayer) event.entity;
+            if(this.isQuakecraft(event.world)){
+                ItemStack stack = new ItemStack(Item.hoeWood, 1);
+                stack.setItemName(ChatColor.RESET + "" + ChatColor.GREEN + "Railgun");
+                player.inventory.setInventorySlotContents(0, stack);
+                player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 1000000, 1, true));
+            }else if(this.isQuakecraft(event.entity.worldObj)){
+                player.inventory.setInventorySlotContents(0, null);
+                player.removePotionEffect(Potion.moveSpeed.id);
             }
         }
     }

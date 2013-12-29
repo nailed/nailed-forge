@@ -34,7 +34,8 @@ public class NailedTeleporter extends Teleporter {
     public void placeInPortal(Entity entity, double x, double y, double z, float par8){
         TeleportOptions opts = this.map.getSpawnTeleport();
         ChunkCoordinates coords = opts.getCoordinates();
-        entity.setLocationAndAngles(coords.posX + 0.5D, coords.posY + 0.5D, coords.posZ + 0.5D, opts.getYaw(), 0);
+        entity.setLocationAndAngles(coords.posX + 0.5D, coords.posY + 0.5D, coords.posZ + 0.5D, opts.getYaw(), opts.getPitch());
         entity.motionX = entity.motionY = entity.motionZ = 0.0D;
+        entity.fallDistance = 0;
     }
 }
