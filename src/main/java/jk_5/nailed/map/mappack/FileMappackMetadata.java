@@ -35,6 +35,9 @@ public class FileMappackMetadata implements MappackMetadata {
     public float spawnPitch;
     public boolean pvpEnabled;
     public EnumGameType gamemode;
+    public boolean choosingRandomSpawnpointAtRespawn;
+    public List<Spawnpoint> randomSpawnpoints;
+    public String startWhen;
 
     public FileMappackMetadata(ConfigFile config){
         this.config = config;
@@ -52,6 +55,8 @@ public class FileMappackMetadata implements MappackMetadata {
         this.difficulty = config.getTag("map").getTag("difficulty").getIntValue(2);
         this.gameType = config.getTag("map").getTag("gametype").getValue("default");
         this.preventingBlockBreak = config.getTag("map").getTag("preventBlockBreak").getBooleanValue(false);
+        this.choosingRandomSpawnpointAtRespawn = config.getTag("map").getTag("randomSpawnpointOnRespawn").getBooleanValue(false);
+        this.startWhen = config.getTag("map").getTag("startGameWhen").getValue("false");
         this.spawnPoint = new ChunkCoordinates(spawnX, spawnY, spawnZ);
 
         this.defaultTeams = Lists.newArrayList();
@@ -67,11 +72,15 @@ public class FileMappackMetadata implements MappackMetadata {
         }
 
         this.gameruleConfig = Maps.newHashMap();
-        ConfigTag gameruleTag = this.config.getTag("gamerule", false);
-        if(gameruleTag != null){
-            for(ConfigTag tag : gameruleTag.getSortedTagList()){
-                this.gameruleConfig.put(tag.name, tag.getValue());
-            }
+        ConfigTag gameruleTag = this.config.getTag("gamerule");
+        for(ConfigTag tag : gameruleTag.getSortedTagList()){
+            this.gameruleConfig.put(tag.name, tag.getValue());
+        }
+
+        this.randomSpawnpoints = Lists.newArrayList();
+        ConfigTag spawnpointsTag = this.config.getTag("randomSpawnpoints");
+        for(ConfigTag tag : spawnpointsTag.getSortedTagList()){
+            this.randomSpawnpoints.add(Spawnpoint.readFromConfig(tag));
         }
     }
 }

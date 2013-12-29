@@ -9,8 +9,11 @@ import jk_5.nailed.map.event.MapCreatedEvent;
 import jk_5.nailed.map.event.MapRemovedEvent;
 import jk_5.nailed.map.mappack.DirectoryMappack;
 import jk_5.nailed.map.mappack.Mappack;
+import jk_5.nailed.map.mappack.Spawnpoint;
 import jk_5.nailed.map.mappack.ZipMappack;
+import jk_5.nailed.players.Player;
 import jk_5.nailed.players.PlayerRegistry;
+import jk_5.nailed.players.TeamUndefined;
 import lombok.Getter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChunkCoordinates;
@@ -21,12 +24,14 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.EventPriority;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.WorldEvent;
 
 import java.io.File;
 import java.util.List;
+import java.util.Random;
 
 /**
  * No description given
@@ -39,10 +44,11 @@ public class MapLoader implements IMappackRegistrar {
     @SuppressWarnings("unused") @Getter private static final File mappackFolder = new File("mappacks");
     @SuppressWarnings("unused") @Getter private static final File mapsFolder = new File("maps");
 
+    @SuppressWarnings("unused") @Getter private Map lobby;
+
     @Getter private final List<Map> maps = Lists.newArrayList();
     @Getter private final List<Mappack> mappacks = Lists.newArrayList();
-
-    @Getter private Map lobby;
+    @Getter private Random randomSpawnpointSelector = new Random();
 
     public static MapLoader instance(){
         return INSTANCE;
@@ -180,9 +186,38 @@ public class MapLoader implements IMappackRegistrar {
                 Map map = this.getMap(event.entity.worldObj);
                 if(map.getMappack() != null){
                     if(!map.getMappack().getMappackMetadata().isPvpEnabled()){
-                        event.setCanceled(true);
+                        if(event.source instanceof PvpIgnoringDamageSource){
+                            if(((PvpIgnoringDamageSource) event.source).disableWhenPvpDisabled()){
+                                event.setCanceled(true);
+                            }
+                        }else{
+                            event.setCanceled(true);
+                        }
                     }
                 }
+            }
+        }
+    }
+
+    @ForgeSubscribe
+    @SuppressWarnings("unused")
+    public void onDie(LivingDeathEvent event){
+        if(!(event.entity instanceof EntityPlayer)) return;
+        Player player = PlayerRegistry.instance().getPlayer(((EntityPlayer) event.entity).username);
+        if(player == null) return;
+        if(!player.getCurrentMap().getGameController().isRunning()) return;
+        if(player.getTeam() instanceof TeamUndefined){
+            Map map = player.getCurrentMap();
+            Mappack mappack = map.getMappack();
+            if(mappack != null && mappack.getMappackMetadata().isChoosingRandomSpawnpointAtRespawn()){
+                List<Spawnpoint> spawnpoints = mappack.getMappackMetadata().getRandomSpawnpoints();
+                Spawnpoint chosen = spawnpoints.get(this.randomSpawnpointSelector.nextInt(spawnpoints.size()));
+                player.getEntity().setSpawnChunk(chosen, true);
+            }
+        }else{
+            if(player.getTeam().shouldOverrideDefaultSpawnpoint()){
+                ChunkCoordinates coords = player.getTeam().getSpawnPoint();
+                player.getEntity().setSpawnChunk(coords, true);
             }
         }
     }
@@ -197,5 +232,26 @@ public class MapLoader implements IMappackRegistrar {
         this.maps.remove(map);
         MinecraftForge.EVENT_BUS.post(new MapRemovedEvent(map));
         NailedLog.info("Unloaded map " + map.getSaveFileName());
+    }
+
+    public void checkShouldStart(Map map){
+        if(map.getMappack() == null) return;
+        String startWhen = map.getMappack().getMappackMetadata().getStartWhen();
+        if(startWhen.equals("false")) return;
+        if(startWhen.startsWith("equals(")){
+            String s[] = startWhen.substring(7, startWhen.length() - 1).split(",");
+            if(s[0].equals("joinedPlayers")){
+                int players = Integer.parseInt(s[1]);
+                if(map.getJoinedPlayers() >= players){
+                    map.getGameController().startGame();
+                }else{
+                    Object data = map.getGameController().load("watchunready");
+                    if(data == null) map.getGameController().save("watchunready", false);
+                    if((Boolean) map.getGameController().load("watchunready")){
+                        map.getGameController().stopGame();
+                    }
+                }
+            }
+        }
     }
 }

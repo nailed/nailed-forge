@@ -6,6 +6,7 @@ import jk_5.nailed.NailedModContainer;
 import jk_5.nailed.players.Player;
 import jk_5.nailed.players.Team;
 import jk_5.nailed.players.TeamBuilder;
+import jk_5.nailed.players.TeamUndefined;
 import lombok.Getter;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class TeamManager {
 
     public TeamManager(Map map){
         this.map = map;
-        this.defaultTeam = new Team(this.map, "unknown-" + this.map.getSaveFileName());
+        this.defaultTeam = new TeamUndefined(this.map);
 
         if(this.map.getMappack() == null) return;
 

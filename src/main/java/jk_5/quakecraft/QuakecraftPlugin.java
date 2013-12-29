@@ -7,6 +7,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 import jk_5.nailed.map.MapLoader;
+import jk_5.nailed.map.instruction.RegisterInstructionEvent;
 import jk_5.nailed.util.ChatColor;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -19,6 +20,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.scoreboard.Score;
+import net.minecraft.scoreboard.ScoreObjective;
+import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -57,6 +61,7 @@ public class QuakecraftPlugin {
     public void onInteract(PlayerInteractEvent event){
         World world = event.entity.worldObj;
         if(this.isQuakecraft(world)){
+            jk_5.nailed.map.Map map = MapLoader.instance().getMap(world);
             if(event.action == PlayerInteractEvent.Action.RIGHT_CLICK_AIR || event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK){
                 if(!this.reloadCooldown.containsKey(event.entityPlayer.username)){
                     this.reloadCooldown.put(event.entityPlayer.username, 21);
@@ -92,6 +97,11 @@ public class QuakecraftPlugin {
                         if(result.entityHit instanceof EntityLivingBase && result.entityHit.isEntityAlive()){
                             EntityLivingBase hit = (EntityLivingBase) result.entityHit;
                             hit.attackEntityFrom(new DamageSourceRailgun(event.entity), hit.getMaxHealth());
+
+                            Scoreboard scoreboard = world.getScoreboard();
+                            ScoreObjective objective = scoreboard.getObjective(map.getID() + "-kills");
+                            Score score = scoreboard.func_96529_a(event.entityPlayer.username, objective);
+                            score.func_96649_a(1);
                         }
                     }else{
                         event.entity.worldObj.playSoundAtEntity(event.entity, "mob.blaze.hit", 2.0f, 4.0f);
@@ -116,15 +126,24 @@ public class QuakecraftPlugin {
         if(event.entity instanceof EntityPlayer){
             EntityPlayer player = (EntityPlayer) event.entity;
             if(this.isQuakecraft(event.world)){
-                ItemStack stack = new ItemStack(Item.hoeWood, 1);
-                stack.setItemName(ChatColor.RESET + "" + ChatColor.GREEN + "Railgun");
-                player.inventory.setInventorySlotContents(0, stack);
-                player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 1000000, 1, true));
+                jk_5.nailed.map.Map map = MapLoader.instance().getMap(event.world);
+                if(map.getGameController().isRunning()){
+                    ItemStack stack = new ItemStack(Item.hoeWood, 1);
+                    stack.setItemName(ChatColor.RESET + "" + ChatColor.GREEN + "Railgun");
+                    player.inventory.setInventorySlotContents(0, stack);
+                    player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 1000000, 1, true));
+                }
             }else if(this.isQuakecraft(event.entity.worldObj)){
                 player.inventory.setInventorySlotContents(0, null);
                 player.removePotionEffect(Potion.moveSpeed.id);
             }
         }
+    }
+
+    @ForgeSubscribe
+    @SuppressWarnings("unused")
+    public void registerInstructions(RegisterInstructionEvent event){
+        event.register("startquakecraft", InstructionStartQuakecraft.class);
     }
 
     @ForgeSubscribe

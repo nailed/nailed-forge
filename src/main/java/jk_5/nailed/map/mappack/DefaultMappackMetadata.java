@@ -29,4 +29,7 @@ public class DefaultMappackMetadata implements MappackMetadata {
     public float spawnPitch;
     public boolean pvpEnabled;
     public EnumGameType gamemode;
+    public boolean choosingRandomSpawnpointAtRespawn;
+    public List<Spawnpoint> randomSpawnpoints;
+    public String startWhen;
 }

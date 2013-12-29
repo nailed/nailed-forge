@@ -6,6 +6,7 @@ import jk_5.nailed.NailedLog;
 import jk_5.nailed.map.gameloop.InstructionController;
 import jk_5.nailed.map.mappack.Mappack;
 import jk_5.nailed.map.mappack.MappackMetadata;
+import jk_5.nailed.map.mappack.Spawnpoint;
 import jk_5.nailed.map.stat.StatManager;
 import jk_5.nailed.map.teleport.TeleportOptions;
 import jk_5.nailed.network.NailedSPH;
@@ -37,6 +38,7 @@ public class Map {
     @Getter private final TeamManager teamManager;
     @Getter private final StatManager statManager;
     @Getter private final InstructionController gameController;
+    @Getter private int joinedPlayers = 0;
 
     public Map(Mappack mappack, int id){
         this.ID = id;
@@ -97,10 +99,14 @@ public class Map {
 
     public void onPlayerJoined(Player player){
         this.teamManager.onPlayerJoinedMap(player);
+        this.joinedPlayers ++;
+        MapLoader.instance().checkShouldStart(this);
     }
 
     public void onPlayerLeft(Player player){
         this.teamManager.onPlayerLeftMap(player);
+        this.joinedPlayers --;
+        MapLoader.instance().checkShouldStart(this);
     }
 
     public String getSaveFileName(){
@@ -147,5 +153,10 @@ public class Map {
 
     public void onGameEnded(){
         this.teamManager.onGameEnded();
+    }
+
+    public Spawnpoint getRandomSpawnpoint(){
+        List<Spawnpoint> spawnpoints = mappack.getMappackMetadata().getRandomSpawnpoints();
+        return spawnpoints.get(MapLoader.instance().getRandomSpawnpointSelector().nextInt(spawnpoints.size()));
     }
 }

@@ -27,4 +27,7 @@ public interface MappackMetadata {
     float getSpawnPitch();
     boolean isPvpEnabled();
     EnumGameType getGamemode();
+    boolean isChoosingRandomSpawnpointAtRespawn();
+    List<Spawnpoint> getRandomSpawnpoints();
+    String getStartWhen();
 }

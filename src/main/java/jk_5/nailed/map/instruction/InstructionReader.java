@@ -48,6 +48,7 @@ public class InstructionReader {
         event.register("trigger", InstructionTriggerStat.class);
         event.register("unwatchunready", InstructionUnwatchUnready.class);
         event.register("watchunready", InstructionWatchUnready.class);
+        event.register("spreadPlayersToRandomSpawns", InstructionSpreadPlayersToRandomSpawns.class);
     }
 
     private InstructionReader(){
