@@ -24,7 +24,7 @@ public class InstructionController implements Runnable {
     @Getter private boolean running = false;
     @Getter private boolean paused = false;
     @Getter private Team winner = null;
-    private final InstructionList instructions;
+    @Getter private final InstructionList instructions;
     private final InstructionGameController controller = new InstructionGameController(this);
     private Thread thread;
 

@@ -7,7 +7,10 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 import jk_5.nailed.map.MapLoader;
+import jk_5.nailed.map.instruction.IInstruction;
 import jk_5.nailed.map.instruction.RegisterInstructionEvent;
+import jk_5.nailed.players.Player;
+import jk_5.nailed.players.PlayerRegistry;
 import jk_5.nailed.util.ChatColor;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -60,6 +63,7 @@ public class QuakecraftPlugin {
     @ForgeSubscribe
     public void onInteract(PlayerInteractEvent event){
         World world = event.entity.worldObj;
+        Player player = PlayerRegistry.instance().getPlayer(event.entityPlayer.username);
         if(this.isQuakecraft(world)){
             jk_5.nailed.map.Map map = MapLoader.instance().getMap(world);
             if(event.action == PlayerInteractEvent.Action.RIGHT_CLICK_AIR || event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK){
@@ -102,6 +106,15 @@ public class QuakecraftPlugin {
                             ScoreObjective objective = scoreboard.getObjective(map.getID() + "-kills");
                             Score score = scoreboard.func_96529_a(event.entityPlayer.username, objective);
                             score.func_96649_a(1);
+
+                            if(score.getScorePoints() >= 25){
+                                for(IInstruction instruction : map.getGameController().getInstructions()){
+                                    if(instruction instanceof InstructionAwaitFinalKill){
+                                        ((InstructionAwaitFinalKill) instruction).finalKillMade = true;
+                                    }
+                                }
+                                map.broadcastChatMessage(ChatMessageComponent.createFromTranslationWithSubstitutions("quakecraft.message.winner", player.getUsername()));
+                            }
                         }
                     }else{
                         event.entity.worldObj.playSoundAtEntity(event.entity, "mob.blaze.hit", 2.0f, 4.0f);
@@ -144,6 +157,7 @@ public class QuakecraftPlugin {
     @SuppressWarnings("unused")
     public void registerInstructions(RegisterInstructionEvent event){
         event.register("startquakecraft", InstructionStartQuakecraft.class);
+        event.register("awaitfinakquakekill", InstructionAwaitFinalKill.class);
     }
 
     @ForgeSubscribe

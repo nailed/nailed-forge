@@ -28,6 +28,7 @@ public class InstructionReader {
     }
 
     @ForgeSubscribe
+    @SuppressWarnings("unused")
     public void registerInstructionsFromEvent(RegisterInstructionEvent event){
         event.register("clearinventory", InstructionClearInventory.class);
         event.register("countup", InstructionCountUp.class);
@@ -49,6 +50,9 @@ public class InstructionReader {
         event.register("unwatchunready", InstructionUnwatchUnready.class);
         event.register("watchunready", InstructionWatchUnready.class);
         event.register("spreadPlayersToRandomSpawns", InstructionSpreadPlayersToRandomSpawns.class);
+        event.register("wait", InstructionWait.class);
+        event.register("teleportall", InstructionTeleportAll.class);
+        event.register("unloadmap", InstructionUnloadMap.class);
     }
 
     private InstructionReader(){

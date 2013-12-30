@@ -32,7 +32,6 @@ public class ProxyCommon {
     }
 
     public void registerEventHandlers(){
-        MinecraftForge.EVENT_BUS.register(new EventHandlerServer());
         MinecraftForge.EVENT_BUS.register(new TeleportListener());
         MinecraftForge.EVENT_BUS.register(new TeleportListenerEffects());
         MinecraftForge.EVENT_BUS.register(PlayerRegistry.instance());
