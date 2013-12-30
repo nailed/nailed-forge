@@ -1,11 +1,11 @@
 package jk_5.nailed.players;
 
+import com.mojang.authlib.GameProfile;
 import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.map.teleport.NailedTeleporter;
 import jk_5.nailed.network.NailedSPH;
 import jk_5.nailed.util.ChatColor;
-import jk_5.nailed.util.Utils;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -23,14 +23,10 @@ import net.minecraft.util.IChatComponent;
 @RequiredArgsConstructor
 public class Player {
 
-    @Getter private final String username;
+    @Getter private final GameProfile gameProfile;
     @Setter private Map currentMap;
     @Getter private boolean online = false;
     @Getter @Setter private int teamSpeakClientID = -1;
-
-    public void setTimeLeft(int seconds){
-        NailedSPH.sendTimeUpdate(this.getEntity(), "Time left: " + ChatColor.GREEN + Utils.secondsToShortTimeString(seconds));
-    }
 
     public void sendNotification(String message){
         EntityPlayerMP entity = this.getEntity();
@@ -51,15 +47,15 @@ public class Player {
     }
 
     public EntityPlayerMP getEntity(){
-        return MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(this.username);
+        return MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(this.getUsername());
     }
 
     public boolean isOp(){
-        return MinecraftServer.getServer().getConfigurationManager().isPlayerOpped(this.username);
+        return MinecraftServer.getServer().getConfigurationManager().isPlayerOpped(this.getUsername());
     }
 
     public String getChatPrefix(){
-        return this.getTeam().getColor() + (this.isOp() ? "@" : "") + this.username + ChatColor.RESET;
+        return this.getTeam().getColor() + (this.isOp() ? "@" : "") + this.getUsername() + ChatColor.RESET;
     }
 
     public Team getTeam(){
@@ -68,6 +64,14 @@ public class Player {
 
     public void setTeam(Team team){
         this.getCurrentMap().getTeamManager().setPlayerTeam(this, team);
+    }
+
+    public String getUsername(){
+        return this.gameProfile.getName();
+    }
+
+    public String getId(){
+        return this.gameProfile.getId();
     }
 
     public Map getCurrentMap(){

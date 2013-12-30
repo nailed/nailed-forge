@@ -104,7 +104,7 @@ public class TeamspeakClient extends Thread implements TeamspeakActionListener {
                     }
                 }
             }
-            Player player = PlayerRegistry.instance().getPlayer(nickname);
+            Player player = PlayerRegistry.instance().getPlayerByUsername(nickname);
             if(player != null) player.setTeamSpeakClientID(id);
         }
     }
@@ -201,7 +201,7 @@ public class TeamspeakClient extends Thread implements TeamspeakActionListener {
     @Override
     public void teamspeakActionPerformed(String eventType, HashMap<String, String> eventInfo){
         if(eventType.equalsIgnoreCase("notifycliententerview")){
-            Player player = PlayerRegistry.instance().getPlayer(eventInfo.get("client_nickname"));
+            Player player = PlayerRegistry.instance().getPlayerByUsername(eventInfo.get("client_nickname"));
             if(player != null){
                 player.setTeamSpeakClientID(Integer.parseInt(eventInfo.get("clid")));
             }

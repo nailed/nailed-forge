@@ -1,7 +1,6 @@
 package jk_5.nailed.blocks.tileentity;
 
-import codechicken.lib.vec.BlockCoord;
-import jk_5.nailed.network.Packets;
+import jk_5.nailed.NailedLog;
 import jk_5.nailed.players.Player;
 import jk_5.nailed.players.PlayerRegistry;
 import lombok.NoArgsConstructor;
@@ -19,20 +18,18 @@ public abstract class NailedTileEntity extends TileEntity {
     public boolean onBlockActivated(EntityPlayer entity, int side, float hitX, float hitY, float hitZ){
         if(this instanceof IGuiTileEntity){
             IGuiTileEntity tile = (IGuiTileEntity) this;
-            if(worldObj.isRemote) return true;
+            if(this.field_145850_b.isRemote) return true;
             else{
-                Player player = PlayerRegistry.instance().getPlayer(entity.username);
+                Player player = PlayerRegistry.instance().getPlayer(entity);
                 if(player == null) return true;
-                if(tile.canPlayerOpenGui(player)){
-                    Packets.OPEN_GUI.newPacket().writeCoord(this.getCoordinates()).sendToPlayer(entity);
-                }
+                NailedLog.info("IMPLEMENT ME IN NailedTileEntity!");
+                //TODO: Packet
+                //if(tile.canPlayerOpenGui(player)){
+                //    Packets.OPEN_GUI.newPacket().writeCoord(this.getCoordinates()).sendToPlayer(entity);
+                //}
                 return true;
             }
         }
         return false;
-    }
-
-    public BlockCoord getCoordinates(){
-        return new BlockCoord(this.xCoord, this.yCoord, this.zCoord);
     }
 }

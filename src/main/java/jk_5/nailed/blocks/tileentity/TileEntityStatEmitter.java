@@ -1,6 +1,5 @@
 package jk_5.nailed.blocks.tileentity;
 
-import codechicken.lib.data.MCDataInput;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -16,9 +15,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet132TileEntityData;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraftforge.common.MinecraftForge;
 
 /**
@@ -40,9 +39,9 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
 
     public void setStatName(String statName){
         this.programmedName = statName;
-        if(this.worldObj == null) this.needsUpdate = true;
-        else if(!this.worldObj.isRemote){
-            this.stat = MapLoader.instance().getMap(this.worldObj).getStatManager().getStat(this.programmedName);
+        if(this.field_145850_b == null) this.needsUpdate = true;
+        else if(!this.field_145850_b.isRemote){
+            this.stat = MapLoader.instance().getMap(this.field_145850_b).getStatManager().getStat(this.programmedName);
             MinecraftForge.EVENT_BUS.post(new StatTileEntityEvent.Load(this));
             this.isLoaded = true;
             if(this.stat == null){
@@ -54,15 +53,15 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
         }
     }
 
-    public void readGuiData(MCDataInput input){
+    /*public void readGuiData(MCDataInput input){
         this.setMode(StatMode.values()[input.readByte()]);
         this.setStatName(input.readString());
-    }
+    }*/
 
     @Override
-    public void updateEntity(){
+    public void func_145845_h(){
         if(this.needsUpdate){
-            this.stat = MapLoader.instance().getMap(this.worldObj).getStatManager().getStat(this.programmedName);
+            this.stat = MapLoader.instance().getMap(this.field_145850_b).getStatManager().getStat(this.programmedName);
             MinecraftForge.EVENT_BUS.post(new StatTileEntityEvent.Load(this));
             this.isLoaded = true;
             if(this.stat == null){
@@ -89,8 +88,8 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
     }
 
     @Override
-    public void invalidate(){
-        super.invalidate();
+    public void func_145843_s(){
+        super.func_145843_s();
         if(this.isLoaded){
             MinecraftForge.EVENT_BUS.post(new StatTileEntityEvent.Unload(this));
             this.isLoaded = false;
@@ -112,28 +111,28 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
     }
 
     @Override
-    public Packet getDescriptionPacket(){
+    public Packet func_145844_m(){
         NBTTagCompound tag = new NBTTagCompound();
-        this.writeToNBT(tag);
-        return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 0, tag);
+        this.func_145839_a(tag);
+        return new S35PacketUpdateTileEntity(this.field_145851_c, this.field_145848_d, this.field_145849_e, 0, tag);
     }
 
     @Override
-    public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt){
-        this.readFromNBT(pkt.data);
+    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt){
+        this.func_145839_a(pkt.func_148857_g());
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tag){
-        super.readFromNBT(tag);
+    public void func_145839_a(NBTTagCompound tag){
+        super.func_145839_a(tag);
         this.setStatName(tag.getString("name"));
         this.mode = StatMode.values()[tag.getByte("mode")];
         this.pulseLength = tag.getInteger("pulseLength");
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tag){
-        super.writeToNBT(tag);
+    public void func_145841_b(NBTTagCompound tag){
+        super.func_145841_b(tag);
         tag.setString("name", this.programmedName);
         tag.setByte("mode", (byte) this.mode.ordinal());
         tag.setInteger("pulseLength", this.pulseLength);
@@ -195,6 +194,6 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
     }
 
     public void scheduleRedstoneUpdate(){
-        this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, this.getBlockType().blockID);
+        this.field_145850_b.func_147459_d(this.field_145851_c, this.field_145848_d, this.field_145849_e, this.field_145854_h);
     }
 }

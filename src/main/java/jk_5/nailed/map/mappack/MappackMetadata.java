@@ -3,7 +3,7 @@ package jk_5.nailed.map.mappack;
 import jk_5.nailed.players.TeamBuilder;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.EnumDifficulty;
-import net.minecraft.world.EnumGameType;
+import net.minecraft.world.WorldSettings;
 
 import java.util.List;
 import java.util.Map;
@@ -27,7 +27,7 @@ public interface MappackMetadata {
     float getSpawnYaw();
     float getSpawnPitch();
     boolean isPvpEnabled();
-    EnumGameType getGamemode();
+    WorldSettings.GameType getGamemode();
     boolean isChoosingRandomSpawnpointAtRespawn();
     List<Spawnpoint> getRandomSpawnpoints();
     String getStartWhen();

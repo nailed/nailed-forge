@@ -7,8 +7,6 @@ import jk_5.nailed.map.mappack.Mappack;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
 
 import java.util.Arrays;
 import java.util.List;
@@ -39,7 +37,8 @@ public class CommandMap extends NailedCommand {
             Mappack mappack = MapLoader.instance().getMappack(name);
             if(mappack == null) throw new CommandException("Mappack does not exist");
             Map map = MapLoader.instance().newMapServerFor(mappack);
-            sender.func_145747_a(new ChatComponentText("Loading " + map.getSaveFileName()).setColor(EnumChatFormatting.GREEN));
+            //TODO: color
+            //sender.func_145747_a(new ChatComponentText("Loading " + map.getSaveFileName()).setColor(EnumChatFormatting.GREEN));
         }else if(args[0].equalsIgnoreCase("remove")){
             if(args.length == 1) throw new WrongUsageException("/map remove <mapid>");
             Map map = null;
@@ -51,7 +50,8 @@ public class CommandMap extends NailedCommand {
             }
             if(map == null) throw new CommandException("Map does not exist");
             map.unloadAndRemove();
-            sender.func_145747_a(new ChatComponentText("Removed " + map.getSaveFileName()).setColor(EnumChatFormatting.GREEN));
+            //TODO: color
+            //sender.func_145747_a(new ChatComponentText("Removed " + map.getSaveFileName()).setColor(EnumChatFormatting.GREEN));
         }else throw new WrongUsageException("/map <create:remove>");
     }
 

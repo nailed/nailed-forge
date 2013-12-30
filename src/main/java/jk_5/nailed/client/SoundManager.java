@@ -14,14 +14,14 @@ public class SoundManager {
 
     @SubscribeEvent
     public void onSoundLoad(SoundLoadEvent event){
-        event.manager.addSound("nailed:teleport/link.ogg");
+        /*event.manager.addSound("nailed:teleport/link.ogg");
         event.manager.addSound("nailed:teleport/link-disarm.ogg");
         event.manager.addSound("nailed:teleport/link-fissure.ogg");
         event.manager.addSound("nailed:teleport/link-following.ogg");
         event.manager.addSound("nailed:teleport/link-intra.ogg");
         event.manager.addSound("nailed:teleport/link-portal.ogg");
         event.manager.addSound("nailed:teleport/pop.wav");
-        event.manager.addSound("nailed:teleport.ogg");
+        event.manager.addSound("nailed:teleport.ogg");*/
     }
 
     @SubscribeEvent

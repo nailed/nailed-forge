@@ -3,7 +3,7 @@ package jk_5.nailed.map.mappack;
 import jk_5.nailed.players.TeamBuilder;
 import lombok.Getter;
 import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.world.EnumGameType;
+import net.minecraft.world.WorldSettings;
 
 import java.util.List;
 import java.util.Map;
@@ -28,7 +28,7 @@ public class DefaultMappackMetadata implements MappackMetadata {
     public float spawnYaw;
     public float spawnPitch;
     public boolean pvpEnabled;
-    public EnumGameType gamemode;
+    public WorldSettings.GameType gamemode;
     public boolean choosingRandomSpawnpointAtRespawn;
     public List<Spawnpoint> randomSpawnpoints;
     public String startWhen;

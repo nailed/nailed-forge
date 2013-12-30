@@ -3,6 +3,7 @@ package jk_5.nailed.blocks.tileentity;
 import com.google.common.base.Preconditions;
 import jk_5.nailed.blocks.NailedBlocks;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockAir;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -19,16 +20,11 @@ public class TileEntityElevator extends NailedTileEntity {
     private static final int MAX_PASSABLE_BLOCKS = 32;
 
     private boolean canTeleportPlayer(int x, int y, int z) {
-        int blockId = worldObj.getBlockId(x, y, z);
-        Block block = Block.blocksList[blockId];
-        if (block == null || block.isAirBlock(worldObj, x, y, z)) return true;
+        Block block = this.field_145850_b.func_147439_a(x, y, z);
+        if (this.field_145850_b.func_147437_c(x, y, z)) return true;
 
-        final AxisAlignedBB aabb = block.getCollisionBoundingBoxFromPool(worldObj, x, y, z);
+        final AxisAlignedBB aabb = block.func_149668_a(field_145850_b, x, y, z);
         return aabb == null || aabb.getAverageEdgeLength() < 0.7;
-    }
-
-    private static boolean isPassable(int blockId) {
-        return !Block.isNormalCube(blockId);
     }
 
     private int findLevel(ForgeDirection direction) {
@@ -36,22 +32,23 @@ public class TileEntityElevator extends NailedTileEntity {
 
         int blocksInTheWay = 0;
         final int delta = direction.offsetY;
-        for (int i = 0, y = yCoord; i < MAX_DISTANCE; i++) {
+        for (int i = 0, y = this.field_145848_d; i < MAX_DISTANCE; i++) {
             y += delta;
-            if (!worldObj.blockExists(xCoord, y, zCoord)) break;
-            if (worldObj.isAirBlock(xCoord, y, zCoord)) continue;
+            if (!this.field_145850_b.blockExists(this.field_145851_c, y, this.field_145849_e)) break;
 
-            int blockId = worldObj.getBlockId(xCoord, y, zCoord);
-            int meta = worldObj.getBlockMetadata(xCoord, y, zCoord);
+            Block block = this.field_145850_b.func_147439_a(this.field_145851_c, y, this.field_145849_e);
+            int meta = this.field_145850_b.getBlockMetadata(this.field_145851_c, y, this.field_145849_e);
 
-            if (blockId == NailedBlocks.stat.blockID && meta == 2) {
-                TileEntity otherBlock = worldObj.getBlockTileEntity(xCoord, y, zCoord);
+            if (block instanceof BlockAir) continue;
+
+            if (block == NailedBlocks.stat && meta == 2) {
+                TileEntity otherBlock = this.field_145850_b.func_147438_o(this.field_145851_c, y, this.field_145849_e);
                 if (otherBlock instanceof TileEntityElevator) {
-                    if (canTeleportPlayer(xCoord, y + 1, zCoord) && canTeleportPlayer(xCoord, y + 2, zCoord)) return y;
+                    if (canTeleportPlayer(this.field_145851_c, y + 1, this.field_145849_e) && canTeleportPlayer(this.field_145851_c, y + 2, this.field_145849_e)) return y;
                 }
             }
 
-            if (!isPassable(blockId) && (++blocksInTheWay > MAX_PASSABLE_BLOCKS)) break;
+            if (!block.isNormalCube(this.field_145850_b, this.field_145851_c, y, this.field_145849_e) && (++blocksInTheWay > MAX_PASSABLE_BLOCKS)) break;
         }
 
         return -1;

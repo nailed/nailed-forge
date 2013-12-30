@@ -1,9 +1,9 @@
 package jk_5.nailed.client.render;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.event.ForgeSubscribe;
 
 /**
  * No description given
@@ -15,7 +15,7 @@ public class RenderEventHandler {
     private Minecraft mc = Minecraft.getMinecraft();
     public static String format = "";
 
-    @ForgeSubscribe
+    @SubscribeEvent
     public void onRenderOverlay(RenderGameOverlayEvent.Post event){
         if(event.type != RenderGameOverlayEvent.ElementType.ALL) return;
         if(format.isEmpty()) return;

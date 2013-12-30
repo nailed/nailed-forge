@@ -37,7 +37,7 @@ public class CommandTeam extends NailedCommand {
         if(args.length == 0) throw new WrongUsageException("/team join <username> <team>");
         if(args[0].equalsIgnoreCase("join")){
             if(args.length == 1) throw new WrongUsageException("/team join <username> <team>");
-            Player player = PlayerRegistry.instance().getPlayer(args[1]);
+            Player player = PlayerRegistry.instance().getPlayerByUsername(args[1]);
             if(player == null) throw new CommandException("Unknown username " + args[1]);
 
             if(args.length == 2) throw new WrongUsageException("/team join " + args[1] + " <team>");

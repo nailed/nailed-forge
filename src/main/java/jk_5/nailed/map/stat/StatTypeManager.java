@@ -1,10 +1,10 @@
 package jk_5.nailed.map.stat;
 
 import com.google.common.collect.Maps;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import jk_5.nailed.map.stat.types.*;
 import lombok.Getter;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.ForgeSubscribe;
 
 import java.util.Map;
 
@@ -27,7 +27,7 @@ public class StatTypeManager {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    @ForgeSubscribe
+    @SubscribeEvent
     @SuppressWarnings("unused")
     public void addStatTypesFromEvent(RegisterStatTypeEvent event){
         event.register("gameloopRunning", new StatTypeGameloopRunning());

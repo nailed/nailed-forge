@@ -27,7 +27,7 @@ public abstract class NailedCommand extends CommandBase {
         Map map = MapLoader.instance().getMap(sender.getEntityWorld());
         if(map == null) throw new CommandException("Something went wrong! You are not in a world");
         Player player = null;
-        if(sender instanceof EntityPlayer) player = PlayerRegistry.instance().getPlayer(((EntityPlayer) sender).username);
+        if(sender instanceof EntityPlayer) player = PlayerRegistry.instance().getPlayer(((EntityPlayer) sender));
         if(player == null){
             this.processCommandWithMap(sender, map, args);
         }else{

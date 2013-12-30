@@ -1,8 +1,8 @@
 package jk_5.nailed.ipc;
 
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.common.registry.TickRegistry;
-import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -14,11 +14,12 @@ import jk_5.nailed.NailedModContainer;
 import jk_5.nailed.ipc.packet.IpcPacket;
 import lombok.Getter;
 import net.minecraftforge.common.MinecraftForge;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.channels.UnresolvedAddressException;
-import java.util.logging.Logger;
 
 /**
  * No description given
@@ -27,7 +28,7 @@ import java.util.logging.Logger;
  */
 public class IpcManager {
 
-    public static final Logger logger = Logger.getLogger("Nailed|IPC");
+    public static final Logger logger = LogManager.getLogger("Nailed|IPC");
 
     private static final IpcManager instance = new IpcManager();
     private Channel channel;
@@ -40,8 +41,8 @@ public class IpcManager {
     }
 
     static {
-        FMLLog.makeLog("Nailed|IPC");
         MinecraftForge.EVENT_BUS.register(new IpcEventListener());
+        FMLCommonHandler.instance().bus().register(instance);
     }
 
     public IpcManager() {
@@ -58,7 +59,6 @@ public class IpcManager {
 
     public void start(){
         logger.info("Starting IPC client");
-        TickRegistry.registerScheduledTickHandler(new PacketProcessor(), Side.SERVER);
         final EventLoopGroup group = new NioEventLoopGroup();
         try{
             IpcHandler handler = new IpcHandler();
@@ -74,7 +74,15 @@ public class IpcManager {
         //}catch(ConnectException e){
         //    NailedLog.severe("Was not able to connect to IPC server");
         }catch(UnresolvedAddressException e){
-            logger.severe("Could not resolve address for IPC server");
+            logger.error("Could not resolve address for IPC server");
+        }
+    }
+
+    @SubscribeEvent
+    public void processPackets(TickEvent.ServerTickEvent event){
+        while(!PacketManager.getProcessQueue().isEmpty()){
+            IpcPacket packet = PacketManager.getProcessQueue().poll();
+            packet.processPacket();
         }
     }
 

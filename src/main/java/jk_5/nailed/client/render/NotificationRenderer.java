@@ -1,6 +1,7 @@
 package jk_5.nailed.client.render;
 
 import com.google.common.collect.Lists;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import jk_5.nailed.NailedModContainer;
@@ -8,7 +9,6 @@ import jk_5.nailed.util.Notification;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.event.ForgeSubscribe;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -19,6 +19,7 @@ import java.util.List;
  *
  * @author jk-5
  */
+@SideOnly(Side.CLIENT)
 public class NotificationRenderer {
 
     public static List<Notification> notifications = Lists.newArrayList();
@@ -53,8 +54,7 @@ public class NotificationRenderer {
         return ret;
     }
 
-    @ForgeSubscribe
-    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
     public void render(RenderGameOverlayEvent.Post event){
         Minecraft mc = Minecraft.getMinecraft();
         long time = System.nanoTime() / 1000000L;

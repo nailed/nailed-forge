@@ -18,6 +18,7 @@ import jk_5.nailed.map.instruction.InstructionReader;
 import jk_5.nailed.map.instruction.RegisterInstructionEvent;
 import jk_5.nailed.map.stat.RegisterStatTypeEvent;
 import jk_5.nailed.map.stat.StatTypeManager;
+import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.server.ProxyCommon;
 import jk_5.nailed.server.command.*;
 import jk_5.nailed.teamspeak.TeamspeakClient;
@@ -77,7 +78,7 @@ public class NailedModContainer {
         NailedAchievements.addAchievements();
 
         NailedLog.info("Initializing network and event handlers");
-        proxy.initNetworkHandlers();
+        NailedNetworkHandler.registerChannel(event.getSide());
         proxy.registerEventHandlers();
 
         NailedLog.info("Registering blocks");

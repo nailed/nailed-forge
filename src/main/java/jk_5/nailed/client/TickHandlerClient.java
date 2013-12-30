@@ -1,7 +1,7 @@
 package jk_5.nailed.client;
 
-import cpw.mods.fml.common.ITickHandler;
-import cpw.mods.fml.common.TickType;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import jk_5.nailed.blocks.tileentity.NailedTileEntity;
 import jk_5.nailed.network.Packets;
 import net.minecraft.client.Minecraft;
@@ -11,19 +11,19 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
-import java.util.EnumSet;
-
 /**
  * No description given
  *
  * @author jk-5
  */
-public class TickHandlerClient implements ITickHandler {
+public class TickHandlerClient {
 
     private boolean wasJumping = false;
     private boolean wasSneaking = false;
 
-    private void onClientTick(){
+    @SubscribeEvent
+    public void onClientTick(TickEvent.ClientTickEvent event){
+        if(event.phase == TickEvent.Phase.START) return;
         EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
         if (player != null) {
             NailedTileEntity target = this.getTileEntityUnderPlayer(player);
@@ -42,31 +42,9 @@ public class TickHandlerClient implements ITickHandler {
             int x = MathHelper.floor_double(player.posX);
             int y = MathHelper.floor_double(player.boundingBox.minY) - 1;
             int z = MathHelper.floor_double(player.posZ);
-            TileEntity te = world.getBlockTileEntity(x, y, z);
+            TileEntity te = world.func_147438_o(x, y, z);
             if (te instanceof NailedTileEntity) return (NailedTileEntity) te;
         }
         return null;
-    }
-
-    @Override
-    public void tickStart(EnumSet<TickType> type, Object... tickData){
-        if(type.contains(TickType.CLIENT)){
-            this.onClientTick();
-        }
-    }
-
-    @Override
-    public void tickEnd(EnumSet<TickType> type, Object... tickData){
-
-    }
-
-    @Override
-    public EnumSet<TickType> ticks(){
-        return EnumSet.of(TickType.CLIENT);
-    }
-
-    @Override
-    public String getLabel(){
-        return this.getClass().getName();
     }
 }

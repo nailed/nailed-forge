@@ -29,7 +29,7 @@ public class CommandInvsee extends NailedCommand {
     @Override
     public void processCommandPlayer(Player sender, Map map, String[] args){
         if(args.length == 1){
-            Player player = PlayerRegistry.instance().getPlayer(args[0]);
+            Player player = PlayerRegistry.instance().getPlayerByUsername(args[0]);
             if(player == null) throw new CommandException("That player is not online!");
             EntityPlayerMP entity = sender.getEntity();
             if(entity.openContainer != entity.inventoryContainer){
@@ -38,7 +38,7 @@ public class CommandInvsee extends NailedCommand {
             entity.incrementWindowID();
 
             InventoryOtherPlayer chest = new InventoryOtherPlayer(player.getEntity(), entity);
-            entity.playerNetServerHandler.func_147359_a(new S2DPacketOpenWindow(entity.currentWindowId, 0, chest.getInvName(), chest.getSizeInventory(), true));
+            entity.playerNetServerHandler.func_147359_a(new S2DPacketOpenWindow(entity.currentWindowId, 0, chest.func_145825_b(), chest.getSizeInventory(), true));
             entity.openContainer = new ContainerChest(entity.inventory, chest);
             entity.openContainer.windowId = entity.currentWindowId;
             entity.openContainer.addCraftingToCrafters(entity);

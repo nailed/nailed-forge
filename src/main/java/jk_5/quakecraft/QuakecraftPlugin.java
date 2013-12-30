@@ -1,12 +1,11 @@
 package jk_5.quakecraft;
 
-import codechicken.lib.raytracer.RayTracer;
 import com.google.common.collect.Maps;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.registry.EntityRegistry;
-import jk_5.nailed.map.Map;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.map.instruction.IInstruction;
 import jk_5.nailed.map.instruction.RegisterInstructionEvent;
@@ -17,11 +16,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityFireworkRocket;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemHoe;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.potion.Potion;
@@ -32,7 +29,6 @@ import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -40,7 +36,6 @@ import net.minecraftforge.event.entity.player.PlayerDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * No description given
@@ -53,31 +48,43 @@ public class QuakecraftPlugin {
     @Mod.Instance("QuakeCraft")
     public static QuakecraftPlugin instance;
 
-    public Map<String, Integer> reloadCooldown = Maps.newHashMap();
+    public java.util.Map<String, Integer> reloadCooldown = Maps.newHashMap();
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event){
         if(event.getSide().isServer()){
+            FMLCommonHandler.instance().bus().register(this);
             MinecraftForge.EVENT_BUS.register(this);
-            TickRegistry.registerTickHandler(new ShootCooldownTickHandler(), Side.SERVER);
         }
     }
 
     @SubscribeEvent
+    @SuppressWarnings("unused")
+    public void onCooldownTick(TickEvent.PlayerTickEvent event){
+        if(event.phase == TickEvent.Phase.START) return;
+        String id = event.player.func_146103_bH().getId();
+        if(QuakecraftPlugin.instance.reloadCooldown.containsKey(id)){
+            int ticks = QuakecraftPlugin.instance.reloadCooldown.get(id) + 1;
+            QuakecraftPlugin.instance.reloadCooldown.put(id, ticks);
+        }
+    }
+
+    @SubscribeEvent
+    @SuppressWarnings("unused")
     public void onInteract(PlayerInteractEvent event){
         World world = event.entity.worldObj;
-        Player player = PlayerRegistry.instance().getPlayer(event.entityPlayer.username);
+        Player player = PlayerRegistry.instance().getPlayer(event.entityPlayer);
         if(this.isQuakecraft(world)){
             jk_5.nailed.map.Map map = MapLoader.instance().getMap(world);
             if(event.action == PlayerInteractEvent.Action.RIGHT_CLICK_AIR || event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK){
-                if(!this.reloadCooldown.containsKey(event.entityPlayer.username)){
-                    this.reloadCooldown.put(event.entityPlayer.username, 21);
+                if(!this.reloadCooldown.containsKey(player.getId())){
+                    this.reloadCooldown.put(player.getId(), 21);
                 }
-                if(this.reloadCooldown.get(event.entityPlayer.username) <= 30) return;
+                if(this.reloadCooldown.get(player.getId()) <= 30) return;
                 ItemStack held = event.entityPlayer.getHeldItem();
                 if(held != null && held.getItem() instanceof ItemHoe){
                     MovingObjectPosition result = this.rayTrace(event.entityPlayer);
-                    if(result != null && result.typeOfHit == EnumMovingObjectType.ENTITY){
+                    if(result != null && result.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY){
                         double particlesPerBlock = 1d;
                         double dx = result.entityHit.posX - event.entity.posX;
                         double dy = result.entityHit.posY - event.entity.posY;
@@ -107,7 +114,7 @@ public class QuakecraftPlugin {
 
                             Scoreboard scoreboard = world.getScoreboard();
                             ScoreObjective objective = scoreboard.getObjective(map.getID() + "-kills");
-                            Score score = scoreboard.func_96529_a(event.entityPlayer.username, objective);
+                            Score score = scoreboard.func_96529_a(player.getUsername(), objective);
                             score.func_96649_a(1);
 
                             if(score.getScorePoints() >= 25){
@@ -116,19 +123,19 @@ public class QuakecraftPlugin {
                                         ((InstructionAwaitFinalKill) instruction).finalKillMade = true;
                                     }
                                 }
-                                map.broadcastChatMessage(ChatMessageComponent.createFromTranslationWithSubstitutions("quakecraft.message.winner", player.getUsername()));
+                                map.broadcastChatMessage(new ChatComponentTranslation("quakecraft.message.winner", player.getUsername()));
                             }
                         }
                     }else{
                         event.entity.worldObj.playSoundAtEntity(event.entity, "mob.blaze.hit", 2.0f, 4.0f);
                     }
-                    this.reloadCooldown.put(event.entityPlayer.username, 0);
+                    this.reloadCooldown.put(player.getId(), 0);
                 }
             }
         }
     }
 
-    @ForgeSubscribe
+    @SubscribeEvent
     @SuppressWarnings("unused")
     public void onPlayerDrop(PlayerDropsEvent event){
         if(this.isQuakecraft(event.entity.worldObj)){
@@ -136,7 +143,7 @@ public class QuakecraftPlugin {
         }
     }
 
-    @ForgeSubscribe
+    @SubscribeEvent
     @SuppressWarnings("unused")
     public void onEntitySpawn(EntityJoinWorldEvent event){
         if(event.entity instanceof EntityPlayer){
@@ -144,8 +151,8 @@ public class QuakecraftPlugin {
             if(this.isQuakecraft(event.world)){
                 jk_5.nailed.map.Map map = MapLoader.instance().getMap(event.world);
                 if(map.getGameController().isRunning()){
-                    ItemStack stack = new ItemStack(Item.hoeWood, 1);
-                    stack.setItemName(ChatColor.RESET + "" + ChatColor.GREEN + "Railgun");
+                    ItemStack stack = new ItemStack(Items.wooden_hoe, 1);
+                    stack.func_151001_c(ChatColor.RESET + "" + ChatColor.GREEN + "Railgun");
                     player.inventory.setInventorySlotContents(0, stack);
                     player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 1000000, 1, true));
                 }
@@ -156,14 +163,14 @@ public class QuakecraftPlugin {
         }
     }
 
-    @ForgeSubscribe
+    @SubscribeEvent
     @SuppressWarnings("unused")
     public void registerInstructions(RegisterInstructionEvent event){
         event.register("startquakecraft", InstructionStartQuakecraft.class);
         event.register("awaitfinakquakekill", InstructionAwaitFinalKill.class);
     }
 
-    @ForgeSubscribe
+    @SubscribeEvent
     @SuppressWarnings("unused")
     public void onDamage(LivingHurtEvent event){
         if(!this.isQuakecraft(event.entity.worldObj)) return;
@@ -172,7 +179,7 @@ public class QuakecraftPlugin {
         }
     }
 
-    @ForgeSubscribe
+    @SubscribeEvent
     @SuppressWarnings("unused")
     public void onFall(LivingFallEvent event){
         if(this.isQuakecraft(event.entity.worldObj)){
@@ -234,11 +241,11 @@ public class QuakecraftPlugin {
     }
 
     public ItemStack getEntityExplosionEffect(int color){
-        ItemStack firework = new ItemStack(Item.firework, 1);
+        ItemStack firework = new ItemStack(Items.fireworks, 1);
         NBTTagCompound tag = new NBTTagCompound();
         firework.setTagCompound(tag);
         NBTTagCompound fireworks = new NBTTagCompound();
-        tag.setCompoundTag("Fireworks", fireworks);
+        tag.setTag("Fireworks", fireworks);
         fireworks.setByte("Flight", (byte) 2);
         NBTTagList explosions = new NBTTagList();
         fireworks.setTag("Explosions", explosions);

@@ -1,6 +1,6 @@
 package jk_5.nailed.effect.fireworks;
 
-import net.minecraft.item.Item;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -49,11 +49,11 @@ public class Firework {
         color1 = Math.min(Math.max(color1, 0x000000), 0xFFFFFF);
         color2 = Math.min(Math.max(color2, 0x000000), 0xFFFFFF);
 
-        ItemStack firework = new ItemStack(Item.firework, 1);
+        ItemStack firework = new ItemStack(Items.fireworks, 1);
         NBTTagCompound tag = new NBTTagCompound();
         firework.setTagCompound(tag);
         NBTTagCompound fireworks = new NBTTagCompound();
-        tag.setCompoundTag("Fireworks", fireworks);
+        tag.setTag("Fireworks", fireworks);
         fireworks.setByte("Flight", (byte) 2);
         NBTTagList explosions = new NBTTagList();
         fireworks.setTag("Explosions", explosions);

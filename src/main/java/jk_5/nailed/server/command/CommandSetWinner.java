@@ -6,8 +6,6 @@ import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.players.Team;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
-import net.minecraft.util.ChatMessageComponent;
-import net.minecraft.util.EnumChatFormatting;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,7 +31,8 @@ public class CommandSetWinner extends NailedCommand {
     public void processCommandWithMap(ICommandSender sender, Map map, String[] args){
         if(args.length == 0) throw new WrongUsageException("/setwinner <team>");
         map.getGameController().setWinner(map.getTeamManager().getTeam(args[0]));
-        sender.sendChatToPlayer(ChatMessageComponent.createFromText("Winner is set").setColor(EnumChatFormatting.GREEN));
+        //FIXME
+        //sender.sendChatToPlayer(ChatMessageComponent.createFromText("Winner is set").setColor(EnumChatFormatting.GREEN));
     }
 
     @Override

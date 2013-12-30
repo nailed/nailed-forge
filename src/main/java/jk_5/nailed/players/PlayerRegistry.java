@@ -1,9 +1,11 @@
 package jk_5.nailed.players;
 
 import com.google.common.collect.Lists;
+import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.IPlayerTracker;
-import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.eventhandler.EventPriority;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.event.*;
 import jk_5.nailed.map.Map;
@@ -11,10 +13,7 @@ import jk_5.nailed.map.MapLoader;
 import lombok.Getter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.EventPriority;
-import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.ServerChatEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 
 import java.util.List;
 
@@ -23,7 +22,7 @@ import java.util.List;
  *
  * @author jk-5
  */
-public class PlayerRegistry implements IPlayerTracker {
+public class PlayerRegistry {
 
     private static PlayerRegistry INSTANCE = new PlayerRegistry();
 
@@ -35,11 +34,24 @@ public class PlayerRegistry implements IPlayerTracker {
     private final List<Player> players = Lists.newArrayList();
 
     public PlayerRegistry() {
-        GameRegistry.registerPlayerTracker(this);
+        FMLCommonHandler.instance().bus().register(this);
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    public Player getPlayer(String username){
+    public Player getPlayer(EntityPlayer pl){
+        return this.getPlayerById(pl.func_146103_bH().getId());
+    }
+
+    public Player getPlayerById(String id){
+        for(Player player : this.players){
+            if(player.getGameProfile().getId().equals(id)){
+                return player;
+            }
+        }
+        return null;
+    }
+
+    public Player getPlayerByUsername(String username){
         for(Player player : this.players){
             if(player.getUsername().equals(username)){
                 return player;
@@ -48,42 +60,47 @@ public class PlayerRegistry implements IPlayerTracker {
         return null;
     }
 
-    public Player getOrCreatePlayer(String username){
-        Player p = this.getPlayer(username);
+    public Player getOrCreatePlayer(EntityPlayer player){
+        return this.getOrCreatePlayer(player.func_146103_bH());
+    }
+
+    public Player getOrCreatePlayer(GameProfile gameProfile){
+        Player p = this.getPlayerByUsername(gameProfile.getName());
         if(p != null) return p;
-        p = new Player(username);
+        p = new Player(gameProfile);
         this.players.add(p);
         MinecraftForge.EVENT_BUS.post(new PlayerCreatedEvent(p.getEntity(), p));
         return p;
     }
 
     @SuppressWarnings("unused")
-    @ForgeSubscribe
-    public void formatPlayerName(PlayerEvent.NameFormat event){
+    @SubscribeEvent
+    public void formatPlayerName(net.minecraftforge.event.entity.player.PlayerEvent.NameFormat event){
         if(FMLCommonHandler.instance().getEffectiveSide().isClient()) return;
-        Player player = this.getOrCreatePlayer(event.username);
+        Player player = this.getOrCreatePlayer(event.entityPlayer.func_146103_bH());
         if(player == null) return;
         event.displayname = player.getChatPrefix();
     }
 
     @SuppressWarnings("unused")
-    @ForgeSubscribe
+    @SubscribeEvent
     public void onPlayerChat(ServerChatEvent event){
-        Player player = this.getOrCreatePlayer(event.username);
+        Player player = this.getOrCreatePlayer(event.player.func_146103_bH());
         if(player == null) return;
         MinecraftForge.EVENT_BUS.post(new PlayerChatEvent(player, event.message));
     }
 
-    @ForgeSubscribe(priority = EventPriority.HIGHEST)
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     @SuppressWarnings("unused")
     public void onPlayerChangedDimension(PlayerChangedDimensionEvent event){
         Map map = MapLoader.instance().getMap(event.player.getEntity().worldObj);
         if(map != null) event.player.setCurrentMap(map);
     }
 
-    @Override
-    public void onPlayerLogin(EntityPlayer ent){
-        Player player = this.getOrCreatePlayer(ent.username);
+    @SubscribeEvent
+    @SuppressWarnings("unused")
+    public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event){
+        Player player = this.getOrCreatePlayer(event.player);
         NailedLog.info("Player " + player.getUsername() + " logged in in world " + player.getCurrentMap().getSaveFileName());
         player.onLogin();
         MinecraftForge.EVENT_BUS.post(new PlayerJoinEvent(player));
@@ -93,9 +110,10 @@ public class PlayerRegistry implements IPlayerTracker {
         }
     }
 
-    @Override
-    public void onPlayerLogout(EntityPlayer ent){
-        Player player = this.getPlayer(ent.username);
+    @SubscribeEvent
+    @SuppressWarnings("unused")
+    public void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event){
+        Player player = this.getPlayer(event.player);
         player.onLogout();
         MinecraftForge.EVENT_BUS.post(new PlayerLeaveEvent(player));
         for(Player p : this.players){
@@ -104,21 +122,23 @@ public class PlayerRegistry implements IPlayerTracker {
         }
     }
 
-    @Override
-    public void onPlayerChangedDimension(EntityPlayer player){
-        Player p = this.getPlayer(player.username);
+    @SubscribeEvent
+    @SuppressWarnings("unused")
+    public void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event){
+        Player p = this.getPlayer(event.player);
         Map oldMap = p.getCurrentMap();
-        Map newMap = MapLoader.instance().getMap(player.worldObj);
-        NailedLog.info("Player " + player.username + " changed dimension");
+        Map newMap = MapLoader.instance().getMap(event.player.worldObj);
+        NailedLog.info("Player " + p.getUsername() + " changed dimension");
         NailedLog.info("   From: " + oldMap.getSaveFileName());
         NailedLog.info("   To:   " + newMap.getSaveFileName());
         p.onChangedDimension();
         MinecraftForge.EVENT_BUS.post(new PlayerChangedDimensionEvent(p, oldMap, newMap));
     }
 
-    @Override
-    public void onPlayerRespawn(EntityPlayer player){
-        Player p = this.getPlayer(player.username);
+    @SubscribeEvent
+    @SuppressWarnings("unused")
+    public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event){
+        Player p = this.getPlayer(event.player);
         NailedLog.info("Player " + p.getUsername() + " respawned");
         p.onRespawn();
     }

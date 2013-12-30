@@ -16,7 +16,7 @@ public class InventoryOtherPlayer extends InventoryBasic {
     private boolean allowUpdate;
 
     public InventoryOtherPlayer(EntityPlayerMP owner, EntityPlayerMP viewer){
-        super(owner.username + "\'s inventory", false, owner.inventory.mainInventory.length);
+        super(owner.getCommandSenderName() + "\'s inventory", false, owner.inventory.mainInventory.length);
         this.owner = owner;
         this.viewer = viewer;
     }

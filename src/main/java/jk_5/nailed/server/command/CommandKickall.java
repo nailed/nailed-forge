@@ -25,7 +25,7 @@ public class CommandKickall extends NailedCommand {
     public void processCommandWithMap(ICommandSender sender, Map map, String[] args){
         String reason = Joiner.on(" ").join(args);
         for(EntityPlayerMP player : (List<EntityPlayerMP>) MinecraftServer.getServer().getConfigurationManager().playerEntityList){
-            player.playerNetServerHandler.kickPlayerFromServer("[" + ChatColor.GREEN + "Nailed" + ChatColor.RESET + "] " + reason);
+            player.playerNetServerHandler.func_147360_c("[" + ChatColor.GREEN + "Nailed" + ChatColor.RESET + "] " + reason); //Kick player
         }
     }
 }

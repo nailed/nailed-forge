@@ -5,13 +5,16 @@ import com.google.common.collect.Sets;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import jk_5.nailed.blocks.tileentity.TileEntityPortalController;
+import net.minecraft.block.Block;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
+import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -25,73 +28,68 @@ import java.util.Stack;
  *
  * @author jk-5
  */
-public class BlockPortalController extends NailedBlock {
+public class BlockPortalController extends NailedBlock implements ITileEntityProvider {
 
-    private Icon iconFace;
+    private IIcon iconFace;
 
     public BlockPortalController(){
-        super("portalController", Material.glass);
-        this.setBlockBounds(0, 0, 0, 1, 1, 0.375F);
+        super("portalController", Material.field_151592_s);
+        this.func_149676_a(0, 0, 0, 1, 1, 0.375F);
     }
 
     @Override
-    public boolean hasTileEntity(int metadata){
-        return true;
-    }
-
-    @Override
-    public TileEntity createTileEntity(World world, int metadata){
+    public TileEntity func_149915_a(World var1, int var2){
         return new TileEntityPortalController();
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public Icon getIcon(int side, int meta){
+    public IIcon func_149691_a(int side, int meta){
         if(side == meta){
             return this.iconFace;
         }else{
-            return this.blockIcon;
+            return this.field_149761_L;
         }
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerIcons(IconRegister register){
-        this.blockIcon = register.registerIcon("nailed:crystal");
+    public void func_149651_a(IIconRegister register){
+        this.field_149761_L = register.registerIcon("nailed:crystal");
         this.iconFace = register.registerIcon("nailed:controllerFront");
     }
 
     @Override
-    public boolean isOpaqueCube(){
+    public boolean func_149662_c(){
         return false;
     }
 
     @Override
-    public boolean renderAsNormalBlock(){
+    public boolean func_149686_d(){
         return false;
     }
 
     @Override
-    public void setBlockBoundsForItemRender(){
-        this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.375F);
+    public void func_149683_g(){
+        this.func_149676_a(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.375F);
     }
 
     @Override
-    public boolean canPlaceBlockOnSide(World world, int x, int y, int z, int side){
-        if((side == 0) && (world.getBlockId(x, y + 1, z) != NailedBlocks.portalCrystal.blockID)){
+    public boolean func_149707_d(World world, int x, int y, int z, int side){
+        if((side == 0) && (world.func_147439_a(x, y + 1, z) != NailedBlocks.portalCrystal)){
             return false;
-        }else if((side == 1) && (world.getBlockId(x, y - 1, z) != NailedBlocks.portalCrystal.blockID)){
+        }else if((side == 1) && (world.func_147439_a(x, y - 1, z) != NailedBlocks.portalCrystal)){
             return false;
-        }else if((side == 2) && (world.getBlockId(x, y, z + 1) != NailedBlocks.portalCrystal.blockID)){
+        }else if((side == 2) && (world.func_147439_a(x, y, z + 1) != NailedBlocks.portalCrystal)){
             return false;
-        }else if((side == 3) && (world.getBlockId(x, y, z - 1) != NailedBlocks.portalCrystal.blockID)){
+        }else if((side == 3) && (world.func_147439_a(x, y, z - 1) != NailedBlocks.portalCrystal)){
             return false;
-        }else if((side == 4) && (world.getBlockId(x + 1, y, z) != NailedBlocks.portalCrystal.blockID)){
+        }else if((side == 4) && (world.func_147439_a(x + 1, y, z) != NailedBlocks.portalCrystal)){
             return false;
-        }else if((side == 5) && (world.getBlockId(x - 1, y, z) != NailedBlocks.portalCrystal.blockID)){
+        }else if((side == 5) && (world.func_147439_a(x - 1, y, z) != NailedBlocks.portalCrystal)){
             return false;
         }else{
-            return canPlaceBlockAt(world, x, y, z);
+            return func_149742_c(world, x, y, z);
         }
     }
 
@@ -100,75 +98,75 @@ public class BlockPortalController extends NailedBlock {
         int i = par1World.getBlockMetadata(par2, par3, par4);
         float f = 0.375F;
 
-        setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, f, 1.0F);
+        func_149676_a(0.0F, 0.0F, 0.0F, 1.0F, f, 1.0F);
         if(i == 0){
-            setBlockBounds(0.0F, 1.0F - f, 0.0F, 1.0F, 1.0F, 1.0F);
+            func_149676_a(0.0F, 1.0F - f, 0.0F, 1.0F, 1.0F, 1.0F);
         }
 
         if(i == 1){
-            setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, f, 1.0F);
+            func_149676_a(0.0F, 0.0F, 0.0F, 1.0F, f, 1.0F);
         }
 
         if(i == 2){
-            setBlockBounds(0.0F, 0.0F, 1.0F - f, 1.0F, 1.0F, 1.0F);
+            func_149676_a(0.0F, 0.0F, 1.0F - f, 1.0F, 1.0F, 1.0F);
         }
 
         if(i == 3){
-            setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, f);
+            func_149676_a(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, f);
         }
 
         if(i == 4){
-            setBlockBounds(1.0F - f, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+            func_149676_a(1.0F - f, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
         }
 
         if(i == 5){
-            setBlockBounds(0.0F, 0.0F, 0.0F, f, 1.0F, 1.0F);
+            func_149676_a(0.0F, 0.0F, 0.0F, f, 1.0F, 1.0F);
         }
-        AxisAlignedBB box = AxisAlignedBB.getAABBPool().getAABB(par2 + this.minX, par3 + this.minY, par4 + this.minZ, par2 + this.maxX, par3 + this.maxY, par4 + this.maxZ);
-        setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.375F);
+        AxisAlignedBB box = AxisAlignedBB.getAABBPool().getAABB(par2 + this.field_149759_B, par3 + this.field_149760_C, par4 + this.field_149754_D, par2 + this.field_149755_E, par3 + this.field_149756_F, par4 + this.field_149757_G);
+        func_149676_a(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.375F);
         return box;
     }
 
     @Override
-    public void addCollisionBoxesToList(World world, int i, int j, int k, AxisAlignedBB axisalignedbb, List list, Entity entity){
-        setBlockBoundsBasedOnState(world, i, j, k);
-        super.addCollisionBoxesToList(world, i, j, k, axisalignedbb, list, entity);
-        setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.375F);
+    public void func_149743_a(World world, int i, int j, int k, AxisAlignedBB axisalignedbb, List list, Entity entity){
+        func_149719_a(world, i, j, k);
+        super.func_149743_a(world, i, j, k, axisalignedbb, list, entity);
+        func_149676_a(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.375F);
     }
 
     @Override
-    public void setBlockBoundsBasedOnState(IBlockAccess par1IBlockAccess, int par2, int par3, int par4){
+    public void func_149719_a(IBlockAccess par1IBlockAccess, int par2, int par3, int par4){
         int i = par1IBlockAccess.getBlockMetadata(par2, par3, par4);
         float f = 0.375F;
 
-        setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.375F);
+        func_149676_a(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.375F);
         if(i == 0){
-            setBlockBounds(0.0F, 1.0F - f, 0.0F, 1.0F, 1.0F, 1.0F);
+            func_149676_a(0.0F, 1.0F - f, 0.0F, 1.0F, 1.0F, 1.0F);
         }
 
         if(i == 1){
-            setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, f, 1.0F);
+            func_149676_a(0.0F, 0.0F, 0.0F, 1.0F, f, 1.0F);
         }
 
         if(i == 2){
-            setBlockBounds(0.0F, 0.0F, 1.0F - f, 1.0F, 1.0F, 1.0F);
+            func_149676_a(0.0F, 0.0F, 1.0F - f, 1.0F, 1.0F, 1.0F);
         }
 
         if(i == 3){
-            setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, f);
+            func_149676_a(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, f);
         }
 
         if(i == 4){
-            setBlockBounds(1.0F - f, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+            func_149676_a(1.0F - f, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
         }
 
         if(i == 5){
-            setBlockBounds(0.0F, 0.0F, 0.0F, f, 1.0F, 1.0F);
+            func_149676_a(0.0F, 0.0F, 0.0F, f, 1.0F, 1.0F);
         }
     }
 
     @Override
-    public int onBlockPlaced(World world, int i, int j, int k, int face, float par6, float par7, float par8, int metadata){
+    public int func_149660_a(World world, int i, int j, int k, int face, float par6, float par7, float par8, int metadata){
         if(face == 0)
             return face;
         if(face == 1)
@@ -186,13 +184,13 @@ public class BlockPortalController extends NailedBlock {
     }
 
     @Override
-    public void onBlockAdded(World par1World, int par2, int par3, int par4){
-        super.onBlockAdded(par1World, par2, par3, par4);
+    public void func_149726_b(World par1World, int par2, int par3, int par4){
+        super.func_149726_b(par1World, par2, par3, par4);
         updateTileEntityOrientation(par1World, par2, par3, par4);
     }
 
     private void updateTileEntityOrientation(World world, int i, int j, int k){
-        TileEntityPortalController controller = (TileEntityPortalController) world.getBlockTileEntity(i, j, k);
+        TileEntityPortalController controller = (TileEntityPortalController) world.func_147438_o(i, j, k);
         int metadata = world.getBlockMetadata(i, j, k);
 
         if(metadata == 1){
@@ -215,14 +213,14 @@ public class BlockPortalController extends NailedBlock {
     }
 
     @Override
-    public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int blockID){
+    public void func_149695_a(World par1World, int par2, int par3, int par4, Block block){
         ChunkCoordinates coord = getBase(par2, par3, par4, par1World.getBlockMetadata(par2, par3, par4));
-        if(par1World.getBlockId(coord.posX, coord.posY, coord.posZ) != NailedBlocks.portalCrystal.blockID){
-            dropBlockAsItem(par1World, par2, par3, par4, 0, 0);
-            par1World.setBlock(par2, par3, par4, 0);
+        if(par1World.func_147439_a(coord.posX, coord.posY, coord.posZ) != NailedBlocks.portalCrystal){
+            func_149697_b(par1World, par2, par3, par4, 0, 0);
+            par1World.func_147468_f(par2, par3, par4);
         }
 
-        super.onNeighborBlockChange(par1World, par2, par3, par4, blockID);
+        super.func_149695_a(par1World, par2, par3, par4, block);
     }
 
     public static void fire(World world, int i, int j, int k){
@@ -277,17 +275,17 @@ public class BlockPortalController extends NailedBlock {
                 directPortal(world, coords.posX - 1, coords.posY, coords.posZ, 6, blocks, portals);
                 directPortal(world, coords.posX, coords.posY - 1, coords.posZ, 2, blocks, portals);
                 directPortal(world, coords.posX, coords.posY, coords.posZ - 1, 4, blocks, portals);
-                if(world.getBlockId(coords.posX, coords.posY, coords.posZ) == NailedBlocks.portal.blockID){
+                if(world.func_147439_a(coords.posX, coords.posY, coords.posZ) == NailedBlocks.portal){
                     repath.add(coords);
                 }
             }
         }
         while(repath.size() > 0){
             ChunkCoordinates coords = repath.remove(0);
-            if(world.getBlockId(coords.posX, coords.posY, coords.posZ) == NailedBlocks.portal.blockID){
+            if(world.func_147439_a(coords.posX, coords.posY, coords.posZ) == NailedBlocks.portal){
                 if(!BlockPortal.isValidPortal(world, coords.posX, coords.posY, coords.posZ)){
                     repathNeighbors(world, coords.posX, coords.posY, coords.posZ);
-                    world.setBlock(coords.posX, coords.posY, coords.posZ, 0, 0, 0);
+                    world.func_147465_d(coords.posX, coords.posY, coords.posZ, Blocks.air, 0, 0);
                     addSurrounding(repath, coords.posX, coords.posY, coords.posZ);
                 }else{
                     redraw.add(coords);
@@ -297,7 +295,7 @@ public class BlockPortalController extends NailedBlock {
         for(ChunkCoordinates coords : redraw){
             if(world.blockExists(coords.posX, coords.posY, coords.posZ)){
                 world.markBlockForUpdate(coords.posX, coords.posY, coords.posZ);
-                world.notifyBlocksOfNeighborChange(coords.posX, coords.posY, coords.posZ, world.getBlockId(coords.posX, coords.posY, coords.posZ));
+                world.func_147459_d(coords.posX, coords.posY, coords.posZ, world.func_147439_a(coords.posX, coords.posY, coords.posZ));
             }
         }
     }
@@ -319,7 +317,7 @@ public class BlockPortalController extends NailedBlock {
     }
 
     private static void redirectPortal(World world, TileEntity tileentity, int i, int j, int k, int meta, List<ChunkCoordinates> blocks){
-        if(isValidLinkPortalBlock(world.getBlockId(i, j, k)) == 0) return;
+        if(isValidLinkPortalBlock(world.func_147439_a(i, j, k)) == 0) return;
         if(world.getBlockMetadata(i, j, k) == meta){
             for(int m = 1; m < 7; m++)
                 if(m != meta){
@@ -348,7 +346,7 @@ public class BlockPortalController extends NailedBlock {
         for(ChunkCoordinates coords : notify)
             if(world.blockExists(coords.posX, coords.posY, coords.posZ)){
                 world.markBlockForUpdate(coords.posX, coords.posY, coords.posZ);
-                world.notifyBlocksOfNeighborChange(coords.posX, coords.posY, coords.posZ, world.getBlockId(coords.posX, coords.posY, coords.posZ));
+                world.func_147459_d(coords.posX, coords.posY, coords.posZ, world.func_147439_a(coords.posX, coords.posY, coords.posZ));
             }
     }
 
@@ -366,7 +364,7 @@ public class BlockPortalController extends NailedBlock {
             j = coords.posY;
             k = coords.posZ;
             if(!BlockPortal.checkPortalTension(world, i, j, k))
-                world.setBlock(i, j, k, 0, 0, 0);
+                world.func_147465_d(i, j, k, Blocks.air, 0, 0);
         }
     }
 
@@ -393,48 +391,48 @@ public class BlockPortalController extends NailedBlock {
     }
 
     private static void expandPortal(World world, int i, int j, int k, Collection<ChunkCoordinates> set, Stack<ChunkCoordinates> created){
-        if(!world.isAirBlock(i, j, k)) return;
+        if(!world.func_147437_c(i, j, k)) return;
 
-        int score = isValidLinkPortalBlock(world.getBlockId(i + 1, j, k)) + isValidLinkPortalBlock(world.getBlockId(i - 1, j, k)) + isValidLinkPortalBlock(world.getBlockId(i, j + 1, k)) + isValidLinkPortalBlock(world.getBlockId(i, j - 1, k)) + isValidLinkPortalBlock(world.getBlockId(i, j, k + 1)) + isValidLinkPortalBlock(world.getBlockId(i, j, k - 1));
+        int score = isValidLinkPortalBlock(world.func_147439_a(i + 1, j, k)) + isValidLinkPortalBlock(world.func_147439_a(i - 1, j, k)) + isValidLinkPortalBlock(world.func_147439_a(i, j + 1, k)) + isValidLinkPortalBlock(world.func_147439_a(i, j - 1, k)) + isValidLinkPortalBlock(world.func_147439_a(i, j, k + 1)) + isValidLinkPortalBlock(world.func_147439_a(i, j, k - 1));
         if(score > 1){
-            world.setBlock(i, j, k, NailedBlocks.portal.blockID, 0, 0);
+            world.func_147465_d(i, j, k, NailedBlocks.portal, 0, 0);
             created.push(new ChunkCoordinates(i, j, k));
             addSurrounding(set, i, j, k);
         }
     }
 
     private static void directPortal(World world, int i, int j, int k, int meta, List<ChunkCoordinates> blocks, List<ChunkCoordinates> portals){
-        if(isValidLinkPortalBlock(world.getBlockId(i, j, k)) == 0) return;
+        if(isValidLinkPortalBlock(world.func_147439_a(i, j, k)) == 0) return;
         if(world.getBlockMetadata(i, j, k) != 0) return;
         world.setBlockMetadataWithNotify(i, j, k, meta, 0);
-        if(world.getBlockId(i, j, k) == NailedBlocks.portal.blockID)
+        if(world.func_147439_a(i, j, k) == NailedBlocks.portal)
             portals.add(new ChunkCoordinates(i, j, k));
         else
             blocks.add(new ChunkCoordinates(i, j, k));
     }
 
     private static void depolarize(World world, int i, int j, int k, List<ChunkCoordinates> blocks){
-        int blockId = world.getBlockId(i, j, k);
-        if(isValidLinkPortalBlock(blockId) == 0) return;
+        Block block = world.func_147439_a(i, j, k);
+        if(isValidLinkPortalBlock(block) == 0) return;
         if(world.getBlockMetadata(i, j, k) == 0) return;
         world.setBlockMetadataWithNotify(i, j, k, 0, 0);
-        if((blockId == NailedBlocks.portal.blockID) && (!BlockPortal.isValidPortal(world, i, j, k))){
-            world.setBlock(i, j, k, 0, 0, 2);
+        if((block == NailedBlocks.portal) && (!BlockPortal.isValidPortal(world, i, j, k))){
+            world.func_147465_d(i, j, k, Blocks.air, 0, 2);
         }
         blocks.add(new ChunkCoordinates(i, j, k));
     }
 
-    public static int isValidLinkPortalBlock(int blockId){
-        if(blockId == NailedBlocks.portalCrystal.blockID) return 1;
-        if(blockId == NailedBlocks.portal.blockID) return 1;
+    public static int isValidLinkPortalBlock(Block block){
+        if(block == NailedBlocks.portalCrystal) return 1;
+        if(block == NailedBlocks.portal) return 1;
         return 0;
     }
 
     public static TileEntity getTileEntity(IBlockAccess blockaccess, int x, int y, int z){
         HashSet<ChunkCoordinates> visited = Sets.newHashSet();
-        int blockId = blockaccess.getBlockId(x, y, z);
-        while(blockId != NailedBlocks.portalController.blockID){
-            if(isValidLinkPortalBlock(blockId) == 0) return null;
+        Block block = blockaccess.func_147439_a(x, y, z);
+        while(block != NailedBlocks.portalController){
+            if(isValidLinkPortalBlock(block) == 0) return null;
             ChunkCoordinates pos = new ChunkCoordinates(x, y, z);
             if(!visited.add(pos)){
                 return null;
@@ -457,8 +455,8 @@ public class BlockPortalController extends NailedBlock {
             else{
                 return null;
             }
-            blockId = blockaccess.getBlockId(x, y, z);
+            block = blockaccess.func_147439_a(x, y, z);
         }
-        return blockaccess.getBlockTileEntity(x, y, z);
+        return blockaccess.func_147438_o(x, y, z);
     }
 }

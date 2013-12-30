@@ -1,13 +1,9 @@
 package jk_5.nailed.client;
 
-import codechicken.lib.packet.PacketCustom;
-import cpw.mods.fml.common.registry.TickRegistry;
-import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.common.FMLCommonHandler;
 import jk_5.nailed.NailedLog;
-import jk_5.nailed.NailedModContainer;
 import jk_5.nailed.client.render.NotificationRenderer;
 import jk_5.nailed.client.render.RenderEventHandler;
-import jk_5.nailed.network.NailedCPH;
 import jk_5.nailed.server.ProxyCommon;
 import jk_5.nailed.util.updateNotifier.UpdateNotificationManager;
 import net.minecraftforge.common.MinecraftForge;
@@ -24,13 +20,6 @@ public class ProxyClient extends ProxyCommon {
     }
 
     @Override
-    public void initNetworkHandlers() {
-        super.initNetworkHandlers();
-
-        PacketCustom.assignHandler(NailedModContainer.getInstance(), new NailedCPH());
-    }
-
-    @Override
     public void registerEventHandlers(){
         super.registerEventHandlers();
 
@@ -38,7 +27,7 @@ public class ProxyClient extends ProxyCommon {
         MinecraftForge.EVENT_BUS.register(new RenderEventHandler());
         MinecraftForge.EVENT_BUS.register(new SoundManager());
         MinecraftForge.EVENT_BUS.register(new NotificationRenderer());
-        TickRegistry.registerTickHandler(new TickHandlerClient(), Side.CLIENT);
+        FMLCommonHandler.instance().bus().register(new TickHandlerClient());
 
         NailedLog.info("Initializing UpdateNotifier");
         UpdateNotificationManager.init();

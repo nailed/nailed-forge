@@ -1,10 +1,8 @@
 package jk_5.nailed.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import jk_5.nailed.blocks.tileentity.TileEntityPortalController;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
@@ -16,18 +14,13 @@ import net.minecraft.world.World;
 public class BlockPortalCrystal extends NailedBlock {
 
     public BlockPortalCrystal(){
-        super("portalCrystal", Material.glass);
-        this.setBlockUnbreakable();
+        super("portalCrystal", Material.field_151592_s); //Material.glass
+        this.func_149722_s();
+        this.func_149658_d("nailed:crystal");
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(IconRegister register){
-        this.blockIcon = register.registerIcon("nailed:crystal");
-    }
-
-    @Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, int blockID){
+    public void func_149695_a(World world, int x, int y, int z, Block block){
         if(world.isRemote) return;
         if(world.getBlockMetadata(x, y, z) == 0) return;
         TileEntity tile = BlockPortalController.getTileEntity(world, x, y, z);

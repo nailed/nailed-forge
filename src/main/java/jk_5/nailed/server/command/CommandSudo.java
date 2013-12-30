@@ -27,7 +27,7 @@ public class CommandSudo extends NailedCommand {
     @Override
     public void processCommandWithMap(ICommandSender sender, Map map, String[] args){
         String cmd = Joiner.on(" ").join(args);
-        Player player = PlayerRegistry.instance().getPlayer(args[0]);
+        Player player = PlayerRegistry.instance().getPlayerByUsername(args[0]);
         if (player != null){
             FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager().executeCommand(player.getEntity(), cmd);
         }else{
