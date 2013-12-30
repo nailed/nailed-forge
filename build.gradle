@@ -25,6 +25,7 @@ apply plugin: 'java'
 apply plugin: 'forge'
 //apply plugin: 'nailed'
 apply plugin: 'maven'
+apply plugin: 'idea'
 
 group = 'jk_5.nailed'
 version = '2.0-BETA1'

@@ -1,8 +1,11 @@
 package jk_5.nailed.ipc.packet;
 
+import com.google.common.base.Charsets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import io.netty.buffer.ByteBuf;
+import io.netty.handler.codec.base64.Base64;
 import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.map.mappack.Mappack;
 import jk_5.nailed.players.Player;
@@ -32,8 +35,12 @@ public class PacketInitConnection extends IpcPacket {
         JsonArray mappacks = new JsonArray();
         for(Mappack mappack : MapLoader.instance().getMappacks()){
             JsonObject obj = new JsonObject();
+            ByteBuf icon = Base64.encode(mappack.getMappackIcon());
             obj.addProperty("id", mappack.getMappackID());
             obj.addProperty("name", mappack.getMappackMetadata().getName());
+            obj.addProperty("icon", "data:image/png;base64," + icon.toString(Charsets.UTF_8));
+            obj.addProperty("isLobby", mappack.getMappackID().equals("lobby"));
+            obj.addProperty("hidden", false);
             mappacks.add(obj);
         }
         json.add("mappacks", mappacks);

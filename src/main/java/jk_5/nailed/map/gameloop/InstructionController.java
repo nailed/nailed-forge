@@ -18,24 +18,38 @@ import java.util.Iterator;
  *
  * @author jk-5
  */
-public class InstructionController extends Thread {
+public class InstructionController implements Runnable {
 
     @Getter private final Map map;
     @Getter private boolean running = false;
     @Getter private boolean paused = false;
     @Getter private Team winner = null;
-    private final InstructionList instructions;
+    @Getter private final InstructionList instructions;
     private final InstructionGameController controller = new InstructionGameController(this);
+    private Thread thread;
 
     public InstructionController(Map map){
         this.map = map;
-        this.setDaemon(true);
-        this.setName("InstructionController-" + map.getSaveFileName());
+        this.newThread();
         if(map.getMappack() != null){
             this.instructions = map.getMappack().getInstructionList().cloneList();
         }else{
             this.instructions = new InstructionList();
         }
+    }
+
+    public void save(String key, Object value) {
+        this.controller.save(key, value);
+    }
+
+    public Object load(String key) {
+        return this.controller.load(key);
+    }
+
+    public void newThread(){
+        this.thread = new Thread(this);
+        this.thread.setDaemon(true);
+        this.thread.setName("InstructionController-" + map.getSaveFileName() + "-" + this.thread.getId());
     }
 
     public void setWinner(Team winner){
@@ -49,12 +63,13 @@ public class InstructionController extends Thread {
     }
 
     public void startGame(){
-        this.start();
+        this.thread.start();
         StatTypeManager.instance().getStatType(StatTypeGameloopRunning.class).onStart(this);
     }
 
     public void stopGame(){
         this.running = false;
+        this.newThread();
         StatTypeManager.instance().getStatType(StatTypeGameloopStopped.class).onEnd(this);
         StatTypeManager.instance().getStatType(StatTypeGameloopRunning.class).onEnd(this);
     }
