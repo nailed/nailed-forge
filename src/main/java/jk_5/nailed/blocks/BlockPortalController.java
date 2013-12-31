@@ -94,7 +94,7 @@ public class BlockPortalController extends NailedBlock implements ITileEntityPro
     }
 
     @Override
-    public AxisAlignedBB getSelectedBoundingBoxFromPool(World par1World, int par2, int par3, int par4){
+    public AxisAlignedBB func_149633_g(World par1World, int par2, int par3, int par4){
         int i = par1World.getBlockMetadata(par2, par3, par4);
         float f = 0.375F;
 

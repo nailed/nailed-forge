@@ -4,7 +4,8 @@ import com.mojang.authlib.GameProfile;
 import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.map.teleport.NailedTeleporter;
-import jk_5.nailed.network.NailedSPH;
+import jk_5.nailed.network.NailedNetworkHandler;
+import jk_5.nailed.network.NailedPacket;
 import jk_5.nailed.util.ChatColor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * No description given
@@ -29,8 +31,18 @@ public class Player {
     @Getter @Setter private int teamSpeakClientID = -1;
 
     public void sendNotification(String message){
+        this.sendNotification(message, null);
+    }
+
+    public void sendNotification(String message, ResourceLocation icon){
+        this.sendNotification(message, icon, 0xFFFFFF);
+    }
+
+    public void sendNotification(String message, ResourceLocation icon, int iconColor){
         EntityPlayerMP entity = this.getEntity();
-        if(entity != null) NailedSPH.sendNotification(this.getEntity(), message);
+        if(entity != null){
+            NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.Notification(message, icon, iconColor), entity);
+        }
     }
 
     public void sendChat(String message){

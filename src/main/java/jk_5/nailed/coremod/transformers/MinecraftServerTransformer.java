@@ -1,7 +1,7 @@
 package jk_5.nailed.coremod.transformers;
 
-import codechicken.lib.asm.ASMHelper;
-import codechicken.lib.asm.ObfMapping;
+import jk_5.nailed.coremod.asm.ASMHelper;
+import jk_5.nailed.coremod.asm.Mapping;
 import net.minecraft.launchwrapper.IClassTransformer;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
@@ -29,7 +29,7 @@ public class MinecraftServerTransformer implements IClassTransformer {
 
     public byte[] transformMinecraftServer(byte[] bytes, Map<String, String> data) {
         ClassNode cnode = ASMHelper.createClassNode(bytes, 0);
-        MethodNode mnode = ASMHelper.findMethod(new ObfMapping("net/minecraft/server/MinecraftServer", "<init>", "(Ljava/io/File;)V"), cnode);
+        MethodNode mnode = ASMHelper.findMethod(new Mapping("net/minecraft/server/MinecraftServer", "<init>", "(Ljava/io/File;)V"), cnode);
 
         int offset = 0;
         int numOfNews = 0;
@@ -58,7 +58,7 @@ public class MinecraftServerTransformer implements IClassTransformer {
         VarInsnNode varNode = (VarInsnNode) mnode.instructions.get(offset);
         varNode.var = 5;
 
-        mnode = ASMHelper.findMethod(new ObfMapping("net/minecraft/server/MinecraftServer", "loadAllWorlds", "(Ljava/lang/String;Ljava/lang/String;JLnet/minecraft/world/WorldType;Ljava/lang/String;)V"), cnode);
+        mnode = ASMHelper.findMethod(new Mapping("net/minecraft/server/MinecraftServer", "loadAllWorlds", "(Ljava/lang/String;Ljava/lang/String;JLnet/minecraft/world/WorldType;Ljava/lang/String;)V"), cnode);
         offset = 0;
         list.clear();
 

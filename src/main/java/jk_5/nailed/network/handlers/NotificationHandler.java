@@ -10,10 +10,10 @@ import jk_5.nailed.network.NailedPacket;
  *
  * @author jk-5
  */
-public class NotificationHandler extends SimpleChannelInboundHandler<NailedPacket.NailedPacketNotification> {
+public class NotificationHandler extends SimpleChannelInboundHandler<NailedPacket.Notification> {
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, NailedPacket.NailedPacketNotification msg) throws Exception{
+    protected void channelRead0(ChannelHandlerContext ctx, NailedPacket.Notification msg) throws Exception{
         NotificationRenderer.addNotification(msg.message, msg.icon, msg.color);
     }
 }

@@ -150,7 +150,7 @@ public class MapLoader implements IMappackRegistrar {
         event.newMap.onPlayerJoined(event.player);
     }
 
-    @ForgeSubscribe
+    @SubscribeEvent
     @SuppressWarnings("unused")
     public void onBlockBreak(BlockEvent.BreakEvent event){
         if(FMLCommonHandler.instance().getEffectiveSide().isClient()) return;
@@ -160,7 +160,7 @@ public class MapLoader implements IMappackRegistrar {
         }
     }
 
-    @ForgeSubscribe
+    @SubscribeEvent
     @SuppressWarnings("unused")
     public void onEntitySpawn(EntityJoinWorldEvent event){
         if(FMLCommonHandler.instance().getEffectiveSide().isClient()) return;
@@ -172,12 +172,12 @@ public class MapLoader implements IMappackRegistrar {
             if(player.posX - 0.5 == spawn.posX && player.posZ - 0.5 == spawn.posZ){
                 event.entity.setLocationAndAngles(player.posX, player.posY, player.posZ, mappack.getMappackMetadata().getSpawnYaw(), mappack.getMappackMetadata().getSpawnPitch());
                 player.setGameType(mappack.getMappackMetadata().getGamemode());
-                map.onPlayerJoined(PlayerRegistry.instance().getOrCreatePlayer(player.username));
+                map.onPlayerJoined(PlayerRegistry.instance().getOrCreatePlayer(player.func_146103_bH()));
             }
         }
     }
 
-    @ForgeSubscribe
+    @SubscribeEvent
     @SuppressWarnings("unused")
     public void onDamage(LivingHurtEvent event){
         if(event.entity instanceof EntityPlayer && event.source instanceof EntityDamageSource){
@@ -199,11 +199,11 @@ public class MapLoader implements IMappackRegistrar {
         }
     }
 
-    @ForgeSubscribe
+    @SubscribeEvent
     @SuppressWarnings("unused")
     public void onDie(LivingDeathEvent event){
         if(!(event.entity instanceof EntityPlayer)) return;
-        Player player = PlayerRegistry.instance().getPlayer(((EntityPlayer) event.entity).username);
+        Player player = PlayerRegistry.instance().getPlayer((EntityPlayer) event.entity);
         if(player == null) return;
         if(!player.getCurrentMap().getGameController().isRunning()) return;
         if(player.getTeam() instanceof TeamUndefined){

@@ -2,8 +2,10 @@ package jk_5.nailed.client;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.relauncher.Side;
 import jk_5.nailed.blocks.tileentity.NailedTileEntity;
-import jk_5.nailed.network.Packets;
+import jk_5.nailed.network.NailedNetworkHandler;
+import jk_5.nailed.network.NailedPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,14 +24,19 @@ public class TickHandlerClient {
     private boolean wasSneaking = false;
 
     @SubscribeEvent
+    @SuppressWarnings("unused")
     public void onClientTick(TickEvent.ClientTickEvent event){
         if(event.phase == TickEvent.Phase.START) return;
         EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
         if (player != null) {
             NailedTileEntity target = this.getTileEntityUnderPlayer(player);
             if (target != null) {
-                if (player.movementInput.jump && !wasJumping) Packets.MOVEMENT_EVENT.newPacket().writeCoord(target.xCoord, target.yCoord, target.zCoord).writeByte(0).sendToServer();
-                if (player.movementInput.sneak && !wasSneaking) Packets.MOVEMENT_EVENT.newPacket().writeCoord(target.xCoord, target.yCoord, target.zCoord).writeByte(1).sendToServer();
+                if (player.movementInput.jump && !wasJumping){
+                    NailedNetworkHandler.getChannelForSide(Side.CLIENT).writeAndFlush(new NailedPacket.MovementEvent(target.field_145851_c, target.field_145848_d, target.field_145849_e, (byte) 0));
+                }
+                if (player.movementInput.sneak && !wasSneaking) {
+                    NailedNetworkHandler.getChannelForSide(Side.CLIENT).writeAndFlush(new NailedPacket.MovementEvent(target.field_145851_c, target.field_145848_d, target.field_145849_e, (byte) 1));
+                }
             }
             wasJumping = player.movementInput.jump;
             wasSneaking = player.movementInput.sneak;

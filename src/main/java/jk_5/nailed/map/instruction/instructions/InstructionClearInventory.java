@@ -34,7 +34,7 @@ public class InstructionClearInventory implements IInstruction {
         Team team = controller.getMap().getTeamManager().getTeam(this.team);
         for(Player player : team.getMembers()){
             EntityPlayer ent = player.getEntity();
-            ent.inventory.clearInventory(-1, -1);
+            ent.inventory.func_146027_a(null, -1);
             ent.inventoryContainer.detectAndSendChanges();
             //if(!ent.capabilities.isCreativeMode) ent.updateHeldItem();
         }

@@ -1,7 +1,7 @@
 package jk_5.nailed.coremod.transformers;
 
-import codechicken.lib.asm.ASMHelper;
-import codechicken.lib.asm.ObfMapping;
+import jk_5.nailed.coremod.asm.ASMHelper;
+import jk_5.nailed.coremod.asm.Mapping;
 import net.minecraft.launchwrapper.IClassTransformer;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
@@ -28,7 +28,7 @@ public class AbstractClientPlayerTransformer implements IClassTransformer {
 
     public byte[] transformAbstractClientPlayer(byte[] data, Map<String, String> mappings){
         ClassNode cnode = ASMHelper.createClassNode(data, 0);
-        MethodNode mnode = ASMHelper.findMethod(new ObfMapping(mappings.get("className").replace(".", "/"), mappings.get("method1"), "(Ljava/lang/String;)Ljava/lang/String;"), cnode);
+        MethodNode mnode = ASMHelper.findMethod(new Mapping(mappings.get("className").replace(".", "/"), mappings.get("method1"), "(Ljava/lang/String;)Ljava/lang/String;"), cnode);
 
         Iterator iter = mnode.instructions.iterator();
 
@@ -40,7 +40,7 @@ public class AbstractClientPlayerTransformer implements IClassTransformer {
             }
         }
 
-        mnode = ASMHelper.findMethod(new ObfMapping(mappings.get("className").replace(".", "/"), mappings.get("method2"), "(Ljava/lang/String;)Ljava/lang/String;"), cnode);
+        mnode = ASMHelper.findMethod(new Mapping(mappings.get("className").replace(".", "/"), mappings.get("method2"), "(Ljava/lang/String;)Ljava/lang/String;"), cnode);
         iter = mnode.instructions.iterator();
 
         while (iter.hasNext()) {

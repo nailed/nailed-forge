@@ -3,7 +3,7 @@ package jk_5.nailed.map.gen;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MapLoader;
-import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
@@ -22,8 +22,8 @@ public class VoidWorldChunkManager extends WorldChunkManager {
     }
 
     @Override
-    public ChunkPosition findBiomePosition(int x, int z, int range, List biomes, Random rand){
-        ChunkPosition ret = super.findBiomePosition(x, z, range, biomes, rand);
+    public ChunkPosition func_150795_a(int x, int z, int range, List biomes, Random rand){
+        ChunkPosition ret = super.func_150795_a(x, z, range, biomes, rand);
 
         if (x == 0 && z == 0 && !world.getWorldInfo().isInitialized()){
             if (ret == null){
@@ -37,7 +37,7 @@ public class VoidWorldChunkManager extends WorldChunkManager {
                 spawn = new ChunkCoordinates(0, 65, 0);
             }
             NailedLog.info("Building spawn platform at: %d, %d, %d", spawn.posX, spawn.posY - 1, spawn.posZ);
-            world.setBlock(spawn.posX, spawn.posY - 1, spawn.posZ, Block.bedrock.blockID);
+            world.func_147449_b(spawn.posX, spawn.posY - 1, spawn.posZ, Blocks.bedrock);
         }
         return ret;
     }

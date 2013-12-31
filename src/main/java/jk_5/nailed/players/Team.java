@@ -100,7 +100,8 @@ public class Team {
 
     public void addPlayerToScoreboardTeam(Player player){
         if(this.scoreboardTeam == null) return;
-        this.map.getWorld().getScoreboard().addPlayerToTeam(player.getUsername(), this.scoreboardTeam);
+        this.map.getWorld().getScoreboard().func_151392_a(player.getUsername(), this.scoreboardTeam.func_96661_b());
+        //this.map.getWorld().getScoreboard().addPlayerToTeam(player.getUsername(), this.scoreboardTeam);
     }
 
     public void removePlayerFromScoreboardTeam(Player player){

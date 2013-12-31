@@ -1,4 +1,4 @@
-package jk_5.nailed.network;
+/*package jk_5.nailed.network;
 
 import codechicken.lib.packet.PacketCustom;
 import codechicken.lib.packet.PacketCustom.IServerPacketHandler;
@@ -17,11 +17,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.network.ForgePacket;
 import net.minecraftforge.common.network.packet.DimensionRegisterPacket;
 
-/**
- * No description given
- *
- * @author jk-5
- */
 public class NailedSPH implements IServerPacketHandler {
 
     @Override
@@ -117,4 +112,4 @@ public class NailedSPH implements IServerPacketHandler {
     public static void broadcastTimeUpdate(String data){
         Packets.TIME_UPDATE.newPacket().writeString(data).sendToClients();
     }
-}
+}*/

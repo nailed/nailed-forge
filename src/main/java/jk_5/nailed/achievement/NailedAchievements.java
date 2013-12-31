@@ -1,7 +1,7 @@
 package jk_5.nailed.achievement;
 
 import com.google.common.collect.Maps;
-import net.minecraft.item.Item;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.Achievement;
 import net.minecraft.util.StatCollector;
@@ -20,11 +20,11 @@ public class NailedAchievements {
     private static AchievementPage page;
 
     public static void addAchievements(){
-        registerAchievement(9001, "nailed.firstJoin", 0, 0, new ItemStack(Item.appleGold, 1), null).setIndependent();
+        registerAchievement("nailed.firstJoin", 0, 0, new ItemStack(Items.golden_apple, 1), null);
     }
 
-    private static Achievement registerAchievement(int id, String name, int x, int y, ItemStack icon, Achievement dependency){
-        Achievement a = new Achievement(id, name, x, y, icon, dependency);
+    private static Achievement registerAchievement(String name, int x, int y, ItemStack icon, Achievement dependency){
+        Achievement a = new Achievement(name, name, x, y, icon, dependency);
         achievements.put(name, a);
         return a;
     }

@@ -33,7 +33,7 @@ public class Spawnpoint extends ChunkCoordinates {
 
     @Override
     public int compareTo(Object o){
-        return this.compareChunkCoordinate((ChunkCoordinates) o);
+        return this.compareTo((ChunkCoordinates) o);
     }
 
     public static Spawnpoint readFromConfig(ConfigTag tag){

@@ -2,11 +2,11 @@ package jk_5.nailed.map.instruction;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import jk_5.nailed.map.MappackInitializationException;
 import jk_5.nailed.map.instruction.instructions.*;
 import lombok.Getter;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.ForgeSubscribe;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,7 +27,7 @@ public class InstructionReader {
         return INSTANCE;
     }
 
-    @ForgeSubscribe
+    @SubscribeEvent
     @SuppressWarnings("unused")
     public void registerInstructionsFromEvent(RegisterInstructionEvent event){
         event.register("clearinventory", InstructionClearInventory.class);

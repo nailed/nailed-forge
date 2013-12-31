@@ -5,6 +5,7 @@ import jk_5.nailed.map.instruction.IInstruction;
 import jk_5.nailed.map.mappack.MappackMetadata;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 
 /**
@@ -16,11 +17,11 @@ import net.minecraft.world.World;
 @AllArgsConstructor
 public class InstructionSetDifficulty implements IInstruction {
 
-    private int difficulty;
+    private EnumDifficulty difficulty;
 
     @Override
     public void injectArguments(String args) {
-        this.difficulty = Integer.parseInt(args);
+        this.difficulty = EnumDifficulty.func_151523_a(Integer.parseInt(args));
     }
 
     @Override
@@ -33,6 +34,6 @@ public class InstructionSetDifficulty implements IInstruction {
         World server = controller.getMap().getWorld();
         MappackMetadata meta = controller.getMap().getMappack().getMappackMetadata();
         server.difficultySetting = this.difficulty;
-        server.setAllowedSpawnTypes(meta.isSpawnHostileMobs() && this.difficulty > 0, meta.isSpawnFriendlyMobs());
+        server.setAllowedSpawnTypes(meta.isSpawnHostileMobs() && this.difficulty.func_151525_a() > 0, meta.isSpawnFriendlyMobs());
     }
 }

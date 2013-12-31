@@ -3,6 +3,7 @@ package jk_5.nailed.map.mappack;
 import jk_5.nailed.players.TeamBuilder;
 import lombok.Getter;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.WorldSettings;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class DefaultMappackMetadata implements MappackMetadata {
     public boolean spawnFriendlyMobs;
     public boolean spawnHostileMobs;
     public Map<String, String> gameruleConfig;
-    public int difficulty;
+    public EnumDifficulty difficulty;
     public String gameType;
     public boolean preventingBlockBreak;
     public float spawnYaw;

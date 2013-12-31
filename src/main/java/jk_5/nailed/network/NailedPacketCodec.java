@@ -14,7 +14,8 @@ import io.netty.channel.ChannelHandlerContext;
 public class NailedPacketCodec extends FMLIndexedMessageToMessageCodec<NailedPacket> {
 
     public NailedPacketCodec(){
-        this.addDiscriminator(0, NailedPacket.NailedPacketNotification.class);
+        this.addDiscriminator(0, NailedPacket.Notification.class);
+        this.addDiscriminator(1, NailedPacket.MovementEvent.class);
     }
 
     @Override

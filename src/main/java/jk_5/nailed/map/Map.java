@@ -2,6 +2,11 @@ package jk_5.nailed.map;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import cpw.mods.fml.common.network.FMLOutboundHandler;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.relauncher.ReflectionHelper;
+import cpw.mods.fml.relauncher.Side;
+import io.netty.channel.embedded.EmbeddedChannel;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.map.gameloop.InstructionController;
 import jk_5.nailed.map.mappack.Mappack;
@@ -9,7 +14,6 @@ import jk_5.nailed.map.mappack.MappackMetadata;
 import jk_5.nailed.map.mappack.Spawnpoint;
 import jk_5.nailed.map.stat.StatManager;
 import jk_5.nailed.map.teleport.TeleportOptions;
-import jk_5.nailed.network.NailedSPH;
 import jk_5.nailed.players.Player;
 import jk_5.nailed.players.PlayerRegistry;
 import jk_5.nailed.server.ProxyCommon;
@@ -21,6 +25,7 @@ import net.minecraft.util.IChatComponent;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.network.ForgeMessage;
 
 import java.io.File;
 import java.util.List;
@@ -57,7 +62,12 @@ public class Map {
         DimensionManager.registerDimension(this.getID(), ProxyCommon.providerID);
         DimensionManager.initDimension(this.getID());
 
-        NailedSPH.broadcastRegisterDimension(this.getID());
+        ForgeMessage.DimensionRegisterMessage packet = new ForgeMessage.DimensionRegisterMessage();
+        ReflectionHelper.setPrivateValue(ForgeMessage.DimensionRegisterMessage.class, packet, ProxyCommon.providerID, "providerId");
+        ReflectionHelper.setPrivateValue(ForgeMessage.DimensionRegisterMessage.class, packet, this.getID(), "dimensionId");
+        EmbeddedChannel channel = NetworkRegistry.INSTANCE.getChannel("FORGE", Side.SERVER);
+        channel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALL);
+        channel.writeOutbound(packet);
     }
 
     public void setWorld(World world){

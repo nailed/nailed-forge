@@ -1,6 +1,6 @@
 package jk_5.nailed.gui;
 
-import codechicken.lib.data.MCDataInput;
+import io.netty.buffer.ByteBuf;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.client.gui.GuiScreen;
 
@@ -30,7 +30,7 @@ public abstract class NailedGui extends GuiScreen {
         super.drawScreen(mouseX, mouseY, partialTick);
     }
 
-    public NailedGui readData(MCDataInput input){
+    public NailedGui readData(ByteBuf buffer){
         return this;
     }
 }

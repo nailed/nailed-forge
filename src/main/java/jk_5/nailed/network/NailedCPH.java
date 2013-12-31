@@ -1,4 +1,4 @@
-package jk_5.nailed.network;
+/*package jk_5.nailed.network;
 
 import codechicken.lib.packet.PacketCustom;
 import codechicken.lib.packet.PacketCustom.IClientPacketHandler;
@@ -11,11 +11,6 @@ import net.minecraft.client.multiplayer.NetClientHandler;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
-/**
- * No description given
- *
- * @author jk-5
- */
 public class NailedCPH implements IClientPacketHandler {
 
     @Override
@@ -45,4 +40,4 @@ public class NailedCPH implements IClientPacketHandler {
             default: break;
         }
     }
-}
+}*/

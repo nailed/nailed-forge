@@ -1,14 +1,9 @@
-package jk_5.nailed.network;
+/*package jk_5.nailed.network;
 
 import codechicken.lib.packet.PacketCustom;
 import jk_5.nailed.NailedModContainer;
 import lombok.Getter;
 
-/**
- * No description given
- *
- * @author jk-5
- */
 public enum Packets {
     TIME_UPDATE(1),
     NOTIFICATION(2),
@@ -36,4 +31,4 @@ public enum Packets {
         }
         return null;
     }
-}
+}*/

@@ -2,8 +2,6 @@ package jk_5.nailed.server;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import jk_5.nailed.achievement.AchievementEventListener;
-import jk_5.nailed.map.teleport.TeleportListener;
-import jk_5.nailed.map.teleport.TeleportListenerEffects;
 import jk_5.nailed.network.NailedConnectionHandler;
 import jk_5.nailed.players.PlayerRegistry;
 import jk_5.nailed.util.invsee.InvSeeTicker;
@@ -21,8 +19,6 @@ public class ProxyCommon {
     public static int providerID;
 
     public void registerEventHandlers(){
-        MinecraftForge.EVENT_BUS.register(new TeleportListener());
-        MinecraftForge.EVENT_BUS.register(new TeleportListenerEffects());
         MinecraftForge.EVENT_BUS.register(PlayerRegistry.instance());
         MinecraftForge.EVENT_BUS.register(new AchievementEventListener());
         FMLCommonHandler.instance().bus().register(new InvSeeTicker());
