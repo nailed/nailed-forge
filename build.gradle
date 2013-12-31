@@ -30,8 +30,8 @@ apply plugin: 'idea'
 group = 'jk_5.nailed'
 version = '2.0-BETA1'
 archivesBaseName = 'nailed-forge'
-targetCompatibility = '1.7'
-sourceCompatibility = '1.7'
+targetCompatibility = '1.6'
+sourceCompatibility = '1.6'
 
 repositories{
     mavenCentral()
@@ -51,14 +51,6 @@ repositories{
         name = "reening"
         url = "http://maven.reening.nl"
     }*/
-    ivy {
-        name 'Forge Legacy'
-        artifactPattern "http://files.minecraftforge.net/[module]/[module]-dev-[revision].[ext]"
-    }
-    ivy {
-        name 'ChickenBones files'
-        artifactPattern "http://www.chickenbones.craftsaddle.org/Files/New_Versions/1.6.4/[module]-dev%20[revision].[ext]"
-    }
 }
 
 minecraft{
@@ -75,9 +67,7 @@ configurations{
 }
 
 dependencies {
-    //packed 'chickenbones:CodeChickenLib:1.6.4-1.0.0.44@jar'
     packed 'pircbot:pircbot:1.5.0'
-    packed files('lib/TeamSpeak3API-r4.jar')
 
     compile 'org.projectlombok:lombok:1.12.2'
 

@@ -7,7 +7,6 @@ import jk_5.nailed.util.ChatColor;
 import jk_5.nailed.util.config.ConfigFile;
 import jk_5.nailed.util.config.ConfigTag;
 import lombok.Getter;
-import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.WorldSettings;
 
@@ -24,7 +23,7 @@ public class FileMappackMetadata implements MappackMetadata {
 
     private final ConfigFile config;
     public String name;
-    public ChunkCoordinates spawnPoint;
+    public Spawnpoint spawnPoint;
     private List<TeamBuilder> defaultTeams;
     public boolean spawnFriendlyMobs;
     public boolean spawnHostileMobs;
@@ -32,8 +31,6 @@ public class FileMappackMetadata implements MappackMetadata {
     public EnumDifficulty difficulty;
     public String gameType;
     public boolean preventingBlockBreak;
-    public float spawnYaw;
-    public float spawnPitch;
     public boolean pvpEnabled;
     public WorldSettings.GameType gamemode;
     public boolean choosingRandomSpawnpointAtRespawn;
@@ -42,11 +39,7 @@ public class FileMappackMetadata implements MappackMetadata {
 
     public FileMappackMetadata(ConfigFile config){
         this.config = config;
-        int spawnX = config.getTag("spawnpoint").getTag("x").getIntValue(0);
-        int spawnY = config.getTag("spawnpoint").getTag("y").getIntValue(64);
-        int spawnZ = config.getTag("spawnpoint").getTag("z").getIntValue(0);
-        this.spawnYaw = config.getTag("spawnpoint").getTag("yaw").getIntValue(0);
-        this.spawnPitch = config.getTag("spawnpoint").getTag("pitch").getIntValue(0);
+        this.spawnPoint = Spawnpoint.readFromConfig(config.getTag("spawnpoint"));
         this.name = config.getTag("map").getTag("name").getValue("");
         this.pvpEnabled = config.getTag("map").getTag("pvp").getBooleanValue(true);
         this.gamemode = WorldSettings.GameType.getByID(config.getTag("map").getTag("gamemode").getIntValue(2));
@@ -58,7 +51,6 @@ public class FileMappackMetadata implements MappackMetadata {
         this.preventingBlockBreak = config.getTag("map").getTag("preventBlockBreak").getBooleanValue(false);
         this.choosingRandomSpawnpointAtRespawn = config.getTag("map").getTag("randomSpawnpointOnRespawn").getBooleanValue(false);
         this.startWhen = config.getTag("map").getTag("startGameWhen").getValue("false");
-        this.spawnPoint = new ChunkCoordinates(spawnX, spawnY, spawnZ);
 
         this.defaultTeams = Lists.newArrayList();
         ConfigTag tags = this.config.getTag("teams");
