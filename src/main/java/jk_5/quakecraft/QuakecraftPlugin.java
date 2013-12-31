@@ -12,6 +12,7 @@ import jk_5.nailed.map.instruction.RegisterInstructionEvent;
 import jk_5.nailed.players.Player;
 import jk_5.nailed.players.PlayerRegistry;
 import jk_5.nailed.util.ChatColor;
+import jk_5.nailed.util.raytracing.RayTracer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityFireworkRocket;

@@ -2,10 +2,14 @@ package jk_5.nailed.map.gameloop;
 
 import com.google.common.collect.Maps;
 import jk_5.nailed.map.instruction.GameController;
-import jk_5.nailed.network.Packets;
+import jk_5.nailed.network.NailedNetworkHandler;
+import jk_5.nailed.network.NailedPacket;
 import jk_5.nailed.players.Team;
 import lombok.RequiredArgsConstructor;
+import net.minecraft.network.play.server.S02PacketChat;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.IChatComponent;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.Map;
 
@@ -38,7 +42,17 @@ public class InstructionGameController implements GameController {
 
     @Override
     public void broadcastTimeRemaining(String data) {
-        Packets.TIME_UPDATE.newPacket().writeString(data).sendToDimension(this.controller.getMap().getID());
+        this.broadcastNotification(data, null);
+    }
+
+    @Override
+    public void broadcastNotification(String data, ResourceLocation icon){
+        this.broadcastNotification(data, null, 0xFFFFFF);
+    }
+
+    @Override
+    public void broadcastNotification(String data, ResourceLocation icon, int iconColor){
+        NailedNetworkHandler.sendPacketToAllPlayersInDimension(new NailedPacket.Notification(data, icon, iconColor), this.controller.getMap().getID());
     }
 
     @Override
@@ -47,12 +61,12 @@ public class InstructionGameController implements GameController {
 
     @Override
     public void broadcastNotification(String data) {
-        Packets.NOTIFICATION.newPacket().writeByte(0).writeString(data).sendToDimension(this.controller.getMap().getID());
+        NailedNetworkHandler.sendPacketToAllPlayersInDimension(new NailedPacket.Notification(data, null, 0xFFFFFF), this.controller.getMap().getID());
     }
 
     @Override
     public void broadcastChatMessage(IChatComponent message) {
-        PacketDispatcher.sendPacketToAllInDimension(new Packet3Chat(message), this.controller.getMap().getID());
+        MinecraftServer.getServer().getConfigurationManager().func_148537_a(new S02PacketChat(message), this.controller.getMap().getID());
     }
 
     @Override

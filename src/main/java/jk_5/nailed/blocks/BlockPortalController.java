@@ -294,7 +294,7 @@ public class BlockPortalController extends NailedBlock implements ITileEntityPro
         }
         for(ChunkCoordinates coords : redraw){
             if(world.blockExists(coords.posX, coords.posY, coords.posZ)){
-                world.markBlockForUpdate(coords.posX, coords.posY, coords.posZ);
+                world.func_147471_g(coords.posX, coords.posY, coords.posZ);
                 world.func_147459_d(coords.posX, coords.posY, coords.posZ, world.func_147439_a(coords.posX, coords.posY, coords.posZ));
             }
         }
@@ -345,7 +345,7 @@ public class BlockPortalController extends NailedBlock implements ITileEntityPro
         }
         for(ChunkCoordinates coords : notify)
             if(world.blockExists(coords.posX, coords.posY, coords.posZ)){
-                world.markBlockForUpdate(coords.posX, coords.posY, coords.posZ);
+                world.func_147471_g(coords.posX, coords.posY, coords.posZ);
                 world.func_147459_d(coords.posX, coords.posY, coords.posZ, world.func_147439_a(coords.posX, coords.posY, coords.posZ));
             }
     }

@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.embedded.EmbeddedChannel;
+import jk_5.nailed.network.handlers.GuiReturnDataHandler;
 import jk_5.nailed.network.handlers.MovementEventHandler;
 import jk_5.nailed.network.handlers.NotificationHandler;
 import jk_5.nailed.network.handlers.PipelineEventHandler;
@@ -37,6 +38,7 @@ public class NailedNetworkHandler {
 
         pipeline.addAfter("jk_5.nailed.network.NailedPacketCodec#0", "ServerToClientConnection", new PipelineEventHandler());
         pipeline.addAfter("jk_5.nailed.network.NailedPacketCodec#0", "MovementEventHandler", new MovementEventHandler());
+        pipeline.addAfter("jk_5.nailed.network.NailedPacketCodec#0", "GuiReturnDataHandler", new GuiReturnDataHandler());
     }
 
     @SideOnly(Side.CLIENT)
@@ -49,6 +51,13 @@ public class NailedNetworkHandler {
     public static void sendPacketToServer(NailedPacket packet){
         EmbeddedChannel channel = getChannelForSide(Side.CLIENT);
         channel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.TOSERVER);
+        channel.writeOutbound(packet);
+    }
+
+    public static void sendPacketToAllPlayersInDimension(NailedPacket packet, int dimension){
+        EmbeddedChannel channel = getChannelForSide(Side.SERVER);
+        channel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.DIMENSION);
+        channel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(dimension);
         channel.writeOutbound(packet);
     }
 
