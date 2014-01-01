@@ -1,5 +1,6 @@
 package jk_5.nailed.network;
 
+import cpw.mods.fml.common.network.FMLEmbeddedChannel;
 import cpw.mods.fml.common.network.FMLOutboundHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -21,7 +22,7 @@ import java.util.EnumMap;
  */
 public class NailedNetworkHandler {
 
-    private static EnumMap<Side, EmbeddedChannel> channelPair;
+    private static EnumMap<Side, FMLEmbeddedChannel> channelPair;
 
     public static EmbeddedChannel getChannelForSide(Side side){
         return channelPair.get(side);
