@@ -168,9 +168,10 @@ public class MapLoader implements IMappackRegistrar {
         if(event.entity instanceof EntityPlayer && map.getMappack() != null){
             Mappack mappack = map.getMappack();
             EntityPlayer player = (EntityPlayer) event.entity;
-            ChunkCoordinates spawn = event.world.getSpawnPoint();
-            if(player.posX - 0.5 == spawn.posX && player.posZ - 0.5 == spawn.posZ){
-                event.entity.setLocationAndAngles(player.posX, player.posY, player.posZ, mappack.getMappackMetadata().getSpawnYaw(), mappack.getMappackMetadata().getSpawnPitch());
+            ChunkCoordinates worldSpawn = event.world.getSpawnPoint();
+            Spawnpoint spawn = mappack.getMappackMetadata().getSpawnPoint();
+            if(player.posX - 0.5 == worldSpawn.posX && player.posZ - 0.5 == worldSpawn.posZ){
+                event.entity.setLocationAndAngles(spawn.posX, spawn.posY, spawn.posZ, spawn.yaw, spawn.pitch);
                 player.setGameType(mappack.getMappackMetadata().getGamemode());
                 map.onPlayerJoined(PlayerRegistry.instance().getOrCreatePlayer(player.func_146103_bH()));
             }
