@@ -20,7 +20,6 @@ import jk_5.nailed.server.ProxyCommon;
 import jk_5.nailed.util.ChatColor;
 import lombok.Getter;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
@@ -133,7 +132,8 @@ public class Map {
             return new TeleportOptions(this, this.world.getSpawnPoint(), 0, 0);
         }
         MappackMetadata meta = this.mappack.getMappackMetadata();
-        return new TeleportOptions(this, new ChunkCoordinates(meta.getSpawnPoint()), meta.getSpawnYaw(), meta.getSpawnPitch());
+        Spawnpoint spawnpoint = new Spawnpoint(meta.getSpawnPoint());
+        return new TeleportOptions(this, spawnpoint, spawnpoint.yaw, spawnpoint.pitch);
     }
 
     public void broadcastChatMessage(IChatComponent message){
