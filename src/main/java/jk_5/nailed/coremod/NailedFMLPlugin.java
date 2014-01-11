@@ -14,7 +14,7 @@ import java.util.Map;
  * @author jk-5
  */
 @Name("Nailed|Core")
-@MCVersion("1.6.4")
+@MCVersion("1.7.2")
 @TransformerExclusions({"jk_5.nailed.coremod.transformers."})
 @SuppressWarnings("unused")
 public class NailedFMLPlugin implements IFMLLoadingPlugin {
@@ -23,7 +23,7 @@ public class NailedFMLPlugin implements IFMLLoadingPlugin {
     public String[] getASMTransformerClass() {
         if(FMLLaunchHandler.side().isClient()){
             return new String[]{
-                    "jk_5.nailed.coremod.transformers.AbstractClientPlayerTransformer"
+                    //"jk_5.nailed.coremod.transformers.AbstractClientPlayerTransformer"
             };
         }else{
             return new String[]{

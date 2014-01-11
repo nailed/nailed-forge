@@ -2,7 +2,6 @@ package jk_5.nailed.blocks;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 
 /**
  * No description given
@@ -17,11 +16,6 @@ public class CreativeTabNailed extends CreativeTabs {
 
     @Override
     public Item getTabIconItem(){
-        return null;
-    }
-
-    @Override
-    public ItemStack func_151244_d(){
-        return new ItemStack(NailedBlocks.invisibleWall, 1, 0);
+        return Item.func_150898_a(NailedBlocks.portal);
     }
 }

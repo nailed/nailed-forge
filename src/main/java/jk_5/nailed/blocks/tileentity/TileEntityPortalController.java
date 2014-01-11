@@ -69,11 +69,12 @@ public class TileEntityPortalController extends NailedTileEntity implements IGui
 
     @Override
     public Packet func_145844_m(){
-        S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(this.field_145851_c, this.field_145848_d, this.field_145849_e, 0, new NBTTagCompound());
-        packet.func_148857_g().setShort("Yaw", this.yaw);
-        packet.func_148857_g().setShort("Pitch", this.pitch);
-        packet.func_148857_g().setInteger("Color", this.color);
-        if(this.programmedName != null) packet.func_148857_g().setString("Destination", this.programmedName);
+        NBTTagCompound tag = new NBTTagCompound();
+        tag.setShort("Yaw", this.yaw);
+        tag.setShort("Pitch", this.pitch);
+        tag.setInteger("Color", this.color);
+        if(this.programmedName != null) tag.setString("Destination", this.programmedName);
+        S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(this.field_145851_c, this.field_145848_d, this.field_145849_e, 0, tag);
         return packet;
     }
 

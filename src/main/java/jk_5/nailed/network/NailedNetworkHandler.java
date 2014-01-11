@@ -24,7 +24,7 @@ public class NailedNetworkHandler {
 
     private static EnumMap<Side, FMLEmbeddedChannel> channelPair;
 
-    public static EmbeddedChannel getChannelForSide(Side side){
+    public static FMLEmbeddedChannel getChannelForSide(Side side){
         return channelPair.get(side);
     }
 
@@ -36,17 +36,19 @@ public class NailedNetworkHandler {
         }
 
         ChannelPipeline pipeline = channelPair.get(Side.SERVER).pipeline();
+        String targetName = getChannelForSide(Side.SERVER).findChannelHandlerNameForType(NailedPacketCodec.class);
 
-        pipeline.addAfter("jk_5.nailed.network.NailedPacketCodec#0", "ServerToClientConnection", new PipelineEventHandler());
-        pipeline.addAfter("jk_5.nailed.network.NailedPacketCodec#0", "MovementEventHandler", new MovementEventHandler());
-        pipeline.addAfter("jk_5.nailed.network.NailedPacketCodec#0", "GuiReturnDataHandler", new GuiReturnDataHandler());
+        pipeline.addAfter(targetName, "ServerToClientConnection", new PipelineEventHandler());
+        pipeline.addAfter(targetName, "MovementEventHandler", new MovementEventHandler());
+        pipeline.addAfter(targetName, "GuiReturnDataHandler", new GuiReturnDataHandler());
     }
 
     @SideOnly(Side.CLIENT)
     private static void addClientHandlers(){
         ChannelPipeline pipeline = channelPair.get(Side.CLIENT).pipeline();
+        String targetName = getChannelForSide(Side.CLIENT).findChannelHandlerNameForType(NailedPacketCodec.class);
 
-        pipeline.addAfter("jk_5.nailed.network.NailedPacketCodec#0", "NotificationHandler", new NotificationHandler());
+        pipeline.addAfter(targetName, "NotificationHandler", new NotificationHandler());
     }
 
     public static void sendPacketToServer(NailedPacket packet){

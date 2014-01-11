@@ -39,7 +39,7 @@ import java.util.List;
  *
  * @author jk-5
  */
-@Mod(modid = NailedModContainer.modid, useMetadata = true, certificateFingerprint = "87401ecb3314a1a18fb267281b2432975a7e2e84")
+@Mod(modid = NailedModContainer.modid, version = "0.1", useMetadata = true, certificateFingerprint = "87401ecb3314a1a18fb267281b2432975a7e2e84")
 public class NailedModContainer {
 
     @Getter protected static final String modid = "Nailed";

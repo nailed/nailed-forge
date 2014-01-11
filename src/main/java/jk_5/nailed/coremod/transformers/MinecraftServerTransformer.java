@@ -29,11 +29,11 @@ public class MinecraftServerTransformer implements IClassTransformer {
 
     public byte[] transformMinecraftServer(byte[] bytes, Map<String, String> data) {
         ClassNode cnode = ASMHelper.createClassNode(bytes, 0);
-        MethodNode mnode = ASMHelper.findMethod(new Mapping("net/minecraft/server/MinecraftServer", "<init>", "(Ljava/io/File;)V"), cnode);
+        MethodNode mnode = ASMHelper.findMethod(new Mapping("net/minecraft/server/MinecraftServer", "<init>", "(Ljava/io/File;Ljava/net/Proxy;)V"), cnode);
 
         int offset = 0;
         int numOfNews = 0;
-        while(numOfNews != 6){
+        while(numOfNews != 9){
             while(mnode.instructions.get(offset).getOpcode() != Opcodes.NEW) offset ++;
             offset ++;
             numOfNews ++;
@@ -138,7 +138,7 @@ public class MinecraftServerTransformer implements IClassTransformer {
         MethodInsnNode initMulti = (MethodInsnNode) mnode.instructions.get(offset);
         initMulti.owner = "net/minecraft/world/WorldServer";
         initMulti.name = "<init>";
-        initMulti.desc = "(Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/world/storage/ISaveHandler;Ljava/lang/String;ILnet/minecraft/world/WorldSettings;Lnet/minecraft/profiler/Profiler;Lnet/minecraft/logging/ILogAgent;)V";
+        initMulti.desc = "(Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/world/storage/ISaveHandler;Ljava/lang/String;ILnet/minecraft/world/WorldSettings;Lnet/minecraft/profiler/Profiler;)V";
 
         return ASMHelper.createBytes(cnode, ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
     }

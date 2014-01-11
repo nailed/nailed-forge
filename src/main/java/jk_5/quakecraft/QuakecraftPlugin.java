@@ -43,7 +43,7 @@ import java.util.List;
  *
  * @author jk-5
  */
-@Mod(modid = "QuakeCraft", name = "QuakeCraft", dependencies = "required-after:Nailed")
+@Mod(modid = "QuakeCraft", name = "QuakeCraft", version = "0.1", dependencies = "required-after:Nailed")
 public class QuakecraftPlugin {
 
     @Mod.Instance("QuakeCraft")
