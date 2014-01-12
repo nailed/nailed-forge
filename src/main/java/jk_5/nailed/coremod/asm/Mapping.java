@@ -45,8 +45,9 @@ public class Mapping {
         this.name = name;
         this.desc = desc;
 
-        if(this.owner.contains("."))
+        if(this.owner.contains(".")){
             throw new IllegalArgumentException(this.owner);
+        }
     }
 
     public Mapping(Mapping descmap, String subclass){
@@ -121,8 +122,9 @@ public class Mapping {
 
     @Override
     public boolean equals(Object obj){
-        if(!(obj instanceof Mapping))
+        if(!(obj instanceof Mapping)){
             return false;
+        }
 
         Mapping desc = (Mapping) obj;
         return this.owner.equals(desc.owner) && this.name.equals(desc.name) && this.desc.equals(desc.desc);
@@ -135,10 +137,12 @@ public class Mapping {
 
     @Override
     public String toString(){
-        if(this.name.length() == 0)
+        if(this.name.length() == 0){
             return "[" + this.owner + "]";
-        if(this.desc.length() == 0)
+        }
+        if(this.desc.length() == 0){
             return "[" + this.owner + "." + this.name + "]";
+        }
         return "[" + (isMethod() ? methodDesc() : fieldDesc()) + "]";
     }
 
@@ -163,17 +167,19 @@ public class Mapping {
     }
 
     public Mapping map(Remapper mapper){
-        if(isMethod())
+        if(isMethod()){
             this.name = mapper.mapMethodName(this.owner, this.name, this.desc);
-        else if(isField())
+        }else if(isField()){
             this.name = mapper.mapFieldName(this.owner, this.name, this.desc);
+        }
 
         this.owner = mapper.mapType(this.owner);
 
-        if(isMethod())
+        if(isMethod()){
             this.desc = mapper.mapMethodDesc(this.desc);
-        else if(this.desc.length() > 0)
+        }else if(this.desc.length() > 0){
             this.desc = mapper.mapDesc(this.desc);
+        }
 
         return this;
     }
