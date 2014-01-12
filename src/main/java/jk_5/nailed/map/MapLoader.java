@@ -1,9 +1,9 @@
 package jk_5.nailed.map;
 
 import com.google.common.collect.Lists;
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.FMLLaunchHandler;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.api.IMappackRegistrar;
 import jk_5.nailed.event.PlayerChangedDimensionEvent;
@@ -55,7 +55,9 @@ public class MapLoader implements IMappackRegistrar {
     }
 
     public MapLoader(){
-        MinecraftForge.EVENT_BUS.register(this);
+        if(FMLLaunchHandler.side().isServer()){
+            MinecraftForge.EVENT_BUS.register(this);
+        }
     }
 
     public void loadMappacks(){
@@ -137,7 +139,6 @@ public class MapLoader implements IMappackRegistrar {
     @SubscribeEvent(priority = EventPriority.HIGH)
     @SuppressWarnings("unused")
     public void onWorldLoad(WorldEvent.Load event){
-        if(FMLCommonHandler.instance().getEffectiveSide().isClient()) return;
         Map map = this.getMap(event.world);
         if(map != null) map.setWorld(event.world);
     }
@@ -145,7 +146,6 @@ public class MapLoader implements IMappackRegistrar {
     @SubscribeEvent
     @SuppressWarnings("unused")
     public void onChangeDimension(PlayerChangedDimensionEvent event){
-        if(FMLCommonHandler.instance().getEffectiveSide().isClient()) return;
         event.oldMap.onPlayerLeft(event.player);
         event.newMap.onPlayerJoined(event.player);
     }
@@ -153,7 +153,6 @@ public class MapLoader implements IMappackRegistrar {
     @SubscribeEvent
     @SuppressWarnings("unused")
     public void onBlockBreak(BlockEvent.BreakEvent event){
-        if(FMLCommonHandler.instance().getEffectiveSide().isClient()) return;
         Mappack mappack = this.getMap(event.world).getMappack();
         if(mappack != null && mappack.getMappackMetadata().isPreventingBlockBreak()){
             event.setCanceled(true);
@@ -163,7 +162,6 @@ public class MapLoader implements IMappackRegistrar {
     @SubscribeEvent
     @SuppressWarnings("unused")
     public void onEntitySpawn(EntityJoinWorldEvent event){
-        if(FMLCommonHandler.instance().getEffectiveSide().isClient()) return;
         Map map = this.getMap(event.world);
         if(event.entity instanceof EntityPlayer && map.getMappack() != null){
             Mappack mappack = map.getMappack();
