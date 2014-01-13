@@ -107,4 +107,30 @@ public abstract class NailedPacket {
             this.data = buffer.readBytes(length);
         }
     }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GuiOpen extends NailedPacket {
+
+        public int x, y, z;
+        public ByteBuf data;
+
+        @Override
+        public void encode(ByteBuf buffer){
+            buffer.writeInt(this.x);
+            buffer.writeInt(this.y);
+            buffer.writeInt(this.z);
+            buffer.writeInt(buffer.readableBytes());
+            buffer.writeBytes(this.data);
+        }
+
+        @Override
+        public void decode(ByteBuf buffer){
+            this.x = buffer.readInt();
+            this.y = buffer.readInt();
+            this.z = buffer.readInt();
+            int length = buffer.readInt();
+            this.data = buffer.readBytes(length);
+        }
+    }
 }
