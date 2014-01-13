@@ -18,6 +18,7 @@ buildscript {
 }
 
 apply plugin: 'java'
+apply plugin: 'scala'
 apply plugin: 'forge'
 //apply plugin: 'nailed'
 apply plugin: 'maven'
@@ -93,6 +94,7 @@ allprojects {
 
 subprojects {
     apply plugin: 'java'
+    apply plugin: 'scala'
 
     jar {
         baseName = 'Nailed-' + baseName
