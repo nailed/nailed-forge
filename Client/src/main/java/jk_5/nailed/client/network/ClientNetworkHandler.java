@@ -27,6 +27,8 @@ public class ClientNetworkHandler {
         //pipeline.addAfter(targetName, "GuiReturnDataHandler", new GuiReturnDataHandler());
 
         pipeline.addAfter(targetName, "NotificationHandler", new NotificationHandler());
+
+        //channel.generatePacketFrom(new NailedPacket.TileEntityData());
     }
 
     public static void sendPacketToServer(NailedPacket packet){

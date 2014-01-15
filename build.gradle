@@ -6,19 +6,22 @@ buildscript {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
         }
-        /*maven {
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+        maven {
             name = "reening"
             url = "http://maven.reening.nl"
-        }*/
+        }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.0-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.1-SNAPSHOT'
         //classpath 'jk_5.nailed.gradle:nailed-gradle:1.1-SNAPSHOT'
     }
 }
 
 apply plugin: 'java'
-apply plugin: 'scala'
 apply plugin: 'forge'
 //apply plugin: 'nailed'
 apply plugin: 'maven'
@@ -28,7 +31,7 @@ version = '2.0-SNAPSHOT'
 archivesBaseName = 'Nailed-Core'
 
 minecraft{
-    version = '1.7.2-10.12.0.997'
+    version = '1.7.2-10.12.0.999'
     assetDir = 'runtime/client/assets'
 }
 
@@ -94,7 +97,6 @@ allprojects {
 
 subprojects {
     apply plugin: 'java'
-    apply plugin: 'scala'
 
     jar {
         baseName = 'Nailed-' + baseName

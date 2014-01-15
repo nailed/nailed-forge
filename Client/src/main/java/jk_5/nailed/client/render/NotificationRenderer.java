@@ -4,8 +4,8 @@ import com.google.common.collect.Lists;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import jk_5.nailed.NailedModContainer;
-import jk_5.nailed.util.Notification;
+import jk_5.nailed.client.NailedClient;
+import jk_5.nailed.client.Notification;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -23,8 +23,8 @@ import java.util.List;
 public class NotificationRenderer {
 
     public static List<Notification> notifications = Lists.newArrayList();
-    private static final int notificationDelay = NailedModContainer.getConfig().getTag("notification").getTag("delay").setComment("Delay before an notification will disappear").getIntValue(5000);
-    private static final int notificationMax = NailedModContainer.getConfig().getTag("notification").getTag("maxNotifications").setComment("Maximum number of notifications").getIntValue(5000);
+    private static final int notificationDelay = NailedClient.getConfig().getTag("notification").getTag("delay").setComment("Delay before an notification will disappear").getIntValue(5000);
+    private static final int notificationMax = NailedClient.getConfig().getTag("notification").getTag("maxNotifications").setComment("Maximum number of notifications").getIntValue(5000);
 
     public static void addNotification(String text){
         addNotification(text, null, 0xFFFFFF);

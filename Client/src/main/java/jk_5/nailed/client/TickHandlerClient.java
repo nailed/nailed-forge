@@ -2,10 +2,9 @@ package jk_5.nailed.client;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.Side;
-import jk_5.nailed.blocks.tileentity.NailedTileEntity;
-import jk_5.nailed.network.NailedNetworkHandler;
-import jk_5.nailed.network.NailedPacket;
+import jk_5.nailed.client.blocks.tileentity.NailedTileEntity;
+import jk_5.nailed.client.network.ClientNetworkHandler;
+import jk_5.nailed.client.network.NailedPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.player.EntityPlayer;
@@ -32,10 +31,10 @@ public class TickHandlerClient {
             NailedTileEntity target = this.getTileEntityUnderPlayer(player);
             if (target != null) {
                 if (player.movementInput.jump && !wasJumping){
-                    NailedNetworkHandler.getChannelForSide(Side.CLIENT).writeAndFlush(new NailedPacket.MovementEvent(target.field_145851_c, target.field_145848_d, target.field_145849_e, (byte) 0));
+                    ClientNetworkHandler.sendPacketToServer(new NailedPacket.MovementEvent(target.field_145851_c, target.field_145848_d, target.field_145849_e, (byte) 0));
                 }
                 if (player.movementInput.sneak && !wasSneaking) {
-                    NailedNetworkHandler.getChannelForSide(Side.CLIENT).writeAndFlush(new NailedPacket.MovementEvent(target.field_145851_c, target.field_145848_d, target.field_145849_e, (byte) 1));
+                    ClientNetworkHandler.sendPacketToServer(new NailedPacket.MovementEvent(target.field_145851_c, target.field_145848_d, target.field_145849_e, (byte) 1));
                 }
             }
             wasJumping = player.movementInput.jump;

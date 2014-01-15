@@ -12,21 +12,21 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent
 import net.minecraft.entity.{Entity, EntityLivingBase}
 import net.minecraft.util._
 import net.minecraft.entity.player.EntityPlayer
-import jk_5.nailed.map.{PvpIgnoringDamageSource, MapLoader}
 import net.minecraft.item.{ItemHoe, ItemStack}
 import net.minecraft.init.Items
-import jk_5.nailed.util.ChatColor
 import net.minecraft.potion.{Potion, PotionEffect}
 import net.minecraft.world.World
-import jk_5.nailed.util.raytracing.RayTracer
 import net.minecraft.nbt.{NBTTagList, NBTTagCompound}
 import net.minecraftforge.event.entity.player.{PlayerDropsEvent, PlayerInteractEvent}
-import jk_5.nailed.players.PlayerRegistry
 import net.minecraft.entity.item.EntityFireworkRocket
 import net.minecraftforge.event.entity.EntityJoinWorldEvent
-import jk_5.nailed.map.instruction.{GameController, IInstruction, TimedInstruction, RegisterInstructionEvent}
 import net.minecraftforge.event.entity.living.{LivingFallEvent, LivingHurtEvent}
 import net.minecraft.scoreboard.{IScoreObjectiveCriteria, ScoreObjective}
+import jk_5.nailed.players.PlayerRegistry
+import jk_5.nailed.map.{PvpIgnoringDamageSource, MapLoader}
+import jk_5.nailed.map.instruction.{RegisterInstructionEvent, TimedInstruction, GameController, IInstruction}
+import jk_5.nailed.common.util.ChatColor
+import jk_5.nailed.util.raytracing.RayTracer
 
 /**
  * No description given
