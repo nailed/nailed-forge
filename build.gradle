@@ -3,16 +3,16 @@ buildscript {
         mavenLocal()
         mavenCentral()
         maven {
+            name = "reening"
+            url = "http://maven.reening.nl"
+        }
+        maven {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
         }
         maven {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
-        maven {
-            name = "reening"
-            url = "http://maven.reening.nl"
         }
     }
     dependencies {
@@ -74,6 +74,10 @@ allprojects {
         mavenLocal()
         mavenCentral()
         maven {
+            name = "reening"
+            url = "http://maven.reening.nl/"
+        }
+        maven {
             name 'forge'
             url 'http://files.minecraftforge.net/maven'
         }
@@ -81,10 +85,6 @@ allprojects {
             name "minecraft"
             url "https://libraries.minecraft.net/"
         }
-        /*maven {
-            name = "reening"
-            url = "http://maven.reening.nl/"
-        }*/
     }
 
     sourceSets.main.resources.getFiles().each { file ->

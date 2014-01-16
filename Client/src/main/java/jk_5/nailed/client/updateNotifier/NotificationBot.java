@@ -1,6 +1,6 @@
 package jk_5.nailed.client.updateNotifier;
 
-import jk_5.nailed.NailedLog;
+import jk_5.nailed.common.NailedLog;
 import net.minecraft.client.Minecraft;
 import org.jibble.pircbot.PircBot;
 
