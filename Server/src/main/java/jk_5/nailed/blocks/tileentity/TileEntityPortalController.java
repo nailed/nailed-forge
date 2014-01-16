@@ -1,29 +1,29 @@
 package jk_5.nailed.blocks.tileentity;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
+import io.netty.buffer.ByteBuf;
 import jk_5.nailed.blocks.BlockPortalController;
+import jk_5.nailed.gui.IGuiReturnHandler;
 import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.map.teleport.TeleportOptions;
 import jk_5.nailed.players.Player;
 import lombok.Getter;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-public class TileEntityPortalController extends NailedTileEntity implements IGuiTileEntity {
+public class TileEntityPortalController extends NailedTileEntity implements IGuiTileEntity, IGuiReturnHandler {
 
     public String title = "";
     public short yaw;
     public short pitch;
     @Getter private int color;
     @Getter private TeleportOptions destination;
-    @Getter private String programmedName;
+    @Getter private String programmedName = "";
 
     public TileEntityPortalController(){
         this.field_145846_f = false;
@@ -64,33 +64,22 @@ public class TileEntityPortalController extends NailedTileEntity implements IGui
     }
 
     @Override
-    public Packet func_145844_m(){
-        NBTTagCompound tag = new NBTTagCompound();
-        tag.setShort("Yaw", this.yaw);
-        tag.setShort("Pitch", this.pitch);
-        tag.setInteger("Color", this.color);
-        if(this.programmedName != null) tag.setString("Destination", this.programmedName);
-        S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(this.field_145851_c, this.field_145848_d, this.field_145849_e, 0, tag);
-        return packet;
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet){
-        this.yaw = packet.func_148857_g().getShort("Yaw");
-        this.pitch = packet.func_148857_g().getShort("Pitch");
-        this.title = packet.func_148857_g().getString("Title");
-        this.color = packet.func_148857_g().getInteger("Color");
-        this.programmedName = packet.func_148857_g().getString("Destination");
-        this.onInventoryChanged();
-    }
-
-    @Override
     public boolean canPlayerOpenGui(Player player){
         if(!player.isOp()){
             player.sendChat("You need to be an OP to do that");
             return false;
         }
         return true;
+    }
+
+    @Override
+    public void writeGuiData(ByteBuf buffer){
+        ByteBufUtils.writeUTF8String(buffer, this.programmedName);
+    }
+
+    @Override
+    public void readGuiCloseData(ByteBuf buffer){
+        this.setDestinationFromName(ByteBufUtils.readUTF8String(buffer));
     }
 
     public void setDestinationFromName(String name){
@@ -100,8 +89,4 @@ public class TileEntityPortalController extends NailedTileEntity implements IGui
         this.programmedName = name;
         if(this.field_145850_b != null) this.link();
     }
-
-    /*public void readGuiData(MCDataInput input){
-        this.setDestinationFromName(input.readString());
-    }*/
 }

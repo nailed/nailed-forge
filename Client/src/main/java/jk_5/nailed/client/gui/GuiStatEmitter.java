@@ -2,12 +2,8 @@ package jk_5.nailed.client.gui;
 
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import jk_5.nailed.client.blocks.tileentity.TileEntityStatEmitter;
-import jk_5.nailed.client.network.ClientNetworkHandler;
-import jk_5.nailed.client.network.NailedPacket;
+import jk_5.nailed.client.blocks.tileentity.IGuiTileEntity;
 import jk_5.nailed.client.util.StatMode;
-import lombok.RequiredArgsConstructor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -19,15 +15,35 @@ import org.lwjgl.input.Keyboard;
  *
  * @author jk-5
  */
-@RequiredArgsConstructor
 public class GuiStatEmitter extends NailedGui {
 
-    private final TileEntityStatEmitter statEmitter;
+    private String statName;
+    private StatMode mode;
+    private int pulseLength;
 
     private GuiTextField textField;
     private GuiButton doneBtn;
     private GuiButton cancelBtn;
     private GuiButton modeBtn;
+
+    public GuiStatEmitter(IGuiTileEntity tileEntity){
+        super(tileEntity);
+    }
+
+    @Override
+    public NailedGui readGuiData(ByteBuf buffer){
+        this.statName = ByteBufUtils.readUTF8String(buffer);
+        this.mode = StatMode.values()[buffer.readByte()];
+        this.pulseLength = buffer.readByte();
+        return this;
+    }
+
+    @Override
+    protected void writeGuiData(ByteBuf buffer){
+        ByteBufUtils.writeUTF8String(buffer, this.textField.func_146179_b());
+        buffer.writeByte(this.mode.ordinal());
+        buffer.writeByte(this.pulseLength);
+    }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTick) {
@@ -42,13 +58,13 @@ public class GuiStatEmitter extends NailedGui {
     public void initGui() {
         Keyboard.enableRepeatEvents(true);
         this.field_146292_n.clear();
-        this.field_146292_n.add(this.modeBtn = new GuiButton(0, this.field_146294_l / 2 - 100, this.field_146295_m / 4 + 72 + 12, "Mode: " + this.statEmitter.getMode().name().toLowerCase()));
-        this.field_146292_n.add(this.doneBtn = new GuiButton(1, this.field_146294_l / 2 - 100, this.field_146295_m / 4 + 96 + 12, I18n.getStringParams("gui.done")));
-        this.field_146292_n.add(this.cancelBtn = new GuiButton(2, this.field_146294_l / 2 - 100, this.field_146295_m / 4 + 120 + 12, I18n.getStringParams("gui.cancel")));
+        this.addButton(this.modeBtn = new GuiButton(0, this.field_146294_l / 2 - 100, this.field_146295_m / 4 + 72 + 12, "Mode: " + this.mode.name().toLowerCase()));
+        this.addButton(this.doneBtn = new GuiButton(1, this.field_146294_l / 2 - 100, this.field_146295_m / 4 + 96 + 12, I18n.getStringParams("gui.done")));
+        this.addButton(this.cancelBtn = new GuiButton(2, this.field_146294_l / 2 - 100, this.field_146295_m / 4 + 120 + 12, I18n.getStringParams("gui.cancel")));
         this.textField = new GuiTextField(this.field_146289_q, this.field_146294_l / 2 - 150, 60, 300, 20);
         this.textField.func_146203_f(32767);
         this.textField.func_146195_b(true);
-        this.textField.func_146180_a(this.statEmitter.getProgrammedName());
+        this.textField.func_146180_a(this.statName);
         this.doneBtn.field_146125_m = this.textField.func_146179_b().trim().length() > 0;
     }
 
@@ -58,19 +74,15 @@ public class GuiStatEmitter extends NailedGui {
             if(button.field_146127_k == 2){
                 Minecraft.getMinecraft().func_147108_a(null);
             }else if(button.field_146127_k == 1){
-                ByteBuf data = Unpooled.buffer();
-                data.writeByte(this.statEmitter.getMode().ordinal());
-                ByteBufUtils.writeUTF8String(data, this.textField.func_146179_b());
-                ClientNetworkHandler.sendPacketToServer(new NailedPacket.GuiReturnDataPacket(this.statEmitter.field_145851_c, this.statEmitter.field_145848_d, this.statEmitter.field_145849_e, data));
-
+                this.sendGuiData();
                 Minecraft.getMinecraft().func_147108_a(null);
             }else if(button.field_146127_k == 0){
-                int next = this.statEmitter.getMode().ordinal() + 1;
+                int next = this.mode.ordinal() + 1;
                 if(next == StatMode.values().length){
                     next = 0;
                 }
-                this.statEmitter.setMode(StatMode.values()[next]);
-                this.modeBtn.field_146126_j = "Mode: " + this.statEmitter.getMode().name().toLowerCase();
+                this.mode = StatMode.values()[next];
+                this.modeBtn.field_146126_j = "Mode: " + this.mode.name().toLowerCase();
             }
         }
     }

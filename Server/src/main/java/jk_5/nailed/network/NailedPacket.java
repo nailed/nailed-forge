@@ -47,14 +47,7 @@ public abstract class NailedPacket {
 
         @Override
         public void decode(ByteBuf buffer){
-            int mode = buffer.readByte();
-            this.message = ByteBufUtils.readUTF8String(buffer);
-            if(mode >= 1){
-                this.icon = new ResourceLocation(ByteBufUtils.readUTF8String(buffer), ByteBufUtils.readUTF8String(buffer));
-            }
-            if(mode == 2){
-                this.color = buffer.readInt();
-            }
+            //Send-only
         }
     }
 
@@ -67,10 +60,7 @@ public abstract class NailedPacket {
 
         @Override
         public void encode(ByteBuf buffer){
-            buffer.writeInt(this.x);
-            buffer.writeInt(this.y);
-            buffer.writeInt(this.z);
-            buffer.writeByte(this.type);
+            //Receive-only
         }
 
         @Override
@@ -91,11 +81,7 @@ public abstract class NailedPacket {
 
         @Override
         public void encode(ByteBuf buffer){
-            buffer.writeInt(this.x);
-            buffer.writeInt(this.y);
-            buffer.writeInt(this.z);
-            buffer.writeInt(buffer.readableBytes());
-            buffer.writeBytes(this.data);
+            //Receive-only
         }
 
         @Override
@@ -103,8 +89,7 @@ public abstract class NailedPacket {
             this.x = buffer.readInt();
             this.y = buffer.readInt();
             this.z = buffer.readInt();
-            int length = buffer.readInt();
-            this.data = buffer.readBytes(length);
+            this.data = buffer.copy();
         }
     }
 
@@ -120,17 +105,12 @@ public abstract class NailedPacket {
             buffer.writeInt(this.x);
             buffer.writeInt(this.y);
             buffer.writeInt(this.z);
-            buffer.writeInt(buffer.readableBytes());
             buffer.writeBytes(this.data);
         }
 
         @Override
         public void decode(ByteBuf buffer){
-            this.x = buffer.readInt();
-            this.y = buffer.readInt();
-            this.z = buffer.readInt();
-            int length = buffer.readInt();
-            this.data = buffer.readBytes(length);
+            //Send-only
         }
     }
 }

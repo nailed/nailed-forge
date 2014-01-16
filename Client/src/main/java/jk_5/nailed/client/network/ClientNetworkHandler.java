@@ -6,6 +6,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
 import io.netty.channel.ChannelPipeline;
 import jk_5.nailed.client.network.handlers.NotificationHandler;
+import jk_5.nailed.client.network.handlers.OpenGuiHandler;
 
 /**
  * No description given
@@ -27,6 +28,7 @@ public class ClientNetworkHandler {
         //pipeline.addAfter(targetName, "GuiReturnDataHandler", new GuiReturnDataHandler());
 
         pipeline.addAfter(targetName, "NotificationHandler", new NotificationHandler());
+        pipeline.addAfter(targetName, "OpenGuiHandler", new OpenGuiHandler());
 
         //channel.generatePacketFrom(new NailedPacket.TileEntityData());
     }

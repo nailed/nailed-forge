@@ -4,11 +4,14 @@ import cpw.mods.fml.common.network.FMLEmbeddedChannel;
 import cpw.mods.fml.common.network.FMLOutboundHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
+import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
 import jk_5.nailed.network.handlers.GuiReturnDataHandler;
 import jk_5.nailed.network.handlers.MovementEventHandler;
 import jk_5.nailed.network.handlers.PipelineEventHandler;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.NetHandlerPlayServer;
 
 /**
  * No description given
@@ -40,5 +43,9 @@ public class NailedNetworkHandler {
         channel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.PLAYER);
         channel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(player);
         channel.writeOutbound(packet);
+    }
+
+    public static EntityPlayerMP getPlayer(ChannelHandlerContext ctx){
+        return ((NetHandlerPlayServer) ctx.channel().attr(NetworkRegistry.NET_HANDLER).get()).field_147369_b;
     }
 }

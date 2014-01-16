@@ -1,5 +1,6 @@
 package jk_5.nailed.client.blocks;
 
+import jk_5.nailed.client.NailedClient;
 import jk_5.nailed.client.blocks.tileentity.NailedTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -16,7 +17,8 @@ public class NailedBlock extends Block {
 
     public NailedBlock(String name, Material material){
         super(material);
-        this.func_149663_c(name);
+        this.func_149663_c("nailed." + name);
+        this.func_149647_a(NailedClient.getCreativeTab());
     }
 
     @Override

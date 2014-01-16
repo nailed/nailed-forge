@@ -1,5 +1,6 @@
 package jk_5.nailed.blocks.tileentity;
 
+import io.netty.buffer.ByteBuf;
 import jk_5.nailed.players.Player;
 
 /**
@@ -10,4 +11,6 @@ import jk_5.nailed.players.Player;
 public interface IGuiTileEntity {
 
     public boolean canPlayerOpenGui(Player player);
+
+    public void writeGuiData(ByteBuf buffer);
 }

@@ -16,7 +16,7 @@ public class NailedBlock extends Block {
 
     public NailedBlock(String name, Material material){
         super(material);
-        this.func_149663_c(name);
+        this.func_149663_c("nailed." + name);
     }
 
     @Override

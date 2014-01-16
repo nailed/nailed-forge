@@ -1,6 +1,9 @@
 package jk_5.nailed.blocks.tileentity;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.network.ByteBufUtils;
+import io.netty.buffer.ByteBuf;
+import jk_5.nailed.gui.IGuiReturnHandler;
 import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.map.stat.IStatTileEntity;
 import jk_5.nailed.map.stat.Stat;
@@ -22,7 +25,7 @@ import net.minecraftforge.common.MinecraftForge;
  * @author jk-5
  */
 @NoArgsConstructor
-public class TileEntityStatEmitter extends NailedTileEntity implements IStatTileEntity, IGuiTileEntity {
+public class TileEntityStatEmitter extends NailedTileEntity implements IStatTileEntity, IGuiTileEntity, IGuiReturnHandler {
 
     @Getter private String programmedName = "";
     @Getter private boolean signalEnabled = false;
@@ -48,11 +51,6 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
             }
         }
     }
-
-    /*public void readGuiData(MCDataInput input){
-        this.setMode(StatMode.values()[input.readByte()]);
-        this.setStatName(input.readString());
-    }*/
 
     @Override
     public void func_145845_h(){
@@ -181,6 +179,20 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
             return false;
         }
         return true;
+    }
+
+    @Override
+    public void writeGuiData(ByteBuf buffer){
+        ByteBufUtils.writeUTF8String(buffer, this.programmedName);
+        buffer.writeByte(this.mode.ordinal());
+        buffer.writeByte(this.pulseLength);
+    }
+
+    @Override
+    public void readGuiCloseData(ByteBuf buffer){
+        this.setStatName(ByteBufUtils.readUTF8String(buffer));
+        this.setMode(StatMode.values()[buffer.readByte()]);
+        this.pulseLength = buffer.readByte();
     }
 
     public void scheduleRedstoneUpdate(){

@@ -75,7 +75,6 @@ public abstract class NailedPacket {
             buffer.writeInt(this.x);
             buffer.writeInt(this.y);
             buffer.writeInt(this.z);
-            buffer.writeInt(buffer.readableBytes());
             buffer.writeBytes(this.data);
         }
 
@@ -102,8 +101,7 @@ public abstract class NailedPacket {
             this.x = buffer.readInt();
             this.y = buffer.readInt();
             this.z = buffer.readInt();
-            int length = buffer.readInt();
-            this.data = buffer.readBytes(length);
+            this.data = buffer.copy();
         }
     }
 }

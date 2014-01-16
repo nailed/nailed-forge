@@ -193,10 +193,7 @@ public class BlockPortalController extends NailedBlock implements ITileEntityPro
         int metadata = world.getBlockMetadata(i, j, k);
 
         if(metadata == 1){
-            controller.pitch = -90;
-            controller.yaw = -90;
-        }else if(metadata == 1){
-            controller.pitch = 90;
+            controller.pitch = -90; //90 ?
             controller.yaw = -90;
         }else if(metadata == 2){
             controller.yaw = 270;

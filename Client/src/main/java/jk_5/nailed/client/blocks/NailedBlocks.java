@@ -42,10 +42,10 @@ public class NailedBlocks {
     }
 
     private static void registerBlock(Block block){
-        GameRegistry.registerBlock(block, block.func_149739_a().substring(5));
+        GameRegistry.registerBlock(block, block.func_149739_a().substring(12));
     }
 
     private static void registerBlock(Block block, Class<? extends ItemBlock> item){
-        GameRegistry.registerBlock(block, item, block.func_149739_a().substring(5));
+        GameRegistry.registerBlock(block, item, block.func_149739_a().substring(12));
     }
 }
