@@ -24,7 +24,6 @@ public class NailedConnectionHandler {
         if(event.player.worldObj.provider instanceof NailedWorldProvider){
             //TODO: send data?
         }
-        NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.Notification("Test", null, 0xFFFFFF), event.player);
         for(Map map : MapLoader.instance().getMaps()){
             if(map.getID() >= -1 && map.getID() <= 1){
                 continue;
