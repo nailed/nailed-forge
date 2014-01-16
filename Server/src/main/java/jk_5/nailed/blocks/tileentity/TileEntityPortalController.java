@@ -8,6 +8,7 @@ import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.map.teleport.TeleportOptions;
 import jk_5.nailed.players.Player;
+import jk_5.nailed.util.ISynchronizedTileEntity;
 import lombok.Getter;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -16,7 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
  *
  * @author jk-5
  */
-public class TileEntityPortalController extends NailedTileEntity implements IGuiTileEntity, IGuiReturnHandler {
+public class TileEntityPortalController extends NailedTileEntity implements IGuiTileEntity, IGuiReturnHandler, ISynchronizedTileEntity {
 
     public String title = "";
     public short yaw;
@@ -88,5 +89,10 @@ public class TileEntityPortalController extends NailedTileEntity implements IGui
         this.destination = map.getSpawnTeleport();
         this.programmedName = name;
         if(this.field_145850_b != null) this.link();
+    }
+
+    @Override
+    public void writeData(ByteBuf buffer){
+        buffer.writeInt(this.color);
     }
 }

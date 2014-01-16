@@ -2,6 +2,7 @@ package jk_5.nailed.client.blocks.tileentity;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import io.netty.buffer.ByteBuf;
 import jk_5.nailed.client.gui.GuiPortalController;
 import jk_5.nailed.client.gui.NailedGui;
 import lombok.Getter;
@@ -34,5 +35,10 @@ public class TileEntityPortalController extends NailedTileEntity implements IGui
     @SideOnly(Side.CLIENT)
     public NailedGui getGui(){
         return new GuiPortalController(this);
+    }
+
+    @Override
+    public void readData(ByteBuf buffer){
+        this.color = buffer.readInt();
     }
 }

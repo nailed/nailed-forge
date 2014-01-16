@@ -7,6 +7,7 @@ import cpw.mods.fml.relauncher.Side;
 import io.netty.channel.ChannelPipeline;
 import jk_5.nailed.client.network.handlers.NotificationHandler;
 import jk_5.nailed.client.network.handlers.OpenGuiHandler;
+import jk_5.nailed.client.network.handlers.TileEntityDataHandler;
 
 /**
  * No description given
@@ -23,14 +24,9 @@ public class ClientNetworkHandler {
         ChannelPipeline pipeline = channel.pipeline();
         String targetName = channel.findChannelHandlerNameForType(NailedPacketCodec.class);
 
-        //pipeline.addAfter(targetName, "ServerToClientConnection", new PipelineEventHandler());
-        //pipeline.addAfter(targetName, "MovementEventHandler", new MovementEventHandler());
-        //pipeline.addAfter(targetName, "GuiReturnDataHandler", new GuiReturnDataHandler());
-
         pipeline.addAfter(targetName, "NotificationHandler", new NotificationHandler());
         pipeline.addAfter(targetName, "OpenGuiHandler", new OpenGuiHandler());
-
-        //channel.generatePacketFrom(new NailedPacket.TileEntityData());
+        pipeline.addAfter(targetName, "TileEntityDataHandler", new TileEntityDataHandler());
     }
 
     public static void sendPacketToServer(NailedPacket packet){

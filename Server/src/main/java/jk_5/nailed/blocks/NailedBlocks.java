@@ -22,6 +22,8 @@ public class NailedBlocks {
     public static BlockStat stat;
     public static BlockPortal portal;
 
+    private static int split = 5; //TODO: Should be 12! Fix remapping!
+
     public static void init(){
         invisibleWall = new BlockInvisibleWall();
         portalCrystal = new BlockPortalCrystal();
@@ -42,10 +44,10 @@ public class NailedBlocks {
     }
 
     private static void registerBlock(Block block){
-        GameRegistry.registerBlock(block, block.func_149739_a().substring(12));
+        GameRegistry.registerBlock(block, block.func_149739_a().substring(split));
     }
 
     private static void registerBlock(Block block, Class<? extends ItemBlock> item){
-        GameRegistry.registerBlock(block, item, block.func_149739_a().substring(12));
+        GameRegistry.registerBlock(block, item, block.func_149739_a().substring(split));
     }
 }
