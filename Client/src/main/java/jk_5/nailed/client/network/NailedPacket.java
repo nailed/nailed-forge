@@ -1,5 +1,6 @@
 package jk_5.nailed.client.network;
 
+import com.google.common.base.Charsets;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import lombok.AllArgsConstructor;
@@ -102,6 +103,49 @@ public abstract class NailedPacket {
             this.y = buffer.readInt();
             this.z = buffer.readInt();
             this.data = buffer.copy();
+        }
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class TileEntityData extends NailedPacket {
+
+        public int x, y, z;
+        public ByteBuf data;
+
+        @Override
+        public void encode(ByteBuf buffer){
+            //NOOP
+        }
+
+        @Override
+        public void decode(ByteBuf buffer){
+            this.x = buffer.readInt();
+            this.y = buffer.readInt();
+            this.z = buffer.readInt();
+            this.data = buffer.copy();
+        }
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class TimeUpdate extends NailedPacket {
+
+        public boolean display;
+        public String data;
+
+        @Override
+        public void encode(ByteBuf buffer){
+            //Receive-only
+        }
+
+        @Override
+        public void decode(ByteBuf buffer){
+            this.display = buffer.readBoolean();
+
+            int len = buffer.readInt();
+            this.data = buffer.toString(buffer.readerIndex(), len, Charsets.UTF_8);
+            buffer.readerIndex(buffer.readerIndex() + len);
         }
     }
 }

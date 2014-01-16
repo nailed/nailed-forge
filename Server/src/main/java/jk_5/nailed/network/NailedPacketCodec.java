@@ -18,6 +18,8 @@ public class NailedPacketCodec extends FMLIndexedMessageToMessageCodec<NailedPac
         this.addDiscriminator(1, NailedPacket.MovementEvent.class);
         this.addDiscriminator(2, NailedPacket.GuiReturnDataPacket.class);
         this.addDiscriminator(3, NailedPacket.GuiOpen.class);
+        this.addDiscriminator(4, NailedPacket.TileEntityData.class);
+        this.addDiscriminator(5, NailedPacket.TimeUpdate.class);
     }
 
     @Override

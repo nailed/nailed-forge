@@ -12,6 +12,7 @@ import jk_5.nailed.network.handlers.PipelineEventHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
+import net.minecraft.network.Packet;
 
 /**
  * No description given
@@ -47,5 +48,9 @@ public class NailedNetworkHandler {
 
     public static EntityPlayerMP getPlayer(ChannelHandlerContext ctx){
         return ((NetHandlerPlayServer) ctx.channel().attr(NetworkRegistry.NET_HANDLER).get()).field_147369_b;
+    }
+
+    public static Packet getProxyPacket(NailedPacket packet){
+        return channel.generatePacketFrom(packet);
     }
 }

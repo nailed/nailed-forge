@@ -1,5 +1,6 @@
 package jk_5.nailed.client.blocks.tileentity;
 
+import io.netty.buffer.ByteBuf;
 import lombok.NoArgsConstructor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -17,5 +18,9 @@ public abstract class NailedTileEntity extends TileEntity {
             if(this.field_145850_b.isRemote) return true;
         }
         return false;
+    }
+
+    public void readData(ByteBuf buffer){
+
     }
 }

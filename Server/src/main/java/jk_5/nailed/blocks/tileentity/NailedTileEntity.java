@@ -6,8 +6,10 @@ import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.network.NailedPacket;
 import jk_5.nailed.players.Player;
 import jk_5.nailed.players.PlayerRegistry;
+import jk_5.nailed.util.ISynchronizedTileEntity;
 import lombok.NoArgsConstructor;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 
 /**
@@ -34,5 +36,17 @@ public abstract class NailedTileEntity extends TileEntity {
             }
         }
         return false;
+    }
+
+    @Override
+    public Packet func_145844_m(){
+        if(!(this instanceof ISynchronizedTileEntity)) return null;
+        ByteBuf buffer = Unpooled.buffer();
+        ((ISynchronizedTileEntity) this).writeData(buffer);
+        if(buffer.readableBytes() == 0){
+            buffer.release();
+            return null;
+        }
+        return NailedNetworkHandler.getProxyPacket(new NailedPacket.TileEntityData(this.field_145851_c, this.field_145848_d, this.field_145849_e, buffer));
     }
 }
