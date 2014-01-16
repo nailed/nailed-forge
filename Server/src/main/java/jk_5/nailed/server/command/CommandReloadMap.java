@@ -6,6 +6,10 @@ import jk_5.nailed.map.MapLoader;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
+import net.minecraft.event.HoverEvent;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,8 +38,11 @@ public class CommandReloadMap extends NailedCommand {
         }
         if(map == null) throw new CommandException("Map does not exist");
         map.reloadFromMappack();
-        //FIXME
-        //sender.func_145747_a(new ChatComponentText("Reloaded map " + map.getSaveFileName()).setColor(EnumChatFormatting.GREEN));
+
+        IChatComponent component = new ChatComponentText("Reloaded map " + map.getSaveFileName());
+        component.func_150256_b().func_150209_a(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText("Go to the map")));
+        component.func_150256_b().func_150238_a(EnumChatFormatting.GREEN);
+        sender.func_145747_a(component);
     }
 
     @Override

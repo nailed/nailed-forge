@@ -4,6 +4,9 @@ import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MapLoader;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.NumberInvalidException;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 
 /**
  * No description given
@@ -39,16 +42,18 @@ public class CommandTime extends NailedCommand {
                     int number = parseInt(sender, args[0]);
                     map = MapLoader.instance().getMap(number);
                     if(map != null){
-                        //FIXME
-                        //sender.sendChatToPlayer(ChatMessageComponent.createFromText("Current time in " + map.getSaveFileName() + ": " + map.getWorld().getWorldTime()));
+                        IChatComponent component = new ChatComponentText("Current time in " + map.getSaveFileName() + ": " + map.getWorld().getWorldTime());
+                        component.func_150256_b().func_150238_a(EnumChatFormatting.GREEN);
+                        sender.func_145747_a(component);
                     }
                 }catch(NumberInvalidException e){
                     //NOOP
                 }
             }
         }else if(hasWorld){
-            //FIXME
-            //sender.sendChatToPlayer(ChatMessageComponent.createFromText("Current time in " + map.getSaveFileName() + ": " + map.getWorld().getWorldTime()));
+            IChatComponent component = new ChatComponentText("Current time in " + map.getSaveFileName() + ": " + map.getWorld().getWorldTime());
+            component.func_150256_b().func_150238_a(EnumChatFormatting.GREEN);
+            sender.func_145747_a(component);
         }
     }
 }
