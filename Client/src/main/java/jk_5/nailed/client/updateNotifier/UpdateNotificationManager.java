@@ -1,9 +1,9 @@
 package jk_5.nailed.client.updateNotifier;
 
 import jk_5.nailed.client.NailedClient;
+import jk_5.nailed.client.NailedLog;
 import jk_5.nailed.client.render.NotificationRenderer;
-import jk_5.nailed.common.NailedLog;
-import jk_5.nailed.common.util.config.ConfigTag;
+import jk_5.nailed.client.util.config.ConfigTag;
 import net.minecraft.util.ResourceLocation;
 
 /**

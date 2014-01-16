@@ -4,7 +4,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import jk_5.nailed.client.gui.GuiStatEmitter;
 import jk_5.nailed.client.gui.NailedGui;
-import jk_5.nailed.common.map.stat.StatMode;
+import jk_5.nailed.client.util.StatMode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

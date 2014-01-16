@@ -6,7 +6,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
-import jk_5.nailed.common.NailedLog;
+import jk_5.nailed.NailedLog;
 import jk_5.nailed.event.*;
 import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MapLoader;

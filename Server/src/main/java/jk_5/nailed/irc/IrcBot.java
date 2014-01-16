@@ -1,13 +1,13 @@
 package jk_5.nailed.irc;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import jk_5.nailed.NailedLog;
 import jk_5.nailed.NailedServer;
-import jk_5.nailed.common.NailedLog;
-import jk_5.nailed.common.util.ChatColor;
-import jk_5.nailed.common.util.config.ConfigTag;
 import jk_5.nailed.event.PlayerChatEvent;
 import jk_5.nailed.event.PlayerJoinEvent;
 import jk_5.nailed.event.PlayerLeaveEvent;
+import jk_5.nailed.util.ChatColor;
+import jk_5.nailed.util.config.ConfigTag;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.server.MinecraftServer;

@@ -1,12 +1,12 @@
 package jk_5.nailed.players;
 
 import com.mojang.authlib.GameProfile;
-import jk_5.nailed.common.util.ChatColor;
 import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.map.teleport.NailedTeleporter;
 import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.network.NailedPacket;
+import jk_5.nailed.util.ChatColor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;

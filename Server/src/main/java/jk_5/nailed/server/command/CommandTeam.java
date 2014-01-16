@@ -1,12 +1,12 @@
 package jk_5.nailed.server.command;
 
 import com.google.common.collect.Lists;
-import jk_5.nailed.common.util.ChatColor;
 import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.players.Player;
 import jk_5.nailed.players.PlayerRegistry;
 import jk_5.nailed.players.Team;
+import jk_5.nailed.util.ChatColor;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;

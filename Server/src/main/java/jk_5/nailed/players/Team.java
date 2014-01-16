@@ -1,8 +1,8 @@
 package jk_5.nailed.players;
 
 import com.google.common.collect.Lists;
-import jk_5.nailed.common.util.ChatColor;
 import jk_5.nailed.map.Map;
+import jk_5.nailed.util.ChatColor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;

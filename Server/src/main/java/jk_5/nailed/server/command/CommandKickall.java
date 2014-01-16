@@ -1,8 +1,8 @@
 package jk_5.nailed.server.command;
 
 import com.google.common.base.Joiner;
-import jk_5.nailed.common.util.ChatColor;
 import jk_5.nailed.map.Map;
+import jk_5.nailed.util.ChatColor;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;

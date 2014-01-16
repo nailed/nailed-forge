@@ -6,7 +6,7 @@ import io.netty.buffer.Unpooled;
 import jk_5.nailed.client.blocks.tileentity.TileEntityStatEmitter;
 import jk_5.nailed.client.network.ClientNetworkHandler;
 import jk_5.nailed.client.network.NailedPacket;
-import jk_5.nailed.common.map.stat.StatMode;
+import jk_5.nailed.client.util.StatMode;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;

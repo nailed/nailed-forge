@@ -28,48 +28,13 @@ apply plugin: 'maven'
 apply plugin: 'idea'
 
 version = '2.0-SNAPSHOT'
-archivesBaseName = 'Nailed-Core'
 
 minecraft{
     version = '1.7.2-10.12.0.999'
     assetDir = 'runtime/client/assets'
 }
 
-configurations{
-    packed
-    compile.extendsFrom packed
-}
-
-dependencies {
-    compile 'org.projectlombok:lombok:1.12.2'
-
-    packed 'pircbot:pircbot:1.5.0'
-
-    testCompile 'junit:junit:4.11'
-}
-
 allprojects {
-    sourceCompatibility = '1.6'
-    targetCompatibility = '1.6'
-
-    ext.ats = []
-
-    jar {
-        from {
-            configurations.packed.collect {
-                it.isDirectory() ? it : zipTree(it).matching {
-                    exclude "META-INF", "META-INF/**", "*META-INF*", "meta-inf"
-                    exclude "**.jar", "**/*.jar", "*.jar"
-                }
-            }
-        }
-
-        manifest {
-            attributes 'version': project.version
-            attributes 'mcversion': rootProject.minecraft.version
-        }
-    }
-
     repositories {
         mavenLocal()
         mavenCentral()
@@ -86,26 +51,38 @@ allprojects {
             url "https://libraries.minecraft.net/"
         }
     }
-
-    sourceSets.main.resources.getFiles().each { file ->
-        if (file.getName().endsWith(".at") || file.getName().endsWith("_at.cfg")){
-            ats += file.getName();
-            rootProject.minecraft.at file.getPath()
-        }
-    }
 }
 
 subprojects {
     apply plugin: 'java'
 
-    jar {
-        baseName = 'Nailed-' + baseName
-        destinationDir = new File(rootProject.getBuildDir(), 'libs')
-    }
+    sourceCompatibility = '1.6'
+    targetCompatibility = '1.6'
+
+    ext.ats = []
 
     configurations{
         packed
         compile.extendsFrom packed
+    }
+
+    jar {
+        baseName = 'Nailed-' + baseName
+        destinationDir = new File(rootProject.getBuildDir(), 'libs')
+
+        manifest {
+            attributes 'version': project.version
+            attributes 'mcversion': rootProject.minecraft.version
+        }
+
+        from {
+            configurations.packed.collect {
+                it.isDirectory() ? it : zipTree(it).matching {
+                    exclude "META-INF", "META-INF/**", "*META-INF*", "meta-inf"
+                    exclude "**.jar", "**/*.jar", "*.jar"
+                }
+            }
+        }
     }
 
     dependencies {
@@ -118,6 +95,25 @@ subprojects {
     rootProject.tasks.reobf {
         reobf(tasks.jar) { spec ->
             spec.classpath = sourceSets.main.compileClasspath
+        }
+    }
+
+    sourceSets.main.resources.getFiles().each { file ->
+        if (file.getName().endsWith(".at") || file.getName().endsWith("_at.cfg")){
+            ats += file.getName();
+            rootProject.minecraft.at file.getPath()
+        }
+    }
+
+    processResources {
+        from(sourceSets.main.resources.srcDirs) {
+            include 'mcmod.info'
+            include 'version.properties'
+            expand 'version': project.version, 'mcversion': project.minecraft.version
+        }
+        from(sourceSets.main.resources.srcDirs) {
+            exclude 'mcmod.info'
+            exclude 'version.properties'
         }
     }
 }

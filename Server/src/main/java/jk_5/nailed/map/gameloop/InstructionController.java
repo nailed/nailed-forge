@@ -1,7 +1,6 @@
 package jk_5.nailed.map.gameloop;
 
-import jk_5.nailed.common.NailedLog;
-import jk_5.nailed.common.util.ChatColor;
+import jk_5.nailed.NailedLog;
 import jk_5.nailed.map.Map;
 import jk_5.nailed.map.instruction.IInstruction;
 import jk_5.nailed.map.instruction.InstructionList;
@@ -9,6 +8,7 @@ import jk_5.nailed.map.instruction.TimedInstruction;
 import jk_5.nailed.map.stat.StatTypeManager;
 import jk_5.nailed.map.stat.types.*;
 import jk_5.nailed.players.Team;
+import jk_5.nailed.util.ChatColor;
 import lombok.Getter;
 
 import java.util.Iterator;

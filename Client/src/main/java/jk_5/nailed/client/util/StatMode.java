@@ -1,4 +1,4 @@
-package jk_5.nailed.common.map.stat;
+package jk_5.nailed.client.util;
 
 /**
  * No description given

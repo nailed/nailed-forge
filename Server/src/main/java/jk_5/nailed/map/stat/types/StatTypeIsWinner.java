@@ -1,11 +1,11 @@
 package jk_5.nailed.map.stat.types;
 
-import jk_5.nailed.common.util.config.ConfigTag;
 import jk_5.nailed.map.gameloop.InstructionController;
 import jk_5.nailed.map.stat.DefaultStat;
 import jk_5.nailed.map.stat.IStatType;
 import jk_5.nailed.map.stat.Stat;
 import jk_5.nailed.players.Team;
+import jk_5.nailed.util.config.ConfigTag;
 
 /**
  * No description given

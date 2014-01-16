@@ -1,10 +1,10 @@
 package jk_5.nailed.blocks.tileentity;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import jk_5.nailed.common.map.stat.StatMode;
 import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.map.stat.IStatTileEntity;
 import jk_5.nailed.map.stat.Stat;
+import jk_5.nailed.map.stat.StatMode;
 import jk_5.nailed.map.stat.StatTileEntityEvent;
 import jk_5.nailed.players.Player;
 import lombok.Getter;

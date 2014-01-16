@@ -14,20 +14,6 @@
             "url": "http://github.com/nailed/nailed-forge/",
             "requiredMods": ["Forge"],
             "useDependencyInformation": "true"
-        },
-        {
-            "modid": "QuakeCraft",
-            "name": "QuakeCraft",
-            "description": "A quakecraft addon to Nailed",
-            "version": "${version}",
-            "mcversion": "${mcversion}",
-            "authors": [
-                "jk-5"
-            ],
-            "credits": "Hypixel for making the original quakecraft",
-            "url": "http://github.com/nailed/nailed-forge/",
-            "requiredMods": ["Forge", "Nailed"],
-            "useDependencyInformation": "true"
         }
     ]
 }

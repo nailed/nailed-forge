@@ -1,4 +1,4 @@
-package jk_5.nailed.common;
+package jk_5.nailed;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;

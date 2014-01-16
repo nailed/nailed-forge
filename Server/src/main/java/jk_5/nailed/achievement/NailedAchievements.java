@@ -1,4 +1,4 @@
-package jk_5.nailed.common.achievement;
+package jk_5.nailed.achievement;
 
 import com.google.common.collect.Maps;
 import net.minecraft.init.Items;

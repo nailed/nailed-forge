@@ -1,6 +1,6 @@
 package jk_5.nailed.map.mappack;
 
-import jk_5.nailed.common.util.config.ConfigTag;
+import jk_5.nailed.util.config.ConfigTag;
 import net.minecraft.util.ChunkCoordinates;
 
 /**

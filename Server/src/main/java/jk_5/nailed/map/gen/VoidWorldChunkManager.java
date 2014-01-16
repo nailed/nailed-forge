@@ -1,6 +1,6 @@
 package jk_5.nailed.map.gen;
 
-import jk_5.nailed.common.NailedLog;
+import jk_5.nailed.NailedLog;
 import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MapLoader;
 import net.minecraft.init.Blocks;

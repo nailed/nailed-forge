@@ -1,4 +1,4 @@
-package jk_5.nailed.common.util.config;
+package jk_5.nailed.client.util.config;
 
 import java.io.*;
 

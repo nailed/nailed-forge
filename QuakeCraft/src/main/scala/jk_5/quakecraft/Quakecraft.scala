@@ -25,7 +25,7 @@ import net.minecraft.scoreboard.{IScoreObjectiveCriteria, ScoreObjective}
 import jk_5.nailed.players.PlayerRegistry
 import jk_5.nailed.map.{PvpIgnoringDamageSource, MapLoader}
 import jk_5.nailed.map.instruction.{RegisterInstructionEvent, TimedInstruction, GameController, IInstruction}
-import jk_5.nailed.common.util.ChatColor
+import jk_5.nailed.util.ChatColor
 import jk_5.nailed.util.raytracing.RayTracer
 
 /**

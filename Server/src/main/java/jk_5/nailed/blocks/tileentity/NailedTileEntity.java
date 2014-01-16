@@ -1,6 +1,6 @@
 package jk_5.nailed.blocks.tileentity;
 
-import jk_5.nailed.common.NailedLog;
+import jk_5.nailed.NailedLog;
 import jk_5.nailed.players.Player;
 import jk_5.nailed.players.PlayerRegistry;
 import lombok.NoArgsConstructor;

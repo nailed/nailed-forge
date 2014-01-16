@@ -2,10 +2,10 @@ package jk_5.nailed.map.mappack;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import jk_5.nailed.common.util.ChatColor;
-import jk_5.nailed.common.util.config.ConfigFile;
-import jk_5.nailed.common.util.config.ConfigTag;
 import jk_5.nailed.players.TeamBuilder;
+import jk_5.nailed.util.ChatColor;
+import jk_5.nailed.util.config.ConfigFile;
+import jk_5.nailed.util.config.ConfigTag;
 import lombok.Getter;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.WorldSettings;

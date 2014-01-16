@@ -2,12 +2,12 @@ package jk_5.nailed.teamspeak;
 
 import com.google.common.base.Splitter;
 import jk_5.nailed.NailedServer;
-import jk_5.nailed.common.util.config.ConfigTag;
 import jk_5.nailed.players.Player;
 import jk_5.nailed.players.PlayerRegistry;
 import jk_5.nailed.players.Team;
 import jk_5.nailed.teamspeak.api.de.stefan1200.jts3serverquery.JTS3ServerQuery;
 import jk_5.nailed.teamspeak.api.de.stefan1200.jts3serverquery.TeamspeakActionListener;
+import jk_5.nailed.util.config.ConfigTag;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraftforge.common.MinecraftForge;
