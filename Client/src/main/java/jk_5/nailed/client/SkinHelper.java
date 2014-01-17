@@ -10,7 +10,7 @@ import java.util.Map;
  *
  * @author jk-5
  */
-public class NailedSkinHooks {
+public class SkinHelper {
 
     private static Map<String, String> skinUrlMap = Maps.newHashMap();
     private static Map<String, String> capeUrlMap = Maps.newHashMap();

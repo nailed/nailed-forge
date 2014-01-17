@@ -5,9 +5,7 @@ import cpw.mods.fml.common.network.FMLOutboundHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
 import io.netty.channel.ChannelPipeline;
-import jk_5.nailed.client.network.handlers.NotificationHandler;
-import jk_5.nailed.client.network.handlers.OpenGuiHandler;
-import jk_5.nailed.client.network.handlers.TileEntityDataHandler;
+import jk_5.nailed.client.network.handlers.*;
 
 /**
  * No description given
@@ -27,6 +25,8 @@ public class ClientNetworkHandler {
         pipeline.addAfter(targetName, "NotificationHandler", new NotificationHandler());
         pipeline.addAfter(targetName, "OpenGuiHandler", new OpenGuiHandler());
         pipeline.addAfter(targetName, "TileEntityDataHandler", new TileEntityDataHandler());
+        pipeline.addAfter(targetName, "SkinDataHandler", new SkinDataHandler());
+        pipeline.addAfter(targetName, "StoreSkinHandler", new StoreSkinHandler());
     }
 
     public static void sendPacketToServer(NailedPacket packet){
