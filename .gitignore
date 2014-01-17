@@ -1,4 +1,7 @@
 .gradle
+.idea/*
+*/.idea/*
+classes
 build
 minecraft
 *.iml

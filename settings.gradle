@@ -1,0 +1,5 @@
+rootProject.name = 'Nailed'
+
+include 'QuakeCraft'
+include 'Server'
+include 'Client'

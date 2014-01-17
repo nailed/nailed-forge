@@ -3,17 +3,21 @@ buildscript {
         mavenLocal()
         mavenCentral()
         maven {
+            name = "reening"
+            url = "http://maven.reening.nl"
+        }
+        maven {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
         }
         maven {
-            name = "reening"
-            url = "http://maven.reening.nl"
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.0-SNAPSHOT'
-        classpath 'jk_5.nailed.gradle:nailed-gradle:1.1-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.1-SNAPSHOT'
+        //classpath 'jk_5.nailed.gradle:nailed-gradle:1.1-SNAPSHOT'
     }
 }
 
@@ -23,130 +27,93 @@ apply plugin: 'forge'
 apply plugin: 'maven'
 apply plugin: 'idea'
 
-group = 'jk_5.nailed'
-version = '2.0-BETA1'
-archivesBaseName = 'nailed-forge'
-targetCompatibility = '1.7'
-sourceCompatibility = '1.7'
-
-repositories{
-    mavenCentral()
-    maven {
-        name = "forge"
-        url = "http://files.minecraftforge.net/maven"
-    }
-    maven {
-        name = "reening"
-        url = "http://maven.reening.nl"
-    }
-    ivy {
-        name 'Forge Legacy'
-        artifactPattern "http://files.minecraftforge.net/[module]/[module]-dev-[revision].[ext]"
-    }
-    ivy {
-        name 'ChickenBones files'
-        artifactPattern "http://www.chickenbones.craftsaddle.org/Files/New_Versions/1.6.4/[module]-dev%20[revision].[ext]"
-    }
-}
+version = '2.0-SNAPSHOT'
 
 minecraft{
-    version = '1.6.4-9.11.1.964'
+    version = '1.7.2-10.12.0.999'
     assetDir = 'runtime/client/assets'
-    accessTransformer = 'src/main/resources/nailed_at.cfg'
 }
 
-configurations{
-    packed
-    compile.extendsFrom packed
-    deployerJars
-    launcher
-}
-
-dependencies {
-    packed 'chickenbones:CodeChickenLib:1.6.4-1.0.0.44@jar'
-    packed 'pircbot:pircbot:1.5.0'
-    packed 'io.netty:netty-all:4.0.14.Final'
-    packed files('lib/TeamSpeak3API-r4.jar')
-
-    compile 'org.projectlombok:lombok:1.12.2'
-
-    testCompile 'junit:junit:4.11'
-
-    deployerJars 'org.apache.maven.wagon:wagon-ssh:2.2'
-
-    launcher 'jk_5.nailed:launcher:1.0'
-    launcher 'jk_5.nailed.deploy:forge:1.0'
-    launcher 'jk_5.nailed.deploy:minecraft:1.0'
-    //launcher 'jk_5.nailed:nailed-forge:2.0'
-}
-
-/*nailed {
-    minecraftVersion = '1.6.4'
-/*}
-
-/*nailedInstaller {
-    version = '1.0'
-}*/
-
-/*nailedLauncher {
-    versionName = 'Nailed-2.0'
-    mainClass = 'net.minecraft.launchwrapper.Launch'
-
-    loadingMavenUrl = 'http://maven.reening.nl/'
-    loadingDependencies = configurations.launcher
-
-    tweakers += 'jk_5.nailed.launcher.UpdatingTweaker'
-    tweakers += 'cpw.mods.fml.common.launcher.FMLTweaker'
-
-    remoteProfileDir = 'nailed'
-
-    deployHost = 'maven.reening.nl'
-    deployUsername = 'maven'
-    deployPassword = mavenPassword
-}*/
-
-jar {
-    manifest {
-        attributes 'FMLCorePlugin': 'jk_5.nailed.coremod.NailedFMLPlugin'
-        attributes 'FMLCorePluginContainsFMLMod': 'true'
-        attributes 'Version': project.version
+allprojects {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven {
+            name = "reening"
+            url = "http://maven.reening.nl/"
+        }
+        maven {
+            name 'forge'
+            url 'http://files.minecraftforge.net/maven'
+        }
+        maven {
+            name "minecraft"
+            url "https://libraries.minecraft.net/"
+        }
     }
-    from {
-        configurations.packed.collect {
-            it.isDirectory() ? it : zipTree(it).matching {
-                exclude "META-INF", "META-INF/**", "*META-INF*", "meta-inf"
-                exclude "**.jar", "**/*.jar", "*.jar"
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    sourceCompatibility = '1.6'
+    targetCompatibility = '1.6'
+
+    ext.ats = []
+
+    configurations{
+        packed
+        compile.extendsFrom packed
+    }
+
+    jar {
+        baseName = 'Nailed-' + baseName
+        destinationDir = new File(rootProject.getBuildDir(), 'libs')
+
+        manifest {
+            attributes 'version': project.version
+            attributes 'mcversion': rootProject.minecraft.version
+        }
+
+        from {
+            configurations.packed.collect {
+                it.isDirectory() ? it : zipTree(it).matching {
+                    exclude "META-INF", "META-INF/**", "*META-INF*", "meta-inf"
+                    exclude "**.jar", "**/*.jar", "*.jar"
+                }
             }
         }
     }
-    //doLast {
-    //    ant.signjar(jar: jar.archivePath, alias: 'Nailed', keystore: nailedKeystoreLocation, storepass: nailedKeystorePassword)
-    //}
-}
 
-uploadArchives {
-    repositories.mavenDeployer {
-        configuration = configurations.deployerJars
-        repository(url: "scp://maven.reening.nl/media/maven/") {
-            authentication(userName: mavenUsername, password: mavenPassword)
+    dependencies {
+        compile rootProject
+        compile 'org.projectlombok:lombok:1.12.2'
+
+        testCompile 'junit:junit:4.11'
+    }
+
+    rootProject.tasks.reobf {
+        reobf(tasks.jar) { spec ->
+            spec.classpath = sourceSets.main.compileClasspath
         }
     }
-}
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '1.8'
-}
-
-processResources {
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-        include 'version.properties'
-        include '**/**.lang'
-        expand 'version': project.version, 'mcversion': project.minecraft.version
+    sourceSets.main.resources.getFiles().each { file ->
+        if (file.getName().endsWith(".at") || file.getName().endsWith("_at.cfg")){
+            ats += file.getName();
+            rootProject.minecraft.at file.getPath()
+        }
     }
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-        exclude 'version.properties'
-        exclude '**/**.lang'
+
+    processResources {
+        from(sourceSets.main.resources.srcDirs) {
+            include 'mcmod.info'
+            include 'version.properties'
+            expand 'version': project.version, 'mcversion': project.minecraft.version
+        }
+        from(sourceSets.main.resources.srcDirs) {
+            exclude 'mcmod.info'
+            exclude 'version.properties'
+        }
     }
 }
