@@ -33,11 +33,11 @@ public class Updater {
     private static final JsonParser parser = new JsonParser();
 
     public static void main(String args[]){
-        UpdatingTweaker.logger.info("Updated: " + checkForUpdates());
+        System.out.println("Updated: " + checkForUpdates());
     }
 
     public static boolean checkForUpdates(){
-        UpdatingTweaker.logger.info("Checking for updates...");
+        System.out.println("Checking for updates...");
 
         JsonObject remote = readRemoteVersionData();
         JsonObject local = readLocalVersionData();
@@ -46,10 +46,10 @@ public class Updater {
         boolean updated = false;
 
         if(diff.entriesOnlyOnLeft().size() > 0){
-            UpdatingTweaker.logger.info("Found files that could be removed locally:");
+            System.out.println("Found files that could be removed locally:");
             Set<Map.Entry<String, JsonObject>> entries = diff.entriesOnlyOnLeft().entrySet();
             for(Map.Entry<String, JsonObject> e : entries){
-                UpdatingTweaker.logger.info("Removing " + e.getKey());
+                System.out.println("Removing " + e.getKey());
                 File dest = resolve(e.getValue().get("destination").getAsString());
                 if(dest.isFile()) dest.delete();
                 File checksum = new File(dest.getAbsolutePath() + ".sha");
@@ -59,7 +59,7 @@ public class Updater {
             }
         }
         if(diff.entriesOnlyOnRight().size() > 0){
-            UpdatingTweaker.logger.info("Found files that where added. Downloading them...");
+            System.out.println("Found files that where added. Downloading them...");
             Set<Map.Entry<String, JsonObject>> entries = diff.entriesOnlyOnRight().entrySet();
             for(Map.Entry<String, JsonObject> e : entries){
                 boolean u = updateFile(e.getValue(), e.getKey());
@@ -70,16 +70,16 @@ public class Updater {
             }
         }
         if(diff.entriesDiffering().size() > 0){
-            UpdatingTweaker.logger.info("Found files that are differing from remote. Checking them...");
+            System.out.println("Found files that are differing from remote. Checking them...");
             Set<Map.Entry<String, MapDifference.ValueDifference<JsonObject>>> entries = diff.entriesDiffering().entrySet();
             for(Map.Entry<String, MapDifference.ValueDifference<JsonObject>> e : entries){
-                UpdatingTweaker.logger.info("Checking " + e.getKey());
+                System.out.println("Checking " + e.getKey());
                 int localRev = e.getValue().leftValue().get("rev").getAsInt();
                 int remoteRev = e.getValue().rightValue().get("rev").getAsInt();
-                UpdatingTweaker.logger.info("  Local rev: " + localRev);
-                UpdatingTweaker.logger.info("  Remote rev: " + remoteRev);
+                System.out.println("  Local rev: " + localRev);
+                System.out.println("  Remote rev: " + remoteRev);
                 if(remoteRev > localRev){
-                    UpdatingTweaker.logger.info("Remote has newer version than we have. Redownloading...");
+                    System.out.println("Remote has newer version than we have. Redownloading...");
                     File dest = resolve(e.getValue().leftValue().get("destination").getAsString());
                     if(dest.isFile()) dest.delete();
                     File checksum = new File(dest.getAbsolutePath() + ".sha");
@@ -109,7 +109,7 @@ public class Updater {
 
     private static boolean updateFile(JsonObject object, String name){
         try{
-            UpdatingTweaker.logger.info("Downloading " + name);
+            System.out.println("Downloading " + name);
             File dest = resolve(object.get("destination").getAsString());
             FileUtils.copyURLToFile(new URL(SERVER + object.get("location").getAsString()), dest, 20000, 20000);
             File checksum = new File(dest.getAbsolutePath() + ".sha");
@@ -118,7 +118,8 @@ public class Updater {
             writer.close();
             return true;
         }catch(Exception e){
-            UpdatingTweaker.logger.error("Error while updating file " + name, e);
+            System.err.println("Error while updating file " + name);
+            e.printStackTrace();
         }
         return false;
     }
@@ -151,7 +152,8 @@ public class Updater {
             reader = new InputStreamReader(url.openStream());
             ret = parser.parse(reader).getAsJsonObject();
         }catch(Exception e){
-            UpdatingTweaker.logger.error("Exception while reading remote version data", e);
+            System.err.println("Exception while reading remote version data");
+            e.printStackTrace();
             ret = new JsonObject();
         }finally{
             IOUtils.closeQuietly(reader);
@@ -171,7 +173,8 @@ public class Updater {
                 ret = new JsonObject();
             }
         }catch(Exception e){
-            UpdatingTweaker.logger.error("Exception while reading local version data", e);
+            System.err.println("Exception while reading local version data");
+            e.printStackTrace();
             ret = new JsonObject();
         }finally{
             IOUtils.closeQuietly(reader);
