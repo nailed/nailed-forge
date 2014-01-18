@@ -12,7 +12,6 @@ import jk_5.nailed.client.map.NailedWorldProvider;
 import jk_5.nailed.client.network.ClientNetworkHandler;
 import jk_5.nailed.client.render.NotificationRenderer;
 import jk_5.nailed.client.render.RenderEventHandler;
-import jk_5.nailed.client.updateNotifier.UpdateNotificationManager;
 import jk_5.nailed.client.util.config.ConfigFile;
 import lombok.Getter;
 import net.minecraftforge.common.DimensionManager;
@@ -69,8 +68,8 @@ public class NailedClient {
         MinecraftForge.EVENT_BUS.register(new NotificationRenderer());
         FMLCommonHandler.instance().bus().register(new TickHandlerClient());
 
-        NailedLog.info("Initializing UpdateNotifier");
-        UpdateNotificationManager.init();
+        //NailedLog.info("Initializing UpdateNotifier");
+        //UpdateNotificationManager.init();
 
         NailedLog.info("Adding creativetab");
         creativeTab = new CreativeTabNailed();
