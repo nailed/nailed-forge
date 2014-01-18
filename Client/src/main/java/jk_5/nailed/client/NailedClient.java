@@ -32,6 +32,7 @@ public class NailedClient {
 
     @Getter private static final Logger logger = LogManager.getLogger("Nailed");
     @Getter protected static final String modid = "Nailed";
+    @Getter private static final String minecraftVersion = "1.7.2";
     @Getter private static ConfigFile config;
     @Getter private static CreativeTabNailed creativeTab;
 

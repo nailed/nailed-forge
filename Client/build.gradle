@@ -1,5 +1,5 @@
-version = '0.1-SNAPSHOT'
+version = '0.1'
 
 dependencies {
-    packed 'pircbot:pircbot:1.5.0'
+    packed 'jk_5.asyncirc:ASyncIRCClient:0.1-SNAPSHOT'
 }
