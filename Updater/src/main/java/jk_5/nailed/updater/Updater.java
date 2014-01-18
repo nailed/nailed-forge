@@ -111,7 +111,7 @@ public class Updater {
         try{
             UpdatingTweaker.logger.info("Downloading " + name);
             File dest = resolve(object.get("destination").getAsString());
-            FileUtils.copyURLToFile(new URL(SERVER + object.get("location").getAsString()), dest, 5000, 5000);
+            FileUtils.copyURLToFile(new URL(SERVER + object.get("location").getAsString()), dest, 20000, 20000);
             File checksum = new File(dest.getAbsolutePath() + ".sha");
             FileWriter writer = new FileWriter(checksum);
             writer.write(getSHA1(dest));
@@ -125,10 +125,22 @@ public class Updater {
 
     private static File resolve(String input){
         String dir = getMinecraftFolder().getAbsolutePath() + "/" + input;
+        if(input.startsWith("{MC_GAME_DIR}")){
+            dir = input.replace("{MC_GAME_DIR}", stripTrailing(UpdatingTweaker.gameDir.getAbsolutePath()));
+        }
+        if(input.startsWith("{MC_ASSET_DIR}")){
+            dir = input.replace("{MC_ASSET_DIR}", stripTrailing(UpdatingTweaker.assetsDir.getAbsolutePath()));
+        }
         dir = dir.replace("{MC_LIB_DIR}", "libraries");
         dir = dir.replace("{MC_VERSION_DIR}", "versions/" + UpdatingTweaker.name);
         dir = dir.replace("{MC_VERSION_NAME}", UpdatingTweaker.name);
         return new File(dir);
+    }
+
+    private static String stripTrailing(String in){
+        if(in.endsWith("/")){
+            return in.substring(0, in.length() - 1);
+        }else return in;
     }
 
     private static JsonObject readRemoteVersionData(){

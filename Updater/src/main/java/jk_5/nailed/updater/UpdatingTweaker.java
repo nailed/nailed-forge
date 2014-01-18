@@ -17,11 +17,15 @@ public class UpdatingTweaker implements ITweaker {
 
     public static final Logger logger = LogManager.getLogger("Nailed|Updater");
     public static String name = "NailedTest";
+    public static File gameDir = new File(".");
+    public static File assetsDir = new File("assets");
 
     @Override
     public void acceptOptions(List<String> args, File gameDir, File assetsDir, String profile){
         logger.info("Started nailed updater");
-        name = profile;
+        UpdatingTweaker.name = profile;
+        UpdatingTweaker.gameDir = gameDir;
+        UpdatingTweaker.assetsDir = assetsDir;
         Updater.checkForUpdates();
     }
 

@@ -44,8 +44,8 @@ nailed {
 
     loadingMavenUrl = 'http://maven.reening.nl/'
 
-    deployedArtifact = 'Client'
-    deployedArtifact = 'Updater'
+    deployedMod = 'Client'
+    deployed = 'Updater'
 
     tweaker = 'jk_5.nailed.updater.UpdatingTweaker'
     tweaker = 'cpw.mods.fml.common.launcher.FMLTweaker'
