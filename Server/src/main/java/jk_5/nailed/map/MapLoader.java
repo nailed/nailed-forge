@@ -1,14 +1,23 @@
 package jk_5.nailed.map;
 
 import com.google.common.collect.Lists;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent;
+import cpw.mods.fml.common.network.FMLOutboundHandler;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.FMLLaunchHandler;
+import cpw.mods.fml.relauncher.Side;
+import io.netty.channel.embedded.EmbeddedChannel;
 import jk_5.nailed.NailedLog;
+import jk_5.nailed.NailedServer;
 import jk_5.nailed.api.IMappackRegistrar;
 import jk_5.nailed.event.PlayerChangedDimensionEvent;
 import jk_5.nailed.map.event.MapCreatedEvent;
 import jk_5.nailed.map.event.MapRemovedEvent;
+import jk_5.nailed.map.gen.NailedWorldProvider;
 import jk_5.nailed.map.mappack.DirectoryMappack;
 import jk_5.nailed.map.mappack.Mappack;
 import jk_5.nailed.map.mappack.Spawnpoint;
@@ -18,11 +27,14 @@ import jk_5.nailed.players.PlayerRegistry;
 import jk_5.nailed.players.TeamUndefined;
 import lombok.Getter;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.network.ForgeMessage;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -57,6 +69,7 @@ public class MapLoader implements IMappackRegistrar {
     public MapLoader(){
         if(FMLLaunchHandler.side().isServer()){
             MinecraftForge.EVENT_BUS.register(this);
+            FMLCommonHandler.instance().bus().register(this);
         }
     }
 
@@ -134,6 +147,31 @@ public class MapLoader implements IMappackRegistrar {
     public Map getMap(World world){
         if(world == null) return null;
         return this.getMap(world.provider.dimensionId);
+    }
+
+    @SubscribeEvent
+    @SuppressWarnings("unused")
+    public void onPlayerHandshake(FMLNetworkEvent.ServerConnectionFromClientEvent event){
+        NetHandlerPlayServer handler = (NetHandlerPlayServer) event.handler;
+        EntityPlayerMP player = handler.field_147369_b;
+        for(Map map : this.getMaps()){
+            if(map.getID() >= -1 && map.getID() <= 1){
+                continue;
+            }
+            ForgeMessage.DimensionRegisterMessage packet = new ForgeMessage.DimensionRegisterMessage(map.getID(), NailedServer.getProviderID());
+            EmbeddedChannel channel = NetworkRegistry.INSTANCE.getChannel("FORGE", Side.SERVER);
+            channel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.PLAYER);
+            channel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(player);
+            channel.writeOutbound(packet);
+        }
+    }
+
+    @SubscribeEvent
+    @SuppressWarnings("unused")
+    public void playerLoggedIn(PlayerEvent.PlayerLoggedInEvent event){
+        if(event.player.worldObj.provider instanceof NailedWorldProvider){
+            //TODO: send data?
+        }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)

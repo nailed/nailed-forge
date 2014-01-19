@@ -20,7 +20,6 @@ import jk_5.nailed.map.instruction.InstructionReader;
 import jk_5.nailed.map.instruction.RegisterInstructionEvent;
 import jk_5.nailed.map.stat.RegisterStatTypeEvent;
 import jk_5.nailed.map.stat.StatTypeManager;
-import jk_5.nailed.network.NailedConnectionHandler;
 import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.players.PlayerRegistry;
 import jk_5.nailed.server.command.*;
@@ -93,7 +92,6 @@ public class NailedServer {
         MinecraftForge.EVENT_BUS.register(PlayerRegistry.instance());
         MinecraftForge.EVENT_BUS.register(new AchievementEventListener());
         FMLCommonHandler.instance().bus().register(new InvSeeTicker());
-        FMLCommonHandler.instance().bus().register(new NailedConnectionHandler());
 
         NailedLog.info("Registering blocks");
         NailedBlocks.init();

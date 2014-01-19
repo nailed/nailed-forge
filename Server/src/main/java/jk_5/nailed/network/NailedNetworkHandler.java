@@ -8,7 +8,6 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
 import jk_5.nailed.network.handlers.GuiReturnDataHandler;
 import jk_5.nailed.network.handlers.MovementEventHandler;
-import jk_5.nailed.network.handlers.PipelineEventHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
@@ -29,7 +28,6 @@ public class NailedNetworkHandler {
         ChannelPipeline pipeline = channel.pipeline();
         String targetName = channel.findChannelHandlerNameForType(NailedPacketCodec.class);
 
-        pipeline.addAfter(targetName, "ServerToClientConnection", new PipelineEventHandler());
         pipeline.addAfter(targetName, "MovementEventHandler", new MovementEventHandler());
         pipeline.addAfter(targetName, "GuiReturnDataHandler", new GuiReturnDataHandler());
     }
