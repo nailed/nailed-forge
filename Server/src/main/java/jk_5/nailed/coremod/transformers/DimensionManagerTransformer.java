@@ -21,9 +21,9 @@ public class DimensionManagerTransformer implements IClassTransformer {
     public byte[] transform(String name, String transformedName, byte[] bytes) {
         if(transformedName.equals(TransformerData.dimensionManagerDeobfuscated.get("className"))){
             if(NailedFMLPlugin.obfuscated){
-                return transformDimensionManager(bytes, TransformerData.minecraftServerObfuscated);
+                return transformDimensionManager(bytes, TransformerData.dimensionManagerObfuscated);
             }else{
-                return transformDimensionManager(bytes, TransformerData.minecraftServerDeobfuscated);
+                return transformDimensionManager(bytes, TransformerData.dimensionManagerDeobfuscated);
             }
         }else return bytes;
     }
