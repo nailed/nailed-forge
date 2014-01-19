@@ -8,6 +8,7 @@ import io.netty.channel.ChannelPipeline;
 import jk_5.nailed.client.network.handlers.NotificationHandler;
 import jk_5.nailed.client.network.handlers.OpenGuiHandler;
 import jk_5.nailed.client.network.handlers.TileEntityDataHandler;
+import jk_5.nailed.client.network.handlers.TimeUpdateHandler;
 
 /**
  * No description given
@@ -27,6 +28,7 @@ public class ClientNetworkHandler {
         pipeline.addAfter(targetName, "NotificationHandler", new NotificationHandler());
         pipeline.addAfter(targetName, "OpenGuiHandler", new OpenGuiHandler());
         pipeline.addAfter(targetName, "TileEntityDataHandler", new TileEntityDataHandler());
+        pipeline.addAfter(targetName, "TimeUpdateHandler", new TimeUpdateHandler());
     }
 
     public static void sendPacketToServer(NailedPacket packet){

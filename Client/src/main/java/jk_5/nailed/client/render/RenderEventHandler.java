@@ -14,11 +14,12 @@ public class RenderEventHandler {
 
     private Minecraft mc = Minecraft.getMinecraft();
     public static String format = "";
+    public static boolean doRender = false;
 
     @SubscribeEvent
     public void onRenderOverlay(RenderGameOverlayEvent.Post event){
         if(event.type != RenderGameOverlayEvent.ElementType.ALL) return;
-        if(format.isEmpty()) return;
+        if(format.isEmpty() || !doRender) return;
 
         int rectWidth = mc.fontRenderer.getStringWidth(format) + 7;
         int rectHeight = 13;

@@ -42,7 +42,7 @@ public class InstructionGameController implements GameController {
 
     @Override
     public void broadcastTimeRemaining(String data) {
-        this.broadcastNotification(data, null);
+        NailedNetworkHandler.sendPacketToAllPlayersInDimension(new NailedPacket.TimeUpdate(true, data), this.controller.getMap().getID());
     }
 
     @Override
