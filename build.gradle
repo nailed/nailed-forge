@@ -36,10 +36,10 @@ apply plugin: 'idea'
 version = '2.0-SNAPSHOT'
 
 nailed {
-    minecraftVersion = '1.7.2'
-    forgeVersion = '10.12.0.1004'
+    minecraftVersion = '1.6.4'
+    forgeVersion = '9.11.1.953'
 
-    versionName = 'Nailed-1.7.2'
+    versionName = 'Nailed-1.6.4'
     mainClass = 'net.minecraft.launchwrapper.Launch'
 
     loadingMavenUrl = 'http://maven.reening.nl/'
@@ -61,7 +61,7 @@ nailed {
 }
 
 minecraft{
-    version = '1.7.2-10.12.0.1004'
+    version = '1.7.2-10.12.0.1007'
     assetDir = 'runtime/client/assets'
 }
 
