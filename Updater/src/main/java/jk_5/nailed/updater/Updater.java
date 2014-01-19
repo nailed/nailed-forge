@@ -28,7 +28,6 @@ public class Updater {
     private static final String SERVER = "http://maven.reening.nl/";
     private static final String VERSIONS_URL = SERVER + "nailed/versions.json";
 
-    private static final Gson gson = new Gson();
     private static final Gson prettyGson = new GsonBuilder().setPrettyPrinting().create();
     private static final JsonParser parser = new JsonParser();
 
