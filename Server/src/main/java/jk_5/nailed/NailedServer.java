@@ -38,6 +38,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * No description given
@@ -65,8 +66,8 @@ public class NailedServer {
     }
 
     @NetworkCheckHandler
-    public boolean acceptEnvironment(String version, Side side){
-        NailedLog.info("Accepting connection from " + side.name() + " on version " + version);
+    public boolean acceptEnvironment(Map<String, String> data, Side side){
+        NailedLog.info("Accepting connection from " + side.name());
         return true;
     }
 
