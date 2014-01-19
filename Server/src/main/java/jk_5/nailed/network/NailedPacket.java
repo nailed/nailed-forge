@@ -157,4 +157,51 @@ public abstract class NailedPacket {
             //Send-only
         }
     }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class PlayerSkin extends NailedPacket {
+
+        public String username;
+        public boolean isSkin;
+        public boolean isUrl;
+        public String skin;
+
+        @Override
+        public void encode(ByteBuf buffer){
+            ByteBufUtils.writeUTF8String(buffer, this.username);
+            buffer.writeBoolean(this.isSkin);
+            buffer.writeBoolean(this.isUrl);
+
+            byte[] utf8Bytes = this.skin.getBytes(Charsets.UTF_8);
+            buffer.writeInt(utf8Bytes.length);
+            buffer.writeBytes(utf8Bytes);
+        }
+
+        @Override
+        public void decode(ByteBuf buffer){
+            //Send-only
+        }
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class StoreSkin extends NailedPacket {
+
+        public String skinName;
+        public boolean isCape;
+        public ByteBuf data;
+
+        @Override
+        public void encode(ByteBuf buffer){
+            ByteBufUtils.writeUTF8String(buffer, this.skinName);
+            buffer.writeBoolean(this.isCape);
+            buffer.writeBytes(this.data);
+        }
+
+        @Override
+        public void decode(ByteBuf buffer){
+            //Send-only
+        }
+    }
 }

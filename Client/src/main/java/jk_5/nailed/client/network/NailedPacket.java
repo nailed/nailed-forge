@@ -148,4 +148,57 @@ public abstract class NailedPacket {
             buffer.readerIndex(buffer.readerIndex() + len);
         }
     }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class PlayerSkin extends NailedPacket {
+
+        public String username;
+        public boolean isSkin;
+        public boolean isUrl;
+        public String skin;
+
+        @Override
+        public void encode(ByteBuf buffer){
+            ByteBufUtils.writeUTF8String(buffer, this.username);
+            buffer.writeBoolean(this.isSkin);
+            buffer.writeBoolean(this.isUrl);
+
+            byte[] utf8Bytes = this.skin.getBytes(Charsets.UTF_8);
+            buffer.writeInt(utf8Bytes.length);
+            buffer.writeBytes(utf8Bytes);
+        }
+
+        @Override
+        public void decode(ByteBuf buffer){
+            this.username = ByteBufUtils.readUTF8String(buffer);
+            this.isSkin = buffer.readBoolean();
+            this.isUrl = buffer.readBoolean();
+
+            int len = buffer.readInt();
+            this.skin = buffer.toString(buffer.readerIndex(), len, Charsets.UTF_8);
+            buffer.readerIndex(buffer.readerIndex() + len);
+        }
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class StoreSkin extends NailedPacket {
+
+        public String skinName;
+        public boolean isCape;
+        public ByteBuf data;
+
+        @Override
+        public void encode(ByteBuf buffer){
+
+        }
+
+        @Override
+        public void decode(ByteBuf buffer){
+            this.skinName = ByteBufUtils.readUTF8String(buffer);
+            this.isCape = buffer.readBoolean();
+            this.data = buffer.copy();
+        }
+    }
 }

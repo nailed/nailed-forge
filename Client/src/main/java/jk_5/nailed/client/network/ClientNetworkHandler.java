@@ -9,6 +9,7 @@ import jk_5.nailed.client.network.handlers.NotificationHandler;
 import jk_5.nailed.client.network.handlers.OpenGuiHandler;
 import jk_5.nailed.client.network.handlers.TileEntityDataHandler;
 import jk_5.nailed.client.network.handlers.TimeUpdateHandler;
+import jk_5.nailed.client.network.handlers.*;
 
 /**
  * No description given
@@ -29,6 +30,8 @@ public class ClientNetworkHandler {
         pipeline.addAfter(targetName, "OpenGuiHandler", new OpenGuiHandler());
         pipeline.addAfter(targetName, "TileEntityDataHandler", new TileEntityDataHandler());
         pipeline.addAfter(targetName, "TimeUpdateHandler", new TimeUpdateHandler());
+        pipeline.addAfter(targetName, "SkinDataHandler", new SkinDataHandler());
+        pipeline.addAfter(targetName, "StoreSkinHandler", new StoreSkinHandler());
     }
 
     public static void sendPacketToServer(NailedPacket packet){
