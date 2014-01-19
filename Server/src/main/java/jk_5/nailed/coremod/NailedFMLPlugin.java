@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.Name;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
+import jk_5.nailed.NailedLog;
 
 import java.util.Map;
 
@@ -18,6 +19,8 @@ import java.util.Map;
 @TransformerExclusions({"jk_5.nailed.coremod.transformers."})
 @SuppressWarnings("unused")
 public class NailedFMLPlugin implements IFMLLoadingPlugin {
+
+    public static boolean obfuscated = false;
 
     @Override
     public String[] getASMTransformerClass() {
@@ -50,6 +53,7 @@ public class NailedFMLPlugin implements IFMLLoadingPlugin {
 
     @Override
     public void injectData(Map<String, Object> data) {
-
+        obfuscated = (Boolean) data.get("runtimeDeobfuscationEnabled");
+        NailedLog.info("Obfuscated: " + obfuscated);
     }
 }

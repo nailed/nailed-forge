@@ -1,11 +1,14 @@
 package jk_5.nailed.coremod.transformers;
 
+import jk_5.nailed.coremod.NailedFMLPlugin;
 import jk_5.nailed.coremod.asm.ASMHelper;
 import jk_5.nailed.coremod.asm.Mapping;
 import net.minecraft.launchwrapper.IClassTransformer;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
+
+import java.util.Map;
 
 /**
  * No description given
@@ -16,15 +19,18 @@ public class DimensionManagerTransformer implements IClassTransformer {
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] bytes) {
-        if(name.equals("net.minecraftforge.common.DimensionManager")){
-            return this.transformDimensionManager(bytes);
-        }
-        return bytes;
+        if(transformedName.equals(TransformerData.dimensionManagerDeobfuscated.get("className"))){
+            if(NailedFMLPlugin.obfuscated){
+                return transformDimensionManager(bytes, TransformerData.minecraftServerObfuscated);
+            }else{
+                return transformDimensionManager(bytes, TransformerData.minecraftServerDeobfuscated);
+            }
+        }else return bytes;
     }
 
-    private byte[] transformDimensionManager(byte[] bytes){
+    private byte[] transformDimensionManager(byte[] bytes, Map<String, String> data){
         ClassNode cnode = ASMHelper.createClassNode(bytes, 0);
-        MethodNode mnode = ASMHelper.findMethod(new Mapping("net/minecraftforge/common/DimensionManager", "initDimension", "(I)V"), cnode);
+        MethodNode mnode = ASMHelper.findMethod(new Mapping(data.get("className").replace('.', '/'), data.get("targetMethodName"), data.get("targetMethodSig")), cnode);
 
         int offset = 0;
         int numOfNews = 0;
@@ -48,13 +54,13 @@ public class DimensionManagerTransformer implements IClassTransformer {
 
         while(mnode.instructions.get(offset).getOpcode() != Opcodes.ALOAD) offset ++;
         ((VarInsnNode) mnode.instructions.get(offset)).var = 2;
-        ((MethodInsnNode) mnode.instructions.get(offset + 1)).owner = "net/minecraft/server/MinecraftServer";
-        ((MethodInsnNode) mnode.instructions.get(offset + 1)).name = "getActiveAnvilConverter";
-        ((MethodInsnNode) mnode.instructions.get(offset + 1)).desc = "()Lnet/minecraft/world/storage/ISaveFormat;";
+        ((MethodInsnNode) mnode.instructions.get(offset + 1)).owner = data.get("minecraftServerName");
+        ((MethodInsnNode) mnode.instructions.get(offset + 1)).name = data.get("getSaveFormatName");
+        ((MethodInsnNode) mnode.instructions.get(offset + 1)).desc = data.get("getSaveFormatSig");
         list.add(new VarInsnNode(Opcodes.ALOAD, 7));
         list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "jk_5/nailed/map/Map", "getSaveFileName", "()Ljava/lang/String;"));
         list.add(new InsnNode(Opcodes.ICONST_1));
-        list.add(new MethodInsnNode(Opcodes.INVOKEINTERFACE, "net/minecraft/world/storage/ISaveFormat", "getSaveLoader", "(Ljava/lang/String;Z)Lnet/minecraft/world/storage/ISaveHandler;"));
+        list.add(new MethodInsnNode(Opcodes.INVOKEINTERFACE, data.get("iSaveFormatName"), data.get("getSaveLoaderName"), data.get("getSaveLoaderSig")));
         mnode.instructions.insert(mnode.instructions.get(offset + 1), list);
         list.clear();
 
@@ -63,7 +69,7 @@ public class DimensionManagerTransformer implements IClassTransformer {
         while(mnode.instructions.get(offset).getOpcode() != Opcodes.NEW) offset ++;
 
         TypeInsnNode typeNode = (TypeInsnNode) mnode.instructions.get(offset);
-        typeNode.desc = "net/minecraft/world/WorldServer";
+        typeNode.desc = data.get("worldServerClass");
 
         while(mnode.instructions.get(offset).getOpcode() != Opcodes.ALOAD) offset ++;
         offset += 2;
@@ -79,8 +85,8 @@ public class DimensionManagerTransformer implements IClassTransformer {
 
         while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKESPECIAL) offset ++;
         MethodInsnNode node = (MethodInsnNode) mnode.instructions.get(offset);
-        node.owner = "net/minecraft/world/WorldServer";
-        node.desc = "(Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/world/storage/ISaveHandler;Ljava/lang/String;ILnet/minecraft/world/WorldSettings;Lnet/minecraft/profiler/Profiler;)V";
+        node.owner = data.get("worldServerClass");
+        node.desc = data.get("worldServerConstructorSig");
 
         return ASMHelper.createBytes(cnode, ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
     }

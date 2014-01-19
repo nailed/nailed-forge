@@ -1,5 +1,6 @@
 package jk_5.nailed.coremod.transformers;
 
+import jk_5.nailed.coremod.NailedFMLPlugin;
 import jk_5.nailed.coremod.asm.ASMHelper;
 import jk_5.nailed.coremod.asm.Mapping;
 import net.minecraft.launchwrapper.IClassTransformer;
@@ -20,16 +21,18 @@ public class MinecraftServerTransformer implements IClassTransformer {
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] bytes){
-        if(name.equals(TransformerData.minecraftServerDeobfuscated.get("className"))){
-            return transformMinecraftServer(bytes, TransformerData.minecraftServerDeobfuscated);
-        }else if(name.equals(TransformerData.minecraftServerObfuscated.get("className"))){
-            return transformMinecraftServer(bytes, TransformerData.minecraftServerObfuscated);
+        if(transformedName.equals(TransformerData.minecraftServerDeobfuscated.get("className"))){
+            if(NailedFMLPlugin.obfuscated){
+                return transformMinecraftServer(bytes, TransformerData.minecraftServerObfuscated);
+            }else{
+                return transformMinecraftServer(bytes, TransformerData.minecraftServerDeobfuscated);
+            }
         }else return bytes;
     }
 
     public byte[] transformMinecraftServer(byte[] bytes, Map<String, String> data) {
         ClassNode cnode = ASMHelper.createClassNode(bytes, 0);
-        MethodNode mnode = ASMHelper.findMethod(new Mapping("net/minecraft/server/MinecraftServer", "<init>", "(Ljava/io/File;Ljava/net/Proxy;)V"), cnode);
+        MethodNode mnode = ASMHelper.findMethod(new Mapping(data.get("className").replace('.', '/'), "<init>", data.get("constructorSig")), cnode);
 
         int offset = 0;
         int numOfNews = 0;
@@ -58,7 +61,7 @@ public class MinecraftServerTransformer implements IClassTransformer {
         VarInsnNode varNode = (VarInsnNode) mnode.instructions.get(offset);
         varNode.var = 5;
 
-        mnode = ASMHelper.findMethod(new Mapping("net/minecraft/server/MinecraftServer", "loadAllWorlds", "(Ljava/lang/String;Ljava/lang/String;JLnet/minecraft/world/WorldType;Ljava/lang/String;)V"), cnode);
+        mnode = ASMHelper.findMethod(new Mapping(data.get("className").replace('.', '/'), data.get("targetMethod1"), data.get("targetMethod1Sig")), cnode);
         offset = 0;
         list.clear();
 
@@ -115,16 +118,16 @@ public class MinecraftServerTransformer implements IClassTransformer {
 
         while(mnode.instructions.get(offset).getOpcode() != Opcodes.NEW) offset ++;
         TypeInsnNode newMulti = (TypeInsnNode) mnode.instructions.get(offset);
-        newMulti.desc = "net/minecraft/world/WorldServer";
+        newMulti.desc = data.get("worldServerClass");
 
         while(mnode.instructions.get(offset).getOpcode() != Opcodes.ALOAD) offset ++;
         offset ++;
 
         list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-        list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/server/MinecraftServer", "anvilConverterForAnvilFile", "Lnet/minecraft/world/storage/ISaveFormat;"));
+        list.add(new FieldInsnNode(Opcodes.GETFIELD, data.get("className").replace('.', '/'), data.get("saveFormatField"), data.get("saveFormatFieldSig")));
         list.add(new VarInsnNode(Opcodes.ALOAD, 17));
         list.add(new InsnNode(Opcodes.ICONST_1));
-        list.add(new MethodInsnNode(Opcodes.INVOKEINTERFACE, "net/minecraft/world/storage/ISaveFormat", "getSaveLoader", "(Ljava/lang/String;Z)Lnet/minecraft/world/storage/ISaveHandler;"));
+        list.add(new MethodInsnNode(Opcodes.INVOKEINTERFACE, data.get("saveFormatClass"), data.get("getSaveLoaderName"), data.get("getSaveLoaderSig")));
         list.add(new VarInsnNode(Opcodes.ALOAD, 17));
 
         mnode.instructions.insert(mnode.instructions.get(offset), list);
@@ -136,9 +139,9 @@ public class MinecraftServerTransformer implements IClassTransformer {
 
         while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKESPECIAL) offset ++;
         MethodInsnNode initMulti = (MethodInsnNode) mnode.instructions.get(offset);
-        initMulti.owner = "net/minecraft/world/WorldServer";
+        initMulti.owner = data.get("worldServerClass");
         initMulti.name = "<init>";
-        initMulti.desc = "(Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/world/storage/ISaveHandler;Ljava/lang/String;ILnet/minecraft/world/WorldSettings;Lnet/minecraft/profiler/Profiler;)V";
+        initMulti.desc = data.get("worldServerConstructorSig");
 
         return ASMHelper.createBytes(cnode, ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
     }
