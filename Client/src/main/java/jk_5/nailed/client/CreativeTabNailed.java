@@ -1,7 +1,7 @@
 package jk_5.nailed.client;
 
+import jk_5.nailed.client.blocks.NailedBlocks;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 
 /**
@@ -17,6 +17,6 @@ public class CreativeTabNailed extends CreativeTabs {
 
     @Override
     public Item getTabIconItem(){
-        return Items.blaze_powder;
+        return Item.func_150898_a(NailedBlocks.portal);
     }
 }

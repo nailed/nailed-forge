@@ -5,9 +5,7 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.*;
-import cpw.mods.fml.common.network.NetworkCheckHandler;
 import cpw.mods.fml.relauncher.FMLLaunchHandler;
-import cpw.mods.fml.relauncher.Side;
 import jk_5.nailed.achievement.AchievementEventListener;
 import jk_5.nailed.achievement.NailedAchievements;
 import jk_5.nailed.api.NailedAPI;
@@ -37,7 +35,6 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Map;
 
 /**
  * No description given
@@ -62,12 +59,6 @@ public class NailedServer {
         if(FMLLaunchHandler.side().isClient()){
             throw new RuntimeException("Nailed-Server is server-only, don\'t use it on the client!");
         }
-    }
-
-    @NetworkCheckHandler
-    public boolean acceptEnvironment(Map<String, String> data, Side side){
-        NailedLog.info("Accepting connection from " + side.name());
-        return true;
     }
 
     @EventHandler

@@ -4,7 +4,6 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkCheckHandler;
 import cpw.mods.fml.relauncher.FMLLaunchHandler;
 import jk_5.nailed.client.achievement.NailedAchievements;
 import jk_5.nailed.client.blocks.NailedBlocks;
@@ -44,11 +43,6 @@ public class NailedClient {
         if(FMLLaunchHandler.side().isServer()){
             throw new RuntimeException("Nailed-Client is client-only, don\'t use it on the server!");
         }
-    }
-
-    @NetworkCheckHandler
-    public boolean acceptClientVersion(String version){
-        return true;
     }
 
     @Mod.EventHandler
