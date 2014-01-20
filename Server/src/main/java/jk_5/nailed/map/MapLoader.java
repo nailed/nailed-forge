@@ -5,7 +5,6 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
-import cpw.mods.fml.common.network.FMLNetworkEvent;
 import cpw.mods.fml.relauncher.FMLLaunchHandler;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.api.IMappackRegistrar;
@@ -139,23 +138,6 @@ public class MapLoader implements IMappackRegistrar {
     public Map getMap(World world){
         if(world == null) return null;
         return this.getMap(world.provider.dimensionId);
-    }
-
-    @SubscribeEvent
-    @SuppressWarnings("unused")
-    public void onPlayerHandshake(FMLNetworkEvent.ServerConnectionFromClientEvent event){
-        /*NetHandlerPlayServer handler = (NetHandlerPlayServer) event.handler;
-        EntityPlayerMP player = handler.field_147369_b;
-        for(Map map : this.getMaps()){
-            if(map.getID() >= -1 && map.getID() <= 1){
-                continue;
-            }
-            ForgeMessage.DimensionRegisterMessage packet = new ForgeMessage.DimensionRegisterMessage(map.getID(), NailedServer.getProviderID());
-            EmbeddedChannel channel = NetworkRegistry.INSTANCE.getChannel("FORGE", Side.SERVER);
-            channel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.PLAYER);
-            channel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(player);
-            channel.writeOutbound(packet);
-        }*/
     }
 
     @SubscribeEvent

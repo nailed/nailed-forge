@@ -6,6 +6,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
+import jk_5.nailed.network.handlers.FMLHandshakeHandler;
 import jk_5.nailed.network.handlers.GuiReturnDataHandler;
 import jk_5.nailed.network.handlers.MovementEventHandler;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,6 +29,7 @@ public class NailedNetworkHandler {
         ChannelPipeline pipeline = channel.pipeline();
         String targetName = channel.findChannelHandlerNameForType(NailedPacketCodec.class);
 
+        pipeline.addAfter(targetName, "FMLHandshakeHandler", new FMLHandshakeHandler());
         pipeline.addAfter(targetName, "MovementEventHandler", new MovementEventHandler());
         pipeline.addAfter(targetName, "GuiReturnDataHandler", new GuiReturnDataHandler());
     }

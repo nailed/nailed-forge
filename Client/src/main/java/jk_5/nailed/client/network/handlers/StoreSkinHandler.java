@@ -1,13 +1,12 @@
 package jk_5.nailed.client.network.handlers;
 
-import io.netty.buffer.ByteBufInputStream;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import jk_5.nailed.client.network.NailedPacket;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.nio.channels.FileChannel;
 
 /**
  * No description given
@@ -20,8 +19,9 @@ public class StoreSkinHandler extends SimpleChannelInboundHandler<NailedPacket.S
     protected void channelRead0(ChannelHandlerContext ctx, NailedPacket.StoreSkin msg) throws Exception{
         File dest = new File("skincache", msg.skinName + ".png");
         dest.getParentFile().mkdirs();
-
-        BufferedImage image = ImageIO.read(new ByteBufInputStream(msg.data));
-        ImageIO.write(image, "PNG", dest);
+        FileChannel channel = new FileOutputStream(dest).getChannel();
+        channel.write(msg.data.nioBuffer());
+        channel.close();
+        msg.data.release();
     }
 }

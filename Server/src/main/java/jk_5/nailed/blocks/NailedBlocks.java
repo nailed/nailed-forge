@@ -6,7 +6,6 @@ import jk_5.nailed.blocks.tileentity.TileEntityPortalController;
 import jk_5.nailed.blocks.tileentity.TileEntityStatEmitter;
 import jk_5.nailed.blocks.tileentity.TileEntityStatModifier;
 import jk_5.nailed.item.ItemBlockMulti;
-import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 
 /**
@@ -21,8 +20,6 @@ public class NailedBlocks {
     public static BlockPortalController portalController;
     public static BlockStat stat;
     public static BlockPortal portal;
-
-    private static int split = 5; //TODO: Should be 12! Fix remapping!
 
     public static void init(){
         invisibleWall = new BlockInvisibleWall();
@@ -43,11 +40,11 @@ public class NailedBlocks {
         GameRegistry.registerTileEntity(TileEntityElevator.class, "nailed.elevator");
     }
 
-    private static void registerBlock(Block block){
-        GameRegistry.registerBlock(block, block.func_149739_a().substring(split));
+    private static void registerBlock(NailedBlock block){
+        GameRegistry.registerBlock(block, "nailed." + block.getRegisteredName());
     }
 
-    private static void registerBlock(Block block, Class<? extends ItemBlock> item){
-        GameRegistry.registerBlock(block, item, block.func_149739_a().substring(split));
+    private static void registerBlock(NailedBlock block, Class<? extends ItemBlock> item){
+        GameRegistry.registerBlock(block, item, "nailed." + block.getRegisteredName());
     }
 }
