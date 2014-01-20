@@ -24,8 +24,8 @@ public class FMLHandshakeHandler extends ChannelInboundHandlerAdapter {
         if(evt instanceof NetworkHandshakeEstablished){
             final NetworkHandshakeEstablished event = (NetworkHandshakeEstablished) evt;
             FMLEmbeddedChannel channel = NetworkRegistry.INSTANCE.getChannel("FORGE", Side.SERVER);
-            channel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.REPLY);
-            //NetHandlerPlayServer handler = (NetHandlerPlayServer) event.netHandler;
+            //channel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.DISPATCHER);
+            channel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(event.dispatcher);
             for(Map map : MapLoader.instance().getMaps()){
                 if(map.getID() >= -1 && map.getID() <= 1){
                     continue;

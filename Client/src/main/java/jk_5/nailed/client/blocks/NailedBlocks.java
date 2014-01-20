@@ -41,10 +41,10 @@ public class NailedBlocks {
     }
 
     private static void registerBlock(NailedBlock block){
-        GameRegistry.registerBlock(block, "nailed." + block.getRegisteredName());
+        GameRegistry.registerBlock(block, block.getRegisteredName());
     }
 
     private static void registerBlock(NailedBlock block, Class<? extends ItemBlock> item){
-        GameRegistry.registerBlock(block, item, "nailed." + block.getRegisteredName());
+        GameRegistry.registerBlock(block, item, block.getRegisteredName());
     }
 }
