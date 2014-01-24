@@ -7,17 +7,13 @@ import jk_5.nailed.gui.IGuiReturnHandler;
 import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.map.stat.IStatTileEntity;
 import jk_5.nailed.map.stat.Stat;
+import jk_5.nailed.map.stat.StatManager;
 import jk_5.nailed.map.stat.StatMode;
-import jk_5.nailed.map.stat.StatTileEntityEvent;
 import jk_5.nailed.players.Player;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraftforge.common.MinecraftForge;
 
 /**
  * No description given
@@ -40,8 +36,9 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
         this.programmedName = statName;
         if(this.field_145850_b == null) this.needsUpdate = true;
         else if(!this.field_145850_b.isRemote){
-            this.stat = MapLoader.instance().getMap(this.field_145850_b).getStatManager().getStat(this.programmedName);
-            MinecraftForge.EVENT_BUS.post(new StatTileEntityEvent.Load(this));
+            StatManager manager = MapLoader.instance().getMap(this.field_145850_b).getStatManager();
+            this.stat = manager.getStat(this.programmedName);
+            manager.registerStatTile(this);
             this.isLoaded = true;
             if(this.stat == null){
                 this.disable();
@@ -55,8 +52,9 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
     @Override
     public void func_145845_h(){
         if(this.needsUpdate){
-            this.stat = MapLoader.instance().getMap(this.field_145850_b).getStatManager().getStat(this.programmedName);
-            MinecraftForge.EVENT_BUS.post(new StatTileEntityEvent.Load(this));
+            StatManager manager = MapLoader.instance().getMap(this.field_145850_b).getStatManager();
+            this.stat = manager.getStat(this.programmedName);
+            manager.registerStatTile(this);
             this.isLoaded = true;
             if(this.stat == null){
                 this.disable();
@@ -67,7 +65,7 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
             this.needsUpdate = false;
         }
         if(!this.isLoaded){
-            MinecraftForge.EVENT_BUS.post(new StatTileEntityEvent.Load(this));
+            MapLoader.instance().getMap(this.field_145850_b).getStatManager().registerStatTile(this);
             this.isLoaded = true;
         }
         if(this.redstonePulseTicks != -1){
@@ -85,7 +83,7 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
     public void func_145843_s(){
         super.func_145843_s();
         if(this.isLoaded){
-            MinecraftForge.EVENT_BUS.post(new StatTileEntityEvent.Unload(this));
+            MapLoader.instance().getMap(this.field_145850_b).getStatManager().unloadStatTile(this);
             this.isLoaded = false;
         }
     }
@@ -94,7 +92,7 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
     public void onChunkUnload(){
         super.onChunkUnload();
         if(this.isLoaded){
-            MinecraftForge.EVENT_BUS.post(new StatTileEntityEvent.Unload(this));
+            MapLoader.instance().getMap(this.field_145850_b).getStatManager().unloadStatTile(this);
             this.isLoaded = false;
         }
     }
@@ -102,18 +100,6 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
     @Override
     public boolean canUpdate(){
         return FMLCommonHandler.instance().getEffectiveSide().isServer();
-    }
-
-    @Override
-    public Packet func_145844_m(){
-        NBTTagCompound tag = new NBTTagCompound();
-        this.func_145839_a(tag);
-        return new S35PacketUpdateTileEntity(this.field_145851_c, this.field_145848_d, this.field_145849_e, 0, tag);
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt){
-        this.func_145839_a(pkt.func_148857_g());
     }
 
     @Override

@@ -35,7 +35,7 @@ public class StatManager {
         return this.stats.getStat(statName);
     }
 
-    @SubscribeEvent
+    /*@SubscribeEvent
     @SuppressWarnings("unused")
     public void onStatTileLoad(StatTileEntityEvent.Load event){
         this.statTiles.add(event.tileEntity);
@@ -45,7 +45,7 @@ public class StatManager {
     @SuppressWarnings("unused")
     public void onStatTileUnload(StatTileEntityEvent.Unload event){
         this.statTiles.remove(event.tileEntity);
-    }
+    }*/
 
     @SubscribeEvent
     @SuppressWarnings("unused")
@@ -61,5 +61,13 @@ public class StatManager {
         for(IStatTileEntity tile : this.statTiles){
             if(tile.getStat() == event.stat) tile.disable();
         }
+    }
+
+    public void registerStatTile(IStatTileEntity statTile){
+        this.statTiles.add(statTile);
+    }
+
+    public void unloadStatTile(IStatTileEntity statTile){
+        this.statTiles.remove(statTile);
     }
 }
