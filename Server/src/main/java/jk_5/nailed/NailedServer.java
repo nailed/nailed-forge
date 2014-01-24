@@ -19,6 +19,7 @@ import jk_5.nailed.map.instruction.RegisterInstructionEvent;
 import jk_5.nailed.map.stat.RegisterStatTypeEvent;
 import jk_5.nailed.map.stat.StatEventHandler;
 import jk_5.nailed.map.stat.StatTypeManager;
+import jk_5.nailed.map.teleport.TeleportEventListenerForge;
 import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.players.PlayerRegistry;
 import jk_5.nailed.server.command.*;
@@ -84,6 +85,7 @@ public class NailedServer {
         MinecraftForge.EVENT_BUS.register(PlayerRegistry.instance());
         MinecraftForge.EVENT_BUS.register(new AchievementEventListener());
         MinecraftForge.EVENT_BUS.register(new StatEventHandler());
+        MinecraftForge.EVENT_BUS.register(new TeleportEventListenerForge());
         FMLCommonHandler.instance().bus().register(new InvSeeTicker());
 
         NailedLog.info("Registering blocks");
@@ -144,27 +146,11 @@ public class NailedServer {
         ch.registerCommand(new CommandReloadMap());
         ch.registerCommand(new CommandKickall());
         ch.registerCommand(new CommandSaveMappack());
-    }
 
-    /*@EventHandler
-    public void remapIds(FMLMissingMappingsEvent event){
-        NailedLog.severe("-------------------------------------------------1");
-        List<FMLMissingMappingsEvent.MissingMapping> mappings = event.get();
-        for(FMLMissingMappingsEvent.MissingMapping mapping : mappings){
-            NailedLog.severe(mapping.type + " " + mapping.name);
-        }
-        NailedLog.severe("-------------------------------------------------1");
-    }
+        ch.getCommands().remove("tp");
 
-    @EventHandler
-    public void remapMod(FMLModIdMappingEvent event){
-        NailedLog.severe("-------------------------------------------------2");
-        List<FMLModIdMappingEvent.ModRemapping> mappings = event.remappedIds;
-        for(FMLModIdMappingEvent.ModRemapping mapping : mappings){
-            NailedLog.severe(mapping.remapTarget + " " + mapping.oldId + " " + mapping.newId);
-        }
-        NailedLog.severe("-------------------------------------------------2");
-    }*/
+        ch.registerCommand(new CommandTP());
+    }
 
     @EventHandler
     public void serverAboutToStart(FMLServerAboutToStartEvent event){

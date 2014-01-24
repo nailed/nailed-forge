@@ -265,4 +265,8 @@ public class MapLoader implements IMappackRegistrar {
             }
         }
     }
+
+    public boolean isDimensionAvailable(int dim){
+        return DimensionManager.isDimensionRegistered(dim);
+    }
 }

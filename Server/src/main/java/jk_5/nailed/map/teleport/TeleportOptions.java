@@ -1,8 +1,11 @@
 package jk_5.nailed.map.teleport;
 
 import jk_5.nailed.map.Map;
+import jk_5.nailed.map.mappack.Spawnpoint;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import net.minecraft.util.ChunkCoordinates;
+import lombok.NoArgsConstructor;
 
 /**
  * No description given
@@ -10,21 +13,29 @@ import net.minecraft.util.ChunkCoordinates;
  * @author jk-5
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
 public class TeleportOptions {
 
-    private ChunkCoordinates coordinates;
+    private Spawnpoint coordinates;
     private float yaw;
     private float pitch;
     private Map destination;
-    private int destinationID;
     private boolean maintainMomentum = false;
     private String sound = "";
 
-    public TeleportOptions(Map destination, ChunkCoordinates coords, float yaw, float pitch){
+    public TeleportOptions(Map destination, Spawnpoint coords, float yaw, float pitch){
         this.destination = destination;
-        this.destinationID = destination.getID();
-        this.coordinates = new ChunkCoordinates(coords);
+        this.coordinates = new Spawnpoint(coords);
         this.yaw = yaw;
         this.pitch = pitch;
+    }
+
+    public TeleportOptions clone(){
+        return new TeleportOptions(this.coordinates, this.yaw, this.pitch, this.destination, this.maintainMomentum, this.sound);
+    }
+
+    public int getDestinationID(){
+        return this.destination.getID();
     }
 }

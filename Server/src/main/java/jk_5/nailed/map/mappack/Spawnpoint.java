@@ -1,6 +1,7 @@
 package jk_5.nailed.map.mappack;
 
 import jk_5.nailed.util.config.ConfigTag;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.ChunkCoordinates;
 
 /**
@@ -13,10 +14,22 @@ public class Spawnpoint extends ChunkCoordinates {
     public float yaw;
     public float pitch;
 
+    public Spawnpoint(int x, int y, int z){
+        super(x, y, z);
+        this.yaw = 0f;
+        this.pitch = 0f;
+    }
+
     public Spawnpoint(int x, int y, int z, float yaw, float pitch){
         super(x, y, z);
         this.yaw = yaw;
         this.pitch = pitch;
+    }
+
+    public Spawnpoint(ChunkCoordinates par1ChunkCoordinates){
+        super(par1ChunkCoordinates);
+        this.yaw = 0f;
+        this.pitch = 0f;
     }
 
     public Spawnpoint(ChunkCoordinates par1ChunkCoordinates, float yaw, float pitch){
@@ -29,6 +42,12 @@ public class Spawnpoint extends ChunkCoordinates {
         super(spawnpoint);
         this.yaw = spawnpoint.yaw;
         this.pitch = spawnpoint.pitch;
+    }
+
+    public Spawnpoint(Entity dest){
+        super((int) dest.posX, (int) dest.posY, (int) dest.posZ);
+        this.yaw = dest.rotationYaw;
+        this.pitch = dest.rotationPitch;
     }
 
     @Override

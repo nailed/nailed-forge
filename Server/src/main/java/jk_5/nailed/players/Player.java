@@ -3,7 +3,7 @@ package jk_5.nailed.players;
 import com.mojang.authlib.GameProfile;
 import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MapLoader;
-import jk_5.nailed.map.teleport.NailedTeleporter;
+import jk_5.nailed.map.teleport.TeleportHelper;
 import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.network.NailedPacket;
 import jk_5.nailed.util.ChatColor;
@@ -108,6 +108,6 @@ public class Player {
     }
 
     public void teleportToMap(Map map){
-        MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension(this.getEntity(), map.getID(), new NailedTeleporter(map));
+        TeleportHelper.travelEntity(map.getWorld(), this.getEntity(), map.getSpawnTeleport());
     }
 }

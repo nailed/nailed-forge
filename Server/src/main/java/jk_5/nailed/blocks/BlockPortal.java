@@ -4,17 +4,14 @@ import com.google.common.collect.Lists;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import jk_5.nailed.blocks.tileentity.TileEntityPortalController;
-import jk_5.nailed.map.teleport.NailedTeleporter;
+import jk_5.nailed.map.teleport.TeleportHelper;
 import jk_5.nailed.map.teleport.TeleportOptions;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
@@ -156,10 +153,10 @@ public class BlockPortal extends NailedBlock {
         TeleportOptions options = container.getDestination();
         options.setMaintainMomentum(true);
         options.setSound("nailed:teleport.teleport-portal");
-        //TeleportHelper.travelEntity(world, entity, options);
-        if(entity instanceof EntityPlayer){
-            MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP) entity, options.getDestinationID(), new NailedTeleporter(options.getDestination()));
-        }
+        TeleportHelper.travelEntity(world, entity, options);
+        //if(entity instanceof EntityPlayer){
+        //    MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP) entity, options.getDestinationID(), new NailedTeleporter(options.getDestination()));
+        //}
     }
 
     @Override

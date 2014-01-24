@@ -127,7 +127,7 @@ public class Map {
 
     public TeleportOptions getSpawnTeleport(){
         if(this.mappack == null){
-            return new TeleportOptions(this, this.world.getSpawnPoint(), 0, 0);
+            return new TeleportOptions(this, new Spawnpoint(this.world.getSpawnPoint()), 0, 0);
         }
         MappackMetadata meta = this.mappack.getMappackMetadata();
         Spawnpoint spawnpoint = new Spawnpoint(meta.getSpawnPoint());
