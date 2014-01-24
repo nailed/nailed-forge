@@ -17,6 +17,7 @@ import jk_5.nailed.map.gen.NailedWorldProvider;
 import jk_5.nailed.map.instruction.InstructionReader;
 import jk_5.nailed.map.instruction.RegisterInstructionEvent;
 import jk_5.nailed.map.stat.RegisterStatTypeEvent;
+import jk_5.nailed.map.stat.StatEventHandler;
 import jk_5.nailed.map.stat.StatTypeManager;
 import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.players.PlayerRegistry;
@@ -76,12 +77,13 @@ public class NailedServer {
         NailedLog.info("Loading achievements");
         NailedAchievements.addAchievements();
 
-        NailedLog.info("Initializing network and event handlers");
+        NailedLog.info("Initializing network pipeline");
         NailedNetworkHandler.registerChannel();
 
-        NailedLog.info("Registering network handlers");
+        NailedLog.info("Registering event handlers");
         MinecraftForge.EVENT_BUS.register(PlayerRegistry.instance());
         MinecraftForge.EVENT_BUS.register(new AchievementEventListener());
+        MinecraftForge.EVENT_BUS.register(new StatEventHandler());
         FMLCommonHandler.instance().bus().register(new InvSeeTicker());
 
         NailedLog.info("Registering blocks");

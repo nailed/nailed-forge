@@ -2,10 +2,8 @@ package jk_5.nailed.map.stat;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import jk_5.nailed.map.Map;
 import lombok.Getter;
-import net.minecraftforge.common.MinecraftForge;
 
 import java.util.List;
 
@@ -28,39 +26,10 @@ public class StatManager {
         }else{
             this.stats = new StatConfig();
         }
-        MinecraftForge.EVENT_BUS.register(this);
     }
 
     public Stat getStat(String statName) {
         return this.stats.getStat(statName);
-    }
-
-    /*@SubscribeEvent
-    @SuppressWarnings("unused")
-    public void onStatTileLoad(StatTileEntityEvent.Load event){
-        this.statTiles.add(event.tileEntity);
-    }
-
-    @SubscribeEvent
-    @SuppressWarnings("unused")
-    public void onStatTileUnload(StatTileEntityEvent.Unload event){
-        this.statTiles.remove(event.tileEntity);
-    }*/
-
-    @SubscribeEvent
-    @SuppressWarnings("unused")
-    public void onStatEnable(StatEvent.Enable event){
-        for(IStatTileEntity tile : this.statTiles){
-            if(tile.getStat() == event.stat) tile.enable();
-        }
-    }
-
-    @SubscribeEvent
-    @SuppressWarnings("unused")
-    public void onStatDisable(StatEvent.Disable event){
-        for(IStatTileEntity tile : this.statTiles){
-            if(tile.getStat() == event.stat) tile.disable();
-        }
     }
 
     public void registerStatTile(IStatTileEntity statTile){
@@ -69,5 +38,17 @@ public class StatManager {
 
     public void unloadStatTile(IStatTileEntity statTile){
         this.statTiles.remove(statTile);
+    }
+
+    public void onStatEnable(Stat stat){
+        for(IStatTileEntity tile : this.statTiles){
+            if(tile.getStat() == stat) tile.enable();
+        }
+    }
+
+    public void onStatDisable(Stat stat){
+        for(IStatTileEntity tile : this.statTiles){
+            if(tile.getStat() == stat) tile.disable();
+        }
     }
 }
