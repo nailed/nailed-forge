@@ -4,12 +4,14 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import jk_5.nailed.players.TeamBuilder;
 import jk_5.nailed.util.ChatColor;
+import jk_5.nailed.util.WeatherType;
 import jk_5.nailed.util.config.ConfigFile;
 import jk_5.nailed.util.config.ConfigTag;
 import lombok.Getter;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.WorldSettings;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +38,7 @@ public class FileMappackMetadata implements MappackMetadata {
     public boolean choosingRandomSpawnpointAtRespawn;
     public List<Spawnpoint> randomSpawnpoints;
     public String startWhen;
+    public EnumSet<WeatherType> permittedWeatherTypes;
 
     public FileMappackMetadata(ConfigFile config){
         this.config = config;
@@ -74,6 +77,16 @@ public class FileMappackMetadata implements MappackMetadata {
         ConfigTag spawnpointsTag = this.config.getTag("randomSpawnpoints");
         for(ConfigTag tag : spawnpointsTag.getSortedTagList()){
             this.randomSpawnpoints.add(Spawnpoint.readFromConfig(tag));
+        }
+
+        this.permittedWeatherTypes = EnumSet.noneOf(WeatherType.class);
+        ConfigTag weatherTag = this.config.getTag("permittedWeather");
+        for(ConfigTag tag : weatherTag.getSortedTagList()){
+            WeatherType type = WeatherType.valueOf(tag.name.toUpperCase());
+            if(type == null) continue;
+            if(tag.getBooleanValue(true)){
+                this.permittedWeatherTypes.add(type);
+            }
         }
     }
 }

@@ -1,6 +1,5 @@
 package jk_5.nailed.map.teleport;
 
-import cpw.mods.fml.relauncher.ReflectionHelper;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.map.gen.NailedWorldProvider;
 import jk_5.nailed.map.mappack.Spawnpoint;
@@ -139,7 +138,7 @@ public class TeleportHelper {
     private static void removeEntityFromWorld(World world, Entity entity){
         if((entity instanceof EntityPlayer)){
             EntityPlayer player = (EntityPlayer) entity;
-            //player.closeScreen(); //TODO: Enable this!
+            player.closeScreen();
             world.playerEntities.remove(player);
             world.updateAllPlayersSleepingFlag();
             int i = entity.chunkCoordX;
@@ -149,13 +148,7 @@ public class TeleportHelper {
                 world.getChunkFromChunkCoords(i, j).isModified = true;
             }
             world.loadedEntityList.remove(entity);
-            //TODO: Replace this reflection line with an AT
-            try{
-                ReflectionHelper.findMethod(World.class, world, new String[]{"onEntityRemoved"}, Entity.class).invoke(world, entity);
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-            //world.onEntityRemoved(entity); //TODO Enable this!
+            world.onEntityRemoved(entity);
         }
         entity.isDead = false;
     }

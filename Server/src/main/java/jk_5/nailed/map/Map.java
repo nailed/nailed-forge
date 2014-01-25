@@ -14,6 +14,7 @@ import jk_5.nailed.map.mappack.MappackMetadata;
 import jk_5.nailed.map.mappack.Spawnpoint;
 import jk_5.nailed.map.stat.StatManager;
 import jk_5.nailed.map.teleport.TeleportOptions;
+import jk_5.nailed.map.weather.WeatherController;
 import jk_5.nailed.players.Player;
 import jk_5.nailed.players.PlayerRegistry;
 import jk_5.nailed.util.ChatColor;
@@ -43,6 +44,8 @@ public class Map {
     @Getter private final StatManager statManager;
     @Getter private final InstructionController gameController;
     @Getter private int joinedPlayers = 0;
+    @Getter private boolean dataResyncRequired = true;
+    @Getter private WeatherController weatherController;
 
     public Map(Mappack mappack, int id){
         this.ID = id;
@@ -50,6 +53,7 @@ public class Map {
         this.teamManager = new TeamManager(this);
         this.statManager = new StatManager(this);
         this.gameController = new InstructionController(this);
+        this.weatherController = new WeatherController(this);
         MapLoader.instance().addMap(this);
     }
 
@@ -167,5 +171,13 @@ public class Map {
     public Spawnpoint getRandomSpawnpoint(){
         List<Spawnpoint> spawnpoints = mappack.getMappackMetadata().getRandomSpawnpoints();
         return spawnpoints.get(MapLoader.instance().getRandomSpawnpointSelector().nextInt(spawnpoints.size()));
+    }
+
+    public void markDataNeedsResync(){
+        this.dataResyncRequired = true;
+    }
+
+    public void onSynced(){
+        this.dataResyncRequired = false;
     }
 }

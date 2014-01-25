@@ -1,10 +1,12 @@
 package jk_5.nailed.map.mappack;
 
 import jk_5.nailed.players.TeamBuilder;
+import jk_5.nailed.util.WeatherType;
 import lombok.Getter;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.WorldSettings;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 
@@ -30,4 +32,5 @@ public class DefaultMappackMetadata implements MappackMetadata {
     public boolean choosingRandomSpawnpointAtRespawn;
     public List<Spawnpoint> randomSpawnpoints;
     public String startWhen;
+    public EnumSet<WeatherType> permittedWeatherTypes;
 }

@@ -6,12 +6,15 @@ import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.map.MappackContainingWorldProvider;
 import jk_5.nailed.map.mappack.Mappack;
+import jk_5.nailed.map.mappack.Spawnpoint;
 import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.network.NailedPacket;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.WorldProvider;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
 
 /**
@@ -38,6 +41,53 @@ public class NailedWorldProvider extends WorldProvider implements MappackContain
 
     public void writeData(ByteBuf buffer){
 
+    }
+
+    @Override
+    public void updateWeather(){
+        if(!this.worldObj.isRemote && this.worldObj.playerEntities.isEmpty()){
+            WorldServer world = (WorldServer) this.worldObj;
+            world.theChunkProviderServer.unloadAllChunks();
+        }
+        this.map.getWeatherController().updateRaining();
+        //this.weatherrenderer.updateClouds();
+
+        this.worldObj.prevRainingStrength = this.worldObj.rainingStrength;
+        this.worldObj.rainingStrength = (float) this.map.getWeatherController().getRainingStrength();
+        this.worldObj.prevThunderingStrength = this.worldObj.thunderingStrength;
+        this.worldObj.thunderingStrength = (float) this.map.getWeatherController().getThunderingStrength();
+
+        if(this.worldObj.isRemote || !(this.worldObj instanceof WorldServer)) return;
+        WorldServer world = (WorldServer) this.worldObj;
+        if(world.areAllPlayersAsleep()){
+            this.setWorldTime(getWorldTime() + this.getTimeUntilSunrise());
+        }
+        this.setWorldTime(getWorldTime() + 1L);
+        if(this.map.isDataResyncRequired() && world.getTotalWorldTime() % 20L == 0L){
+            this.map.onSynced();
+            this.broadcastMapData();
+        }
+    }
+
+    @Override
+    public boolean canDoLightning(Chunk chunk){
+        this.map.getWeatherController().tick(this.worldObj, chunk);
+        return false;
+    }
+
+    private long getTimeUntilSunrise(){
+        long dayinterval = 24000L;
+        return dayinterval - this.getWorldTime() % dayinterval;
+    }
+
+    public void resetRainAndThunder(){
+        this.map.markDataNeedsResync();
+        this.map.getWeatherController().clear();
+    }
+
+    public void toggleRain(){
+        this.map.markDataNeedsResync();
+        this.map.getWeatherController().toggleRain();
     }
 
     @Override
@@ -68,7 +118,7 @@ public class NailedWorldProvider extends WorldProvider implements MappackContain
     @Override
     public ChunkCoordinates getRandomizedSpawnPoint(){
         if(this.hasMappack()){
-            return new ChunkCoordinates(this.map.getMappack().getMappackMetadata().getSpawnPoint());
+            return new Spawnpoint(this.map.getMappack().getMappackMetadata().getSpawnPoint());
         }else{
             return super.getRandomizedSpawnPoint();
         }
