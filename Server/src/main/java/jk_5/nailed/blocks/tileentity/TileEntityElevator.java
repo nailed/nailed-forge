@@ -64,7 +64,7 @@ public class TileEntityElevator extends NailedTileEntity implements IMovementEve
         int level = findLevel(dir);
         if(level >= 0){
             player.setPositionAndUpdate(this.field_145851_c + 0.5, level + 1.1, this.field_145849_e + 0.5);
-            this.field_145850_b.playSoundAtEntity(player, "nailed:teleport", 1F, 1F);
+            this.field_145850_b.playSoundAtEntity(player, "nailed:elevator", 1F, 1F);
         }
     }
 

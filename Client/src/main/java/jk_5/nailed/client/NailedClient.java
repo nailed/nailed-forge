@@ -58,7 +58,6 @@ public class NailedClient {
 
         NailedLog.info("Registering event handlers");
         MinecraftForge.EVENT_BUS.register(new RenderEventHandler());
-        MinecraftForge.EVENT_BUS.register(new SoundManager());
         MinecraftForge.EVENT_BUS.register(new NotificationRenderer());
         FMLCommonHandler.instance().bus().register(new TickHandlerClient());
 

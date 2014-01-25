@@ -220,4 +220,25 @@ public abstract class NailedPacket {
             this.data = buffer.copy();
         }
     }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Particle extends NailedPacket {
+
+        public double x, y, z;
+        public String name;
+
+        @Override
+        public void encode(ByteBuf buffer){
+
+        }
+
+        @Override
+        public void decode(ByteBuf buffer){
+            this.x = buffer.readDouble();
+            this.y = buffer.readDouble();
+            this.z = buffer.readDouble();
+            this.name = ByteBufUtils.readUTF8String(buffer);
+        }
+    }
 }

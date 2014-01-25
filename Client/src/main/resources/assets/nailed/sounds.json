@@ -1,0 +1,20 @@
+{
+    "teleport": {
+        "category": "block",
+        "sounds": [
+            "teleport/teleport"
+        ]
+    },
+    "teleport.pop": {
+        "category": "block",
+        "sounds": [
+            "teleport/pop"
+        ]
+    },
+    "elevator": {
+        "category": "block",
+        "sounds": [
+            "elevator"
+        ]
+    }
+}

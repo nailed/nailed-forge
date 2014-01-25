@@ -223,4 +223,25 @@ public abstract class NailedPacket {
             //Send-only
         }
     }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Particle extends NailedPacket {
+
+        public double x, y, z;
+        public String name;
+
+        @Override
+        public void encode(ByteBuf buffer){
+            buffer.writeDouble(this.x);
+            buffer.writeDouble(this.y);
+            buffer.writeDouble(this.z);
+            ByteBufUtils.writeUTF8String(buffer, this.name);
+        }
+
+        @Override
+        public void decode(ByteBuf buffer){
+            //Send-only
+        }
+    }
 }

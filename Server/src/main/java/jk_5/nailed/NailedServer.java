@@ -19,6 +19,7 @@ import jk_5.nailed.map.instruction.RegisterInstructionEvent;
 import jk_5.nailed.map.stat.RegisterStatTypeEvent;
 import jk_5.nailed.map.stat.StatEventHandler;
 import jk_5.nailed.map.stat.StatTypeManager;
+import jk_5.nailed.map.teleport.TeleportEventListenerEffect;
 import jk_5.nailed.map.teleport.TeleportEventListenerForge;
 import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.players.PlayerRegistry;
@@ -86,6 +87,7 @@ public class NailedServer {
         MinecraftForge.EVENT_BUS.register(new AchievementEventListener());
         MinecraftForge.EVENT_BUS.register(new StatEventHandler());
         MinecraftForge.EVENT_BUS.register(new TeleportEventListenerForge());
+        MinecraftForge.EVENT_BUS.register(new TeleportEventListenerEffect());
         FMLCommonHandler.instance().bus().register(new InvSeeTicker());
 
         NailedLog.info("Registering blocks");

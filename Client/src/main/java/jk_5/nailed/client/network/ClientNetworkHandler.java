@@ -29,6 +29,7 @@ public class ClientNetworkHandler {
         pipeline.addAfter(targetName, "SkinDataHandler", new SkinDataHandler());
         pipeline.addAfter(targetName, "StoreSkinHandler", new StoreSkinHandler());
         pipeline.addAfter(targetName, "MapDataHandler", new MapDataHandler());
+        pipeline.addAfter(targetName, "ParticleHandler", new ParticleHandler());
     }
 
     public static void sendPacketToServer(NailedPacket packet){
