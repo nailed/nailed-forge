@@ -26,10 +26,10 @@ public class TeleportEventListenerEffect {
     }
 
     private static void playSound(Entity entity, TeleportOptions options){
-        if(options.getSound() != null){
-            entity.worldObj.playSoundAtEntity(entity, options.getSound(), 0.8F, entity.worldObj.rand.nextFloat() * 0.2F + 0.9F);
-        }else if(entity instanceof EntityItem){
+        if(entity instanceof EntityItem){
             entity.worldObj.playSoundAtEntity(entity, "nailed:teleport.pop", 0.8F, entity.worldObj.rand.nextFloat() * 0.2F + 0.9F);
+        }else if(options.getSound() != null && !options.getSound().isEmpty()){
+            entity.worldObj.playSoundAtEntity(entity, options.getSound(), 0.8F, entity.worldObj.rand.nextFloat() * 0.2F + 0.9F);
         }else{
             entity.worldObj.playSoundAtEntity(entity, "nailed:teleport", 0.8F, entity.worldObj.rand.nextFloat() * 0.2F + 0.9F);
         }

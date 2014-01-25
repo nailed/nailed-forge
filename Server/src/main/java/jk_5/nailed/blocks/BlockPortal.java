@@ -39,7 +39,6 @@ public class BlockPortal extends NailedBlock {
     @Override
     @SideOnly(Side.CLIENT)
     public void func_149651_a(IIconRegister register){
-        //this.blockIcon
         this.field_149761_L = register.registerIcon("nailed:portal");
     }
 
@@ -152,11 +151,8 @@ public class BlockPortal extends NailedBlock {
         }
         TeleportOptions options = container.getDestination();
         options.setMaintainMomentum(true);
-        options.setSound("nailed:teleport.teleport-portal");
+        options.setSound("nailed:teleport.portal");
         TeleportHelper.travelEntity(world, entity, options);
-        //if(entity instanceof EntityPlayer){
-        //    MinecraftServer.getServer().getConfigurationManager().transferPlayerToDimension((EntityPlayerMP) entity, options.getDestinationID(), new NailedTeleporter(options.getDestination()));
-        //}
     }
 
     @Override

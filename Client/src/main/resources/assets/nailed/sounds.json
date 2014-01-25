@@ -11,6 +11,12 @@
             "teleport/pop"
         ]
     },
+    "teleport.portal": {
+        "category": "block",
+        "sounds": [
+            "teleport/portal"
+        ]
+    },
     "elevator": {
         "category": "block",
         "sounds": [
