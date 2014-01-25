@@ -24,8 +24,8 @@ public abstract class TeleportEvent extends Event {
      */
     @Cancelable
     public static class TeleportEventAllow extends TeleportEvent {
-        public TeleportEventAllow(World origin, Entity entity, TeleportOptions info) {
-            super(origin, null, entity, info);
+        public TeleportEventAllow(World origin, World destination, Entity entity, TeleportOptions info) {
+            super(origin, destination, entity, info);
         }
     }
 
@@ -45,8 +45,8 @@ public abstract class TeleportEvent extends Event {
      * Called before the entity is linked
      */
     public static class TeleportEventStart extends TeleportEvent {
-        public TeleportEventStart(World origin, Entity entity, TeleportOptions info) {
-            super(origin, null, entity, info);
+        public TeleportEventStart(World origin, World destination, Entity entity, TeleportOptions info) {
+            super(origin, destination, entity, info);
         }
     }
 
@@ -54,8 +54,8 @@ public abstract class TeleportEvent extends Event {
      * Called when the entity leaves their current world but has not yet entered the next
      */
     public static class TeleportEventExitWorld extends TeleportEvent {
-        public TeleportEventExitWorld(Entity entity, TeleportOptions info) {
-            super(null, null, entity, info);
+        public TeleportEventExitWorld(World orgin, World destination, Entity entity, TeleportOptions info) {
+            super(orgin, destination, entity, info);
         }
     }
 
@@ -65,8 +65,8 @@ public abstract class TeleportEvent extends Event {
      * server-side information such as weather and time.
      */
     public static class TeleportEventEnterWorld extends TeleportEvent {
-        public TeleportEventEnterWorld(World destination, Entity entity, TeleportOptions info) {
-            super(null, destination, entity, info);
+        public TeleportEventEnterWorld(World orgin, World destination, Entity entity, TeleportOptions info) {
+            super(orgin, destination, entity, info);
         }
     }
 
@@ -75,8 +75,8 @@ public abstract class TeleportEvent extends Event {
      * The entity is fully realized in the world and has been updated on clients.
      */
     public static class TeleportEventEnd extends TeleportEvent {
-        public TeleportEventEnd(World destination, Entity entity, TeleportOptions info) {
-            super(null, destination, entity, info);
+        public TeleportEventEnd(World orgin, World destination, Entity entity, TeleportOptions info) {
+            super(orgin, destination, entity, info);
         }
     }
 }

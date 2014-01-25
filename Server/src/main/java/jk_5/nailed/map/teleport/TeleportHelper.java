@@ -32,7 +32,7 @@ public class TeleportHelper {
         options = options.clone();
         int dimension = options.getDestinationID();
         Spawnpoint spawn = options.getCoordinates();
-        if(!TeleportEventFactory.isLinkPermitted(world, entity, options)) return false;
+        if(!TeleportEventFactory.isLinkPermitted(entity.worldObj, world, entity, options)) return false;
         if(mcServer == null) mcServer = MinecraftServer.getServer();
         if((mcServer == null) || ((dimension != 0) && (!mcServer.getAllowNether()))) return false;
         WorldServer newworld = mcServer.worldServerForDimension(dimension);
@@ -52,7 +52,7 @@ public class TeleportHelper {
     }
 
     private static Entity teleportEntity(World newworld, Entity entity, int dimension, Spawnpoint spawn, TeleportOptions options){
-        if(!TeleportEventFactory.isLinkPermitted(entity.worldObj, entity, options)){
+        if(!TeleportEventFactory.isLinkPermitted(entity.worldObj, newworld, entity, options)){
             return null;
         }
         Entity mount = entity.ridingEntity;
@@ -61,7 +61,7 @@ public class TeleportHelper {
             mount = teleportEntity(newworld, mount, dimension, spawn, options);
         }
         boolean changingworlds = entity.worldObj != newworld;
-        TeleportEventFactory.onLinkStart(entity.worldObj, entity, options);
+        TeleportEventFactory.onLinkStart(entity.worldObj, newworld, entity, options);
         entity.worldObj.updateEntityWithOptionalForce(entity, false);
         if((entity instanceof EntityPlayerMP)){
             EntityPlayerMP player = (EntityPlayerMP) entity;
@@ -76,10 +76,11 @@ public class TeleportHelper {
                 ((WorldServer) entity.worldObj).getPlayerManager().removePlayer(player);
             }
         }
+        World orgin = entity.worldObj;
         if(changingworlds){
             removeEntityFromWorld(entity.worldObj, entity);
         }
-        TeleportEventFactory.onExitWorld(entity, options);
+        TeleportEventFactory.onExitWorld(orgin, newworld, entity, options);
 
         entity.setLocationAndAngles(spawn.posX + 0.5D, spawn.posY, spawn.posZ + 0.5D, spawn.yaw, spawn.pitch);
         ((WorldServer) newworld).theChunkProviderServer.loadChunk(spawn.posX >> 4, spawn.posZ >> 4);
@@ -101,7 +102,7 @@ public class TeleportHelper {
             entity.setWorld(newworld);
         }
         entity.setLocationAndAngles(spawn.posX + 0.5D, spawn.posY, spawn.posZ + 0.5D, spawn.yaw, spawn.pitch);
-        TeleportEventFactory.onEnterWorld(newworld, entity, options);
+        TeleportEventFactory.onEnterWorld(orgin, newworld, entity, options);
         newworld.updateEntityWithOptionalForce(entity, false);
         entity.setLocationAndAngles(spawn.posX + 0.5D, spawn.posY, spawn.posZ + 0.5D, spawn.yaw, spawn.pitch);
         if((entity instanceof EntityPlayerMP)){
@@ -124,7 +125,7 @@ public class TeleportHelper {
             player.playerNetServerHandler.func_147359_a(new S1FPacketSetExperience(player.experience, player.experienceTotal, player.experienceLevel));
         }
         entity.setLocationAndAngles(spawn.posX + 0.5D, spawn.posY, spawn.posZ + 0.5D, spawn.yaw, spawn.pitch);
-        TeleportEventFactory.onLinkEnd(newworld, entity, options);
+        TeleportEventFactory.onLinkEnd(orgin, newworld, entity, options);
         if(mount != null){
             if((entity instanceof EntityPlayerMP)){
                 newworld.updateEntityWithOptionalForce(entity, true);
