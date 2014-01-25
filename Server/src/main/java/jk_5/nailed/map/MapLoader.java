@@ -144,7 +144,7 @@ public class MapLoader implements IMappackRegistrar {
     @SuppressWarnings("unused")
     public void playerLoggedIn(PlayerEvent.PlayerLoggedInEvent event){
         if(event.player.worldObj.provider instanceof NailedWorldProvider){
-            //TODO: send data?
+            ((NailedWorldProvider) event.player.worldObj.provider).sendMapData(event.player);
         }
     }
 

@@ -201,4 +201,23 @@ public abstract class NailedPacket {
             this.data = buffer.copy();
         }
     }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MapData extends NailedPacket {
+
+        public int dimId;
+        public ByteBuf data;
+
+        @Override
+        public void encode(ByteBuf buffer){
+
+        }
+
+        @Override
+        public void decode(ByteBuf buffer){
+            this.dimId = buffer.readInt();
+            this.data = buffer.copy();
+        }
+    }
 }

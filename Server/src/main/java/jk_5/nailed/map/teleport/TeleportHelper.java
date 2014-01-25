@@ -2,6 +2,7 @@ package jk_5.nailed.map.teleport;
 
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import jk_5.nailed.NailedLog;
+import jk_5.nailed.map.gen.NailedWorldProvider;
 import jk_5.nailed.map.mappack.Spawnpoint;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -70,10 +71,9 @@ public class TeleportHelper {
             if(changingworlds){
                 player.dimension = dimension;
                 player.playerNetServerHandler.func_147359_a(new S07PacketRespawn(player.dimension, player.worldObj.difficultySetting, newworld.getWorldInfo().getTerrainType(), player.theItemInWorldManager.getGameType()));
-                //player.playerNetServerHandler.sendPacketToPlayer(new Packet9Respawn(player.dimension, (byte) player.worldObj.difficultySetting, newworld.getWorldInfo().getTerrainType(), newworld.getHeight(), player.theItemInWorldManager.getGameType()));
-                //if((newworld.provider instanceof WorldProviderNailed)){
-                //    NetworkHelper.sendAgeData(newworld, player, DimensionUtils.getDimensionUID(newworld.provider));
-                //}
+                if(newworld.provider instanceof NailedWorldProvider){
+                    ((NailedWorldProvider) newworld.provider).sendMapData(player);
+                }
                 ((WorldServer) entity.worldObj).getPlayerManager().removePlayer(player);
             }
         }

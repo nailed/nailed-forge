@@ -5,10 +5,6 @@ import cpw.mods.fml.common.network.FMLOutboundHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
 import io.netty.channel.ChannelPipeline;
-import jk_5.nailed.client.network.handlers.NotificationHandler;
-import jk_5.nailed.client.network.handlers.OpenGuiHandler;
-import jk_5.nailed.client.network.handlers.TileEntityDataHandler;
-import jk_5.nailed.client.network.handlers.TimeUpdateHandler;
 import jk_5.nailed.client.network.handlers.*;
 
 /**
@@ -32,6 +28,7 @@ public class ClientNetworkHandler {
         pipeline.addAfter(targetName, "TimeUpdateHandler", new TimeUpdateHandler());
         pipeline.addAfter(targetName, "SkinDataHandler", new SkinDataHandler());
         pipeline.addAfter(targetName, "StoreSkinHandler", new StoreSkinHandler());
+        pipeline.addAfter(targetName, "MapDataHandler", new MapDataHandler());
     }
 
     public static void sendPacketToServer(NailedPacket packet){

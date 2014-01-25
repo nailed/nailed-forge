@@ -1,5 +1,6 @@
 package jk_5.nailed.client.map;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.biome.WorldChunkManager;
@@ -23,6 +24,10 @@ public class NailedWorldProvider extends WorldProvider {
     @Override
     protected void registerWorldChunkManager(){
         this.worldChunkMgr = new WorldChunkManager(this.worldObj);
+    }
+
+    public void readData(ByteBuf buffer){
+
     }
 
     @Override
