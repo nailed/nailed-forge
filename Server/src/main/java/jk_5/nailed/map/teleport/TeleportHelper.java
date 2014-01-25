@@ -1,6 +1,7 @@
 package jk_5.nailed.map.teleport;
 
 import cpw.mods.fml.relauncher.ReflectionHelper;
+import jk_5.nailed.NailedLog;
 import jk_5.nailed.map.mappack.Spawnpoint;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -37,7 +38,7 @@ public class TeleportHelper {
         if((mcServer == null) || ((dimension != 0) && (!mcServer.getAllowNether()))) return false;
         WorldServer newworld = mcServer.worldServerForDimension(dimension);
         if(newworld == null){
-            System.err.println("Cannot Link Entity to Dimension: Could not get World for Dimension " + dimension);
+            NailedLog.error("Cannot Link Entity to Dimension: Could not get World for Dimension " + dimension);
             return false;
         }
         if(spawn == null){
@@ -148,6 +149,7 @@ public class TeleportHelper {
                 world.getChunkFromChunkCoords(i, j).isModified = true;
             }
             world.loadedEntityList.remove(entity);
+            //TODO: Replace this reflection line with an AT
             try{
                 ReflectionHelper.findMethod(World.class, world, new String[]{"onEntityRemoved"}, Entity.class).invoke(world, entity);
             }catch(Exception e){

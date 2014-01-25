@@ -72,7 +72,7 @@ public class IpcManager {
                 }
             });
         //}catch(ConnectException e){
-        //    NailedLog.severe("Was not able to connect to IPC server");
+        //    NailedLog.error("Was not able to connect to IPC server");
         }catch(UnresolvedAddressException e){
             logger.error("Could not resolve address for IPC server");
         }

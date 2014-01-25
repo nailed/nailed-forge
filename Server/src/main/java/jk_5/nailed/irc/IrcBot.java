@@ -141,7 +141,7 @@ public class IrcBot extends PircBot {
                 connect(host, port, serverPassword);
                 joinChannel(channel, channelPassword);
             }catch(Exception e){
-                NailedLog.warning("An error was thrown while connecting to irc");
+                NailedLog.warn("An error was thrown while connecting to irc");
             }
         }
     }

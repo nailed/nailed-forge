@@ -106,7 +106,7 @@ public class InstructionController implements Runnable {
                         current.execute(this.controller);
                     }
                 }else{
-                    NailedLog.warning("Current instruction is null at %s", this.map.getSaveFileName());
+                    NailedLog.warn("Current instruction is null at %s", this.map.getSaveFileName());
                 }
                 if(this.isPaused()) Thread.sleep(1000);
             }
@@ -114,7 +114,7 @@ public class InstructionController implements Runnable {
             this.map.broadcastChatMessage(ChatColor.RED + e.getClass().getName() + " was thrown in the game loop. Game stopped!");
             if(current != null) this.map.broadcastChatMessage(ChatColor.RED + "Current instruction: " + this.getClass().getName());
             else this.map.broadcastChatMessage(ChatColor.RED + "Current instruction seems te be null. That isn\'t supposed to happen!");
-            NailedLog.severe(e, "Exception in game loop for " + this.map.getSaveFileName());
+            NailedLog.error(e, "Exception in game loop for " + this.map.getSaveFileName());
         }
         this.running = false;
         StatTypeManager.instance().getStatType(StatTypeGameloopRunning.class).onEnd(this);

@@ -68,11 +68,11 @@ public class ZipMappack implements Mappack {
                 entry = zipStream.getNextEntry();
             }
         }catch(InstructionParseException e){
-            NailedLog.severe("There was an error in your instruction syntax in " + file.getName());
-            NailedLog.severe(e.getMessage());
+            NailedLog.error("There was an error in your instruction syntax in " + file.getName());
+            NailedLog.error(e.getMessage());
             throw new DiscardedMappackInitializationException("Instruction syntax error!", e);
         }catch(FileNotFoundException e){
-            NailedLog.severe(e, "Discovered mappack file " + file.getPath() + " is gone now? This is impossible");
+            NailedLog.error(e, "Discovered mappack file " + file.getPath() + " is gone now? This is impossible");
             throw new DiscardedMappackInitializationException("Mappack file " + file.getPath() + " disappeared!", e);
         }catch(IOException e){
             throw new MappackInitializationException("Mappack file " + file.getPath() + " could not be read", e);
@@ -161,7 +161,7 @@ public class ZipMappack implements Mappack {
             worldDir.renameTo(destDir);
             return destDir;
         }catch(IOException ioe){
-            NailedLog.severe(ioe, "Error while unpacking file");
+            NailedLog.error(ioe, "Error while unpacking file");
         }
         return null;
     }

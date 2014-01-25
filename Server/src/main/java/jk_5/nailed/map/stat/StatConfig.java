@@ -28,7 +28,7 @@ public class StatConfig {
             if(typeTag != null){
                 IStatType type = StatTypeManager.instance().getStatType(typeTag.getValue());
                 if(type == null){
-                    NailedLog.warning("Unknown stat type " + typeTag.getValue());
+                    NailedLog.warn("Unknown stat type " + typeTag.getValue());
                     continue;
                 }
                 stat.setType(type);

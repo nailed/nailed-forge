@@ -81,9 +81,9 @@ public class MapLoader implements IMappackRegistrar {
                 }
             }catch (DiscardedMappackInitializationException e){
                 //Discard!
-                NailedLog.warning("An error was thrown while loading mappack " + file.getName() + ", skipping it!");
+                NailedLog.warn("An error was thrown while loading mappack " + file.getName() + ", skipping it!");
             }catch (MappackInitializationException e){
-                NailedLog.severe(e, "Error while loading mappack " + file.getName() + ", skipping it!");
+                NailedLog.error(e, "Error while loading mappack " + file.getName() + ", skipping it!");
             }
         }
         NailedLog.info("Successfully loaded %d mappacks!", this.mappacks.size());

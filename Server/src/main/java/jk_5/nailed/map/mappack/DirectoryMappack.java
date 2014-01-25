@@ -75,11 +75,11 @@ public class DirectoryMappack implements Mappack {
                 statConfig = new StatConfig(new ConfigFile(statConfigFile).setReadOnly());
             }
         }catch(InstructionParseException e){
-            NailedLog.severe("There was an error in your instruction syntax in " + directory.getName());
-            NailedLog.severe(e.getMessage());
+            NailedLog.error("There was an error in your instruction syntax in " + directory.getName());
+            NailedLog.error(e.getMessage());
             throw new DiscardedMappackInitializationException("Instruction syntax error!", e);
         }catch(FileNotFoundException e){
-            NailedLog.severe(e, "Discovered mappack directory is gone now? This is impossible");
+            NailedLog.error(e, "Discovered mappack directory is gone now? This is impossible");
             throw new MappackInitializationException("Mappack directory disappeared!", e);
         }
         pack.setInstructionList(instructionList);
