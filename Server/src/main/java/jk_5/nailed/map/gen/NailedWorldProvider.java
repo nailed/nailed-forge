@@ -13,7 +13,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.WorldProvider;
-import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
 
@@ -44,8 +43,15 @@ public class NailedWorldProvider extends WorldProvider implements MappackContain
     }
 
     @Override
+    public void calculateInitialWeather(){
+        this.updateWeather();
+    }
+
+    @Override
     public void updateWeather(){
-        if(!this.worldObj.isRemote && this.worldObj.playerEntities.isEmpty()){
+        super.updateWeather();
+
+        /*if(!this.worldObj.isRemote && this.worldObj.playerEntities.isEmpty()){
             WorldServer world = (WorldServer) this.worldObj;
             world.theChunkProviderServer.unloadAllChunks();
         }
@@ -66,7 +72,7 @@ public class NailedWorldProvider extends WorldProvider implements MappackContain
         if(this.map.isDataResyncRequired() && world.getTotalWorldTime() % 20L == 0L){
             this.map.onSynced();
             this.broadcastMapData();
-        }
+        }*/
     }
 
     @Override
@@ -83,11 +89,6 @@ public class NailedWorldProvider extends WorldProvider implements MappackContain
     public void resetRainAndThunder(){
         this.map.markDataNeedsResync();
         this.map.getWeatherController().clear();
-    }
-
-    public void toggleRain(){
-        this.map.markDataNeedsResync();
-        this.map.getWeatherController().toggleRain();
     }
 
     @Override
