@@ -27,6 +27,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.world.BlockEvent;
@@ -206,6 +207,17 @@ public class MapLoader implements IMappackRegistrar {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    @SuppressWarnings("unused")
+    public void onAttack(LivingAttackEvent event){
+        if(event.source.getEntity() instanceof EntityPlayer && event.entityLiving instanceof EntityPlayer){
+            Mappack mappack = this.getMap(event.entity.worldObj).getMappack();
+            if(mappack != null && !mappack.getMappackMetadata().isPvpEnabled()){
+                event.setCanceled(true);
             }
         }
     }
