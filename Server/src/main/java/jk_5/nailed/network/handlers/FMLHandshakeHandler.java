@@ -9,6 +9,7 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import jk_5.nailed.NailedServer;
 import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MapLoader;
+import jk_5.nailed.network.MinecraftPacketAdapter;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.Packet;
 import net.minecraftforge.common.network.ForgeMessage;
@@ -33,6 +34,9 @@ public class FMLHandshakeHandler extends ChannelInboundHandlerAdapter {
                 Packet packet = channel.generatePacketFrom(new ForgeMessage.DimensionRegisterMessage(map.getID(), NailedServer.getProviderID()));
                 handler.func_147359_a(packet);
             }
+
+            //Try to hack a handler into Minecraft's main pipeline so we can change some packets before they are sent
+            handler.field_147371_a.channel().pipeline().addAfter("encoder", "NailedPacketAdapter", new MinecraftPacketAdapter());
         }
         ctx.fireUserEventTriggered(evt);
     }
