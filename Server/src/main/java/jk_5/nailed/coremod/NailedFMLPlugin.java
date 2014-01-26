@@ -38,7 +38,7 @@ public class NailedFMLPlugin implements IFMLLoadingPlugin {
 
     @Override
     public String getAccessTransformerClass(){
-        return null;
+        return "jk_5.nailed.coremod.transformers.NailedAccessTransformer";
     }
 
     @Override
