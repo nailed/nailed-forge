@@ -90,6 +90,7 @@ public class BlockInvisibleWall extends BlockMulti {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void func_149666_a(Item item, CreativeTabs tab, List list){
         list.add(new ItemStack(item, 1, 0));
         //list.add(new ItemStack(id, 1, 1));

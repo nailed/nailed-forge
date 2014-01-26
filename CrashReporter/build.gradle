@@ -1,0 +1,9 @@
+version = '0.1-SNAPSHOT'
+
+jar.manifest{
+    attributes 'FMLCorePlugin': 'jk_5.nailed.crashreporter.CrashReporter'
+}
+
+dependencies{
+    packed 'jk_5.asyncirc:ASyncIRCClient:0.1-SNAPSHOT'
+}
