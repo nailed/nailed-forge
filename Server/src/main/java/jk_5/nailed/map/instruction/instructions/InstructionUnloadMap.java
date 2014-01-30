@@ -2,13 +2,14 @@ package jk_5.nailed.map.instruction.instructions;
 
 import jk_5.nailed.map.instruction.GameController;
 import jk_5.nailed.map.instruction.IInstruction;
+import jk_5.nailed.map.instruction.TimedInstruction;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-public class InstructionUnloadMap implements IInstruction {
+public class InstructionUnloadMap extends TimedInstruction {
 
     @Override
     public void injectArguments(String args){
@@ -16,8 +17,13 @@ public class InstructionUnloadMap implements IInstruction {
     }
 
     @Override
-    public void execute(GameController controller){
-        controller.getMap().unloadAndRemove();
+    public boolean executeTimed(GameController controller, int ticks){
+        if(ticks >= 1){
+            controller.getMap().unloadAndRemove();
+            return false;
+        }else{
+            return true;
+        }
     }
 
     @Override
