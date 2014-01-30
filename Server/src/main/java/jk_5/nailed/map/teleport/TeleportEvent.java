@@ -10,43 +10,39 @@ import net.minecraft.entity.Entity;
 @RequiredArgsConstructor
 public abstract class TeleportEvent extends Event {
 
-    /** The world the entity is leaving.  May be null. */
-    public final Map origin;
-    /** The destination world.  May be null. */
-    public final Map destination;
-    /** The entity being linked */
+    public final Map oldMap;
+    public final Map newMap;
     public final Entity entity;
-    /** The link descriptor.  You should not modify this object in any way */
     public final TeleportOptions options;
 
     /**
-     * Cancel this event to prevent linking.
+     * Cancel this event to prevent teleporting.
      */
     @Cancelable
     public static class TeleportEventAllow extends TeleportEvent {
-        public TeleportEventAllow(Map origin, Map destination, Entity entity, TeleportOptions info) {
-            super(origin, destination, entity, info);
+        public TeleportEventAllow(Map oldMap, Map newMap, Entity entity, TeleportOptions info) {
+            super(oldMap, newMap, entity, info);
         }
     }
 
     /**
-     * Used to provide alternate values for the link
+     * Used to provide alternate values for the teleport
      */
     public static class TeleportEventAlter extends TeleportEvent {
-        /** Set this to alter the link (null until set) */
+        /** Set this to alter the teleport destination (null until set) */
         public Spawnpoint spawn;
 
-        public TeleportEventAlter(Map origin, Map destination, Entity entity, TeleportOptions info) {
-            super(origin, destination, entity, info);
+        public TeleportEventAlter(Map oldMap, Map newMap, Entity entity, TeleportOptions info) {
+            super(oldMap, newMap, entity, info);
         }
     }
 
     /**
-     * Called before the entity is linked
+     * Called before the entity is teleported
      */
     public static class TeleportEventStart extends TeleportEvent {
-        public TeleportEventStart(Map origin, Map destination, Entity entity, TeleportOptions info) {
-            super(origin, destination, entity, info);
+        public TeleportEventStart(Map oldMap, Map newMap, Entity entity, TeleportOptions info) {
+            super(oldMap, newMap, entity, info);
         }
     }
 
@@ -54,8 +50,8 @@ public abstract class TeleportEvent extends Event {
      * Called when the entity leaves their current world but has not yet entered the next
      */
     public static class TeleportEventExitWorld extends TeleportEvent {
-        public TeleportEventExitWorld(Map orgin, Map destination, Entity entity, TeleportOptions info) {
-            super(orgin, destination, entity, info);
+        public TeleportEventExitWorld(Map oldMap, Map newMap, Entity entity, TeleportOptions info) {
+            super(oldMap, newMap, entity, info);
         }
     }
 
@@ -65,8 +61,8 @@ public abstract class TeleportEvent extends Event {
      * server-side information such as weather and time.
      */
     public static class TeleportEventEnterWorld extends TeleportEvent {
-        public TeleportEventEnterWorld(Map orgin, Map destination, Entity entity, TeleportOptions info) {
-            super(orgin, destination, entity, info);
+        public TeleportEventEnterWorld(Map oldMap, Map newMap, Entity entity, TeleportOptions info) {
+            super(oldMap, newMap, entity, info);
         }
     }
 
@@ -75,8 +71,8 @@ public abstract class TeleportEvent extends Event {
      * The entity is fully realized in the world and has been updated on clients.
      */
     public static class TeleportEventEnd extends TeleportEvent {
-        public TeleportEventEnd(Map orgin, Map destination, Entity entity, TeleportOptions info) {
-            super(orgin, destination, entity, info);
+        public TeleportEventEnd(Map oldMap, Map newMap, Entity entity, TeleportOptions info) {
+            super(oldMap, newMap, entity, info);
         }
     }
 }
