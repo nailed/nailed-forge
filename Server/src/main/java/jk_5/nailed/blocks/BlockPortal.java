@@ -149,10 +149,10 @@ public class BlockPortal extends NailedBlock {
             world.func_147468_f(x, y, z);
             return;
         }
-        TeleportOptions options = container.getDestination();
+        TeleportOptions options = container.getDestination().clone();
         options.setMaintainMomentum(true);
         options.setSound("nailed:teleport.portal");
-        TeleportHelper.travelEntity(world, entity, options);
+        TeleportHelper.travelEntity(entity, options);
     }
 
     @Override

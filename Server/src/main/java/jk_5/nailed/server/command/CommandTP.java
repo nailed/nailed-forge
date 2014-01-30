@@ -79,11 +79,11 @@ public class CommandTP extends NailedCommand {
                 subject = getTargetPlayer(sender, sSubject);
             }
             if(subject == null){
-                throw new WrongUsageException("commands.nailed.tp.fail.nosubject", new Object[0]);
+                throw new WrongUsageException("commands.nailed.tp.fail.nosubject");
             }
 
             link = getLinkInfoForTarget(sender, subject, sTarget, sX, sY, sZ);
-            TeleportHelper.travelEntity(subject.worldObj, subject, link);
+            TeleportHelper.travelEntity(subject, link);
         }catch(CommandException e){
             sender.func_145747_a(new ChatComponentTranslation(e.getMessage()));
             sender.func_145747_a(new ChatComponentTranslation(getCommandUsage(sender)));

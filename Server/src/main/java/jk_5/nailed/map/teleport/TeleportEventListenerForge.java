@@ -14,7 +14,7 @@ public class TeleportEventListenerForge {
     @SubscribeEvent
     public void onTeleportEnd(TeleportEvent.TeleportEventEnd event){
         if((event.entity instanceof EntityPlayer)){
-            FMLCommonHandler.instance().firePlayerChangedDimensionEvent((EntityPlayer) event.entity, event.origin.provider.dimensionId, event.destination.provider.dimensionId);
+            FMLCommonHandler.instance().firePlayerChangedDimensionEvent((EntityPlayer) event.entity, event.origin.getID(), event.destination.getID());
         }
     }
 }

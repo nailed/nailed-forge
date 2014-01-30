@@ -108,6 +108,6 @@ public class Player {
     }
 
     public void teleportToMap(Map map){
-        TeleportHelper.travelEntity(map.getWorld(), this.getEntity(), map.getSpawnTeleport());
+        TeleportHelper.travelEntity(this.getEntity(), map.getSpawnTeleport());
     }
 }

@@ -1,6 +1,8 @@
 package jk_5.nailed.map.teleport;
 
 import jk_5.nailed.NailedLog;
+import jk_5.nailed.map.Map;
+import jk_5.nailed.map.MapLoader;
 import jk_5.nailed.map.gen.NailedWorldProvider;
 import jk_5.nailed.map.mappack.Spawnpoint;
 import net.minecraft.block.Block;
@@ -21,19 +23,21 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class TeleportHelper {
     private static MinecraftServer mcServer = null;
 
-    public static boolean travelEntity(World world, Entity entity, TeleportOptions options){
-        if(world.isRemote) return false;
+    public static boolean travelEntity(Entity entity, TeleportOptions options){
+        Map destMap = options.getDestination();
+        Map currentMap = MapLoader.instance().getMap(entity.worldObj);
+        World destWorld = destMap.getWorld();
+        if(destWorld.isRemote) return false;
         if(options == null) return false;
         options = options.clone();
-        int dimension = options.getDestinationID();
+        int dimension = destMap.getID();
         Spawnpoint spawn = options.getCoordinates();
-        if(!TeleportEventFactory.isLinkPermitted(entity.worldObj, world, entity, options)) return false;
+        if(!TeleportEventFactory.isLinkPermitted(currentMap, destMap, entity, options)) return false;
         if(mcServer == null) mcServer = MinecraftServer.getServer();
         if((mcServer == null) || ((dimension != 0) && (!mcServer.getAllowNether()))) return false;
         WorldServer newworld = mcServer.worldServerForDimension(dimension);
@@ -45,46 +49,47 @@ public class TeleportHelper {
             spawn = new Spawnpoint(newworld.getSpawnPoint());
             options.setCoordinates(spawn);
         }
-        TeleportEvent.TeleportEventAlter event = new TeleportEvent.TeleportEventAlter(world, newworld, entity, options.clone());
+        TeleportEvent.TeleportEventAlter event = new TeleportEvent.TeleportEventAlter(currentMap, destMap, entity, options.clone());
         MinecraftForge.EVENT_BUS.post(event);
         if(event.spawn != null) spawn = event.spawn;
-        teleportEntity(newworld, entity, dimension, spawn, options);
+        teleportEntity(currentMap, destMap, entity, spawn, options);
         return true;
     }
 
-    private static Entity teleportEntity(World newworld, Entity entity, int dimension, Spawnpoint spawn, TeleportOptions options){
-        if(!TeleportEventFactory.isLinkPermitted(entity.worldObj, newworld, entity, options)){
+    private static Entity teleportEntity(Map currentMap, Map destMap, Entity entity, Spawnpoint spawn, TeleportOptions options){
+        int dimension = destMap.getID();
+        World destWorld = destMap.getWorld();
+        if(!TeleportEventFactory.isLinkPermitted(currentMap, destMap, entity, options)){
             return null;
         }
         Entity mount = entity.ridingEntity;
         if(entity.ridingEntity != null){
             entity.mountEntity(null);
-            mount = teleportEntity(newworld, mount, dimension, spawn, options);
+            mount = teleportEntity(currentMap, destMap, mount, spawn, options);
         }
-        boolean changingworlds = entity.worldObj != newworld;
-        TeleportEventFactory.onLinkStart(entity.worldObj, newworld, entity, options);
+        boolean changingworlds = entity.worldObj != destWorld;
+        TeleportEventFactory.onLinkStart(currentMap, destMap, entity, options);
         entity.worldObj.updateEntityWithOptionalForce(entity, false);
         if((entity instanceof EntityPlayerMP)){
             EntityPlayerMP player = (EntityPlayerMP) entity;
             player.closeScreen();
             if(changingworlds){
                 player.dimension = dimension;
-                player.playerNetServerHandler.func_147359_a(new S07PacketRespawn(player.dimension, player.worldObj.difficultySetting, newworld.getWorldInfo().getTerrainType(), player.theItemInWorldManager.getGameType()));
-                if(newworld.provider instanceof NailedWorldProvider){
-                    ((NailedWorldProvider) newworld.provider).sendMapData(player);
+                player.playerNetServerHandler.func_147359_a(new S07PacketRespawn(player.dimension, player.worldObj.difficultySetting, destWorld.getWorldInfo().getTerrainType(), player.theItemInWorldManager.getGameType()));
+                if(destWorld.provider instanceof NailedWorldProvider){
+                    ((NailedWorldProvider) destWorld.provider).sendMapData(player);
                 }
                 ((WorldServer) entity.worldObj).getPlayerManager().removePlayer(player);
             }
         }
-        World orgin = entity.worldObj;
         if(changingworlds){
             removeEntityFromWorld(entity.worldObj, entity);
         }
-        TeleportEventFactory.onExitWorld(orgin, newworld, entity, options);
+        TeleportEventFactory.onExitWorld(currentMap, destMap, entity, options);
 
         entity.setLocationAndAngles(spawn.posX + 0.5D, spawn.posY, spawn.posZ + 0.5D, spawn.yaw, spawn.pitch);
-        ((WorldServer) newworld).theChunkProviderServer.loadChunk(spawn.posX >> 4, spawn.posZ >> 4);
-        while(getCollidingWorldGeometry(newworld, entity.boundingBox, entity).size() != 0){
+        ((WorldServer) destWorld).theChunkProviderServer.loadChunk(spawn.posX >> 4, spawn.posZ >> 4);
+        while(getCollidingWorldGeometry(destWorld, entity.boundingBox, entity).size() != 0){
             spawn.posY += 1;
             entity.setPosition(spawn.posX + 0.5D, spawn.posY, spawn.posZ + 0.5D);
         }
@@ -94,41 +99,39 @@ public class TeleportHelper {
                 entity.isDead = false;
                 entity.writeToNBTOptional(entityNBT);
                 entity.isDead = true;
-                entity = EntityList.createEntityFromNBT(entityNBT, newworld);
+                entity = EntityList.createEntityFromNBT(entityNBT, destWorld);
                 if(entity == null) return null;
-                entity.dimension = newworld.provider.dimensionId;
+                entity.dimension = destWorld.provider.dimensionId;
             }
-            newworld.spawnEntityInWorld(entity);
-            entity.setWorld(newworld);
+            destWorld.spawnEntityInWorld(entity);
+            entity.setWorld(destWorld);
         }
         entity.setLocationAndAngles(spawn.posX + 0.5D, spawn.posY, spawn.posZ + 0.5D, spawn.yaw, spawn.pitch);
-        TeleportEventFactory.onEnterWorld(orgin, newworld, entity, options);
-        newworld.updateEntityWithOptionalForce(entity, false);
+        TeleportEventFactory.onEnterWorld(currentMap, destMap, entity, options);
+        destWorld.updateEntityWithOptionalForce(entity, false);
         entity.setLocationAndAngles(spawn.posX + 0.5D, spawn.posY, spawn.posZ + 0.5D, spawn.yaw, spawn.pitch);
         if((entity instanceof EntityPlayerMP)){
             EntityPlayerMP player = (EntityPlayerMP) entity;
-            if(changingworlds) player.mcServer.getConfigurationManager().func_72375_a(player, (WorldServer) newworld);
+            if(changingworlds) player.mcServer.getConfigurationManager().func_72375_a(player, (WorldServer) destWorld);
             player.playerNetServerHandler.func_147364_a(spawn.posX + 0.5D, spawn.posY, spawn.posZ + 0.5D, player.rotationYaw, player.rotationPitch);
         }
-        newworld.updateEntityWithOptionalForce(entity, false);
+        destWorld.updateEntityWithOptionalForce(entity, false);
         if(((entity instanceof EntityPlayerMP)) && (changingworlds)){
             EntityPlayerMP player = (EntityPlayerMP) entity;
-            player.theItemInWorldManager.setWorld((WorldServer) newworld);
-            player.mcServer.getConfigurationManager().updateTimeAndWeatherForPlayer(player, (WorldServer) newworld);
+            player.theItemInWorldManager.setWorld((WorldServer) destWorld);
+            player.mcServer.getConfigurationManager().updateTimeAndWeatherForPlayer(player, (WorldServer) destWorld);
             player.mcServer.getConfigurationManager().syncPlayerInventory(player);
-            Iterator iter = player.getActivePotionEffects().iterator();
 
-            while(iter.hasNext()){
-                PotionEffect effect = (PotionEffect) iter.next();
-                player.playerNetServerHandler.func_147359_a(new S1DPacketEntityEffect(player.func_145782_y(), effect));
+            for(Object obj : player.getActivePotionEffects()){
+                player.playerNetServerHandler.func_147359_a(new S1DPacketEntityEffect(player.func_145782_y(), (PotionEffect) obj));
             }
             player.playerNetServerHandler.func_147359_a(new S1FPacketSetExperience(player.experience, player.experienceTotal, player.experienceLevel));
         }
         entity.setLocationAndAngles(spawn.posX + 0.5D, spawn.posY, spawn.posZ + 0.5D, spawn.yaw, spawn.pitch);
-        TeleportEventFactory.onLinkEnd(orgin, newworld, entity, options);
+        TeleportEventFactory.onLinkEnd(currentMap, destMap, entity, options);
         if(mount != null){
             if((entity instanceof EntityPlayerMP)){
-                newworld.updateEntityWithOptionalForce(entity, true);
+                destWorld.updateEntityWithOptionalForce(entity, true);
             }
             entity.mountEntity(mount);
         }
