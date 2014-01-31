@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 public class PlayerChangedDimensionEvent extends Event {
-
     public final Player player;
     public final Map oldMap;
     public final Map newMap;

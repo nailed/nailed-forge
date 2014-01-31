@@ -9,7 +9,7 @@ import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
 import io.netty.handler.codec.http.websocketx.WebSocketVersion;
-import jk_5.nailed.ipc.packet.PacketInitConnection;
+import jk_5.nailed.ipc.packet.PacketAuthenticate;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,7 +33,7 @@ public class WebsocketHandler extends SimpleChannelInboundHandler<Object> {
             this.handshaker.finishHandshake(ctx.channel(), (FullHttpResponse) msg);
             logger.info("Connected to IPC server!");
             this.handshakeFuture.setSuccess();
-            ctx.writeAndFlush(new PacketInitConnection());
+            ctx.writeAndFlush(new PacketAuthenticate());
             return;
         }
         if(msg instanceof CloseWebSocketFrame){

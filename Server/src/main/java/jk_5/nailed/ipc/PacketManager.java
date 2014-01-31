@@ -24,6 +24,8 @@ public class PacketManager {
         packets.put("leave", PacketPlayerLeave.class);
         packets.put("kill", PacketKill.class);
         packets.put("death", PacketPlayerDeath.class);
+        packets.put("auth", PacketAuthenticate.class);
+        packets.put("authResponse", PacketAuthResponse.class);
     }
 
     public static IpcPacket getPacket(String name) throws IllegalAccessException, InstantiationException {

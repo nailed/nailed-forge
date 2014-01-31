@@ -12,7 +12,6 @@ import net.minecraft.entity.player.EntityPlayer;
  */
 @RequiredArgsConstructor
 public class PlayerCreatedEvent extends Event {
-
     public final EntityPlayer entityPlayer;
     public final Player player;
 }
