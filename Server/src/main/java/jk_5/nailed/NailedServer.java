@@ -152,6 +152,7 @@ public class NailedServer {
         ch.registerCommand(new CommandKickall());
         ch.registerCommand(new CommandSaveMappack());
         ch.registerCommand(new CommandSafehouse());
+        ch.registerCommand(new CommandTps());
 
         ch.getCommands().remove("tp");
         ch.getCommands().remove("toggledownfall");
