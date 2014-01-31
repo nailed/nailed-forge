@@ -19,7 +19,6 @@ import jk_5.nailed.map.mappack.ZipMappack;
 import jk_5.nailed.players.Player;
 import jk_5.nailed.players.PlayerRegistry;
 import jk_5.nailed.players.TeamUndefined;
-import jk_5.nailed.skinsync.SkinSyncManager;
 import lombok.Getter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChunkCoordinates;
@@ -148,8 +147,8 @@ public class MapLoader implements IMappackRegistrar {
         if(event.player.worldObj.provider instanceof NailedWorldProvider){
             ((NailedWorldProvider) event.player.worldObj.provider).sendMapData(event.player);
         }
-        SkinSyncManager.getInstance().sendSkinToClient(event.player, new File("testskin.png"), "skinTest");
-        SkinSyncManager.getInstance().setPlayerSkin(event.player, "skinTest");
+        //SkinSyncManager.getInstance().sendSkinToClient(event.player, new File("testskin.png"), "skinTest");
+        //SkinSyncManager.getInstance().setPlayerSkin(event.player, "skinTest");
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)

@@ -29,6 +29,9 @@ import jk_5.nailed.util.config.ConfigFile;
 import jk_5.nailed.util.invsee.InvSeeTicker;
 import lombok.Getter;
 import net.minecraft.command.CommandHandler;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.LogManager;
@@ -148,12 +151,17 @@ public class NailedServer {
         ch.registerCommand(new CommandReloadMap());
         ch.registerCommand(new CommandKickall());
         ch.registerCommand(new CommandSaveMappack());
+        ch.registerCommand(new CommandSafehouse());
 
         ch.getCommands().remove("tp");
         ch.getCommands().remove("toggledownfall");
 
         ch.registerCommand(new CommandTP());
         ch.registerCommand(new CommandToggleDownfall());
+
+        ChatComponentText component = new ChatComponentText("Nailed");
+        component.func_150256_b().func_150238_a(EnumChatFormatting.GREEN);
+        MinecraftServer.getServer().func_147134_at().func_151315_a(component);
     }
 
     @EventHandler

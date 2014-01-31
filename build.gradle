@@ -73,6 +73,7 @@ allprojects {
             name = 'reening'
             url = 'http://maven.reening.nl'
         }
+        flatDir name: 'localRepository', dirs: 'build/dirtyArtifacts'
     }
 }
 
