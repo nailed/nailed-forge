@@ -1,5 +1,10 @@
 version = '0.1'
 
+jar.manifest{
+    attributes 'FMLCorePlugin': 'jk_5.nailed.client.coremod.NailedFMLPlugin'
+    attributes 'FMLCorePluginContainsFMLMod': 'true'
+}
+
 dependencies {
     packed 'jk_5.asyncirc:ASyncIRCClient:0.1-SNAPSHOT'
     compile project(":CrashReporter")

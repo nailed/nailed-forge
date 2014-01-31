@@ -11,6 +11,7 @@ import jk_5.nailed.client.map.NailedWorldProvider;
 import jk_5.nailed.client.network.ClientNetworkHandler;
 import jk_5.nailed.client.render.NotificationRenderer;
 import jk_5.nailed.client.render.RenderEventHandler;
+import jk_5.nailed.client.skinsync.SkinSync;
 import jk_5.nailed.client.util.config.ConfigFile;
 import lombok.Getter;
 import net.minecraftforge.common.DimensionManager;
@@ -59,6 +60,7 @@ public class NailedClient {
         NailedLog.info("Registering event handlers");
         MinecraftForge.EVENT_BUS.register(new RenderEventHandler());
         MinecraftForge.EVENT_BUS.register(new NotificationRenderer());
+        MinecraftForge.EVENT_BUS.register(SkinSync.getInstance());
         FMLCommonHandler.instance().bus().register(new TickHandlerClient());
 
         //NailedLog.info("Initializing UpdateNotifier");

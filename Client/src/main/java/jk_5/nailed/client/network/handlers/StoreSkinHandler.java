@@ -1,12 +1,15 @@
 package jk_5.nailed.client.network.handlers;
 
+import io.netty.buffer.ByteBufInputStream;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import jk_5.nailed.client.NailedLog;
 import jk_5.nailed.client.network.NailedPacket;
+import jk_5.nailed.client.skinsync.SkinSync;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.nio.channels.FileChannel;
 
 /**
  * No description given
@@ -17,11 +20,17 @@ public class StoreSkinHandler extends SimpleChannelInboundHandler<NailedPacket.S
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, NailedPacket.StoreSkin msg) throws Exception{
-        File dest = new File("skincache", msg.skinName + ".png");
+        NailedLog.info("Incoming " + (msg.isCape ? "cape" : "skin") + " data for " + msg.skinName);
+        File dest = new File("skincache", (msg.isCape ? "cape_" : "skin_") + msg.skinName + ".png");
         dest.getParentFile().mkdirs();
-        FileChannel channel = new FileOutputStream(dest).getChannel();
-        channel.write(msg.data.nioBuffer());
-        channel.close();
+        BufferedImage image = ImageIO.read(new ByteBufInputStream(msg.data));
+        ImageIO.write(image, "PNG", dest);
         msg.data.release();
+        if(msg.isCape){
+            SkinSync.getInstance().cacheCapeData(msg.skinName, image);
+        }else{
+            SkinSync.getInstance().cacheSkinData(msg.skinName, image);
+        }
+        NailedLog.info("Stored " + (msg.isCape ? "cape" : "skin") + " data for " + msg.skinName);
     }
 }

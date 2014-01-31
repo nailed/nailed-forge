@@ -155,14 +155,12 @@ public abstract class NailedPacket {
 
         public String username;
         public boolean isSkin;
-        public boolean isUrl;
         public String skin;
 
         @Override
         public void encode(ByteBuf buffer){
             ByteBufUtils.writeUTF8String(buffer, this.username);
             buffer.writeBoolean(this.isSkin);
-            buffer.writeBoolean(this.isUrl);
 
             byte[] utf8Bytes = this.skin.getBytes(Charsets.UTF_8);
             buffer.writeInt(utf8Bytes.length);
@@ -173,7 +171,6 @@ public abstract class NailedPacket {
         public void decode(ByteBuf buffer){
             this.username = ByteBufUtils.readUTF8String(buffer);
             this.isSkin = buffer.readBoolean();
-            this.isUrl = buffer.readBoolean();
 
             int len = buffer.readInt();
             this.skin = buffer.toString(buffer.readerIndex(), len, Charsets.UTF_8);
@@ -198,7 +195,7 @@ public abstract class NailedPacket {
         public void decode(ByteBuf buffer){
             this.skinName = ByteBufUtils.readUTF8String(buffer);
             this.isCape = buffer.readBoolean();
-            this.data = buffer.copy();
+            this.data = buffer.slice();
         }
     }
 
