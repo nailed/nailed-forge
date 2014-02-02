@@ -26,7 +26,7 @@ import java.util.Collection;
  *
  * @author jk-5
  */
-@Mod(modid = NailedClient.modid, version = "0.1", useMetadata = true, certificateFingerprint = "87401ecb3314a1a18fb267281b2432975a7e2e84")
+@Mod(modid = NailedClient.modid, version = "0.1", useMetadata = true, certificateFingerprint = "87401ecb3314a1a18fb267281b2432975a7e2e84", guiFactory = "jk_5.nailed.client.config.NailedConfigGuiFactory")
 public class NailedClient {
 
     @Getter private static final Logger logger = LogManager.getLogger("Nailed");
