@@ -15,6 +15,8 @@ import jk_5.nailed.map.mappack.Spawnpoint;
 import jk_5.nailed.map.stat.StatManager;
 import jk_5.nailed.map.teleport.TeleportOptions;
 import jk_5.nailed.map.weather.WeatherController;
+import jk_5.nailed.network.NailedNetworkHandler;
+import jk_5.nailed.network.NailedPacket;
 import jk_5.nailed.players.Player;
 import jk_5.nailed.players.PlayerRegistry;
 import jk_5.nailed.util.ChatColor;
@@ -179,5 +181,9 @@ public class Map {
 
     public void onSynced(){
         this.dataResyncRequired = false;
+    }
+
+    public void broadcastNotification(String msg){
+        NailedNetworkHandler.sendPacketToAllPlayersInDimension(new NailedPacket.Notification(msg, null, 0xFFFFFF), this.getID());
     }
 }
