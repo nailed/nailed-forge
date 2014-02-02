@@ -29,6 +29,7 @@ public class Player {
     @Setter private Map currentMap;
     @Getter private boolean online = false;
     @Getter @Setter private int teamSpeakClientID = -1;
+    @Getter @Setter private int fps;
 
     public void sendNotification(String message){
         this.sendNotification(message, null);

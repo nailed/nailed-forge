@@ -7,8 +7,10 @@ import cpw.mods.fml.relauncher.Side;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
 import jk_5.nailed.network.handlers.FMLHandshakeHandler;
+import jk_5.nailed.network.handlers.FPSSummaryHandler;
 import jk_5.nailed.network.handlers.GuiReturnDataHandler;
 import jk_5.nailed.network.handlers.MovementEventHandler;
+import lombok.Getter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
@@ -21,6 +23,7 @@ import net.minecraft.network.Packet;
  */
 public class NailedNetworkHandler {
 
+    @Getter
     private static FMLEmbeddedChannel channel;
 
     public static void registerChannel(){
@@ -32,6 +35,7 @@ public class NailedNetworkHandler {
         pipeline.addAfter(targetName, "FMLHandshakeHandler", new FMLHandshakeHandler());
         pipeline.addAfter(targetName, "MovementEventHandler", new MovementEventHandler());
         pipeline.addAfter(targetName, "GuiReturnDataHandler", new GuiReturnDataHandler());
+        pipeline.addAfter(targetName, "FPSSummaryHandler", new FPSSummaryHandler());
     }
 
     public static void sendPacketToAllPlayersInDimension(NailedPacket packet, int dimension){

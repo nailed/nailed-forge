@@ -238,4 +238,21 @@ public abstract class NailedPacket {
             this.name = ByteBufUtils.readUTF8String(buffer);
         }
     }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class FPSSummary extends NailedPacket {
+
+        public int fps;
+
+        @Override
+        public void encode(ByteBuf buffer){
+            buffer.writeInt(this.fps);
+        }
+
+        @Override
+        public void decode(ByteBuf buffer){
+
+        }
+    }
 }

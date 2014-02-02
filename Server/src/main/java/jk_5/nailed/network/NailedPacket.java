@@ -244,4 +244,21 @@ public abstract class NailedPacket {
             //Send-only
         }
     }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class FPSSummary extends NailedPacket {
+
+        public int fps;
+
+        @Override
+        public void encode(ByteBuf buffer){
+
+        }
+
+        @Override
+        public void decode(ByteBuf buffer){
+            this.fps = buffer.readInt();
+        }
+    }
 }

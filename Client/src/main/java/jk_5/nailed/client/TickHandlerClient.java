@@ -21,6 +21,7 @@ public class TickHandlerClient {
 
     private boolean wasJumping = false;
     private boolean wasSneaking = false;
+    private int ellapsedTicks = 0;
 
     @SubscribeEvent
     @SuppressWarnings("unused")
@@ -40,6 +41,11 @@ public class TickHandlerClient {
             wasJumping = player.movementInput.jump;
             wasSneaking = player.movementInput.sneak;
         }
+        if(this.ellapsedTicks >= 40){
+            ClientNetworkHandler.sendPacketToServer(new NailedPacket.FPSSummary(Minecraft.debugFPS));
+            this.ellapsedTicks = -1;
+        }
+        this.ellapsedTicks++;
     }
 
     public NailedTileEntity getTileEntityUnderPlayer(EntityPlayer player){
