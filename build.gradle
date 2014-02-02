@@ -35,7 +35,7 @@ version = '2.0-SNAPSHOT'
 
 nailed {
     minecraftVersion = '1.7.2'
-    forgeVersion = '1.7.2-10.12.0.1019'
+    forgeVersion = '10.12.0.1023'
 
     versionName = 'Nailed-1.7.2'
     mainClass = 'net.minecraft.launchwrapper.Launch'
@@ -60,7 +60,7 @@ nailed {
 }
 
 minecraft{
-    version = '1.7.2-10.12.0.1021'
+    version = '1.7.2-10.12.0.1023'
     assetDir = 'runtime/client/assets'
 }
 
@@ -73,7 +73,7 @@ allprojects {
             name = 'reening'
             url = 'http://maven.reening.nl'
         }
-        flatDir name: 'localRepository', dirs: 'build/dirtyArtifacts'
+        flatDir name: 'localRepository', dirs: '/Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/dirtyArtifacts'
     }
 }
 

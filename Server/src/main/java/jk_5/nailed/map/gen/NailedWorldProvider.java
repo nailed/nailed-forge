@@ -51,6 +51,11 @@ public class NailedWorldProvider extends WorldProvider implements MappackContain
     public void updateWeather(){
         super.updateWeather();
 
+        this.worldObj.rainingStrength = 0;
+        this.worldObj.prevRainingStrength = 0;
+        this.worldObj.thunderingStrength = 0;
+        this.worldObj.prevThunderingStrength = 0;
+
         /*if(!this.worldObj.isRemote && this.worldObj.playerEntities.isEmpty()){
             WorldServer world = (WorldServer) this.worldObj;
             world.theChunkProviderServer.unloadAllChunks();
