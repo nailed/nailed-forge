@@ -21,7 +21,7 @@ public class InstructionCountUp extends TimedInstruction {
     @Override
     public boolean executeTimed(GameController controller, int ticks) {
         controller.broadcastTimeRemaining(Utils.secondsToShortTimeString(ticks));
-        return true;
+        return false;
     }
 
     @Override

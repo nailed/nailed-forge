@@ -8,11 +8,11 @@ package jk_5.nailed.map.instruction;
 public abstract class TimedInstruction implements IInstruction {
 
     /**
-     * Will be executed until this method returns false
+     * Will be executed until this method returns true
      *
      * @param controller The gamecontroller that you can use to interact with the map
      * @param ticks How long we are waiting on this task already
-     * @return true if we should execute another tick, false otherwise
+     * @return true if you are done executing, false otherwise.
      */
     public abstract boolean executeTimed(GameController controller, int ticks);
 
