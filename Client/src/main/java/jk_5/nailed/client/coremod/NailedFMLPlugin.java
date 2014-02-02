@@ -9,6 +9,7 @@ import java.util.Map;
  *
  * @author jk-5
  */
+@IFMLLoadingPlugin.MCVersion("1.7.2")
 public class NailedFMLPlugin implements IFMLLoadingPlugin {
 
     @Override
