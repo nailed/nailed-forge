@@ -5,7 +5,6 @@ import net.minecraft.crash.CrashReport;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.ServerConfigurationManager;
-import net.minecraft.util.ChatComponentText;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -60,7 +59,7 @@ public class CrashReporter {
     private static void kickAllPlayers(){
         ServerConfigurationManager manager = MinecraftServer.getServer().getConfigurationManager();
         while(!manager.playerEntityList.isEmpty()){
-            ((EntityPlayerMP) manager.playerEntityList.get(0)).playerNetServerHandler.func_147231_a(new ChatComponentText("Server Crashed!"));
+            ((EntityPlayerMP) manager.playerEntityList.get(0)).playerNetServerHandler.func_147360_c("Server Crashed!");
         }
     }
 }
