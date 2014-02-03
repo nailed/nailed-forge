@@ -1,10 +1,17 @@
 Todo:
 - Add transformer obf mappings
-- Fix teleportation
+- Gamesigns
+- Some kind of permission system
+- Zone protection
+- Add a lot of chat commands
+- Login gui
+- Skinsync
+- Native cypher
+- Dynamic instructions
 
 Bugs:
 - PULSE_OFF pulses on enable
-- Countdown does not seem to work
+- Teamwon stat type doesn't work
 
 Command permission levels:  (See http://minecraft.gamepedia.com/Server.properties#Minecraft_server_properties)
 0. Everybody
