@@ -9,6 +9,7 @@ Todo:
 - Native cypher
 - Dynamic instructions
 - API module
+- Scoreboard API
 
 Bugs:
 - PULSE_OFF pulses on enable

@@ -12,6 +12,7 @@ import jk_5.nailed.map.gameloop.InstructionController;
 import jk_5.nailed.map.mappack.Mappack;
 import jk_5.nailed.map.mappack.MappackMetadata;
 import jk_5.nailed.map.mappack.Spawnpoint;
+import jk_5.nailed.map.sign.SignCommandHandler;
 import jk_5.nailed.map.stat.StatManager;
 import jk_5.nailed.map.teleport.TeleportOptions;
 import jk_5.nailed.map.weather.WeatherController;
@@ -48,6 +49,7 @@ public class Map {
     @Getter private int joinedPlayers = 0;
     @Getter private boolean dataResyncRequired = true;
     @Getter private WeatherController weatherController;
+    @Getter private SignCommandHandler signCommandHandler;
 
     public Map(Mappack mappack, int id){
         this.ID = id;
@@ -56,6 +58,7 @@ public class Map {
         this.statManager = new StatManager(this);
         this.gameController = new InstructionController(this);
         this.weatherController = new WeatherController(this);
+        this.signCommandHandler = new SignCommandHandler(this);
         MapLoader.instance().addMap(this);
     }
 

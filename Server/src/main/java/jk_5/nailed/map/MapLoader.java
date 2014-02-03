@@ -30,7 +30,10 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.world.ChunkEvent;
+import net.minecraftforge.event.world.ChunkWatchEvent;
 import net.minecraftforge.event.world.WorldEvent;
 
 import java.io.File;
@@ -163,6 +166,10 @@ public class MapLoader implements IMappackRegistrar {
     public void onChangeDimension(PlayerChangedDimensionEvent event){
         event.oldMap.onPlayerLeft(event.player);
         event.newMap.onPlayerJoined(event.player);
+        for(Map map : this.maps){
+            map.getSignCommandHandler().onPlayerLeftMap(event.oldMap, event.player);
+            map.getSignCommandHandler().onPlayerJoinMap(event.newMap, event.player);
+        }
     }
 
     @SubscribeEvent
@@ -244,6 +251,48 @@ public class MapLoader implements IMappackRegistrar {
                 ChunkCoordinates coords = player.getTeam().getSpawnPoint();
                 player.getEntity().setSpawnChunk(coords, true);
             }
+        }
+    }
+
+    @SubscribeEvent
+    @SuppressWarnings("unused")
+    public void onChunkLoad(ChunkEvent.Load event){
+        for(Map map : this.maps){
+            map.getSignCommandHandler().onChunkLoad(event);
+        }
+    }
+
+    @SubscribeEvent
+    @SuppressWarnings("unused")
+    public void onChunkUnload(ChunkEvent.Unload event){
+        for(Map map : this.maps){
+            map.getSignCommandHandler().onChunkUnload(event);
+        }
+    }
+
+    @SubscribeEvent
+    @SuppressWarnings("unused")
+    public void onWatch(ChunkWatchEvent.Watch event){
+        for(Map map : this.maps){
+            map.getSignCommandHandler().onWatch(event);
+        }
+    }
+
+    @SubscribeEvent
+    @SuppressWarnings("unused")
+    public void onUnwatch(ChunkWatchEvent.UnWatch event){
+        for(Map map : this.maps){
+            map.getSignCommandHandler().onUnwatch(event);
+        }
+    }
+
+    @SubscribeEvent
+    @SuppressWarnings("unused")
+    public void onInteract(PlayerInteractEvent event){
+        //TODO: replace this
+        //for(Map map : this.maps){
+        for(int i = 0; i < this.maps.size(); i++){
+            this.maps.get(i).getSignCommandHandler().onInteract(event);
         }
     }
 
