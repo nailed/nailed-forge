@@ -1,6 +1,5 @@
 package jk_5.nailed.network;
 
-import cpw.mods.fml.relauncher.ReflectionHelper;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
@@ -10,6 +9,7 @@ import jk_5.nailed.util.ChatColor;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.client.C12PacketUpdateSign;
 import net.minecraft.network.play.server.S02PacketChat;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
@@ -24,6 +24,10 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception{
+        if(msg instanceof C12PacketUpdateSign){
+            C12PacketUpdateSign packet = (C12PacketUpdateSign) msg;
+            NailedLog.info("%s, %s, %s, %s  x=%s, y=%s, z=%s", packet.field_149590_d[0], packet.field_149590_d[1], packet.field_149590_d[2], packet.field_149590_d[3], Integer.toString(packet.field_149593_a), Integer.toString(packet.field_149591_b), Integer.toString(packet.field_149592_c));
+        }
         ctx.fireChannelRead(msg);
     }
 
@@ -31,7 +35,7 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception{
         if(msg instanceof S02PacketChat){
             S02PacketChat packet = (S02PacketChat) msg;
-            IChatComponent component = ReflectionHelper.getPrivateValue(S02PacketChat.class, packet, "field_148919_a");
+            IChatComponent component = packet.field_148919_a;
             if(component instanceof ChatComponentTranslation){
                 ChatComponentTranslation translation = (ChatComponentTranslation) component;
                 String key = translation.func_150268_i();

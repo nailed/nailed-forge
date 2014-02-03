@@ -8,6 +8,7 @@ Todo:
 - Skinsync
 - Native cypher
 - Dynamic instructions
+- API module
 
 Bugs:
 - PULSE_OFF pulses on enable
