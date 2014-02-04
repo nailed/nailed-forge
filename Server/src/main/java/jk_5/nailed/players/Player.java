@@ -3,6 +3,7 @@ package jk_5.nailed.players;
 import com.mojang.authlib.GameProfile;
 import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MapLoader;
+import jk_5.nailed.map.mappack.Spawnpoint;
 import jk_5.nailed.map.teleport.TeleportHelper;
 import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.network.NailedPacket;
@@ -10,6 +11,7 @@ import jk_5.nailed.util.ChatColor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.Packet;
 import net.minecraft.server.MinecraftServer;
@@ -110,5 +112,10 @@ public class Player {
 
     public void teleportToMap(Map map){
         TeleportHelper.travelEntity(this.getEntity(), map.getSpawnTeleport());
+    }
+
+    public Spawnpoint getLocation(){
+        EntityPlayer player = this.getEntity();
+        return new Spawnpoint((int) player.posX, (int) player.posY, (int) player.posZ, player.rotationYaw, player.rotationPitch);
     }
 }

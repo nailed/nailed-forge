@@ -1,18 +1,25 @@
 package jk_5.nailed.server.command;
 
+import com.google.common.collect.Lists;
 import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MapLoader;
+import jk_5.nailed.map.mappack.Mappack;
 import jk_5.nailed.map.mappack.Spawnpoint;
 import jk_5.nailed.map.teleport.TeleportHelper;
 import jk_5.nailed.map.teleport.TeleportOptions;
 import jk_5.nailed.players.Player;
+import jk_5.nailed.players.PlayerRegistry;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.PlayerNotFoundException;
-import net.minecraft.command.WrongUsageException;
+import net.minecraft.command.PlayerSelector;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentTranslation;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
 
@@ -47,79 +54,109 @@ public class CommandTP extends NailedCommand {
 
     @Override
     public void process(ICommandSender sender, String[] args){
-        Entity subject;
-        TeleportOptions link;
+        List<Pair<Entity, TeleportOptions>> options = Lists.newArrayList();
         try{
-            String sSubject = null;
-            String sTarget;
-            String sX = null;
-            String sY = null;
-            String sZ = null;
-
-            if(args.length > 3){
-                if(args.length > 4){
-                    sSubject = args[(args.length - 5)];
+            if(args.length == 1){
+                //  /tp destinationPlayer
+                Pair<Entity, TeleportOptions> data;
+                if(sender instanceof EntityPlayer){
+                    data = new MutablePair<Entity, TeleportOptions>((EntityPlayer) sender, null);
+                }else{
+                    throw new CommandException("commands.nailed.tp.fail.notarget");
                 }
-                sTarget = args[(args.length - 4)];
-                sX = args[(args.length - 3)];
-                sY = args[(args.length - 2)];
-                sZ = args[(args.length - 1)];
+                Player target = PlayerRegistry.instance().getPlayerByUsername(args[0]);
+                if(target == null){
+                    throw new CommandException("commands.nailed.tp.fail.notarget");
+                }
+                TeleportOptions option = new TeleportOptions();
+                option.setCoordinates(target.getLocation());
+                option.setDestination(target.getCurrentMap());
+                data.setValue(option);
             }else if(args.length == 2){
-                sSubject = args[(args.length - 2)];
-                sTarget = args[(args.length - 1)];
-            }else if(args.length == 1){
-                sTarget = args[(args.length - 1)];
-            }else{
-                throw new WrongUsageException("commands.nailed.tp.usage");
+                //  /tp teleportingPlayer destinationPlayer | destinationMap
+                EntityPlayerMP[] players = getPlayersList(sender, args[0]);
+                TeleportOptions option = getDestination(sender, args[1]);
+                for(EntityPlayerMP player : players){
+                    options.add(new ImmutablePair<Entity, TeleportOptions>(player, option));
+                }
+            }else if(args.length == 3){
+                //  /tp x y z
+                EntityPlayer teleporting;
+                if(sender instanceof EntityPlayer){
+                    teleporting = (EntityPlayer) sender;
+                }else{
+                    throw new CommandException("commands.nailed.tp.fail.notarget");
+                }
+                int x = (int) Math.floor(handleRelativeNumber(sender, teleporting.posX, args[0]));
+                int y = (int) Math.floor(handleRelativeNumber(sender, teleporting.posY, args[1], 0, 0));
+                int z = (int) Math.floor(handleRelativeNumber(sender, teleporting.posZ, args[2]));
+                TeleportOptions option = new TeleportOptions();
+                option.setCoordinates(new Spawnpoint(x, y, z, teleporting.rotationYaw, teleporting.rotationPitch));
+                option.setDestination(MapLoader.instance().getMap(teleporting.worldObj));
+                options.add(new ImmutablePair<Entity, TeleportOptions>(teleporting, option));
+            }else if(args.length == 4){
+                //  /tp teleportingPlayer x y z
+                Player target = PlayerRegistry.instance().getPlayerByUsername(args[0]);
+                if(target == null){
+                    throw new CommandException("commands.nailed.tp.fail.notarget");
+                }
+                EntityPlayerMP[] players = getPlayersList(sender, args[0]);
+                for(EntityPlayerMP player : players){
+                    int x = (int) Math.floor(handleRelativeNumber(sender, player.posX, args[1]));
+                    int y = (int) Math.floor(handleRelativeNumber(sender, player.posY, args[2], 0, 0));
+                    int z = (int) Math.floor(handleRelativeNumber(sender, player.posZ, args[3]));
+                    TeleportOptions option = new TeleportOptions();
+                    option.setCoordinates(new Spawnpoint(x, y, z, player.rotationYaw, player.rotationPitch));
+                    option.setDestination(target.getCurrentMap());
+                    options.add(new ImmutablePair<Entity, TeleportOptions>(player, option));
+                }
             }
-
-            if(sSubject == null)
-                subject = getCommandSenderAsPlayer(sender);
-            else{
-                subject = getTargetPlayer(sender, sSubject);
+            for(Pair<Entity, TeleportOptions> p : options){
+                TeleportHelper.travelEntity(p.getKey(), p.getValue());
             }
-            if(subject == null){
-                throw new WrongUsageException("commands.nailed.tp.fail.nosubject");
-            }
-
-            link = getLinkInfoForTarget(sender, subject, sTarget, sX, sY, sZ);
-            TeleportHelper.travelEntity(subject, link);
         }catch(CommandException e){
             sender.func_145747_a(new ChatComponentTranslation(e.getMessage()));
-            sender.func_145747_a(new ChatComponentTranslation(getCommandUsage(sender)));
+            sender.func_145747_a(new ChatComponentTranslation(this.getCommandUsage(sender)));
         }
     }
 
-    public static TeleportOptions getLinkInfoForTarget(ICommandSender sender, Entity subject, String sTarget, String sX, String sY, String sZ){
-        TeleportOptions link = null;
-        try{
-            Entity target = getTargetPlayer(sender, sTarget);
-            link = createOptionsForLocation(new Spawnpoint(target), MapLoader.instance().getMap(target.worldObj));
-        }catch(PlayerNotFoundException e){
-            //NOOP. We'll try again later
+    private static EntityPlayerMP[] getPlayersList(ICommandSender sender, String pattern){
+        EntityPlayerMP[] players = PlayerSelector.matchPlayers(sender, pattern);
+        if(players == null){
+            Player p = PlayerRegistry.instance().getPlayerByUsername(pattern);
+            if(p == null) throw new CommandException("commands.nailed.tp.fail.notarget");
+            players = new EntityPlayerMP[]{p.getEntity()};
         }
-        if(link == null){
-            link = new TeleportOptions();
-            int dim = (int) (handleRelativeNumber(sender, subject.dimension, sTarget, 0, 0) - 0.5D);
-            Map destMap = MapLoader.instance().getMap(dim);
-            if(destMap == null){
-                throw new CommandException("commands.nailed.tp.fail.noworld", dim);
-            }
-            link.setDestination(destMap);
-            if((sX != null) && (sY != null) && (sZ != null)){
-                int x = (int) handleRelativeNumber(sender, subject.posX, sX);
-                int y = (int) handleRelativeNumber(sender, subject.posY, sY, 0, 0);
-                int z = (int) handleRelativeNumber(sender, subject.posZ, sZ);
-                link.setCoordinates(new Spawnpoint(x, y, z));
-            }
-        }
-        return link;
+        return players;
     }
 
-    private static TeleportOptions createOptionsForLocation(Spawnpoint spawnpoint, Map map){
-        TeleportOptions options = new TeleportOptions();
-        options.setCoordinates(spawnpoint);
-        options.setDestination(map);
-        return options;
+    private static TeleportOptions getDestination(ICommandSender sender, String data){
+        TeleportOptions dest = new TeleportOptions();
+        Player p = PlayerRegistry.instance().getPlayerByUsername(data);
+        if(p != null){
+            dest.setCoordinates(p.getLocation());
+            dest.setDestination(p.getCurrentMap());
+        }else{
+            Map map = MapLoader.instance().getMapFromName(data);
+            if(map != null){
+                Mappack mappack = map.getMappack();
+                if(mappack != null){
+                    dest.setCoordinates(mappack.getMappackMetadata().getSpawnPoint());
+                }
+                dest.setDestination(map);
+            }else{
+                map = MapLoader.instance().getMap(parseInt(sender, data));
+                if(map != null){
+                    Mappack mappack = map.getMappack();
+                    if(mappack != null){
+                        dest.setCoordinates(mappack.getMappackMetadata().getSpawnPoint());
+                    }
+                    dest.setDestination(map);
+                }else{
+                    throw new CommandException("commands.nailed.tp.fail.nodest");
+                }
+            }
+        }
+        return dest;
     }
 }

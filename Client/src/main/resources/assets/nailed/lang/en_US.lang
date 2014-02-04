@@ -18,5 +18,7 @@ commands.nailed.time.usage=/time - Change the time
 commands.nailed.savemappack.usage=/time - Change the time
 commands.nailed.error.notValid=You can't use this command!
 
+commands.nailed.tp.usage=/tp [teleportingPlayer] <targetPlayer | targetDim [x y z]>
+
 death.attack.railgun=%s was gibbed by %s
 quakecraft.message.winner=The winner is %s
