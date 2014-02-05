@@ -8,4 +8,5 @@ jar.manifest{
 dependencies {
     packed 'pircbot:pircbot:1.5.0'
     compile project(":CrashReporter")
+    compile project(":API")
 }

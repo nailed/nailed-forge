@@ -1,8 +1,10 @@
 rootProject.name = 'Nailed'
 
+include 'API'
 include 'QuakeCraft'
 include 'Server'
 include 'Client'
 include 'Updater'
 include 'CrashReporter'
 include 'Native'
+
