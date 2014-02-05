@@ -20,7 +20,6 @@ public class TileEntityPortalController extends NailedTileEntity implements IGui
     @Getter private int color;
 
     public TileEntityPortalController(){
-        this.field_145846_f = false;
         this.yaw = 0;
         this.pitch = 0;
         this.color = 0x3333FF;

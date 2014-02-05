@@ -34,9 +34,9 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
 
     public void setStatName(String statName){
         this.programmedName = statName;
-        if(this.field_145850_b == null) this.needsUpdate = true;
-        else if(!this.field_145850_b.isRemote){
-            StatManager manager = NailedAPI.getMapLoader().getMap(this.field_145850_b).getStatManager();
+        if(this.worldObj == null) this.needsUpdate = true;
+        else if(!this.worldObj.isRemote){
+            StatManager manager = NailedAPI.getMapLoader().getMap(this.worldObj).getStatManager();
             this.stat = manager.getStat(this.programmedName);
             manager.registerStatTile(this);
             this.isLoaded = true;
@@ -50,9 +50,9 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
     }
 
     @Override
-    public void func_145845_h(){
+    public void updateEntity(){
         if(this.needsUpdate){
-            StatManager manager = NailedAPI.getMapLoader().getMap(this.field_145850_b).getStatManager();
+            StatManager manager = NailedAPI.getMapLoader().getMap(this.worldObj).getStatManager();
             this.stat = manager.getStat(this.programmedName);
             manager.registerStatTile(this);
             this.isLoaded = true;
@@ -65,7 +65,7 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
             this.needsUpdate = false;
         }
         if(!this.isLoaded){
-            NailedAPI.getMapLoader().getMap(this.field_145850_b).getStatManager().registerStatTile(this);
+            NailedAPI.getMapLoader().getMap(this.worldObj).getStatManager().registerStatTile(this);
             this.isLoaded = true;
         }
         if(this.redstonePulseTicks != -1){
@@ -80,10 +80,10 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
     }
 
     @Override
-    public void func_145843_s(){
-        super.func_145843_s();
+    public void invalidate(){
+        super.invalidate();
         if(this.isLoaded){
-            NailedAPI.getMapLoader().getMap(this.field_145850_b).getStatManager().unloadStatTile(this);
+            NailedAPI.getMapLoader().getMap(this.worldObj).getStatManager().unloadStatTile(this);
             this.isLoaded = false;
         }
     }
@@ -92,7 +92,7 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
     public void onChunkUnload(){
         super.onChunkUnload();
         if(this.isLoaded){
-            NailedAPI.getMapLoader().getMap(this.field_145850_b).getStatManager().unloadStatTile(this);
+            NailedAPI.getMapLoader().getMap(this.worldObj).getStatManager().unloadStatTile(this);
             this.isLoaded = false;
         }
     }
@@ -103,16 +103,16 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
     }
 
     @Override
-    public void func_145839_a(NBTTagCompound tag){
-        super.func_145839_a(tag);
+    public void readFromNBT(NBTTagCompound tag){
+        super.readFromNBT(tag);
         this.setStatName(tag.getString("name"));
         this.mode = StatMode.values()[tag.getByte("mode")];
         this.pulseLength = tag.getInteger("pulseLength");
     }
 
     @Override
-    public void func_145841_b(NBTTagCompound tag){
-        super.func_145841_b(tag);
+    public void writeToNBT(NBTTagCompound tag){
+        super.writeToNBT(tag);
         tag.setString("name", this.programmedName);
         tag.setByte("mode", (byte) this.mode.ordinal());
         tag.setInteger("pulseLength", this.pulseLength);
@@ -182,6 +182,6 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
     }
 
     public void scheduleRedstoneUpdate(){
-        this.field_145850_b.func_147459_d(this.field_145851_c, this.field_145848_d, this.field_145849_e, this.field_145854_h);
+        this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, this.blockType);
     }
 }

@@ -30,123 +30,123 @@ import java.util.Random;
 public class BlockPortal extends NailedBlock {
 
     public BlockPortal(){
-        super("portal", Material.field_151570_A); //Material.portal
-        this.func_149675_a(true);
-        this.func_149715_a(1);
-        this.func_149722_s();
+        super("portal", Material.portal);
+        this.setTickRandomly(true);
+        this.setLightLevel(1);
+        this.setBlockUnbreakable();
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void func_149651_a(IIconRegister register){
-        this.field_149761_L = register.registerIcon("nailed:portal");
+    public void registerBlockIcons(IIconRegister register){
+        this.blockIcon = register.registerIcon("nailed:portal");
     }
 
     @Override
-    public AxisAlignedBB func_149668_a(World world, int par2, int par3, int i){
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z){
         return null;
     }
 
     @Override
-    public void func_149719_a(IBlockAccess blockAccess, int x, int y, int z){
+    public void setBlockBoundsBasedOnState(IBlockAccess blockAccess, int x, int y, int z){
         float xmin = 0.25F;
         float xmax = 0.75F;
         float ymin = 0.25F;
         float ymax = 0.75F;
         float zmin = 0.25F;
         float zmax = 0.75F;
-        if(BlockPortalController.isValidLinkPortalBlock(blockAccess.func_147439_a(x - 1, y, z)) > 0){
+        if(BlockPortalController.isValidLinkPortalBlock(blockAccess.getBlock(x - 1, y, z)) > 0){
             xmin = 0.0F;
         }
-        if(BlockPortalController.isValidLinkPortalBlock(blockAccess.func_147439_a(x + 1, y, z)) > 0){
+        if(BlockPortalController.isValidLinkPortalBlock(blockAccess.getBlock(x + 1, y, z)) > 0){
             xmax = 1.0F;
         }
-        if(BlockPortalController.isValidLinkPortalBlock(blockAccess.func_147439_a(x, y - 1, z)) > 0){
+        if(BlockPortalController.isValidLinkPortalBlock(blockAccess.getBlock(x, y - 1, z)) > 0){
             ymin = 0.0F;
         }
-        if(BlockPortalController.isValidLinkPortalBlock(blockAccess.func_147439_a(x, y + 1, z)) > 0){
+        if(BlockPortalController.isValidLinkPortalBlock(blockAccess.getBlock(x, y + 1, z)) > 0){
             ymax = 1.0F;
         }
-        if(BlockPortalController.isValidLinkPortalBlock(blockAccess.func_147439_a(x, y, z - 1)) > 0){
+        if(BlockPortalController.isValidLinkPortalBlock(blockAccess.getBlock(x, y, z - 1)) > 0){
             zmin = 0.0F;
         }
-        if(BlockPortalController.isValidLinkPortalBlock(blockAccess.func_147439_a(x, y, z + 1)) > 0){
+        if(BlockPortalController.isValidLinkPortalBlock(blockAccess.getBlock(x, y, z + 1)) > 0){
             zmax = 1.0F;
         }
-        this.func_149676_a(xmin, ymin, zmin, xmax, ymax, zmax);
+        this.setBlockBounds(xmin, ymin, zmin, xmax, ymax, zmax);
     }
 
     @Override
-    public boolean func_149662_c(){
+    public boolean isOpaqueCube(){
         return false;
     }
 
     @Override
-    public boolean func_149686_d(){
+    public boolean renderAsNormalBlock(){
         return false;
     }
 
     @Override
-    public int func_149645_b(){
+    public int getRenderType(){
         return 0;
     }
 
     @Override
-    public int func_149635_D(){
+    public int getBlockColor(){
         return 0x3333FF;
     }
 
     @Override
-    public int func_149741_i(int i){
+    public int getRenderColor(int i){
         return 0x3333FF;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public boolean func_149646_a(IBlockAccess world, int x, int y, int z, int side){
-        Block block = world.func_147439_a(x, y, z);
-        return block != this && super.func_149646_a(world, x, y, z, side);
+    public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int side){
+        Block block = world.getBlock(x, y, z);
+        return block != this && super.shouldSideBeRendered(world, x, y, z, side);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public int func_149720_d(IBlockAccess blockAccess, int x, int y, int z){
+    public int colorMultiplier(IBlockAccess blockAccess, int x, int y, int z){
         World world = Minecraft.getMinecraft().theWorld;
         TileEntity entity = BlockPortalController.getTileEntity(world, x, y, z);
         if((entity != null) && ((entity instanceof TileEntityPortalController))){
             TileEntityPortalController controller = (TileEntityPortalController) entity;
             return controller.getColor();
         }
-        return func_149635_D();
+        return this.getBlockColor();
     }
 
     @Override
-    public void func_149695_a(World par1World, int par2, int par3, int par4, Block block){
+    public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, Block block){
         if(par1World.isRemote) return;
         validate(par1World, new ChunkCoordinates(par2, par3, par4));
     }
 
     @Override
-    public int func_149745_a(Random rand){
+    public int quantityDropped(Random rand){
         return 0;
     }
 
     @Override
-    public int func_149701_w(){
+    public int getRenderBlockPass(){
         return 1;
     }
 
     @Override
-    public void func_149670_a(World world, int x, int y, int z, Entity entity){
+    public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity){
         if(world.isRemote) return;
         TileEntity tileentity = BlockPortalController.getTileEntity(world, x, y, z);
         if((tileentity == null) || (!(tileentity instanceof TileEntityPortalController))){
-            world.func_147468_f(x, y, z);
+            world.setBlockToAir(x, y, z);
             return;
         }
         TileEntityPortalController container = (TileEntityPortalController) tileentity;
         if(container.getDestination() == null){
-            world.func_147468_f(x, y, z);
+            world.setBlockToAir(x, y, z);
             return;
         }
         TeleportOptions options = container.getDestination().clone();
@@ -156,9 +156,9 @@ public class BlockPortal extends NailedBlock {
     }
 
     @Override
-    public void func_149674_a(World world, int i, int j, int k, Random rand){
+    public void updateTick(World world, int i, int j, int k, Random rand){
         if(world.isRemote) return;
-        this.func_149695_a(world, i, j, k, Blocks.air);
+        this.onNeighborBlockChange(world, i, j, k, Blocks.air);
     }
 
     public static void validate(World world, ChunkCoordinates start){
@@ -167,7 +167,7 @@ public class BlockPortal extends NailedBlock {
         blocks.add(start);
         while(blocks.size() > 0){
             ChunkCoordinates coords = blocks.remove(0);
-            if(world.func_147439_a(coords.posX, coords.posY, coords.posZ) == NailedBlocks.portal){
+            if(world.getBlock(coords.posX, coords.posY, coords.posZ) == NailedBlocks.portal){
                 validate(world, coords.posX, coords.posY, coords.posZ, blocks);
             }
         }
@@ -175,7 +175,7 @@ public class BlockPortal extends NailedBlock {
 
     private static void validate(World world, int i, int j, int k, Collection<ChunkCoordinates> blocks){
         if(!isValidPortal(world, i, j, k)){
-            world.func_147449_b(i, j, k, Blocks.air); //setBlock
+            world.setBlockToAir(i, j, k);
             BlockPortalController.addSurrounding(blocks, i, j, k);
         }
     }
@@ -189,13 +189,13 @@ public class BlockPortal extends NailedBlock {
     public static boolean checkPortalTension(World world, int i, int j, int k){
         if(world.isRemote) return true;
         int score = 0;
-        if((BlockPortalController.isValidLinkPortalBlock(world.func_147439_a(i + 1, j, k)) > 0) && (BlockPortalController.isValidLinkPortalBlock(world.func_147439_a(i - 1, j, k)) > 0)){
+        if((BlockPortalController.isValidLinkPortalBlock(world.getBlock(i + 1, j, k)) > 0) && (BlockPortalController.isValidLinkPortalBlock(world.getBlock(i - 1, j, k)) > 0)){
             score++;
         }
-        if((BlockPortalController.isValidLinkPortalBlock(world.func_147439_a(i, j + 1, k)) > 0) && (BlockPortalController.isValidLinkPortalBlock(world.func_147439_a(i, j - 1, k)) > 0)){
+        if((BlockPortalController.isValidLinkPortalBlock(world.getBlock(i, j + 1, k)) > 0) && (BlockPortalController.isValidLinkPortalBlock(world.getBlock(i, j - 1, k)) > 0)){
             score++;
         }
-        if((BlockPortalController.isValidLinkPortalBlock(world.func_147439_a(i, j, k + 1)) > 0) && (BlockPortalController.isValidLinkPortalBlock(world.func_147439_a(i, j, k - 1)) > 0)){
+        if((BlockPortalController.isValidLinkPortalBlock(world.getBlock(i, j, k + 1)) > 0) && (BlockPortalController.isValidLinkPortalBlock(world.getBlock(i, j, k - 1)) > 0)){
             score++;
         }
         return score > 1;

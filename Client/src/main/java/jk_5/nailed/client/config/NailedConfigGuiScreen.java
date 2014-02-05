@@ -19,20 +19,20 @@ public class NailedConfigGuiScreen extends GuiScreen {
     @SuppressWarnings("unchecked")
     @Override
     public void initGui(){
-        this.field_146292_n.add(new GuiButton(1, this.field_146294_l / 2 - 75, this.field_146295_m - 38, I18n.getStringParams("gui.done")));
+        this.buttonList.add(new GuiButton(1, this.width / 2 - 75, this.height - 38, I18n.format("gui.done")));
     }
 
     @Override
-    protected void func_146284_a(GuiButton par1GuiButton){
-        if (par1GuiButton.field_146124_l && par1GuiButton.field_146127_k == 1){
+    protected void actionPerformed(GuiButton par1GuiButton){
+        if (par1GuiButton.enabled && par1GuiButton.id == 1){
             FMLClientHandler.instance().showGuiScreen(this.parent);
         }
     }
 
     @Override
     public void drawScreen(int par1, int par2, float par3){
-        this.func_146276_q_();
-        this.drawCenteredString(this.field_146289_q, "Nailed config screen (Without config)", this.field_146294_l / 2, 40, 0xFFFFFF);
+        this.drawDefaultBackground();
+        this.drawCenteredString(this.fontRendererObj, "Nailed config screen (Without config)", this.width / 2, 40, 0xFFFFFF);
         super.drawScreen(par1, par2, par3);
     }
 }

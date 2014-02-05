@@ -32,10 +32,10 @@ public class TickHandlerClient {
             NailedTileEntity target = this.getTileEntityUnderPlayer(player);
             if (target != null) {
                 if (player.movementInput.jump && !wasJumping){
-                    ClientNetworkHandler.sendPacketToServer(new NailedPacket.MovementEvent(target.field_145851_c, target.field_145848_d, target.field_145849_e, (byte) 0));
+                    ClientNetworkHandler.sendPacketToServer(new NailedPacket.MovementEvent(target.xCoord, target.yCoord, target.zCoord, (byte) 0));
                 }
                 if (player.movementInput.sneak && !wasSneaking) {
-                    ClientNetworkHandler.sendPacketToServer(new NailedPacket.MovementEvent(target.field_145851_c, target.field_145848_d, target.field_145849_e, (byte) 1));
+                    ClientNetworkHandler.sendPacketToServer(new NailedPacket.MovementEvent(target.xCoord, target.yCoord, target.zCoord, (byte) 1));
                 }
             }
             wasJumping = player.movementInput.jump;
@@ -54,7 +54,7 @@ public class TickHandlerClient {
             int x = MathHelper.floor_double(player.posX);
             int y = MathHelper.floor_double(player.boundingBox.minY) - 1;
             int z = MathHelper.floor_double(player.posZ);
-            TileEntity te = world.func_147438_o(x, y, z);
+            TileEntity te = world.getTileEntity(x, y, z);
             if (te instanceof NailedTileEntity) return (NailedTileEntity) te;
         }
         return null;

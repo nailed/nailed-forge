@@ -21,13 +21,13 @@ public class NailedBlock extends Block {
     public NailedBlock(String name, Material material){
         super(material);
         this.registeredName = name;
-        this.func_149663_c("nailed." + name);
-        this.func_149647_a(NailedClient.getCreativeTab());
+        this.setBlockName("nailed." + name);
+        this.setCreativeTab(NailedClient.getCreativeTab());
     }
 
     @Override
-    public boolean func_149727_a(World world, int x, int y, int z, EntityPlayer entity, int side, float hitX, float hitY, float hitZ){
-        TileEntity tile = world.func_147438_o(x, y, z);
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entity, int side, float hitX, float hitY, float hitZ){
+        TileEntity tile = world.getTileEntity(x, y, z);
         if(tile != null && tile instanceof NailedTileEntity){
             return ((NailedTileEntity) tile).onBlockActivated(entity, side, hitX, hitY, hitZ);
         }
@@ -35,15 +35,15 @@ public class NailedBlock extends Block {
     }
 
     @Override
-    public void func_149749_a(World world, int x, int y, int z, Block oldBlock, int oldMeta){
-        super.func_149749_a(world, x, y, z, oldBlock, oldMeta);
-        world.func_147475_p(x, y, z);
+    public void breakBlock(World world, int x, int y, int z, Block oldBlock, int oldMeta){
+        super.breakBlock(world, x, y, z, oldBlock, oldMeta);
+        world.removeTileEntity(x, y, z);
     }
 
     @Override
-    public boolean func_149696_a(World world, int x, int y, int z, int eventID, int data){
-        super.func_149696_a(world, x, y, z, eventID, data);
-        TileEntity tileentity = world.func_147438_o(x, y, z);
-        return tileentity != null && tileentity.func_145842_c(eventID, data);
+    public boolean onBlockEventReceived(World world, int x, int y, int z, int eventID, int data){
+        super.onBlockEventReceived(world, x, y, z, eventID, data);
+        TileEntity tileentity = world.getTileEntity(x, y, z);
+        return tileentity != null && tileentity.receiveClientEvent(eventID, data);
     }
 }

@@ -29,8 +29,8 @@ public class BlockStat extends BlockMulti implements ITileEntityProvider {
     private IIcon[] icons;
 
     public BlockStat(){
-        super("statBlock", Material.field_151594_q); //Material.circuits
-        this.func_149722_s(); //setBlockUnbreakable
+        super("statBlock", Material.iron);
+        this.setBlockUnbreakable();
     }
 
     @Override
@@ -46,7 +46,7 @@ public class BlockStat extends BlockMulti implements ITileEntityProvider {
     }
 
     @Override
-    public TileEntity func_149915_a(World world, int meta){
+    public TileEntity createNewTileEntity(World world, int meta){
         if(meta == 0){
             return new TileEntityStatEmitter();
         }else if(meta == 1){
@@ -59,7 +59,7 @@ public class BlockStat extends BlockMulti implements ITileEntityProvider {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void func_149651_a(IIconRegister register){
+    public void registerBlockIcons(IIconRegister register){
         this.icons = new IIcon[16];
         this.icons[0] = register.registerIcon("nailed:statemitter");
         this.icons[1] = register.registerIcon("nailed:statmodifier");
@@ -68,7 +68,7 @@ public class BlockStat extends BlockMulti implements ITileEntityProvider {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public IIcon func_149691_a(int side, int meta){
+    public IIcon getIcon(int side, int meta){
         return this.icons[meta];
     }
 
@@ -78,12 +78,13 @@ public class BlockStat extends BlockMulti implements ITileEntityProvider {
     }
 
     @Override
-    public int func_149692_a(int meta){
+    public int damageDropped(int meta){
         return meta;
     }
 
     @Override
-    public void func_149666_a(Item item, CreativeTabs tab, List list){
+    @SuppressWarnings("unchecked")
+    public void getSubBlocks(Item item, CreativeTabs tab, List list){
         list.add(new ItemStack(item, 1, 0));
         list.add(new ItemStack(item, 1, 1));
         list.add(new ItemStack(item, 1, 2));

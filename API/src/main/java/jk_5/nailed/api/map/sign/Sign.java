@@ -30,7 +30,7 @@ public abstract class Sign {
     private final Set<EntityPlayerMP> watchers = Sets.newHashSet();
 
     public TileEntitySign getTileEntity(){
-        TileEntity tile = this.map.getWorld().func_147438_o(this.x, this.y, this.z);
+        TileEntity tile = this.map.getWorld().getTileEntity(this.x, this.y, this.z);
         if(tile instanceof TileEntitySign){
             return (TileEntitySign) tile;
         }else{
@@ -49,7 +49,7 @@ public abstract class Sign {
     public void broadcastUpdate(){
         S33PacketUpdateSign packet = this.getUpdatePacket();
         for(EntityPlayerMP player : this.watchers){
-            player.playerNetServerHandler.func_147359_a(packet);
+            player.playerNetServerHandler.sendPacket(packet);
         }
     }
 
@@ -57,7 +57,7 @@ public abstract class Sign {
 
     public void addWatcher(EntityPlayerMP player){
         this.watchers.add(player);
-        player.playerNetServerHandler.func_147359_a(this.getUpdatePacket());
+        player.playerNetServerHandler.sendPacket(this.getUpdatePacket());
     }
 
     public void removeWatcher(EntityPlayerMP player){

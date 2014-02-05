@@ -28,9 +28,9 @@ public class GuiPortalController extends NailedGui {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTick) {
-        this.func_146276_q_();
-        this.drawCenteredString(this.field_146289_q, "Portal Controller", this.field_146294_l / 2, 20, 0xFFFFFFFF);
-        this.textField.func_146194_f();
+        this.drawDefaultBackground();
+        this.drawCenteredString(this.fontRendererObj, "Portal Controller", this.width / 2, 20, 0xFFFFFFFF);
+        this.textField.drawTextBox();
 
         super.drawScreen(mouseX, mouseY, partialTick);
     }
@@ -38,55 +38,54 @@ public class GuiPortalController extends NailedGui {
     @Override
     public void initGui() {
         Keyboard.enableRepeatEvents(true);
-        this.field_146292_n.clear();
-        this.addButton(this.doneBtn = new GuiButton(0, this.field_146294_l / 2 - 100, this.field_146295_m / 4 + 96 + 12, I18n.getStringParams("gui.done")));
-        this.addButton(this.cancelBtn = new GuiButton(1, this.field_146294_l / 2 - 100, this.field_146295_m / 4 + 120 + 12, I18n.getStringParams("gui.cancel")));
-        this.textField = new GuiTextField(this.field_146289_q, this.field_146294_l / 2 - 150, 60, 300, 20);
-        this.textField.func_146203_f(32767);
-        this.textField.func_146195_b(true);
-        this.textField.func_146180_a(this.mapName);
-        this.doneBtn.field_146125_m = this.textField.func_146179_b().trim().length() > 0;
+        this.buttonList.clear();
+        this.addButton(this.doneBtn = new GuiButton(0, this.width / 2 - 100, this.height / 4 + 96 + 12, I18n.format("gui.done")));
+        this.addButton(this.cancelBtn = new GuiButton(1, this.width / 2 - 100, this.height / 4 + 120 + 12, I18n.format("gui.cancel")));
+        this.textField = new GuiTextField(this.fontRendererObj, this.width / 2 - 150, 60, 300, 20);
+        this.textField.setMaxStringLength(32767);
+        this.textField.setFocused(true);
+        this.textField.setText(this.mapName);
+        this.doneBtn.enabled = this.textField.getText().trim().length() > 0;
     }
 
     @Override
-    protected void func_146284_a(GuiButton button) {
-        if(button.field_146125_m){
-            if(button.field_146127_k == 1){
-                Minecraft.getMinecraft().func_147108_a(null);
-            }else if(button.field_146127_k == 0){
+    protected void actionPerformed(GuiButton button) {
+        if(button.enabled){
+            if(button.id == 1){
+                Minecraft.getMinecraft().displayGuiScreen(null);
+            }else if(button.id == 0){
                 this.sendGuiData();
-                Minecraft.getMinecraft().func_147108_a(null);
+                Minecraft.getMinecraft().displayGuiScreen(null);
             }
         }
     }
 
     @Override
     protected void keyTyped(char c, int i) {
-        this.textField.func_146201_a(c, i);
-        //doneBtn.enabled  \/
-        this.doneBtn.field_146125_m = this.textField.func_146179_b().trim().length() > 0;
+        this.textField.textboxKeyTyped(c, i);
+        this.doneBtn.enabled = this.textField.getText().trim().length() > 0;
 
         if(i == Keyboard.KEY_ESCAPE){
-            this.func_146284_a(this.cancelBtn);
+            this.actionPerformed(this.cancelBtn);
         }else if(i == Keyboard.KEY_RETURN){
-            this.func_146284_a(this.doneBtn);
+            this.actionPerformed(this.doneBtn);
         }
     }
 
     @Override
     protected void mouseClicked(int i, int i2, int i3) {
         super.mouseClicked(i, i2, i3);
-        this.textField.func_146192_a(i, i2, i3);
+        this.textField.mouseClicked(i, i2, i3);
     }
 
     @Override
-    public void func_146281_b() {
+    public void onGuiClosed() {
         Keyboard.enableRepeatEvents(false);
     }
 
     @Override
     public void updateScreen() {
-        this.textField.func_146178_a(); //updateCursorCounter
+        this.textField.updateCursorCounter();
     }
 
     @Override
@@ -97,6 +96,6 @@ public class GuiPortalController extends NailedGui {
 
     @Override
     protected void writeGuiData(ByteBuf buffer){
-        ByteBufUtils.writeUTF8String(buffer, this.textField.func_146179_b());
+        ByteBufUtils.writeUTF8String(buffer, this.textField.getText());
     }
 }

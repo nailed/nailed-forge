@@ -27,15 +27,14 @@ public class TileEntityPortalController extends NailedTileEntity implements IGui
     @Getter private String programmedName = "";
 
     public TileEntityPortalController(){
-        this.field_145846_f = false;
         this.yaw = 0;
         this.pitch = 0;
         this.color = 0x3333FF;
     }
 
     public void link(){
-        BlockPortalController.fire(this.field_145850_b, this.field_145851_c, this.field_145848_d, this.field_145849_e);
-        this.onInventoryChanged();
+        BlockPortalController.fire(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
+        this.markDirty();
         this.color = 0xFF0000;
     }
 
@@ -45,8 +44,8 @@ public class TileEntityPortalController extends NailedTileEntity implements IGui
     }
 
     @Override
-    public void func_145839_a(NBTTagCompound nbttagcompound){
-        super.func_145839_a(nbttagcompound);
+    public void readFromNBT(NBTTagCompound nbttagcompound){
+        super.readFromNBT(nbttagcompound);
         this.yaw = nbttagcompound.getShort("Yaw");
         this.pitch = nbttagcompound.getShort("Pitch");
         this.setDestinationFromName(nbttagcompound.getString("Destination"));
@@ -56,8 +55,8 @@ public class TileEntityPortalController extends NailedTileEntity implements IGui
     }
 
     @Override
-    public void func_145841_b(NBTTagCompound nbttagcompound){
-        super.func_145841_b(nbttagcompound);
+    public void writeToNBT(NBTTagCompound nbttagcompound){
+        super.writeToNBT(nbttagcompound);
         nbttagcompound.setShort("Yaw", this.yaw);
         nbttagcompound.setShort("Pitch", this.pitch);
         nbttagcompound.setInteger("Color", this.color);
@@ -88,7 +87,7 @@ public class TileEntityPortalController extends NailedTileEntity implements IGui
         if(map == null) return;
         this.destination = map.getSpawnTeleport();
         this.programmedName = name;
-        if(this.field_145850_b != null) this.link();
+        if(this.worldObj != null) this.link();
     }
 
     @Override

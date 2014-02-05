@@ -22,10 +22,10 @@ public class TileEntityElevator extends NailedTileEntity implements IMovementEve
     private static final int MAX_PASSABLE_BLOCKS = 32;
 
     private boolean canTeleportPlayer(int x, int y, int z){
-        Block block = this.field_145850_b.func_147439_a(x, y, z);
-        if(this.field_145850_b.func_147437_c(x, y, z)) return true;
+        Block block = this.worldObj.getBlock(x, y, z);
+        if(this.worldObj.isAirBlock(x, y, z)) return true;
 
-        final AxisAlignedBB aabb = block.func_149668_a(field_145850_b, x, y, z);
+        final AxisAlignedBB aabb = block.getCollisionBoundingBoxFromPool(this.worldObj, x, y, z);
         return aabb == null || aabb.getAverageEdgeLength() < 0.7;
     }
 
@@ -34,25 +34,25 @@ public class TileEntityElevator extends NailedTileEntity implements IMovementEve
 
         int blocksInTheWay = 0;
         final int delta = direction.offsetY;
-        for(int i = 0, y = this.field_145848_d; i < MAX_DISTANCE; i++){
+        for(int i = 0, y = this.yCoord; i < MAX_DISTANCE; i++){
             y += delta;
-            if(!this.field_145850_b.blockExists(this.field_145851_c, y, this.field_145849_e)) break;
+            if(!this.worldObj.blockExists(this.xCoord, y, this.zCoord)) break;
 
-            Block block = this.field_145850_b.func_147439_a(this.field_145851_c, y, this.field_145849_e);
-            int meta = this.field_145850_b.getBlockMetadata(this.field_145851_c, y, this.field_145849_e);
+            Block block = this.worldObj.getBlock(this.xCoord, y, this.zCoord);
+            int meta = this.worldObj.getBlockMetadata(this.xCoord, y, this.zCoord);
 
             if(block instanceof BlockAir) continue;
 
             if(block == NailedBlocks.stat && meta == 2){
-                TileEntity otherBlock = this.field_145850_b.func_147438_o(this.field_145851_c, y, this.field_145849_e);
+                TileEntity otherBlock = this.worldObj.getTileEntity(this.xCoord, y, this.zCoord);
                 if(otherBlock instanceof TileEntityElevator){
-                    if(canTeleportPlayer(this.field_145851_c, y + 1, this.field_145849_e) && canTeleportPlayer(this.field_145851_c, y + 2, this.field_145849_e)){
+                    if(canTeleportPlayer(this.xCoord, y + 1, this.zCoord) && canTeleportPlayer(this.xCoord, y + 2, this.zCoord)){
                         return y;
                     }
                 }
             }
 
-            if(!block.isNormalCube(this.field_145850_b, this.field_145851_c, y, this.field_145849_e) && (++blocksInTheWay > MAX_PASSABLE_BLOCKS)){
+            if(!block.isNormalCube(this.worldObj, this.xCoord, y, this.zCoord) && (++blocksInTheWay > MAX_PASSABLE_BLOCKS)){
                 break;
             }
         }
@@ -63,8 +63,8 @@ public class TileEntityElevator extends NailedTileEntity implements IMovementEve
     private void activate(EntityPlayer player, ForgeDirection dir){
         int level = findLevel(dir);
         if(level >= 0){
-            player.setPositionAndUpdate(this.field_145851_c + 0.5, level + 1.1, this.field_145849_e + 0.5);
-            this.field_145850_b.playSoundAtEntity(player, "nailed:elevator", 1F, 1F);
+            player.setPositionAndUpdate(this.xCoord + 0.5, level + 1.1, this.zCoord + 0.5);
+            this.worldObj.playSoundAtEntity(player, "nailed:elevator", 1F, 1F);
         }
     }
 

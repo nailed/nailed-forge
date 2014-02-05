@@ -20,12 +20,12 @@ import java.util.Random;
 public class BlockInvisibleWall extends BlockMulti {
 
     public BlockInvisibleWall(){
-        super("invisibleBlock", Material.field_151592_s); //Material.glass
+        super("invisibleBlock", Material.glass); //Material.glass
 
-        //this.disableStats(); //disableStats
-        this.func_149722_s(); //setBlockUnbreakable
-        this.func_149713_g(0); //setLightOpacity
-        this.func_149752_b(6000000.0F); //setHardness
+        this.disableStats(); //disableStats
+        this.setBlockUnbreakable(); //setBlockUnbreakable
+        this.setLightOpacity(0); //setLightOpacity
+        this.setHardness(6000000.0F); //setHardness
     }
 
     @Override
@@ -47,33 +47,33 @@ public class BlockInvisibleWall extends BlockMulti {
     }
 
     @Override
-    public int func_149745_a(Random random){
+    public int quantityDropped(Random random){
         return 0;
     }
 
     @Override
-    public int func_149645_b(){
+    public int getRenderType(){
         return -1;
     }
 
     @Override
-    public AxisAlignedBB func_149668_a(World world, int x, int y, int z){
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z){
         if(world.getBlockMetadata(x, y, z) == 1) return null;
-        return super.func_149668_a(world, x, y, z);
+        return super.getCollisionBoundingBoxFromPool(world, x, y, z);
     }
 
     @Override
-    public int func_149656_h(){
+    public int getMobilityFlag(){
         return 2;
     }
 
     @Override
-    public boolean func_149662_c(){
+    public boolean renderAsNormalBlock(){
         return false;
     }
 
     @Override
-    public boolean func_149686_d(){
+    public boolean isOpaqueCube(){
         return false;
     }
 
@@ -83,7 +83,8 @@ public class BlockInvisibleWall extends BlockMulti {
     }
 
     @Override
-    public void func_149666_a(Item item, CreativeTabs tab, List list){
+    @SuppressWarnings("unchecked")
+    public void getSubBlocks(Item item, CreativeTabs tab, List list){
         list.add(new ItemStack(item, 1, 0));
         //list.add(new ItemStack(id, 1, 1));
         list.add(new ItemStack(item, 1, 2));

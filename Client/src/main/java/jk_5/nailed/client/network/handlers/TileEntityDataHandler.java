@@ -16,7 +16,7 @@ public class TileEntityDataHandler extends SimpleChannelInboundHandler<NailedPac
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, NailedPacket.TileEntityData msg) throws Exception{
-        TileEntity tile = Minecraft.getMinecraft().theWorld.func_147438_o(msg.x, msg.y, msg.z);
+        TileEntity tile = Minecraft.getMinecraft().theWorld.getTileEntity(msg.x, msg.y, msg.z);
         if(tile != null && tile instanceof NailedTileEntity){
             ((NailedTileEntity) tile).readData(msg.data);
         }

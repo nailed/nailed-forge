@@ -60,7 +60,7 @@ nailed {
 }
 
 minecraft{
-    version = '1.7.2-10.12.0.1023'
+    version = '1.7.2-10.12.0.1024'
     assetDir = 'runtime/client/assets'
 }
 

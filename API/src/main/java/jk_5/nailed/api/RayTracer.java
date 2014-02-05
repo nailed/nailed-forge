@@ -24,7 +24,7 @@ public class RayTracer {
         Vec3 headVec = getCorrectedHeadVec(player);
         Vec3 lookVec = player.getLook(1);
         Vec3 endVec = headVec.addVector(lookVec.xCoord * reach, lookVec.yCoord * reach, lookVec.zCoord * reach);
-        return world.clip(headVec, endVec, true);
+        return world.rayTraceBlocks(headVec, endVec, true);
     }
 
     public static Vec3 getCorrectedHeadVec(EntityPlayer player){

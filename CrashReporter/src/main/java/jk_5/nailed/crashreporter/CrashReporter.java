@@ -59,7 +59,7 @@ public class CrashReporter {
     private static void kickAllPlayers(){
         ServerConfigurationManager manager = MinecraftServer.getServer().getConfigurationManager();
         while(!manager.playerEntityList.isEmpty()){
-            ((EntityPlayerMP) manager.playerEntityList.get(0)).playerNetServerHandler.func_147360_c("Server Crashed!");
+            ((EntityPlayerMP) manager.playerEntityList.get(0)).playerNetServerHandler.kickPlayerFromServer("Server Crashed!");
         }
     }
 }

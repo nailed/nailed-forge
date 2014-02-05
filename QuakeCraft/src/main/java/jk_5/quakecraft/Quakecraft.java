@@ -63,7 +63,7 @@ public class Quakecraft {
     @SuppressWarnings("unused")
     public void onCooldownTick(TickEvent.PlayerTickEvent event){
         if(event.phase == TickEvent.Phase.START) return;
-        String id = event.player.func_146103_bH().getId();
+        String id = event.player.getGameProfile().getId();
         if(Quakecraft.instance.reloadCooldown.containsKey(id)){
             int ticks = Quakecraft.instance.reloadCooldown.get(id) + 1;
             Quakecraft.instance.reloadCooldown.put(id, ticks);
@@ -116,7 +116,7 @@ public class Quakecraft {
                             Scoreboard scoreboard = world.getScoreboard();
                             ScoreObjective objective = scoreboard.getObjective(map.getID() + "-kills");
                             Score score = scoreboard.func_96529_a(player.getUsername(), objective);
-                            score.func_96649_a(1);
+                            score.increseScore(1);
 
                             if(score.getScorePoints() >= 25){
                                 for(IInstruction instruction : map.getInstructionController().getInstructions()){
@@ -153,7 +153,7 @@ public class Quakecraft {
                 Map map = NailedAPI.getMapLoader().getMap(event.world);
                 if(map.getInstructionController().isRunning()){
                     ItemStack stack = new ItemStack(Items.wooden_hoe, 1);
-                    stack.func_151001_c(ChatColor.RESET + "" + ChatColor.GREEN + "Railgun");
+                    stack.setStackDisplayName(ChatColor.RESET + "" + ChatColor.GREEN + "Railgun");
                     player.inventory.setInventorySlotContents(0, stack);
                     player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 1000000, 1, true));
                 }

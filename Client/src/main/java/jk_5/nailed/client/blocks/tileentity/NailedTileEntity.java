@@ -15,7 +15,7 @@ public abstract class NailedTileEntity extends TileEntity {
 
     public boolean onBlockActivated(EntityPlayer entity, int side, float hitX, float hitY, float hitZ){
         if(this instanceof IGuiTileEntity){
-            if(this.field_145850_b.isRemote) return true;
+            if(this.worldObj.isRemote) return true;
         }
         return false;
     }

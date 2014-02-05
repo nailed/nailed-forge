@@ -31,7 +31,7 @@ public class SkinSync {
 
     @SubscribeEvent
     public void onPreRenderSpecials(RenderPlayerEvent.Specials.Pre event){
-        String username = event.entityPlayer.func_146103_bH().getName();
+        String username = event.entityPlayer.getGameProfile().getName();
         if(event.entityPlayer instanceof AbstractClientPlayer && this.reloadingPlayers.contains(username)){
             this.reloadingPlayers.remove(username);
             AbstractClientPlayer clientPlayer = (AbstractClientPlayer) event.entityPlayer;

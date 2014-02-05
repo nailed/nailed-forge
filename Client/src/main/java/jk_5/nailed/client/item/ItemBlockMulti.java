@@ -35,7 +35,7 @@ public class ItemBlockMulti extends ItemBlock {
     @SideOnly(Side.CLIENT)
     public IIcon getIconFromDamage(int meta){
         //this.block.getIcon(side, meta)
-        return this.field_150939_a.func_149691_a(2, meta);
+        return this.field_150939_a.getIcon(2, meta);
     }
 
     @Override

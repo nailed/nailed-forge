@@ -25,17 +25,17 @@ public abstract class NailedGui extends GuiScreen {
         TileEntity tile = (TileEntity) tileEntity;
         ByteBuf data = Unpooled.buffer();
         this.writeGuiData(data);
-        ClientNetworkHandler.sendPacketToServer(new NailedPacket.GuiReturnDataPacket(tile.field_145851_c, tile.field_145848_d, tile.field_145849_e, data));
+        ClientNetworkHandler.sendPacketToServer(new NailedPacket.GuiReturnDataPacket(tile.xCoord, tile.yCoord, tile.zCoord, data));
     }
 
     @SuppressWarnings("unchecked")
     protected final void addButton(GuiButton button){
-        this.field_146292_n.add(button);
+        this.buttonList.add(button);
     }
 
     @SuppressWarnings("unchecked")
     protected final void addLabel(GuiLabel label){
-        this.field_146293_o.add(label);
+        this.buttonList.add(label);
     }
 
     public NailedGui readGuiData(ByteBuf buffer){
