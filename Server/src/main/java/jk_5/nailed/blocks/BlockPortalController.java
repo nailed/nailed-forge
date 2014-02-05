@@ -74,7 +74,7 @@ public class BlockPortalController extends NailedBlock implements ITileEntityPro
     }
 
     @Override
-    public AxisAlignedBB func_149633_g(World par1World, int par2, int par3, int par4){
+    public AxisAlignedBB getSelectedBoundingBoxFromPool(World par1World, int par2, int par3, int par4){
         int i = par1World.getBlockMetadata(par2, par3, par4);
         float f = 0.375F;
 
@@ -108,14 +108,14 @@ public class BlockPortalController extends NailedBlock implements ITileEntityPro
     }
 
     @Override
-    public void func_149743_a(World world, int i, int j, int k, AxisAlignedBB axisalignedbb, List list, Entity entity){
-        func_149719_a(world, i, j, k);
-        super.func_149743_a(world, i, j, k, axisalignedbb, list, entity);
+    public void addCollisionBoxesToList(World world, int i, int j, int k, AxisAlignedBB axisalignedbb, List list, Entity entity){
+        setBlockBoundsBasedOnState(world, i, j, k);
+        super.addCollisionBoxesToList(world, i, j, k, axisalignedbb, list, entity);
         setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.375F);
     }
 
     @Override
-    public void func_149719_a(IBlockAccess par1IBlockAccess, int par2, int par3, int par4){
+    public void setBlockBoundsBasedOnState(IBlockAccess par1IBlockAccess, int par2, int par3, int par4){
         int i = par1IBlockAccess.getBlockMetadata(par2, par3, par4);
         float f = 0.375F;
 
@@ -129,25 +129,37 @@ public class BlockPortalController extends NailedBlock implements ITileEntityPro
         }
 
         if(i == 2){
-            setBlockBounds(0.0F, 0.0F, 1.0F - f, 1.0F, 1.0F, 1.0F);
+            func_149676_a(0.0F, 0.0F, 1.0F - f, 1.0F, 1.0F, 1.0F);
         }
 
         if(i == 3){
-            setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, f);
+            func_149676_a(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, f);
         }
 
         if(i == 4){
-            setBlockBounds(1.0F - f, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+            func_149676_a(1.0F - f, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
         }
 
         if(i == 5){
-            setBlockBounds(0.0F, 0.0F, 0.0F, f, 1.0F, 1.0F);
+            func_149676_a(0.0F, 0.0F, 0.0F, f, 1.0F, 1.0F);
         }
     }
 
     @Override
     public int func_149660_a(World world, int i, int j, int k, int face, float par6, float par7, float par8, int metadata){
-        if(face >= 0 && face <= 5) return face;
+        if(face == 0)
+            return face;
+        if(face == 1)
+            return face;
+        if(face == 2)
+            return face;
+        if(face == 3)
+            return face;
+        if(face == 4)
+            return face;
+        if(face == 5){
+            return face;
+        }
         return 0;
     }
 
@@ -158,7 +170,7 @@ public class BlockPortalController extends NailedBlock implements ITileEntityPro
     }
 
     private void updateTileEntityOrientation(World world, int i, int j, int k){
-        TileEntityPortalController controller = (TileEntityPortalController) world.getTileEntity(i, j, k);
+        TileEntityPortalController controller = (TileEntityPortalController) world.func_147438_o(i, j, k);
         int metadata = world.getBlockMetadata(i, j, k);
 
         if(metadata == 1){
@@ -183,7 +195,7 @@ public class BlockPortalController extends NailedBlock implements ITileEntityPro
     @Override
     public void func_149695_a(World par1World, int par2, int par3, int par4, Block block){
         ChunkCoordinates coord = getBase(par2, par3, par4, par1World.getBlockMetadata(par2, par3, par4));
-        if(par1World.getBlock(coord.posX, coord.posY, coord.posZ) != NailedBlocks.portalCrystal){
+        if(par1World.func_147439_a(coord.posX, coord.posY, coord.posZ) != NailedBlocks.portalCrystal){
             func_149697_b(par1World, par2, par3, par4, 0, 0);
             par1World.func_147468_f(par2, par3, par4);
         }
@@ -243,17 +255,17 @@ public class BlockPortalController extends NailedBlock implements ITileEntityPro
                 directPortal(world, coords.posX - 1, coords.posY, coords.posZ, 6, blocks, portals);
                 directPortal(world, coords.posX, coords.posY - 1, coords.posZ, 2, blocks, portals);
                 directPortal(world, coords.posX, coords.posY, coords.posZ - 1, 4, blocks, portals);
-                if(world.getBlock(coords.posX, coords.posY, coords.posZ) == NailedBlocks.portal){
+                if(world.func_147439_a(coords.posX, coords.posY, coords.posZ) == NailedBlocks.portal){
                     repath.add(coords);
                 }
             }
         }
         while(repath.size() > 0){
             ChunkCoordinates coords = repath.remove(0);
-            if(world.getBlock(coords.posX, coords.posY, coords.posZ) == NailedBlocks.portal){
+            if(world.func_147439_a(coords.posX, coords.posY, coords.posZ) == NailedBlocks.portal){
                 if(!BlockPortal.isValidPortal(world, coords.posX, coords.posY, coords.posZ)){
                     repathNeighbors(world, coords.posX, coords.posY, coords.posZ);
-                    world.setBlock(coords.posX, coords.posY, coords.posZ, Blocks.air, 0, 0);
+                    world.func_147465_d(coords.posX, coords.posY, coords.posZ, Blocks.air, 0, 0);
                     addSurrounding(repath, coords.posX, coords.posY, coords.posZ);
                 }else{
                     redraw.add(coords);
@@ -262,8 +274,8 @@ public class BlockPortalController extends NailedBlock implements ITileEntityPro
         }
         for(ChunkCoordinates coords : redraw){
             if(world.blockExists(coords.posX, coords.posY, coords.posZ)){
-                world.markBlockForUpdate(coords.posX, coords.posY, coords.posZ);
-                world.notifyBlocksOfNeighborChange(coords.posX, coords.posY, coords.posZ, world.getBlock(coords.posX, coords.posY, coords.posZ));
+                world.func_147471_g(coords.posX, coords.posY, coords.posZ);
+                world.func_147459_d(coords.posX, coords.posY, coords.posZ, world.func_147439_a(coords.posX, coords.posY, coords.posZ));
             }
         }
     }
@@ -285,7 +297,7 @@ public class BlockPortalController extends NailedBlock implements ITileEntityPro
     }
 
     private static void redirectPortal(World world, TileEntity tileentity, int i, int j, int k, int meta, List<ChunkCoordinates> blocks){
-        if(isValidLinkPortalBlock(world.getBlock(i, j, k)) == 0) return;
+        if(isValidLinkPortalBlock(world.func_147439_a(i, j, k)) == 0) return;
         if(world.getBlockMetadata(i, j, k) == meta){
             for(int m = 1; m < 7; m++)
                 if(m != meta){
@@ -313,8 +325,8 @@ public class BlockPortalController extends NailedBlock implements ITileEntityPro
         }
         for(ChunkCoordinates coords : notify)
             if(world.blockExists(coords.posX, coords.posY, coords.posZ)){
-                world.markBlockForUpdate(coords.posX, coords.posY, coords.posZ);
-                world.notifyBlocksOfNeighborChange(coords.posX, coords.posY, coords.posZ, world.getBlock(coords.posX, coords.posY, coords.posZ));
+                world.func_147471_g(coords.posX, coords.posY, coords.posZ);
+                world.func_147459_d(coords.posX, coords.posY, coords.posZ, world.func_147439_a(coords.posX, coords.posY, coords.posZ));
             }
     }
 
@@ -332,7 +344,7 @@ public class BlockPortalController extends NailedBlock implements ITileEntityPro
             j = coords.posY;
             k = coords.posZ;
             if(!BlockPortal.checkPortalTension(world, i, j, k))
-                world.setBlock(i, j, k, Blocks.air, 0, 0);
+                world.func_147465_d(i, j, k, Blocks.air, 0, 0);
         }
     }
 
@@ -359,33 +371,33 @@ public class BlockPortalController extends NailedBlock implements ITileEntityPro
     }
 
     private static void expandPortal(World world, int i, int j, int k, Collection<ChunkCoordinates> set, Stack<ChunkCoordinates> created){
-        if(!world.isAirBlock(i, j, k)) return;
+        if(!world.func_147437_c(i, j, k)) return;
 
-        int score = isValidLinkPortalBlock(world.getBlock(i + 1, j, k)) + isValidLinkPortalBlock(world.getBlock(i - 1, j, k)) + isValidLinkPortalBlock(world.getBlock(i, j + 1, k)) + isValidLinkPortalBlock(world.getBlock(i, j - 1, k)) + isValidLinkPortalBlock(world.getBlock(i, j, k + 1)) + isValidLinkPortalBlock(world.getBlock(i, j, k - 1));
+        int score = isValidLinkPortalBlock(world.func_147439_a(i + 1, j, k)) + isValidLinkPortalBlock(world.func_147439_a(i - 1, j, k)) + isValidLinkPortalBlock(world.func_147439_a(i, j + 1, k)) + isValidLinkPortalBlock(world.func_147439_a(i, j - 1, k)) + isValidLinkPortalBlock(world.func_147439_a(i, j, k + 1)) + isValidLinkPortalBlock(world.func_147439_a(i, j, k - 1));
         if(score > 1){
-            world.setBlock(i, j, k, NailedBlocks.portal, 0, 0);
+            world.func_147465_d(i, j, k, NailedBlocks.portal, 0, 0);
             created.push(new ChunkCoordinates(i, j, k));
             addSurrounding(set, i, j, k);
         }
     }
 
     private static void directPortal(World world, int i, int j, int k, int meta, List<ChunkCoordinates> blocks, List<ChunkCoordinates> portals){
-        if(isValidLinkPortalBlock(world.getBlock(i, j, k)) == 0) return;
+        if(isValidLinkPortalBlock(world.func_147439_a(i, j, k)) == 0) return;
         if(world.getBlockMetadata(i, j, k) != 0) return;
         world.setBlockMetadataWithNotify(i, j, k, meta, 0);
-        if(world.getBlock(i, j, k) == NailedBlocks.portal)
+        if(world.func_147439_a(i, j, k) == NailedBlocks.portal)
             portals.add(new ChunkCoordinates(i, j, k));
         else
             blocks.add(new ChunkCoordinates(i, j, k));
     }
 
     private static void depolarize(World world, int i, int j, int k, List<ChunkCoordinates> blocks){
-        Block block = world.getBlock(i, j, k);
+        Block block = world.func_147439_a(i, j, k);
         if(isValidLinkPortalBlock(block) == 0) return;
         if(world.getBlockMetadata(i, j, k) == 0) return;
         world.setBlockMetadataWithNotify(i, j, k, 0, 0);
         if((block == NailedBlocks.portal) && (!BlockPortal.isValidPortal(world, i, j, k))){
-            world.setBlock(i, j, k, Blocks.air, 0, 2);
+            world.func_147465_d(i, j, k, Blocks.air, 0, 2);
         }
         blocks.add(new ChunkCoordinates(i, j, k));
     }
@@ -398,7 +410,7 @@ public class BlockPortalController extends NailedBlock implements ITileEntityPro
 
     public static TileEntity getTileEntity(IBlockAccess blockaccess, int x, int y, int z){
         HashSet<ChunkCoordinates> visited = Sets.newHashSet();
-        Block block = blockaccess.getBlock(x, y, z);
+        Block block = blockaccess.func_147439_a(x, y, z);
         while(block != NailedBlocks.portalController){
             if(isValidLinkPortalBlock(block) == 0) return null;
             ChunkCoordinates pos = new ChunkCoordinates(x, y, z);
@@ -423,8 +435,8 @@ public class BlockPortalController extends NailedBlock implements ITileEntityPro
             else{
                 return null;
             }
-            block = blockaccess.getBlock(x, y, z);
+            block = blockaccess.func_147439_a(x, y, z);
         }
-        return blockaccess.getTileEntity(x, y, z);
+        return blockaccess.func_147438_o(x, y, z);
     }
 }

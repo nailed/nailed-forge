@@ -22,8 +22,8 @@ public class VoidWorldChunkManager extends WorldChunkManager {
     }
 
     @Override
-    public ChunkPosition func_150795_a(int x, int z, int range, List biomes, Random rand){
-        ChunkPosition ret = super.func_150795_a(x, z, range, biomes, rand);
+    public ChunkPosition findBiomePosition(int x, int z, int range, List biomes, Random rand){
+        ChunkPosition ret = super.findBiomePosition(x, z, range, biomes, rand);
 
         if (x == 0 && z == 0 && !world.getWorldInfo().isInitialized()){
             if (ret == null){
@@ -37,7 +37,7 @@ public class VoidWorldChunkManager extends WorldChunkManager {
                 spawn = new ChunkCoordinates(0, 65, 0);
             }
             NailedLog.info("Building spawn platform at: %d, %d, %d", spawn.posX, spawn.posY - 1, spawn.posZ);
-            world.func_147449_b(spawn.posX, spawn.posY - 1, spawn.posZ, Blocks.bedrock);
+            world.setBlock(spawn.posX, spawn.posY - 1, spawn.posZ, Blocks.bedrock);
         }
         return ret;
     }

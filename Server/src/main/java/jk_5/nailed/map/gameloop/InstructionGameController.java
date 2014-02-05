@@ -65,7 +65,7 @@ public class InstructionGameController implements GameController {
 
     @Override
     public void broadcastChatMessage(IChatComponent message) {
-        MinecraftServer.getServer().getConfigurationManager().func_148537_a(new S02PacketChat(message), this.controller.getMap().getID());
+        MinecraftServer.getServer().getConfigurationManager().sendPacketToAllPlayersInDimension(new S02PacketChat(message), this.controller.getMap().getID());
     }
 
     @Override

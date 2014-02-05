@@ -22,9 +22,8 @@ import java.util.List;
 public class BlockStat extends BlockMulti implements ITileEntityProvider {
 
     public BlockStat(){
-        super("statBlock", Material.field_151594_q); //Material.circuits
-        //this.isBlockContainer = true;
-        this.func_149722_s(); //setBlockUnbreakable
+        super("statBlock", Material.iron);
+        this.setBlockUnbreakable();
     }
 
     @Override
@@ -40,7 +39,7 @@ public class BlockStat extends BlockMulti implements ITileEntityProvider {
     }
 
     @Override
-    public TileEntity func_149915_a(World world, int meta){
+    public TileEntity createNewTileEntity(World world, int meta){
         if(meta == 0){
             return new TileEntityStatEmitter();
         }else if(meta == 1){
@@ -57,20 +56,20 @@ public class BlockStat extends BlockMulti implements ITileEntityProvider {
     }
 
     @Override
-    public int func_149692_a(int meta){
+    public int damageDropped(int meta){
         return meta;
     }
 
     @Override
-    public void func_149666_a(Item item, CreativeTabs tab, List list){
+    public void getSubBlocks(Item item, CreativeTabs tab, List list){
         list.add(new ItemStack(item, 1, 0));
         list.add(new ItemStack(item, 1, 1));
         list.add(new ItemStack(item, 1, 2));
     }
 
     @Override
-    public int func_149709_b(IBlockAccess world, int x, int y, int z, int side){
-        TileEntity tile = world.func_147438_o(x, y, z);
+    public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int side){
+        TileEntity tile = world.getTileEntity(x, y, z);
         if(tile == null || !(tile instanceof TileEntityStatEmitter)) return 0;
         return ((TileEntityStatEmitter) tile).isSignalEnabled() ? 15 : 0;
     }
