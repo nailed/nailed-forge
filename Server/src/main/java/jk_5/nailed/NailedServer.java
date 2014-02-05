@@ -158,9 +158,11 @@ public class NailedServer {
 
         ch.getCommands().remove("tp");
         ch.getCommands().remove("toggledownfall");
+        ch.getCommands().remove("gamemode");
 
         ch.registerCommand(new CommandTP());
         ch.registerCommand(new CommandToggleDownfall());
+        ch.registerCommand(new CommandGamemode());
 
         ChatComponentText component = new ChatComponentText("Nailed");
         component.func_150256_b().func_150238_a(EnumChatFormatting.GREEN);

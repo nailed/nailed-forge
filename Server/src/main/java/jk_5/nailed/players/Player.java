@@ -8,16 +8,19 @@ import jk_5.nailed.map.teleport.TeleportHelper;
 import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.network.NailedPacket;
 import jk_5.nailed.util.ChatColor;
+import jk_5.nailed.util.Gamemode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S2BPacketChangeGameState;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.WorldSettings;
 
 /**
  * No description given
@@ -117,5 +120,15 @@ public class Player {
     public Spawnpoint getLocation(){
         EntityPlayer player = this.getEntity();
         return new Spawnpoint((int) player.posX, (int) player.posY, (int) player.posZ, player.rotationYaw, player.rotationPitch);
+    }
+
+    public Gamemode getGameMode(){
+        return Gamemode.fromId(this.getEntity().theItemInWorldManager.getGameType().getID());
+    }
+
+    public void setGameMode(Gamemode mode){
+        EntityPlayerMP entity = this.getEntity();
+        entity.theItemInWorldManager.setGameType(WorldSettings.GameType.getByID(mode.getId()));
+        this.sendPacket(new S2BPacketChangeGameState(3, mode.getId()));
     }
 }
