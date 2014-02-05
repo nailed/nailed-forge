@@ -6,13 +6,13 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import jk_5.nailed.map.MapLoader;
-import jk_5.nailed.map.instruction.IInstruction;
-import jk_5.nailed.map.instruction.RegisterInstructionEvent;
-import jk_5.nailed.players.Player;
-import jk_5.nailed.players.PlayerRegistry;
-import jk_5.nailed.util.ChatColor;
-import jk_5.nailed.util.raytracing.RayTracer;
+import jk_5.nailed.api.ChatColor;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.RayTracer;
+import jk_5.nailed.api.events.RegisterInstructionEvent;
+import jk_5.nailed.api.map.IInstruction;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.player.Player;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityFireworkRocket;
@@ -74,9 +74,9 @@ public class Quakecraft {
     @SuppressWarnings("unused")
     public void onInteract(PlayerInteractEvent event){
         World world = event.entity.worldObj;
-        Player player = PlayerRegistry.instance().getPlayer(event.entityPlayer);
+        Player player = NailedAPI.getPlayerRegistry().getPlayer(event.entityPlayer);
         if(this.isQuakecraft(world)){
-            jk_5.nailed.map.Map map = MapLoader.instance().getMap(world);
+            Map map = NailedAPI.getMapLoader().getMap(world);
             if(event.action == PlayerInteractEvent.Action.RIGHT_CLICK_AIR || event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK){
                 if(!this.reloadCooldown.containsKey(player.getId())){
                     this.reloadCooldown.put(player.getId(), 21);
@@ -119,7 +119,7 @@ public class Quakecraft {
                             score.func_96649_a(1);
 
                             if(score.getScorePoints() >= 25){
-                                for(IInstruction instruction : map.getGameController().getInstructions()){
+                                for(IInstruction instruction : map.getInstructionController().getInstructions()){
                                     if(instruction instanceof InstructionAwaitFinalKill){
                                         ((InstructionAwaitFinalKill) instruction).finalKillMade = true;
                                     }
@@ -150,8 +150,8 @@ public class Quakecraft {
         if(event.entity instanceof EntityPlayer){
             EntityPlayer player = (EntityPlayer) event.entity;
             if(this.isQuakecraft(event.world)){
-                jk_5.nailed.map.Map map = MapLoader.instance().getMap(event.world);
-                if(map.getGameController().isRunning()){
+                Map map = NailedAPI.getMapLoader().getMap(event.world);
+                if(map.getInstructionController().isRunning()){
                     ItemStack stack = new ItemStack(Items.wooden_hoe, 1);
                     stack.func_151001_c(ChatColor.RESET + "" + ChatColor.GREEN + "Railgun");
                     player.inventory.setInventorySlotContents(0, stack);
@@ -259,6 +259,6 @@ public class Quakecraft {
     }
 
     public boolean isQuakecraft(World world){
-        return MapLoader.instance().getMap(world).getMappack().getMappackMetadata().getGameType().equals("quakecraft");
+        return NailedAPI.getMapLoader().getMap(world).getMappack().getMappackMetadata().getGameType().equals("quakecraft");
     }
 }

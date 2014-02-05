@@ -3,29 +3,29 @@ package jk_5.nailed;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.relauncher.FMLLaunchHandler;
 import jk_5.nailed.achievement.AchievementEventListener;
 import jk_5.nailed.achievement.NailedAchievements;
 import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.config.ConfigFile;
+import jk_5.nailed.api.events.RegisterInstructionEvent;
 import jk_5.nailed.blocks.NailedBlocks;
 import jk_5.nailed.ipc.IpcManager;
 import jk_5.nailed.irc.IrcBot;
-import jk_5.nailed.map.MapLoader;
+import jk_5.nailed.map.NailedMapLoader;
 import jk_5.nailed.map.gen.NailedWorldProvider;
 import jk_5.nailed.map.instruction.InstructionReader;
-import jk_5.nailed.map.instruction.RegisterInstructionEvent;
+import jk_5.nailed.map.mappack.NailedMappackLoader;
 import jk_5.nailed.map.stat.RegisterStatTypeEvent;
 import jk_5.nailed.map.stat.StatEventHandler;
 import jk_5.nailed.map.stat.StatTypeManager;
 import jk_5.nailed.map.teleport.TeleportEventListenerEffect;
 import jk_5.nailed.map.teleport.TeleportEventListenerForge;
 import jk_5.nailed.network.NailedNetworkHandler;
-import jk_5.nailed.players.PlayerRegistry;
+import jk_5.nailed.players.NailedPlayerRegistry;
 import jk_5.nailed.server.command.*;
 import jk_5.nailed.teamspeak.TeamspeakClient;
-import jk_5.nailed.util.config.ConfigFile;
 import jk_5.nailed.util.invsee.InvSeeTicker;
 import lombok.Getter;
 import net.minecraft.command.CommandHandler;
@@ -34,12 +34,9 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -51,32 +48,33 @@ import java.util.Date;
 public class NailedServer {
 
     @Getter protected static final String modid = "Nailed";
-    @Getter private static final Logger logger = LogManager.getLogger("Nailed");
-    @Getter private static ConfigFile config;
+    @SuppressWarnings("unused") @Getter private static ConfigFile config;
     @Getter private static int providerID;
 
-    @Getter @Instance(modid) private static NailedServer instance;
     @Getter private static IrcBot ircBot;
     @Getter private static TeamspeakClient teamspeakClient;
-    @Getter private static Collection<Integer> registeredDimensions;
 
     public NailedServer(){
-        NailedAPI.setMappackRegistrar(MapLoader.instance());
+        NailedAPI.setMapLoader(new NailedMapLoader());
+        NailedAPI.setMappackLoader(new NailedMappackLoader());
+        NailedAPI.setPlayerRegistry(new NailedPlayerRegistry());
+
         if(FMLLaunchHandler.side().isClient()){
             throw new RuntimeException("Nailed-Server is server-only, don\'t use it on the client!");
         }
     }
 
     @EventHandler
+    @SuppressWarnings("unused")
     public void preInit(FMLPreInitializationEvent event){
         NailedLog.info("Creating config file");
         config = new ConfigFile(event.getSuggestedConfigurationFile()).setComment("Nailed main config file");
 
-        if(MapLoader.getMapsFolder().exists()){
+        if(NailedAPI.getMapLoader().getMapsFolder().exists()){
             NailedLog.info("Clearing away old maps folder");
             new File(".", "mapbackups").mkdirs();
             File dest = new File(new File(".", "mapbackups"), new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()));
-            MapLoader.getMapsFolder().renameTo(dest);
+            NailedAPI.getMapLoader().getMapsFolder().renameTo(dest);
         }
 
         NailedLog.info("Loading achievements");
@@ -86,11 +84,15 @@ public class NailedServer {
         NailedNetworkHandler.registerChannel();
 
         NailedLog.info("Registering event handlers");
-        MinecraftForge.EVENT_BUS.register(PlayerRegistry.instance());
+        MinecraftForge.EVENT_BUS.register(NailedAPI.getPlayerRegistry());
+        MinecraftForge.EVENT_BUS.register(NailedAPI.getMapLoader());
+        MinecraftForge.EVENT_BUS.register(NailedAPI.getMappackLoader());
         MinecraftForge.EVENT_BUS.register(new AchievementEventListener());
         MinecraftForge.EVENT_BUS.register(new StatEventHandler());
         MinecraftForge.EVENT_BUS.register(new TeleportEventListenerForge());
         MinecraftForge.EVENT_BUS.register(new TeleportEventListenerEffect());
+        FMLCommonHandler.instance().bus().register(NailedAPI.getPlayerRegistry());
+        FMLCommonHandler.instance().bus().register(NailedAPI.getMapLoader());
         FMLCommonHandler.instance().bus().register(new InvSeeTicker());
 
         NailedLog.info("Registering blocks");
@@ -115,6 +117,7 @@ public class NailedServer {
     }
 
     @EventHandler
+    @SuppressWarnings("unused")
     public void init(FMLInitializationEvent event){
         MinecraftForge.EVENT_BUS.post(new RegisterInstructionEvent(InstructionReader.instance().getInstructionMap()));
         MinecraftForge.EVENT_BUS.post(new RegisterStatTypeEvent(StatTypeManager.instance().getStatTypes()));
@@ -124,12 +127,14 @@ public class NailedServer {
     }
 
     @EventHandler
+    @SuppressWarnings("unused")
     public void postInit(FMLPostInitializationEvent event){
         NailedLog.info("Loading the mappacks");
-        MapLoader.instance().loadMappacks();
+        NailedAPI.getMappackLoader().loadMappacks();
     }
 
     @EventHandler
+    @SuppressWarnings("unused")
     public void serverStarting(FMLServerStartingEvent event){
         ircBot.connect();
         teamspeakClient.connect();
@@ -170,6 +175,7 @@ public class NailedServer {
     }
 
     @EventHandler
+    @SuppressWarnings("unused")
     public void serverAboutToStart(FMLServerAboutToStartEvent event){
         IpcManager.instance().start();
     }

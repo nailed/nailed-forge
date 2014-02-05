@@ -8,8 +8,8 @@ import cpw.mods.fml.relauncher.Side;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import jk_5.nailed.NailedServer;
-import jk_5.nailed.map.Map;
-import jk_5.nailed.map.MapLoader;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.map.Map;
 import jk_5.nailed.network.MinecraftPacketAdapter;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraftforge.common.network.ForgeMessage;
@@ -29,7 +29,7 @@ public class FMLHandshakeHandler extends ChannelInboundHandlerAdapter {
             FMLEmbeddedChannel channel = NetworkRegistry.INSTANCE.getChannel("FORGE", Side.SERVER);
             channel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.DISPATCHER);
             channel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(event.dispatcher);
-            for(Map map : MapLoader.instance().getMaps()){
+            for(Map map : NailedAPI.getMapLoader().getMaps()){
                 if(map.getID() >= -1 && map.getID() <= 1){
                     continue;
                 }

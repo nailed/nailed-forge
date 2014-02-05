@@ -2,6 +2,7 @@ package jk_5.nailed.map.stat;
 
 import com.google.common.collect.Maps;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import jk_5.nailed.api.map.stat.IStatType;
 import jk_5.nailed.map.stat.types.*;
 import lombok.Getter;
 import net.minecraftforge.common.MinecraftForge;

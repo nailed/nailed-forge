@@ -1,12 +1,11 @@
 package jk_5.nailed.server.command;
 
 import com.google.common.collect.Lists;
-import jk_5.nailed.map.Map;
-import jk_5.nailed.map.MapLoader;
-import jk_5.nailed.players.Player;
-import jk_5.nailed.players.PlayerRegistry;
-import jk_5.nailed.players.Team;
-import jk_5.nailed.util.ChatColor;
+import jk_5.nailed.api.ChatColor;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.team.Team;
+import jk_5.nailed.api.player.Player;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -37,7 +36,7 @@ public class CommandTeam extends NailedCommand {
         if(args.length == 0) throw new WrongUsageException("/team join <username> <team>");
         if(args[0].equalsIgnoreCase("join")){
             if(args.length == 1) throw new WrongUsageException("/team join <username> <team>");
-            Player player = PlayerRegistry.instance().getPlayer(getTargetPlayer(sender, args[1]));
+            Player player = NailedAPI.getPlayerRegistry().getPlayer(getTargetPlayer(sender, args[1]));
             if(player == null) throw new CommandException("Unknown username " + args[1]);
 
             if(args.length == 2) throw new WrongUsageException("/team join " + args[1] + " <team>");
@@ -53,7 +52,7 @@ public class CommandTeam extends NailedCommand {
 
     @Override
     public List addTabCompletionOptions(ICommandSender iCommandSender, String[] strings){
-        Map map = MapLoader.instance().getMap(iCommandSender.getEntityWorld());
+        Map map = NailedAPI.getMapLoader().getMap(iCommandSender.getEntityWorld());
         if(strings.length == 1) return getListOfStringsMatchingLastWord(strings, "join");
         else if(strings.length == 2){
             if(strings[0].equalsIgnoreCase("join")){

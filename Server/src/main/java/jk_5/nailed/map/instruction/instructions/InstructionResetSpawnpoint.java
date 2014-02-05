@@ -1,8 +1,8 @@
 package jk_5.nailed.map.instruction.instructions;
 
-import jk_5.nailed.map.instruction.GameController;
-import jk_5.nailed.map.instruction.IInstruction;
-import jk_5.nailed.players.Team;
+import jk_5.nailed.api.map.GameController;
+import jk_5.nailed.api.map.IInstruction;
+import jk_5.nailed.api.map.team.Team;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
@@ -30,6 +30,6 @@ public class InstructionResetSpawnpoint implements IInstruction {
     @Override
     public void execute(GameController controller) {
         Team team = controller.getMap().getTeamManager().getTeam(this.team);
-        if(team != null) team.setSpawnPoint(null);
+        if(team != null) team.setSpawnpoint(null);
     }
 }

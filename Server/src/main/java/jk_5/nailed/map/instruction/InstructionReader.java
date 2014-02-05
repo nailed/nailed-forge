@@ -3,6 +3,8 @@ package jk_5.nailed.map.instruction;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import jk_5.nailed.api.events.RegisterInstructionEvent;
+import jk_5.nailed.api.map.IInstruction;
 import jk_5.nailed.map.MappackInitializationException;
 import jk_5.nailed.map.instruction.instructions.*;
 import lombok.Getter;

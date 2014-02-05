@@ -1,6 +1,6 @@
 package jk_5.quakecraft;
 
-import jk_5.nailed.map.PvpIgnoringDamageSource;
+import jk_5.nailed.api.map.PvpIgnoringDamageSource;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.EntityDamageSource;
 

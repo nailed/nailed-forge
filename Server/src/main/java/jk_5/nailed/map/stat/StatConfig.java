@@ -2,8 +2,10 @@ package jk_5.nailed.map.stat;
 
 import com.google.common.collect.Lists;
 import jk_5.nailed.NailedLog;
-import jk_5.nailed.util.config.ConfigFile;
-import jk_5.nailed.util.config.ConfigTag;
+import jk_5.nailed.api.config.ConfigFile;
+import jk_5.nailed.api.config.ConfigTag;
+import jk_5.nailed.api.map.stat.IStatType;
+import jk_5.nailed.api.map.stat.Stat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -15,7 +17,7 @@ import java.util.List;
  * @author jk-5
  */
 @NoArgsConstructor
-public class StatConfig {
+public class StatConfig implements jk_5.nailed.api.map.stat.StatConfig {
 
     @Getter
     private List<Stat> stats = Lists.newArrayList();

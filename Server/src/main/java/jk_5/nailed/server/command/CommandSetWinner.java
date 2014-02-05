@@ -1,9 +1,12 @@
 package jk_5.nailed.server.command;
 
 import com.google.common.collect.Lists;
-import jk_5.nailed.map.Map;
-import jk_5.nailed.map.MapLoader;
-import jk_5.nailed.players.Team;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.PossibleWinner;
+import jk_5.nailed.api.map.team.Team;
+import jk_5.nailed.api.player.Player;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.util.ChatComponentText;
@@ -32,8 +35,15 @@ public class CommandSetWinner extends NailedCommand {
 
     @Override
     public void processCommandWithMap(ICommandSender sender, Map map, String[] args){
-        if(args.length == 0) throw new WrongUsageException("/setwinner <team>");
-        map.getGameController().setWinner(map.getTeamManager().getTeam(args[0]));
+        if(args.length == 0) throw new WrongUsageException("/setwinner <winner>");
+        PossibleWinner winner = map.getTeamManager().getTeam(args[0]);
+        if(winner == null){
+            Player player = NailedAPI.getPlayerRegistry().getPlayerByUsername(args[0]);
+            if(player.getCurrentMap() != map) throw new CommandException("Player " + args[0] + " is not in this map");
+        }
+        if(winner == null) throw new CommandException(args[0] + " is not a player or team");
+
+        map.getInstructionController().setWinner(map.getTeamManager().getTeam(args[0]));
 
         IChatComponent component = new ChatComponentText("Winner set to " + args[0]);
         component.func_150256_b().func_150238_a(EnumChatFormatting.GREEN);
@@ -43,7 +53,7 @@ public class CommandSetWinner extends NailedCommand {
     @Override
     public List addTabCompletionOptions(ICommandSender sender, String[] args){
         if(args.length != 1) return Arrays.asList();
-        Map map = MapLoader.instance().getMap(sender.getEntityWorld());
+        Map map = NailedAPI.getMapLoader().getMap(sender.getEntityWorld());
         List<String> teams = Lists.newArrayList();
         for(Team team : map.getTeamManager().getTeams()){
             teams.add(team.getTeamId());

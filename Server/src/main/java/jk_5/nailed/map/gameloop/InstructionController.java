@@ -1,14 +1,10 @@
 package jk_5.nailed.map.gameloop;
 
 import jk_5.nailed.NailedLog;
-import jk_5.nailed.map.Map;
-import jk_5.nailed.map.instruction.IInstruction;
-import jk_5.nailed.map.instruction.InstructionList;
-import jk_5.nailed.map.instruction.TimedInstruction;
+import jk_5.nailed.api.ChatColor;
+import jk_5.nailed.api.map.*;
 import jk_5.nailed.map.stat.StatTypeManager;
 import jk_5.nailed.map.stat.types.*;
-import jk_5.nailed.players.Team;
-import jk_5.nailed.util.ChatColor;
 import lombok.Getter;
 
 import java.util.Iterator;
@@ -18,12 +14,12 @@ import java.util.Iterator;
  *
  * @author jk-5
  */
-public class InstructionController implements Runnable {
+public class InstructionController implements Runnable, jk_5.nailed.api.map.InstructionController {
 
     @Getter private final Map map;
     @Getter private boolean running = false;
     @Getter private boolean paused = false;
-    @Getter private Team winner = null;
+    @Getter private PossibleWinner winner = null;
     @Getter private final InstructionList instructions;
     private final InstructionGameController controller = new InstructionGameController(this);
     private Thread thread;
@@ -34,7 +30,7 @@ public class InstructionController implements Runnable {
         if(map.getMappack() != null){
             this.instructions = map.getMappack().getInstructionList().cloneList();
         }else{
-            this.instructions = new InstructionList();
+            this.instructions = new jk_5.nailed.map.instruction.InstructionList();
         }
     }
 
@@ -52,14 +48,14 @@ public class InstructionController implements Runnable {
         this.thread.setName("InstructionController-" + map.getSaveFileName() + "-" + this.thread.getId());
     }
 
-    public void setWinner(Team winner){
+    public void setWinner(PossibleWinner winner){
         if(!this.running || this.winner != null) return;
         this.winner = winner;
         this.running = false;
         this.stopGame();
         StatTypeManager.instance().getStatType(StatTypeGameHasWinner.class).onWin(this);
         StatTypeManager.instance().getStatType(StatTypeIsWinner.class).onWinnerSet(this, winner);
-        this.controller.broadcastNotification("Winner is " + winner.getColoredName());
+        this.controller.broadcastNotification("Winner is " + winner.getWinnerColoredName());
     }
 
     public void startGame(){

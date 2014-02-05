@@ -1,8 +1,8 @@
 package jk_5.nailed.server.command;
 
 import com.google.common.collect.Lists;
-import jk_5.nailed.map.Map;
-import jk_5.nailed.map.MapLoader;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.map.Map;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -30,7 +30,7 @@ public class CommandReloadMap extends NailedCommand {
     public void processCommandWithMap(ICommandSender sender, Map currentMap, String[] args){
         if(args.length == 0) throw new WrongUsageException("/reloadmap <mapname>");
         Map map = null;
-        for(Map m : MapLoader.instance().getMaps()){
+        for(Map m : NailedAPI.getMapLoader().getMaps()){
             if(args[0].equalsIgnoreCase(m.getSaveFileName())){
                 map = m;
                 break;
@@ -49,7 +49,7 @@ public class CommandReloadMap extends NailedCommand {
     public List addTabCompletionOptions(ICommandSender sender, String[] args){
         if(args.length != 1) return Arrays.asList();
         List<String> ret = Lists.newArrayList();
-        for(Map map : MapLoader.instance().getMaps()){
+        for(Map map : NailedAPI.getMapLoader().getMaps()){
             ret.add(map.getSaveFileName());
         }
         return getListOfStringsFromIterableMatchingLastWord(args, ret);

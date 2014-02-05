@@ -2,11 +2,13 @@ package jk_5.nailed.map.mappack;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import jk_5.nailed.players.TeamBuilder;
-import jk_5.nailed.util.ChatColor;
-import jk_5.nailed.util.WeatherType;
-import jk_5.nailed.util.config.ConfigFile;
-import jk_5.nailed.util.config.ConfigTag;
+import jk_5.nailed.api.ChatColor;
+import jk_5.nailed.api.WeatherType;
+import jk_5.nailed.api.config.ConfigFile;
+import jk_5.nailed.api.config.ConfigTag;
+import jk_5.nailed.api.map.MappackMetadata;
+import jk_5.nailed.api.map.Spawnpoint;
+import jk_5.nailed.api.map.team.TeamBuilder;
 import lombok.Getter;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.WorldSettings;
@@ -58,7 +60,7 @@ public class FileMappackMetadata implements MappackMetadata {
         this.defaultTeams = Lists.newArrayList();
         ConfigTag tags = this.config.getTag("teams");
         for(ConfigTag tag : tags.getSortedTagList()){
-            TeamBuilder team = new TeamBuilder();
+            TeamBuilder team = new jk_5.nailed.map.team.TeamBuilder();
             team.setInternalName(tag.name);
             team.setName(tag.getTag("name").getValue(tag.name));
             team.setColor(ChatColor.getByName(tag.getTag("color").getValue(ChatColor.WHITE.name())));

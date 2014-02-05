@@ -1,7 +1,8 @@
 package jk_5.nailed.map.teleport;
 
 import cpw.mods.fml.common.eventhandler.Event;
-import jk_5.nailed.map.Map;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.teleport.TeleportOptions;
 import net.minecraft.entity.Entity;
 import net.minecraftforge.common.MinecraftForge;
 

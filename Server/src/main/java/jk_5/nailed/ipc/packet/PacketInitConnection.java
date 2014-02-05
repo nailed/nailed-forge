@@ -6,10 +6,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.base64.Base64;
-import jk_5.nailed.map.MapLoader;
-import jk_5.nailed.map.mappack.Mappack;
-import jk_5.nailed.players.Player;
-import jk_5.nailed.players.PlayerRegistry;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.map.Mappack;
+import jk_5.nailed.api.player.Player;
 
 /**
  * No description given
@@ -26,14 +25,14 @@ public class PacketInitConnection extends IpcPacket {
     @Override
     public void write(JsonObject json) {
         JsonArray onlinePlayers = new JsonArray();
-        for(Player player : PlayerRegistry.instance().getPlayers()){
+        for(Player player : NailedAPI.getPlayerRegistry().getPlayers()){
             if(player.isOnline()){
                 onlinePlayers.add(new JsonPrimitive(player.getUsername()));
             }
         }
         json.add("players", onlinePlayers);
         JsonArray mappacks = new JsonArray();
-        for(Mappack mappack : MapLoader.instance().getMappacks()){
+        for(Mappack mappack : NailedAPI.getMappackLoader().getMappacks()){
             JsonObject obj = new JsonObject();
             ByteBuf icon = Base64.encode(mappack.getMappackIcon());
             obj.addProperty("id", mappack.getMappackID());

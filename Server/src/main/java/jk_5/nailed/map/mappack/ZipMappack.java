@@ -4,14 +4,16 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.Unpooled;
 import jk_5.nailed.NailedLog;
+import jk_5.nailed.api.config.ConfigFile;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.MapBuilder;
+import jk_5.nailed.api.map.Mappack;
+import jk_5.nailed.api.map.MappackMetadata;
 import jk_5.nailed.map.DiscardedMappackInitializationException;
-import jk_5.nailed.map.Map;
 import jk_5.nailed.map.MappackInitializationException;
-import jk_5.nailed.map.PotentialMap;
 import jk_5.nailed.map.instruction.InstructionList;
 import jk_5.nailed.map.instruction.InstructionParseException;
 import jk_5.nailed.map.stat.StatConfig;
-import jk_5.nailed.util.config.ConfigFile;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.io.IOUtils;
@@ -93,8 +95,8 @@ public class ZipMappack implements Mappack {
     }
 
     @Override
-    public Map createMap(PotentialMap potentialMap) {
-        return potentialMap.createMap();
+    public Map createMap(MapBuilder potentialMap) {
+        return potentialMap.build();
     }
 
     @Override

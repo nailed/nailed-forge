@@ -1,8 +1,8 @@
 package jk_5.nailed.map.weather;
 
-import jk_5.nailed.map.Map;
-import jk_5.nailed.map.mappack.Mappack;
-import jk_5.nailed.util.WeatherType;
+import jk_5.nailed.api.WeatherType;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.Mappack;
 import lombok.Getter;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.world.World;
@@ -16,7 +16,7 @@ import java.util.Random;
  *
  * @author jk-5
  */
-public class WeatherController {
+public class WeatherController implements jk_5.nailed.api.map.WeatherController {
 
     private Random random = new Random();
     private int updateLCG = this.random.nextInt();

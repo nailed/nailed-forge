@@ -2,11 +2,12 @@ package jk_5.nailed.map.gen;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import jk_5.nailed.map.Map;
-import jk_5.nailed.map.MapLoader;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.Mappack;
+import jk_5.nailed.api.map.Spawnpoint;
 import jk_5.nailed.map.MappackContainingWorldProvider;
-import jk_5.nailed.map.mappack.Mappack;
-import jk_5.nailed.map.mappack.Spawnpoint;
+import jk_5.nailed.map.NailedMap;
 import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.network.NailedPacket;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,7 +35,7 @@ public class NailedWorldProvider extends WorldProvider implements MappackContain
 
     @Override
     protected void registerWorldChunkManager(){
-        this.map = MapLoader.instance().getMap(this.dimensionId);
+        this.map = NailedAPI.getMapLoader().getMap(this.dimensionId);
         this.worldChunkMgr = new VoidWorldChunkManager(this.worldObj);
     }
 
@@ -92,7 +93,9 @@ public class NailedWorldProvider extends WorldProvider implements MappackContain
     }
 
     public void resetRainAndThunder(){
-        this.map.markDataNeedsResync();
+        if(this.map instanceof NailedMap){
+            ((NailedMap) this.map).markDataNeedsResync();
+        }
         this.map.getWeatherController().clear();
     }
 

@@ -1,14 +1,13 @@
 package jk_5.nailed.server.command;
 
 import com.google.common.collect.Lists;
-import jk_5.nailed.map.Map;
-import jk_5.nailed.map.MapLoader;
-import jk_5.nailed.map.mappack.Mappack;
-import jk_5.nailed.map.mappack.Spawnpoint;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.Mappack;
+import jk_5.nailed.api.map.Spawnpoint;
+import jk_5.nailed.api.map.teleport.TeleportOptions;
+import jk_5.nailed.api.player.Player;
 import jk_5.nailed.map.teleport.TeleportHelper;
-import jk_5.nailed.map.teleport.TeleportOptions;
-import jk_5.nailed.players.Player;
-import jk_5.nailed.players.PlayerRegistry;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.PlayerSelector;
@@ -64,7 +63,7 @@ public class CommandTP extends NailedCommand {
                 }else{
                     throw new CommandException("commands.nailed.tp.fail.notarget");
                 }
-                Player target = PlayerRegistry.instance().getPlayerByUsername(args[0]);
+                Player target = NailedAPI.getPlayerRegistry().getPlayerByUsername(args[0]);
                 if(target == null){
                     throw new CommandException("commands.nailed.tp.fail.notarget");
                 }
@@ -92,11 +91,11 @@ public class CommandTP extends NailedCommand {
                 int z = (int) Math.floor(handleRelativeNumber(sender, teleporting.posZ, args[2]));
                 TeleportOptions option = new TeleportOptions();
                 option.setCoordinates(new Spawnpoint(x, y, z, teleporting.rotationYaw, teleporting.rotationPitch));
-                option.setDestination(MapLoader.instance().getMap(teleporting.worldObj));
+                option.setDestination(NailedAPI.getMapLoader().getMap(teleporting.worldObj));
                 options.add(new ImmutablePair<Entity, TeleportOptions>(teleporting, option));
             }else if(args.length == 4){
                 //  /tp teleportingPlayer x y z
-                Player target = PlayerRegistry.instance().getPlayerByUsername(args[0]);
+                Player target = NailedAPI.getPlayerRegistry().getPlayerByUsername(args[0]);
                 if(target == null){
                     throw new CommandException("commands.nailed.tp.fail.notarget");
                 }
@@ -123,7 +122,7 @@ public class CommandTP extends NailedCommand {
     private static EntityPlayerMP[] getPlayersList(ICommandSender sender, String pattern){
         EntityPlayerMP[] players = PlayerSelector.matchPlayers(sender, pattern);
         if(players == null){
-            Player p = PlayerRegistry.instance().getPlayerByUsername(pattern);
+            Player p = NailedAPI.getPlayerRegistry().getPlayerByUsername(pattern);
             if(p == null) throw new CommandException("commands.nailed.tp.fail.notarget");
             players = new EntityPlayerMP[]{p.getEntity()};
         }
@@ -132,12 +131,12 @@ public class CommandTP extends NailedCommand {
 
     private static TeleportOptions getDestination(ICommandSender sender, String data){
         TeleportOptions dest = new TeleportOptions();
-        Player p = PlayerRegistry.instance().getPlayerByUsername(data);
+        Player p = NailedAPI.getPlayerRegistry().getPlayerByUsername(data);
         if(p != null){
             dest.setCoordinates(p.getLocation());
             dest.setDestination(p.getCurrentMap());
         }else{
-            Map map = MapLoader.instance().getMapFromName(data);
+            Map map = NailedAPI.getMapLoader().getMap(data);
             if(map != null){
                 Mappack mappack = map.getMappack();
                 if(mappack != null){
@@ -145,7 +144,7 @@ public class CommandTP extends NailedCommand {
                 }
                 dest.setDestination(map);
             }else{
-                map = MapLoader.instance().getMap(parseInt(sender, data));
+                map = NailedAPI.getMapLoader().getMap(parseInt(sender, data));
                 if(map != null){
                     Mappack mappack = map.getMappack();
                     if(mappack != null){

@@ -1,7 +1,7 @@
 package jk_5.nailed.server.command;
 
 import com.google.common.base.Joiner;
-import jk_5.nailed.map.Map;
+import jk_5.nailed.api.map.Map;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
 

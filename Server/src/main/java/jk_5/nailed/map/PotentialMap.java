@@ -1,6 +1,10 @@
 package jk_5.nailed.map;
 
-import jk_5.nailed.map.mappack.Mappack;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.MapBuilder;
+import jk_5.nailed.api.map.Mappack;
+import lombok.Getter;
 import net.minecraftforge.common.DimensionManager;
 
 import java.io.File;
@@ -10,26 +14,29 @@ import java.io.File;
  *
  * @author jk-5
  */
-public final class PotentialMap {
+public final class PotentialMap implements MapBuilder {
 
-    private final int id;
-    private final Mappack pack;
+    @Getter private final int ID;
+    @Getter private final Mappack mappack;
 
     public PotentialMap(Mappack mappack){
-        this.id = DimensionManager.getNextFreeDimId();
-        this.pack = mappack;
+        this.ID = DimensionManager.getNextFreeDimId();
+        this.mappack = mappack;
     }
 
+    @Override
     public String getSaveFileName(){
-        return "map" + (this.pack == null ? "" : "_" + this.pack.getMappackID()) + "_" + this.id;
+        return "map" + (this.mappack == null ? "" : "_" + this.mappack.getMappackID()) + "_" + this.ID;
     }
 
+    @Override
     public File getSaveFolder(){
-        return new File(MapLoader.getMapsFolder(), this.getSaveFileName());
+        return new File(NailedAPI.getMapLoader().getMapsFolder(), this.getSaveFileName());
     }
 
-    public Map createMap(){
-        return new Map(this.pack, this.id);
+    @Override
+    public Map build(){
+        return new NailedMap(this.mappack, this.ID);
     }
 
     public static String getSaveFileName(Map map){

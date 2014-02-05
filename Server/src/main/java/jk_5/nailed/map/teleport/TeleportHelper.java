@@ -1,10 +1,11 @@
 package jk_5.nailed.map.teleport;
 
 import jk_5.nailed.NailedLog;
-import jk_5.nailed.map.Map;
-import jk_5.nailed.map.MapLoader;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.Spawnpoint;
+import jk_5.nailed.api.map.teleport.TeleportOptions;
 import jk_5.nailed.map.gen.NailedWorldProvider;
-import jk_5.nailed.map.mappack.Spawnpoint;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -30,7 +31,7 @@ public class TeleportHelper {
 
     public static boolean travelEntity(Entity entity, TeleportOptions options){
         Map destMap = options.getDestination();
-        Map currentMap = MapLoader.instance().getMap(entity.worldObj);
+        Map currentMap = NailedAPI.getMapLoader().getMap(entity.worldObj);
         World destWorld = destMap.getWorld();
         if(destWorld.isRemote) return false;
         if(options == null) return false;
@@ -39,7 +40,7 @@ public class TeleportHelper {
         Spawnpoint spawn = options.getCoordinates();
         if(!TeleportEventFactory.isLinkPermitted(currentMap, destMap, entity, options)) return false;
         if(mcServer == null) mcServer = MinecraftServer.getServer();
-        if((mcServer == null) || ((dimension != 0) && (!mcServer.getAllowNether()))) return false;
+        if(mcServer == null) return false;
         WorldServer newworld = mcServer.worldServerForDimension(dimension);
         if(newworld == null){
             NailedLog.error("Cannot Link Entity to Dimension: Could not get World for Dimension " + dimension);

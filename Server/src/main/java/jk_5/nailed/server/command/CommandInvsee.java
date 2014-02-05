@@ -1,8 +1,8 @@
 package jk_5.nailed.server.command;
 
-import jk_5.nailed.map.Map;
-import jk_5.nailed.players.Player;
-import jk_5.nailed.players.PlayerRegistry;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.player.Player;
 import jk_5.nailed.util.invsee.InventoryOtherPlayer;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -29,7 +29,7 @@ public class CommandInvsee extends NailedCommand {
     @Override
     public void processCommandPlayer(Player sender, Map map, String[] args){
         if(args.length == 1){
-            Player player = PlayerRegistry.instance().getPlayerByUsername(args[0]);
+            Player player = NailedAPI.getPlayerRegistry().getPlayerByUsername(args[0]);
             if(player == null) throw new CommandException("That player is not online!");
             EntityPlayerMP entity = sender.getEntity();
             if(entity.openContainer != entity.inventoryContainer){

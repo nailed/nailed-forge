@@ -2,7 +2,9 @@ package jk_5.nailed.map.stat;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import jk_5.nailed.map.Map;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.stat.IStatTileEntity;
+import jk_5.nailed.api.map.stat.Stat;
 import lombok.Getter;
 
 import java.util.List;
@@ -12,17 +14,15 @@ import java.util.List;
  *
  * @author jk-5
  */
-public class StatManager {
+public class StatManager implements jk_5.nailed.api.map.stat.StatManager {
 
-    private final Map map;
-    @Getter private final StatConfig stats;
+    @Getter private final jk_5.nailed.api.map.stat.StatConfig stats;
     @Getter private final List<IStatTileEntity> statTiles = Lists.newArrayList();
 
     public StatManager(Map map){
-        this.map = map;
         if(map.getMappack() != null){
             Preconditions.checkNotNull(map.getMappack().getStatConfig(), "StatConfig may not be null!");
-            this.stats = this.map.getMappack().getStatConfig().clone();
+            this.stats = map.getMappack().getStatConfig().clone();
         }else{
             this.stats = new StatConfig();
         }

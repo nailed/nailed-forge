@@ -1,17 +1,16 @@
 package jk_5.nailed.map.gameloop;
 
 import com.google.common.collect.Maps;
-import jk_5.nailed.map.instruction.GameController;
+import jk_5.nailed.api.map.GameController;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.PossibleWinner;
 import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.network.NailedPacket;
-import jk_5.nailed.players.Team;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.network.play.server.S02PacketChat;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
-
-import java.util.Map;
 
 /**
  * No description given
@@ -21,7 +20,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class InstructionGameController implements GameController {
 
-    private final Map<String, Object> storage = Maps.newHashMap();
+    private final java.util.Map<String, Object> storage = Maps.newHashMap();
     private final InstructionController controller;
 
     @Override
@@ -36,8 +35,8 @@ public class InstructionGameController implements GameController {
     }
 
     @Override
-    public void setWinner(Team team) {
-        this.controller.setWinner(team);
+    public void setWinner(PossibleWinner winner) {
+        this.controller.setWinner(winner);
     }
 
     @Override
@@ -70,7 +69,7 @@ public class InstructionGameController implements GameController {
     }
 
     @Override
-    public jk_5.nailed.map.Map getMap() {
+    public Map getMap() {
         return this.controller.getMap();
     }
 }

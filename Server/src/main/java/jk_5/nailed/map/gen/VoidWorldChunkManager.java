@@ -1,8 +1,8 @@
 package jk_5.nailed.map.gen;
 
 import jk_5.nailed.NailedLog;
-import jk_5.nailed.map.Map;
-import jk_5.nailed.map.MapLoader;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.map.Map;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.ChunkPosition;
@@ -29,7 +29,7 @@ public class VoidWorldChunkManager extends WorldChunkManager {
             if (ret == null){
                 ret = new ChunkPosition(0, 0, 0);
             }
-            Map map = MapLoader.instance().getMap(this.world);
+            Map map = NailedAPI.getMapLoader().getMap(this.world);
             ChunkCoordinates spawn;
             if(map != null && map.getMappack() != null){
                 spawn = map.getMappack().getMappackMetadata().getSpawnPoint();

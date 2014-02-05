@@ -2,10 +2,10 @@ package jk_5.nailed.network.handlers;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.player.Player;
 import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.network.NailedPacket;
-import jk_5.nailed.players.Player;
-import jk_5.nailed.players.PlayerRegistry;
 
 /**
  * No description given
@@ -16,7 +16,7 @@ public class FPSSummaryHandler extends SimpleChannelInboundHandler<NailedPacket.
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, NailedPacket.FPSSummary msg) throws Exception{
-        Player p = PlayerRegistry.instance().getPlayer(NailedNetworkHandler.getPlayer(ctx));
+        Player p = NailedAPI.getPlayerRegistry().getPlayer(NailedNetworkHandler.getPlayer(ctx));
         p.setFps(msg.fps);
     }
 }

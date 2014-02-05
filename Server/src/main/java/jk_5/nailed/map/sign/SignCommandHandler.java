@@ -1,8 +1,10 @@
 package jk_5.nailed.map.sign;
 
 import com.google.common.collect.Sets;
-import jk_5.nailed.map.Map;
-import jk_5.nailed.players.Player;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.sign.Sign;
+import jk_5.nailed.api.map.sign.SignMappack;
+import jk_5.nailed.api.player.Player;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
@@ -21,7 +23,7 @@ import java.util.Set;
  * @author jk-5
  */
 @RequiredArgsConstructor
-public class SignCommandHandler {
+public class SignCommandHandler implements jk_5.nailed.api.map.sign.SignCommandHandler {
 
     private final Map map;
     private final Set<Sign> signs = Sets.newHashSet();

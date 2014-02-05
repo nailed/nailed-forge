@@ -1,10 +1,10 @@
 package jk_5.nailed.map.instruction.instructions;
 
-import jk_5.nailed.map.instruction.GameController;
-import jk_5.nailed.map.instruction.IInstruction;
+import jk_5.nailed.api.map.GameController;
+import jk_5.nailed.api.map.IInstruction;
+import jk_5.nailed.api.map.stat.IStatType;
+import jk_5.nailed.api.map.stat.Stat;
 import jk_5.nailed.map.stat.DefaultStat;
-import jk_5.nailed.map.stat.IStatType;
-import jk_5.nailed.map.stat.Stat;
 import jk_5.nailed.map.stat.types.StatTypeModifiable;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

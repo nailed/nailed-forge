@@ -1,6 +1,7 @@
 package jk_5.nailed.map.stat;
 
 import cpw.mods.fml.common.eventhandler.Event;
+import jk_5.nailed.api.map.stat.IStatType;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Map;

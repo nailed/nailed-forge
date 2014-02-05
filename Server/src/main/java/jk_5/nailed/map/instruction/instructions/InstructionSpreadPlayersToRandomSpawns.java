@@ -1,9 +1,9 @@
 package jk_5.nailed.map.instruction.instructions;
 
-import jk_5.nailed.map.instruction.GameController;
-import jk_5.nailed.map.instruction.IInstruction;
-import jk_5.nailed.map.mappack.Spawnpoint;
-import jk_5.nailed.players.Player;
+import jk_5.nailed.api.map.GameController;
+import jk_5.nailed.api.map.IInstruction;
+import jk_5.nailed.api.map.Spawnpoint;
+import jk_5.nailed.api.player.Player;
 
 /**
  * No description given

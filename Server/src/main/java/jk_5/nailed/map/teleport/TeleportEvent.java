@@ -2,8 +2,9 @@ package jk_5.nailed.map.teleport;
 
 import cpw.mods.fml.common.eventhandler.Cancelable;
 import cpw.mods.fml.common.eventhandler.Event;
-import jk_5.nailed.map.Map;
-import jk_5.nailed.map.mappack.Spawnpoint;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.Spawnpoint;
+import jk_5.nailed.api.map.teleport.TeleportOptions;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.entity.Entity;
 

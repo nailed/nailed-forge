@@ -2,12 +2,13 @@ package jk_5.nailed.teamspeak;
 
 import com.google.common.base.Splitter;
 import jk_5.nailed.NailedServer;
-import jk_5.nailed.players.Player;
-import jk_5.nailed.players.PlayerRegistry;
-import jk_5.nailed.players.Team;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.config.ConfigTag;
+import jk_5.nailed.api.player.Player;
+import jk_5.nailed.players.NailedPlayer;
+import jk_5.nailed.players.NailedTeam;
 import jk_5.nailed.teamspeak.api.de.stefan1200.jts3serverquery.JTS3ServerQuery;
 import jk_5.nailed.teamspeak.api.de.stefan1200.jts3serverquery.TeamspeakActionListener;
-import jk_5.nailed.util.config.ConfigTag;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraftforge.common.MinecraftForge;
@@ -104,8 +105,8 @@ public class TeamspeakClient extends Thread implements TeamspeakActionListener {
                     }
                 }
             }
-            Player player = PlayerRegistry.instance().getPlayerByUsername(nickname);
-            if(player != null) player.setTeamSpeakClientID(id);
+            Player player = NailedAPI.getPlayerRegistry().getPlayerByUsername(nickname);
+            if(player != null && player instanceof NailedPlayer) ((NailedPlayer) player).setTeamSpeakClientID(id);
         }
     }
 
@@ -168,32 +169,36 @@ public class TeamspeakClient extends Thread implements TeamspeakActionListener {
         }
     }
 
-    public void createChannelFor(Team team){
+    public void createChannelFor(NailedTeam team){
         String name = "Nailed." + team.getMap().getID() + "." + team.getTeamId();
         //int chanid = Integer.parseInt(this.api.doCommand("channelcreate channel_name=" + name + " channel_order=0 cpid=" + this.parentID).get("response").split("=")[1]);
         //team.setTeamSpeakChannelID(chanid);
     }
 
-    public void removeChannel(Team team){
+    public void removeChannel(NailedTeam team){
         if(team.getTeamSpeakChannelID() == -1) return;
         //this.api.doCommand("channeldelete cid=" + team.getTeamSpeakChannelID() + " force=1");
         //team.setTeamSpeakChannelID(-1);
     }
 
-    public void movePlayersIntoChannel(Team team){
+    public void movePlayersIntoChannel(NailedTeam team){
         if(team.getTeamSpeakChannelID() == -1) return;
         for(Player player : team.getMembers()){
-            if(player.getTeamSpeakClientID() != -1){
-                this.api.moveClient(player.getTeamSpeakClientID(), team.getTeamSpeakChannelID(), null);
+            if(!(player instanceof NailedPlayer)) continue;
+            NailedPlayer pl = (NailedPlayer) player;
+            if(pl.getTeamSpeakClientID() != -1){
+                this.api.moveClient(pl.getTeamSpeakClientID(), team.getTeamSpeakChannelID(), null);
             }
         }
     }
 
-    public void movePlayersToLobby(Team team){
+    public void movePlayersToLobby(NailedTeam team){
         if(this.lobbyID == -1) return;
         for(Player player : team.getMembers()){
-            if(player.getTeamSpeakClientID() != -1){
-                this.api.moveClient(player.getTeamSpeakClientID(), this.lobbyID, null);
+            if(!(player instanceof NailedPlayer)) continue;
+            NailedPlayer pl = (NailedPlayer) player;
+            if(pl.getTeamSpeakClientID() != -1){
+                this.api.moveClient(pl.getTeamSpeakClientID(), this.lobbyID, null);
             }
         }
     }
@@ -201,15 +206,17 @@ public class TeamspeakClient extends Thread implements TeamspeakActionListener {
     @Override
     public void teamspeakActionPerformed(String eventType, HashMap<String, String> eventInfo){
         if(eventType.equalsIgnoreCase("notifycliententerview")){
-            Player player = PlayerRegistry.instance().getPlayerByUsername(eventInfo.get("client_nickname"));
-            if(player != null){
-                player.setTeamSpeakClientID(Integer.parseInt(eventInfo.get("clid")));
+            Player player = NailedAPI.getPlayerRegistry().getPlayerByUsername(eventInfo.get("client_nickname"));
+            if(player != null && player instanceof NailedPlayer){
+                ((NailedPlayer) player).setTeamSpeakClientID(Integer.parseInt(eventInfo.get("clid")));
             }
         }else if(eventType.equalsIgnoreCase("notifyclientleftview")){
             int clid = Integer.parseInt(eventInfo.get("clid"));
-            for(Player player : PlayerRegistry.instance().getPlayers()){
-                if(player.getTeamSpeakClientID() == clid){
-                    player.setTeamSpeakClientID(-1);
+            for(Player player : NailedAPI.getPlayerRegistry().getPlayers()){
+                if(!(player instanceof NailedPlayer)) continue;
+                NailedPlayer pl = (NailedPlayer) player;
+                if(pl.getTeamSpeakClientID() == clid){
+                    pl.setTeamSpeakClientID(-1);
                 }
             }
         }

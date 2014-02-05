@@ -1,8 +1,8 @@
 package jk_5.nailed.server.command;
 
-import jk_5.nailed.map.Map;
-import jk_5.nailed.map.MapLoader;
-import jk_5.nailed.players.Player;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.player.Player;
 
 /**
  * No description given
@@ -18,6 +18,6 @@ public class CommandLobby extends NailedCommand {
 
     @Override
     public void processCommandPlayer(Player sender, Map map, String[] args){
-        sender.teleportToMap(MapLoader.instance().getLobby());
+        sender.teleportToMap(NailedAPI.getMapLoader().getLobby());
     }
 }

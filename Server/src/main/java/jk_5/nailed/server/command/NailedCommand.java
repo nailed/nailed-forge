@@ -1,9 +1,8 @@
 package jk_5.nailed.server.command;
 
-import jk_5.nailed.map.Map;
-import jk_5.nailed.map.MapLoader;
-import jk_5.nailed.players.Player;
-import jk_5.nailed.players.PlayerRegistry;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.player.Player;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -23,10 +22,10 @@ public abstract class NailedCommand extends CommandBase {
 
     @Override
     public final void processCommand(ICommandSender sender, String[] args){
-        Map map = MapLoader.instance().getMap(sender.getEntityWorld());
+        Map map = NailedAPI.getMapLoader().getMap(sender.getEntityWorld());
         if(map == null) this.process(sender, args);
         Player player = null;
-        if(sender instanceof EntityPlayer) player = PlayerRegistry.instance().getPlayer(((EntityPlayer) sender));
+        if(sender instanceof EntityPlayer) player = NailedAPI.getPlayerRegistry().getPlayer(((EntityPlayer) sender));
         if(player == null){
             this.processCommandWithMap(sender, map, args);
         }else{
@@ -67,33 +66,32 @@ public abstract class NailedCommand extends CommandBase {
     }
 
     public static double handleRelativeNumber(ICommandSender par1ICommandSender, double origin, String arg, int min, int max){
-        boolean flag = arg.startsWith("~");
-        double d1 = flag ? origin : 0.0D;
+        boolean isRelative = arg.startsWith("~");
+        double value = isRelative ? origin : 0.0D;
 
-        if((!flag) || (arg.length() > 1)){
-            boolean flag1 = arg.contains(".");
+        if(!isRelative || arg.length() > 1){
+            boolean isDouble = arg.contains(".");
 
-            if(flag){
+            if(isRelative){
                 arg = arg.substring(1);
             }
 
-            d1 += parseDouble(par1ICommandSender, arg);
+            value += parseDouble(par1ICommandSender, arg);
 
-            if((!flag1) && (!flag)){
-                d1 += 0.5D;
+            if(!isDouble && !isRelative){
+                value += 0.5D;
             }
         }
 
-        if((min != 0) || (max != 0)){
-            if(d1 < min){
-                throw new NumberInvalidException("commands.generic.double.tooSmall", new Object[]{Double.valueOf(d1), Integer.valueOf(min)});
+        if(min != 0 || max != 0){
+            if(value < min){
+                throw new NumberInvalidException("commands.generic.double.tooSmall", value, min);
             }
-
-            if(d1 > max){
-                throw new NumberInvalidException("commands.generic.double.tooBig", new Object[]{Double.valueOf(d1), Integer.valueOf(max)});
+            if(value > max){
+                throw new NumberInvalidException("commands.generic.double.tooBig", value, max);
             }
         }
 
-        return d1;
+        return value;
     }
 }

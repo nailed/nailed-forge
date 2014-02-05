@@ -2,12 +2,12 @@ package jk_5.nailed.blocks.tileentity;
 
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.teleport.TeleportOptions;
+import jk_5.nailed.api.player.Player;
 import jk_5.nailed.blocks.BlockPortalController;
 import jk_5.nailed.gui.IGuiReturnHandler;
-import jk_5.nailed.map.Map;
-import jk_5.nailed.map.MapLoader;
-import jk_5.nailed.map.teleport.TeleportOptions;
-import jk_5.nailed.players.Player;
 import jk_5.nailed.util.ISynchronizedTileEntity;
 import lombok.Getter;
 import net.minecraft.nbt.NBTTagCompound;
@@ -84,7 +84,7 @@ public class TileEntityPortalController extends NailedTileEntity implements IGui
     }
 
     public void setDestinationFromName(String name){
-        Map map = MapLoader.instance().getMapFromName(name);
+        Map map = NailedAPI.getMapLoader().getMap(name);
         if(map == null) return;
         this.destination = map.getSpawnTeleport();
         this.programmedName = name;

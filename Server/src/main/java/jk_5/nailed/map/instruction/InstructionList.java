@@ -2,6 +2,7 @@ package jk_5.nailed.map.instruction;
 
 import com.google.common.collect.ForwardingList;
 import com.google.common.collect.Lists;
+import jk_5.nailed.api.map.IInstruction;
 import jk_5.nailed.map.MappackInitializationException;
 
 import java.io.BufferedReader;
@@ -12,7 +13,7 @@ import java.util.List;
  *
  * @author jk-5
  */
-public class InstructionList extends ForwardingList<IInstruction> {
+public class InstructionList extends ForwardingList<IInstruction> implements jk_5.nailed.api.map.InstructionList {
 
     private final List<IInstruction> instructions = Lists.newArrayList();
 

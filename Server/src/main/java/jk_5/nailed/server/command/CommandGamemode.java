@@ -1,9 +1,9 @@
 package jk_5.nailed.server.command;
 
-import jk_5.nailed.map.Map;
-import jk_5.nailed.players.Player;
-import jk_5.nailed.players.PlayerRegistry;
-import jk_5.nailed.util.Gamemode;
+import jk_5.nailed.api.Gamemode;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.player.Player;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -43,7 +43,7 @@ public class CommandGamemode extends NailedCommand {
     public void processCommandWithMap(ICommandSender sender, Map map, String[] args){
         if(args.length == 0){
             if(sender instanceof EntityPlayer){
-                Player target = PlayerRegistry.instance().getPlayer((EntityPlayer) sender);
+                Player target = NailedAPI.getPlayerRegistry().getPlayer((EntityPlayer) sender);
                 Gamemode gamemode = this.getToggledGamemode(target);
                 if(gamemode == null) throw new CommandException("Unknown gamemode");
                 target.setGameMode(gamemode);
@@ -51,10 +51,10 @@ public class CommandGamemode extends NailedCommand {
         }else if(args.length == 1){
             if(sender instanceof EntityPlayer){
                 Gamemode gamemode = this.getGameModeFromCommand(args[0]);
-                Player target = PlayerRegistry.instance().getPlayer((EntityPlayer) sender);
+                Player target = NailedAPI.getPlayerRegistry().getPlayer((EntityPlayer) sender);
                 target.setGameMode(gamemode);
             }else{
-                Player target = PlayerRegistry.instance().getPlayerByUsername(args[0]);
+                Player target = NailedAPI.getPlayerRegistry().getPlayerByUsername(args[0]);
                 if(target == null) throw new CommandException("Player " + args[0] + " was not found");
                 Gamemode gamemode = this.getToggledGamemode(target);
                 target.setGameMode(gamemode);

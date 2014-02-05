@@ -1,13 +1,13 @@
 package jk_5.nailed.players;
 
-import jk_5.nailed.map.Map;
+import jk_5.nailed.api.map.Map;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-public class TeamUndefined extends Team {
+public class TeamUndefined extends NailedTeam {
 
     public TeamUndefined(Map map) {
         super(map, "undefined-" + map.getSaveFileName());

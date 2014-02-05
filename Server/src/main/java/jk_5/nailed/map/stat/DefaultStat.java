@@ -1,6 +1,8 @@
 package jk_5.nailed.map.stat;
 
 import com.google.common.collect.Maps;
+import jk_5.nailed.api.map.stat.IStatType;
+import jk_5.nailed.api.map.stat.Stat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -1,8 +1,8 @@
 package jk_5.nailed.blocks.tileentity;
 
-import jk_5.nailed.map.MapLoader;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.map.stat.Stat;
 import jk_5.nailed.map.stat.DefaultStat;
-import jk_5.nailed.map.stat.Stat;
 import jk_5.nailed.map.stat.types.StatTypeModifiable;
 
 /**
@@ -20,7 +20,7 @@ public class TileEntityStatModifier extends NailedTileEntity {
         this.programmedName = statName;
         if(this.field_145850_b == null) this.needsUpdate = true;
         else{
-            Stat stat = MapLoader.instance().getMap(this.field_145850_b).getStatManager().getStat(this.programmedName);
+            Stat stat = NailedAPI.getMapLoader().getMap(this.field_145850_b).getStatManager().getStat(this.programmedName);
             if(stat instanceof DefaultStat && ((DefaultStat) stat).getType() instanceof StatTypeModifiable){
                 this.stat = (DefaultStat) stat;
             }

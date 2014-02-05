@@ -1,7 +1,7 @@
 package jk_5.nailed.ipc.packet;
 
 import com.google.gson.JsonObject;
-import jk_5.nailed.players.Player;
+import jk_5.nailed.api.player.Player;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 

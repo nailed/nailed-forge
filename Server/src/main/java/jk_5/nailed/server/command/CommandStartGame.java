@@ -1,6 +1,6 @@
 package jk_5.nailed.server.command;
 
-import jk_5.nailed.map.Map;
+import jk_5.nailed.api.map.Map;
 import net.minecraft.command.ICommandSender;
 
 /**
@@ -22,6 +22,6 @@ public class CommandStartGame extends NailedCommand {
 
     @Override
     public void processCommandWithMap(ICommandSender sender, Map map, String[] args){
-        map.getGameController().startGame();
+        map.getInstructionController().startGame();
     }
 }

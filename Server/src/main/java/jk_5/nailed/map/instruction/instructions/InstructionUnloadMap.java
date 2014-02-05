@@ -1,8 +1,8 @@
 package jk_5.nailed.map.instruction.instructions;
 
-import jk_5.nailed.map.instruction.GameController;
-import jk_5.nailed.map.instruction.IInstruction;
-import jk_5.nailed.map.instruction.TimedInstruction;
+import jk_5.nailed.api.map.GameController;
+import jk_5.nailed.api.map.IInstruction;
+import jk_5.nailed.api.map.TimedInstruction;
 
 /**
  * No description given

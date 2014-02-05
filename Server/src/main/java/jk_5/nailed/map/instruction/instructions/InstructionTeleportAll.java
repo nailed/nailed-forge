@@ -1,10 +1,10 @@
 package jk_5.nailed.map.instruction.instructions;
 
-import jk_5.nailed.map.Map;
-import jk_5.nailed.map.MapLoader;
-import jk_5.nailed.map.instruction.GameController;
-import jk_5.nailed.map.instruction.IInstruction;
-import jk_5.nailed.players.Player;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.map.GameController;
+import jk_5.nailed.api.map.IInstruction;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.player.Player;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
@@ -26,7 +26,7 @@ public class InstructionTeleportAll implements IInstruction {
 
     @Override
     public void execute(GameController controller){
-        Map destinationMap = MapLoader.instance().getMap(this.destination);
+        Map destinationMap = NailedAPI.getMapLoader().getMap(this.destination);
         for(Player player : controller.getMap().getPlayers()){
             player.teleportToMap(destinationMap);
         }

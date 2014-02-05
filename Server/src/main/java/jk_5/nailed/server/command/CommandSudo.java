@@ -2,9 +2,9 @@ package jk_5.nailed.server.command;
 
 import com.google.common.base.Joiner;
 import cpw.mods.fml.common.FMLCommonHandler;
-import jk_5.nailed.map.Map;
-import jk_5.nailed.players.Player;
-import jk_5.nailed.players.PlayerRegistry;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.player.Player;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -26,7 +26,7 @@ public class CommandSudo extends NailedCommand {
 
     @Override
     public void processCommandWithMap(ICommandSender sender, Map map, String[] args){
-        Player player = PlayerRegistry.instance().getPlayerByUsername(args[0]);
+        Player player = NailedAPI.getPlayerRegistry().getPlayerByUsername(args[0]);
         args[0] = null;
         String cmd = Joiner.on(" ").skipNulls().join(args);
         if (player != null){

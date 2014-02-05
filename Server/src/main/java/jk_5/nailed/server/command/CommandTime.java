@@ -1,7 +1,7 @@
 package jk_5.nailed.server.command;
 
-import jk_5.nailed.map.Map;
-import jk_5.nailed.map.MapLoader;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.map.Map;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.NumberInvalidException;
 import net.minecraft.util.ChatComponentText;
@@ -31,7 +31,7 @@ public class CommandTime extends NailedCommand {
                     else if(args[1].equals("night")) target = 18000;
                     else target = parseIntBounded(sender, args[1], 0, 23999);
                     if(!hasWorld && args.length == 3){
-                        map = MapLoader.instance().getMap(parseInt(sender, args[2]));
+                        map = NailedAPI.getMapLoader().getMap(parseInt(sender, args[2]));
                     }
                     if(map != null){
                         map.getWorld().setWorldTime(target);
@@ -40,7 +40,7 @@ public class CommandTime extends NailedCommand {
             }else{
                 try{
                     int number = parseInt(sender, args[0]);
-                    map = MapLoader.instance().getMap(number);
+                    map = NailedAPI.getMapLoader().getMap(number);
                     if(map != null){
                         IChatComponent component = new ChatComponentText("Current time in " + map.getSaveFileName() + ": " + map.getWorld().getWorldTime());
                         component.func_150256_b().func_150238_a(EnumChatFormatting.GREEN);

@@ -3,13 +3,13 @@ package jk_5.nailed.blocks.tileentity;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.map.stat.IStatTileEntity;
+import jk_5.nailed.api.map.stat.Stat;
+import jk_5.nailed.api.map.stat.StatManager;
+import jk_5.nailed.api.map.stat.StatMode;
+import jk_5.nailed.api.player.Player;
 import jk_5.nailed.gui.IGuiReturnHandler;
-import jk_5.nailed.map.MapLoader;
-import jk_5.nailed.map.stat.IStatTileEntity;
-import jk_5.nailed.map.stat.Stat;
-import jk_5.nailed.map.stat.StatManager;
-import jk_5.nailed.map.stat.StatMode;
-import jk_5.nailed.players.Player;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -36,7 +36,7 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
         this.programmedName = statName;
         if(this.field_145850_b == null) this.needsUpdate = true;
         else if(!this.field_145850_b.isRemote){
-            StatManager manager = MapLoader.instance().getMap(this.field_145850_b).getStatManager();
+            StatManager manager = NailedAPI.getMapLoader().getMap(this.field_145850_b).getStatManager();
             this.stat = manager.getStat(this.programmedName);
             manager.registerStatTile(this);
             this.isLoaded = true;
@@ -52,7 +52,7 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
     @Override
     public void func_145845_h(){
         if(this.needsUpdate){
-            StatManager manager = MapLoader.instance().getMap(this.field_145850_b).getStatManager();
+            StatManager manager = NailedAPI.getMapLoader().getMap(this.field_145850_b).getStatManager();
             this.stat = manager.getStat(this.programmedName);
             manager.registerStatTile(this);
             this.isLoaded = true;
@@ -65,7 +65,7 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
             this.needsUpdate = false;
         }
         if(!this.isLoaded){
-            MapLoader.instance().getMap(this.field_145850_b).getStatManager().registerStatTile(this);
+            NailedAPI.getMapLoader().getMap(this.field_145850_b).getStatManager().registerStatTile(this);
             this.isLoaded = true;
         }
         if(this.redstonePulseTicks != -1){
@@ -83,7 +83,7 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
     public void func_145843_s(){
         super.func_145843_s();
         if(this.isLoaded){
-            MapLoader.instance().getMap(this.field_145850_b).getStatManager().unloadStatTile(this);
+            NailedAPI.getMapLoader().getMap(this.field_145850_b).getStatManager().unloadStatTile(this);
             this.isLoaded = false;
         }
     }
@@ -92,7 +92,7 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
     public void onChunkUnload(){
         super.onChunkUnload();
         if(this.isLoaded){
-            MapLoader.instance().getMap(this.field_145850_b).getStatManager().unloadStatTile(this);
+            NailedAPI.getMapLoader().getMap(this.field_145850_b).getStatManager().unloadStatTile(this);
             this.isLoaded = false;
         }
     }

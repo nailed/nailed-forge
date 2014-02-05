@@ -1,5 +1,7 @@
 package jk_5.nailed.util;
 
+import jk_5.nailed.api.ChatColor;
+
 /**
  * No description given
  *

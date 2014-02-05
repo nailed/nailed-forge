@@ -1,7 +1,9 @@
 package jk_5.nailed.map.mappack;
 
-import jk_5.nailed.players.TeamBuilder;
-import jk_5.nailed.util.WeatherType;
+import jk_5.nailed.api.WeatherType;
+import jk_5.nailed.api.map.MappackMetadata;
+import jk_5.nailed.api.map.Spawnpoint;
+import jk_5.nailed.api.map.team.TeamBuilder;
 import lombok.Getter;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.WorldSettings;

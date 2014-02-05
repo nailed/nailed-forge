@@ -5,7 +5,7 @@ package jk_5.nailed.map;
  *
  * @author jk-5
  */
-public class WrappedMap extends Map {
+public class WrappedMap extends NailedMap {
 
     public WrappedMap(int ID){
         super(null, ID);

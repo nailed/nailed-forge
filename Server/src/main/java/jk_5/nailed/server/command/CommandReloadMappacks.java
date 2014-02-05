@@ -1,7 +1,7 @@
 package jk_5.nailed.server.command;
 
-import jk_5.nailed.map.Map;
-import jk_5.nailed.map.MapLoader;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.map.Map;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
@@ -26,9 +26,9 @@ public class CommandReloadMappacks extends NailedCommand {
 
     @Override
     public void processCommandWithMap(ICommandSender sender, Map map, String[] args){
-        MapLoader.instance().loadMappacks();
+        NailedAPI.getMappackLoader().loadMappacks();
 
-        IChatComponent component = new ChatComponentText("Successfully loaded " + MapLoader.instance().getMappacks().size() + " mappacks");
+        IChatComponent component = new ChatComponentText("Successfully loaded " + NailedAPI.getMappackLoader().getMappacks().size() + " mappacks");
         component.func_150256_b().func_150238_a(EnumChatFormatting.GREEN);
         sender.func_145747_a(component);
     }
