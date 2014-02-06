@@ -43,8 +43,8 @@ public class CommandTime extends NailedCommand {
                     map = NailedAPI.getMapLoader().getMap(number);
                     if(map != null){
                         IChatComponent component = new ChatComponentText("Current time in " + map.getSaveFileName() + ": " + map.getWorld().getWorldTime());
-                        component.func_150256_b().func_150238_a(EnumChatFormatting.GREEN);
-                        sender.func_145747_a(component);
+                        component.getChatStyle().setColor(EnumChatFormatting.GREEN);
+                        sender.addChatMessage(component);
                     }
                 }catch(NumberInvalidException e){
                     //NOOP
@@ -52,8 +52,8 @@ public class CommandTime extends NailedCommand {
             }
         }else if(hasWorld){
             IChatComponent component = new ChatComponentText("Current time in " + map.getSaveFileName() + ": " + map.getWorld().getWorldTime());
-            component.func_150256_b().func_150238_a(EnumChatFormatting.GREEN);
-            sender.func_145747_a(component);
+            component.getChatStyle().setColor(EnumChatFormatting.GREEN);
+            sender.addChatMessage(component);
         }
     }
 }

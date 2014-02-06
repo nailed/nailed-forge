@@ -29,7 +29,7 @@ public class CommandReloadMappacks extends NailedCommand {
         NailedAPI.getMappackLoader().loadMappacks();
 
         IChatComponent component = new ChatComponentText("Successfully loaded " + NailedAPI.getMappackLoader().getMappacks().size() + " mappacks");
-        component.func_150256_b().func_150238_a(EnumChatFormatting.GREEN);
-        sender.func_145747_a(component);
+        component.getChatStyle().setColor(EnumChatFormatting.GREEN);
+        sender.addChatMessage(component);
     }
 }

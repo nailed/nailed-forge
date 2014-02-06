@@ -35,6 +35,6 @@ public class SkinSyncManager {
     }
 
     public void setPlayerSkin(EntityPlayer player, String skinName){
-        NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.PlayerSkin(player.func_146103_bH().getName(), true, false, skinName), player);
+        NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.PlayerSkin(player.getGameProfile().getName(), true, false, skinName), player);
     }
 }

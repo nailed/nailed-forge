@@ -37,7 +37,7 @@ public class FMLHandshakeHandler extends ChannelInboundHandlerAdapter {
             }
 
             //Try to hack a handler into Minecraft's main pipeline so we can change some packets before they are sent
-            handler.field_147371_a.channel().pipeline().addAfter("encoder", "NailedPacketAdapter", new MinecraftPacketAdapter());
+            handler.netManager.channel().pipeline().addAfter("encoder", "NailedPacketAdapter", new MinecraftPacketAdapter());
         }
         ctx.fireUserEventTriggered(evt);
     }

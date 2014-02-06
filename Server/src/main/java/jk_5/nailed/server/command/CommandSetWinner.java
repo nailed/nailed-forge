@@ -46,8 +46,8 @@ public class CommandSetWinner extends NailedCommand {
         map.getInstructionController().setWinner(map.getTeamManager().getTeam(args[0]));
 
         IChatComponent component = new ChatComponentText("Winner set to " + args[0]);
-        component.func_150256_b().func_150238_a(EnumChatFormatting.GREEN);
-        sender.func_145747_a(component);
+        component.getChatStyle().setColor(EnumChatFormatting.GREEN);
+        sender.addChatMessage(component);
     }
 
     @Override

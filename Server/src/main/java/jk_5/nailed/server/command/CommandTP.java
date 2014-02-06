@@ -114,8 +114,8 @@ public class CommandTP extends NailedCommand {
                 TeleportHelper.travelEntity(p.getKey(), p.getValue());
             }
         }catch(CommandException e){
-            sender.func_145747_a(new ChatComponentTranslation(e.getMessage()));
-            sender.func_145747_a(new ChatComponentTranslation(this.getCommandUsage(sender)));
+            sender.addChatMessage(new ChatComponentTranslation(e.getMessage()));
+            sender.addChatMessage(new ChatComponentTranslation(this.getCommandUsage(sender)));
         }
     }
 

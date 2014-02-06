@@ -94,7 +94,7 @@ public class NailedMap implements Map {
                 }
             }
             world.difficultySetting = meta.getDifficulty();                                 //TODO: is this correct?
-            world.setAllowedSpawnTypes(meta.isSpawnHostileMobs() && world.difficultySetting.func_151525_a() > 0, meta.isSpawnFriendlyMobs());
+            world.setAllowedSpawnTypes(meta.isSpawnHostileMobs() && world.difficultySetting.getDifficultyId() > 0, meta.isSpawnFriendlyMobs());
         }
 
         NailedLog.info("Registered map " + this.getSaveFileName());
@@ -110,7 +110,7 @@ public class NailedMap implements Map {
     @Override
     public void reloadFromMappack(){
         for(Player player : this.getPlayers()){
-            player.getEntity().playerNetServerHandler.func_147360_c("[" + ChatColor.GREEN + "Nailed" + ChatColor.RESET + "] Reloading the map you were in"); //kickPlayerFromServer
+            player.getEntity().playerNetServerHandler.kickPlayerFromServer("[" + ChatColor.GREEN + "Nailed" + ChatColor.RESET + "] Reloading the map you were in"); //kickPlayerFromServer
         }
         this.unloadAndRemove();
         this.mappack.prepareWorld(this.getSaveFolder());

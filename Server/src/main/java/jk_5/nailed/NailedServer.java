@@ -170,7 +170,7 @@ public class NailedServer {
         ch.registerCommand(new CommandGamemode());
 
         ChatComponentText component = new ChatComponentText("Nailed");
-        component.func_150256_b().func_150238_a(EnumChatFormatting.GREEN);
+        component.getChatStyle().setColor(EnumChatFormatting.GREEN);
         MinecraftServer.getServer().func_147134_at().func_151315_a(component);
     }
 

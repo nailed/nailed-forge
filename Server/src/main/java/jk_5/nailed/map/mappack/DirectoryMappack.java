@@ -124,11 +124,11 @@ public class DirectoryMappack implements Mappack {
 
         try{
             WorldServer world = (WorldServer) map.getWorld();
-            boolean notSaveEnabled = world.canNotSave;
-            world.canNotSave = false;
+            boolean notSaveEnabled = world.levelSaving;
+            world.levelSaving = false;
             world.saveAllChunks(true, null);
 
-            world.canNotSave = true;
+            world.levelSaving = true;
 
             FileUtils.copyDirectory(map.getSaveFolder(), worldDir, new FileFilter() {
                 @Override
@@ -137,7 +137,7 @@ public class DirectoryMappack implements Mappack {
                 }
             });
 
-            world.canNotSave = notSaveEnabled;
+            world.levelSaving = notSaveEnabled;
         }catch(MinecraftException e){
             throw new RuntimeException("Save failed", e);
         }catch(IOException e){

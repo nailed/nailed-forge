@@ -59,11 +59,11 @@ public class NailedPlayer implements Player {
 
     public void sendChat(IChatComponent message){
         EntityPlayerMP entity = this.getEntity();
-        if(entity != null) this.getEntity().func_145747_a(message); //sendChatToPlayer
+        if(entity != null) this.getEntity().addChatComponentMessage(message);
     }
 
     public void sendPacket(Packet packet){
-        this.getEntity().playerNetServerHandler.func_147359_a(packet); //sendPacketToPlayer
+        this.getEntity().playerNetServerHandler.sendPacket(packet);
     }
 
     public EntityPlayerMP getEntity(){

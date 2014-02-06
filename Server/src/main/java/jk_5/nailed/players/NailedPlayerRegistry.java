@@ -30,7 +30,7 @@ public class NailedPlayerRegistry implements PlayerRegistry {
 
     @Override
     public Player getPlayer(EntityPlayer pl){
-        return this.getPlayerById(pl.func_146103_bH().getId());
+        return this.getPlayerById(pl.getGameProfile().getId());
     }
 
     @Override
@@ -54,7 +54,7 @@ public class NailedPlayerRegistry implements PlayerRegistry {
     }
 
     public Player getOrCreatePlayer(EntityPlayer player){
-        return this.getOrCreatePlayer(player.func_146103_bH());
+        return this.getOrCreatePlayer(player.getGameProfile());
     }
 
     @Override
@@ -71,7 +71,7 @@ public class NailedPlayerRegistry implements PlayerRegistry {
     @SubscribeEvent
     public void formatPlayerName(net.minecraftforge.event.entity.player.PlayerEvent.NameFormat event){
         if(FMLCommonHandler.instance().getEffectiveSide().isClient()) return;
-        Player player = this.getOrCreatePlayer(event.entityPlayer.func_146103_bH());
+        Player player = this.getOrCreatePlayer(event.entityPlayer.getGameProfile());
         if(player == null) return;
         event.displayname = player.getChatPrefix();
     }
@@ -79,7 +79,7 @@ public class NailedPlayerRegistry implements PlayerRegistry {
     @SuppressWarnings("unused")
     @SubscribeEvent
     public void onPlayerChat(ServerChatEvent event){
-        Player player = this.getOrCreatePlayer(event.player.func_146103_bH());
+        Player player = this.getOrCreatePlayer(event.player.getGameProfile());
         if(player == null) return;
         MinecraftForge.EVENT_BUS.post(new PlayerChatEvent(player, event.message));
     }

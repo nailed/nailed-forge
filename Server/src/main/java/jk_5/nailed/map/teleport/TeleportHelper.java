@@ -76,7 +76,7 @@ public class TeleportHelper {
             player.closeScreen();
             if(changingworlds){
                 player.dimension = dimension;
-                player.playerNetServerHandler.func_147359_a(new S07PacketRespawn(player.dimension, player.worldObj.difficultySetting, destWorld.getWorldInfo().getTerrainType(), player.theItemInWorldManager.getGameType()));
+                player.playerNetServerHandler.sendPacket(new S07PacketRespawn(player.dimension, player.worldObj.difficultySetting, destWorld.getWorldInfo().getTerrainType(), player.theItemInWorldManager.getGameType()));
                 if(destWorld.provider instanceof NailedWorldProvider){
                     ((NailedWorldProvider) destWorld.provider).sendMapData(player);
                 }
@@ -114,7 +114,7 @@ public class TeleportHelper {
         if((entity instanceof EntityPlayerMP)){
             EntityPlayerMP player = (EntityPlayerMP) entity;
             if(changingworlds) player.mcServer.getConfigurationManager().func_72375_a(player, (WorldServer) destWorld);
-            player.playerNetServerHandler.func_147364_a(spawn.posX + 0.5D, spawn.posY, spawn.posZ + 0.5D, player.rotationYaw, player.rotationPitch);
+            player.playerNetServerHandler.setPlayerLocation(spawn.posX + 0.5D, spawn.posY, spawn.posZ + 0.5D, player.rotationYaw, player.rotationPitch);
         }
         destWorld.updateEntityWithOptionalForce(entity, false);
         if(((entity instanceof EntityPlayerMP)) && (changingworlds)){
@@ -124,9 +124,9 @@ public class TeleportHelper {
             player.mcServer.getConfigurationManager().syncPlayerInventory(player);
 
             for(Object obj : player.getActivePotionEffects()){
-                player.playerNetServerHandler.func_147359_a(new S1DPacketEntityEffect(player.func_145782_y(), (PotionEffect) obj));
+                player.playerNetServerHandler.sendPacket(new S1DPacketEntityEffect(player.getEntityId(), (PotionEffect) obj));
             }
-            player.playerNetServerHandler.func_147359_a(new S1FPacketSetExperience(player.experience, player.experienceTotal, player.experienceLevel));
+            player.playerNetServerHandler.sendPacket(new S1FPacketSetExperience(player.experience, player.experienceTotal, player.experienceLevel));
         }
         entity.setLocationAndAngles(spawn.posX + 0.5D, spawn.posY, spawn.posZ + 0.5D, spawn.yaw, spawn.pitch);
         TeleportEventFactory.onLinkEnd(currentMap, destMap, entity, options);
@@ -169,9 +169,9 @@ public class TeleportHelper {
             for(int l1 = i1; l1 < j1; l1++){
                 if(world.blockExists(k1, 64, l1)){
                     for(int i2 = k - 1; i2 < l; i2++){
-                        Block block = world.func_147439_a(k1, i2, l1);
+                        Block block = world.getBlock(k1, i2, l1);
                         if(block != null){
-                            block.func_149743_a(world, k1, i2, l1, axisalignedbb, collidingBoundingBoxes, entity);
+                            block.addCollisionBoxesToList(world, k1, i2, l1, axisalignedbb, collidingBoundingBoxes, entity);
                         }
                     }
                 }

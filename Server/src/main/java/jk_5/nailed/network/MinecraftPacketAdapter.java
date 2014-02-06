@@ -32,7 +32,7 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
         if(msg instanceof C12PacketUpdateSign){
             C12PacketUpdateSign packet = (C12PacketUpdateSign) msg;
             NetworkManager manager = ctx.pipeline().get(NetworkManager.class);
-            EntityPlayerMP player = ((NetHandlerPlayServer) manager.func_150729_e()).field_147369_b;
+            EntityPlayerMP player = ((NetHandlerPlayServer) manager.getNetHandler()).playerEntity;
             SignCommandHandler handler = NailedAPI.getMapLoader().getMap(player.worldObj).getSignCommandHandler();
             handler.onSignAdded(packet.field_149590_d, packet.field_149593_a, packet.field_149591_b, packet.field_149592_c);
         }
@@ -42,16 +42,16 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception{
         NetworkManager manager = (NetworkManager) ctx.pipeline().get("packet_handler");
-        NetHandlerPlayServer handler = (NetHandlerPlayServer) manager.func_150729_e();
-        EntityPlayerMP player = handler.field_147369_b;
+        NetHandlerPlayServer handler = (NetHandlerPlayServer) manager.getNetHandler();
+        EntityPlayerMP player = handler.playerEntity;
         if(msg instanceof S02PacketChat){
             S02PacketChat packet = (S02PacketChat) msg;
             IChatComponent component = packet.field_148919_a;
             if(component instanceof ChatComponentTranslation){
                 ChatComponentTranslation translation = (ChatComponentTranslation) component;
-                String key = translation.func_150268_i();
+                String key = translation.getKey();
                 if(key.startsWith("death.")){
-                    String died = ChatColor.stripColor(((ChatComponentText) translation.func_150271_j()[0]).func_150261_e());
+                    String died = ChatColor.stripColor(((ChatComponentText) translation.getFormatArgs()[0]).getUnformattedTextForChat());
                     if(died.startsWith("@")) died = died.substring(1);
                     EntityPlayerMP diedPlayer = NailedAPI.getPlayerRegistry().getPlayerByUsername(died).getEntity();
                     if(player.dimension == diedPlayer.dimension){

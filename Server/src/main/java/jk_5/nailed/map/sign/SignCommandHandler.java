@@ -30,7 +30,7 @@ public class SignCommandHandler implements jk_5.nailed.api.map.sign.SignCommandH
 
     @SuppressWarnings("unchecked")
     public void onChunkLoad(ChunkEvent.Load event){
-        for(TileEntity tile : (Collection<TileEntity>) event.getChunk().field_150816_i.values()){
+        for(TileEntity tile : (Collection<TileEntity>) event.getChunk().chunkTileEntityMap.values()){
             if(tile instanceof TileEntitySign){
                 TileEntitySign sign = (TileEntitySign) tile;
                 Sign signData = this.getSignData(sign);
@@ -43,10 +43,10 @@ public class SignCommandHandler implements jk_5.nailed.api.map.sign.SignCommandH
 
     @SuppressWarnings("unchecked")
     public void onChunkUnload(ChunkEvent.Unload event){
-        for(TileEntity tile : (Collection<TileEntity>) event.getChunk().field_150816_i.values()){
+        for(TileEntity tile : (Collection<TileEntity>) event.getChunk().chunkTileEntityMap.values()){
             if(tile instanceof TileEntitySign){
                 TileEntitySign sign = (TileEntitySign) tile;
-                this.removeSign(this.getSign(sign.field_145851_c, sign.field_145848_d, sign.field_145849_e));
+                this.removeSign(this.getSign(sign.xCoord, sign.yCoord, sign.zCoord));
             }
         }
     }
@@ -55,10 +55,10 @@ public class SignCommandHandler implements jk_5.nailed.api.map.sign.SignCommandH
     public void onWatch(ChunkWatchEvent.Watch event){
         World world = event.player.worldObj;
         Chunk chunk = world.getChunkFromChunkCoords(event.chunk.chunkXPos, event.chunk.chunkZPos);
-        for(TileEntity tile : (Collection<TileEntity>) chunk.field_150816_i.values()){
+        for(TileEntity tile : (Collection<TileEntity>) chunk.chunkTileEntityMap.values()){
             if(tile instanceof TileEntitySign){
                 TileEntitySign signTile = (TileEntitySign) tile;
-                Sign sign = this.getSign(signTile.field_145851_c, signTile.field_145848_d, signTile.field_145849_e);
+                Sign sign = this.getSign(signTile.xCoord, signTile.yCoord, signTile.zCoord);
                 if(sign == null) continue;
                 sign.addWatcher(event.player);
             }
@@ -69,10 +69,10 @@ public class SignCommandHandler implements jk_5.nailed.api.map.sign.SignCommandH
     public void onUnwatch(ChunkWatchEvent.UnWatch event){
         World world = event.player.worldObj;
         Chunk chunk = world.getChunkFromChunkCoords(event.chunk.chunkXPos, event.chunk.chunkZPos);
-        for(TileEntity tile : (Collection<TileEntity>) chunk.field_150816_i.values()){
+        for(TileEntity tile : (Collection<TileEntity>) chunk.chunkTileEntityMap.values()){
             if(tile instanceof TileEntitySign){
                 TileEntitySign signTile = (TileEntitySign) tile;
-                Sign sign = this.getSign(signTile.field_145851_c, signTile.field_145848_d, signTile.field_145849_e);
+                Sign sign = this.getSign(signTile.xCoord, signTile.yCoord, signTile.zCoord);
                 if(sign == null) continue;
                 sign.removeWatcher(event.player);
             }
@@ -80,7 +80,7 @@ public class SignCommandHandler implements jk_5.nailed.api.map.sign.SignCommandH
     }
 
     private Sign getSignData(TileEntitySign sign){
-        return this.getSignData(sign.field_145915_a, sign.field_145851_c, sign.field_145848_d, sign.field_145849_e);
+        return this.getSignData(sign.signText, sign.xCoord, sign.yCoord, sign.zCoord);
     }
 
     private Sign getSignData(String[] lines, int x, int y, int z){

@@ -28,16 +28,16 @@ public class CommandIrc extends NailedCommand {
         if(args.length == 0) throw new CommandException("See " + ChatColor.GOLD + "/irc help" + ChatColor.RED + " for more information");
         if(args.length == 1){
             if(args[0].equalsIgnoreCase("help")){
-                sender.func_145747_a(new ChatComponentText("Command usage for /irc"));
-                sender.func_145747_a(new ChatComponentText("/irc connect <host> [port] [serverpass] - Connects to a server, and disconnects from the current server if already connected"));
-                sender.func_145747_a(new ChatComponentText("/irc disconnect - Disconnects from current server"));
-                sender.func_145747_a(new ChatComponentText("/irc join <channel> [channelpass] - Joins the specified channel"));
+                sender.addChatMessage(new ChatComponentText("Command usage for /irc"));
+                sender.addChatMessage(new ChatComponentText("/irc connect <host> [port] [serverpass] - Connects to a server, and disconnects from the current server if already connected"));
+                sender.addChatMessage(new ChatComponentText("/irc disconnect - Disconnects from current server"));
+                sender.addChatMessage(new ChatComponentText("/irc join <channel> [channelpass] - Joins the specified channel"));
             }else if(args[0].equalsIgnoreCase("connect")){
-                sender.func_145747_a(new ChatComponentText("Not yet implemented"));
+                sender.addChatMessage(new ChatComponentText("Not yet implemented"));
             }else if(args[0].equalsIgnoreCase("disconnect")){
-                sender.func_145747_a(new ChatComponentText("Not yet implemented"));
+                sender.addChatMessage(new ChatComponentText("Not yet implemented"));
             }else if(args[0].equalsIgnoreCase("join")){
-                sender.func_145747_a(new ChatComponentText("Not yet implemented"));
+                sender.addChatMessage(new ChatComponentText("Not yet implemented"));
             }
         }
     }

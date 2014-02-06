@@ -18,7 +18,7 @@ public class MovementEventHandler extends SimpleChannelInboundHandler<NailedPack
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, NailedPacket.MovementEvent msg) throws Exception{
         EntityPlayerMP player = NailedNetworkHandler.getPlayer(ctx);
-        TileEntity tile = player.worldObj.func_147438_o(msg.x, msg.y, msg.z);
+        TileEntity tile = player.worldObj.getTileEntity(msg.x, msg.y, msg.z);
         if(tile != null && tile instanceof IMovementEventTileEntity){
             ((IMovementEventTileEntity) tile).onMovementEvent(msg.type, player);
         }

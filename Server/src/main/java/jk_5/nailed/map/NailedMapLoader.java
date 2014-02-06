@@ -154,7 +154,7 @@ public class NailedMapLoader implements MapLoader {
             if(player.posX - 0.5 == worldSpawn.posX && player.posZ - 0.5 == worldSpawn.posZ){
                 event.entity.setLocationAndAngles(spawn.posX, spawn.posY, spawn.posZ, spawn.yaw, spawn.pitch);
                 player.setGameType(mappack.getMappackMetadata().getGamemode());
-                map.onPlayerJoined(NailedAPI.getPlayerRegistry().getOrCreatePlayer(player.func_146103_bH()));
+                map.onPlayerJoined(NailedAPI.getPlayerRegistry().getOrCreatePlayer(player.getGameProfile()));
             }
         }
     }

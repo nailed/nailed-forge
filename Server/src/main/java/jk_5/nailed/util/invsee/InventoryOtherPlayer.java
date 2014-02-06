@@ -22,31 +22,31 @@ public class InventoryOtherPlayer extends InventoryBasic {
     }
 
     @Override
-    public void openChest(){
+    public void openInventory(){
         InvSeeTicker.register(this);
         this.allowUpdate = false;
         for (int id = 0; id < this.owner.inventory.mainInventory.length; ++id){
             this.setInventorySlotContents(id, this.owner.inventory.mainInventory[id]);
         }
         allowUpdate = true;
-        super.openChest();
+        super.openInventory();
     }
 
     @Override
-    public void closeChest(){
+    public void closeInventory(){
         InvSeeTicker.unregister(this);
         if(this.allowUpdate){
             for (int id = 0; id < this.owner.inventory.mainInventory.length; ++id){
                 this.owner.inventory.mainInventory[id] = getStackInSlot(id);
             }
         }
-        this.onInventoryChanged();
-        super.closeChest();
+        this.markDirty();
+        super.closeInventory();
     }
 
     @Override
-    public void onInventoryChanged(){
-        super.onInventoryChanged();
+    public void markDirty(){
+        super.markDirty();
         if(this.allowUpdate){
             for (int id = 0; id < this.owner.inventory.mainInventory.length; ++id){
                 this.owner.inventory.mainInventory[id] = this.getStackInSlot(id);
@@ -60,6 +60,6 @@ public class InventoryOtherPlayer extends InventoryBasic {
             setInventorySlotContents(id, this.owner.inventory.mainInventory[id]);
         }
         this.allowUpdate = true;
-        this.onInventoryChanged();
+        this.markDirty();
     }
 }

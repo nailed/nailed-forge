@@ -41,7 +41,7 @@ public class NailedTeam implements Team {
     public void onWorldSet(){
         String name = "map" + this.map.getID() + this.teamId;
         Scoreboard scoreboard = this.map.getWorld().getScoreboard();
-        ScorePlayerTeam scoreplayerteam = scoreboard.func_96508_e(name);
+        ScorePlayerTeam scoreplayerteam = scoreboard.createTeam(name);
         if(scoreplayerteam == null){
             this.scoreboardTeam = scoreboard.createTeam(name);
             this.scoreboardTeam.setTeamName(this.name);
@@ -103,7 +103,7 @@ public class NailedTeam implements Team {
 
     public void addPlayerToScoreboardTeam(Player player){
         if(this.scoreboardTeam == null) return;
-        this.map.getWorld().getScoreboard().func_151392_a(player.getUsername(), this.scoreboardTeam.func_96661_b());
+        this.map.getWorld().getScoreboard().func_151392_a(player.getUsername(), this.scoreboardTeam.getRegisteredName());
         //this.map.getWorld().getScoreboard().addPlayerToTeam(player.getUsername(), this.scoreboardTeam);
     }
 

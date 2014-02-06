@@ -21,7 +21,7 @@ public class InstructionSetDifficulty implements IInstruction {
 
     @Override
     public void injectArguments(String args) {
-        this.difficulty = EnumDifficulty.func_151523_a(Integer.parseInt(args));
+        this.difficulty = EnumDifficulty.getDifficultyEnum(Integer.parseInt(args));
     }
 
     @Override
@@ -34,6 +34,6 @@ public class InstructionSetDifficulty implements IInstruction {
         World server = controller.getMap().getWorld();
         MappackMetadata meta = controller.getMap().getMappack().getMappackMetadata();
         server.difficultySetting = this.difficulty;
-        server.setAllowedSpawnTypes(meta.isSpawnHostileMobs() && this.difficulty.func_151525_a() > 0, meta.isSpawnFriendlyMobs());
+        server.setAllowedSpawnTypes(meta.isSpawnHostileMobs() && this.difficulty.getDifficultyId() > 0, meta.isSpawnFriendlyMobs());
     }
 }

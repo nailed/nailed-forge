@@ -43,9 +43,9 @@ public class CommandMap extends NailedCommand {
             Map map = NailedAPI.getMapLoader().createMapServer(mappack);
 
             IChatComponent component = new ChatComponentText("Loading " + map.getSaveFileName());
-            component.func_150256_b().func_150209_a(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText("Go to the map")));
-            component.func_150256_b().func_150238_a(EnumChatFormatting.GREEN);
-            sender.func_145747_a(component);
+            component.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText("Go to the map")));
+            component.getChatStyle().setColor(EnumChatFormatting.GREEN);
+            sender.addChatMessage(component);
         }else if(args[0].equalsIgnoreCase("remove")){
             if(args.length == 1) throw new WrongUsageException("/map remove <mapid>");
             Map map = null;
@@ -59,8 +59,8 @@ public class CommandMap extends NailedCommand {
             map.unloadAndRemove();
 
             IChatComponent component = new ChatComponentText("Removed " + map.getSaveFileName());
-            component.func_150256_b().func_150238_a(EnumChatFormatting.GREEN);
-            sender.func_145747_a(component);
+            component.getChatStyle().setColor(EnumChatFormatting.GREEN);
+            sender.addChatMessage(component);
         }else throw new WrongUsageException("/map <create:remove>");
     }
 

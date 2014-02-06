@@ -51,7 +51,7 @@ public class FileMappackMetadata implements MappackMetadata {
         this.spawnHostileMobs = config.getTag("map").getTag("spawn-hostile-mobs").getBooleanValue(true);
         this.spawnFriendlyMobs = config.getTag("map").getTag("spawn-friendly-mobs").getBooleanValue(true);
         this.name = config.getTag("map").getTag("name").getValue("");
-        this.difficulty = EnumDifficulty.func_151523_a(config.getTag("map").getTag("difficulty").getIntValue(2));
+        this.difficulty = EnumDifficulty.getDifficultyEnum(config.getTag("map").getTag("difficulty").getIntValue(2));
         this.gameType = config.getTag("map").getTag("gametype").getValue("default");
         this.preventingBlockBreak = config.getTag("map").getTag("preventBlockBreak").getBooleanValue(false);
         this.choosingRandomSpawnpointAtRespawn = config.getTag("map").getTag("randomSpawnpointOnRespawn").getBooleanValue(false);

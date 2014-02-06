@@ -35,10 +35,10 @@ public class CommandInvsee extends NailedCommand {
             if(entity.openContainer != entity.inventoryContainer){
                 entity.closeScreen();
             }
-            entity.incrementWindowID();
+            entity.getNextWindowId();
 
             InventoryOtherPlayer chest = new InventoryOtherPlayer(player.getEntity(), entity);
-            entity.playerNetServerHandler.func_147359_a(new S2DPacketOpenWindow(entity.currentWindowId, 0, chest.func_145825_b(), chest.getSizeInventory(), true));
+            entity.playerNetServerHandler.sendPacket(new S2DPacketOpenWindow(entity.currentWindowId, 0, chest.getInventoryName(), chest.getSizeInventory(), true));
             entity.openContainer = new ContainerChest(entity.inventory, chest);
             entity.openContainer.windowId = entity.currentWindowId;
             entity.openContainer.addCraftingToCrafters(entity);

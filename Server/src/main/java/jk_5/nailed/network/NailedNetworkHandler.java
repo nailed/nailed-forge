@@ -51,7 +51,7 @@ public class NailedNetworkHandler {
     }
 
     public static EntityPlayerMP getPlayer(ChannelHandlerContext ctx){
-        return ((NetHandlerPlayServer) ctx.channel().attr(NetworkRegistry.NET_HANDLER).get()).field_147369_b;
+        return ((NetHandlerPlayServer) ctx.channel().attr(NetworkRegistry.NET_HANDLER).get()).playerEntity;
     }
 
     public static Packet getProxyPacket(NailedPacket packet){
