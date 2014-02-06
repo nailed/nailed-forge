@@ -107,10 +107,10 @@ public class MinecraftServerTransformer implements IClassTransformer {
         offset ++;
         while(mnode.instructions.get(offset).getOpcode() != Opcodes.ILOAD) offset ++;
 
-        list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "jk_5/nailed/map/MapLoader", "instance", "()Ljk_5/nailed/map/MapLoader;"));
+        list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "jk_5/nailed/map/NailedMapLoader", "instance", "()Ljk_5/nailed/map/NailedMapLoader;"));
         list.add(new VarInsnNode(Opcodes.ILOAD, 14));
-        list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "jk_5/nailed/map/MapLoader", "getMap", "(I)Ljk_5/nailed/map/Map;"));
-        list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "jk_5/nailed/map/Map", "getSaveFileName", "()Ljava/lang/String;"));
+        list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "jk_5/nailed/map/NailedMapLoader", "getMap", "(I)Ljk_5/nailed/api/map/Map;"));
+        list.add(new MethodInsnNode(Opcodes.INVOKEINTERFACE, "jk_5/nailed/api/map/Map", "getSaveFileName", "()Ljava/lang/String;"));
         list.add(new VarInsnNode(Opcodes.ASTORE, 17));
 
         mnode.instructions.insertBefore(mnode.instructions.get(offset), list);

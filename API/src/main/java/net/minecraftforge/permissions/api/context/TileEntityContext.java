@@ -11,7 +11,8 @@ import net.minecraft.tileentity.TileEntity;
  */
 public class TileEntityContext implements IBlockContext {
 
-    @Getter private int x, y, z, dimensionId, blockMetadata;
+    private int x, y, z;
+    @Getter private int dimensionId, blockMetadata;
     @Getter private Block block;
 
     public TileEntityContext(TileEntity tile){
@@ -26,6 +27,21 @@ public class TileEntityContext implements IBlockContext {
     @Override
     public boolean hasTileEntity(){
         return true;
+    }
+
+    @Override
+    public double getX(){
+        return x;
+    }
+
+    @Override
+    public double getY(){
+        return y;
+    }
+
+    @Override
+    public double getZ(){
+        return z;
     }
 
     @Override

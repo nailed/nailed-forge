@@ -23,7 +23,7 @@ import java.util.List;
 public final class PermissionsManager {
 
     private static boolean wasSet = false;
-    private static List<PermBuilderFactory.PermReg> central = Lists.newArrayList(); // the canonical list of permissions, given to the factory at serverStarted
+    private static List<PermReg> central = Lists.newArrayList(); // the canonical list of permissions, given to the factory at serverStarted
     private static final PermBuilderFactory DEFAULT = new OpPermFactory();
     private static PermBuilderFactory FACTORY;
 
@@ -127,9 +127,13 @@ public final class PermissionsManager {
     /**
      * Register permissions for checking with the permission handler
      *
-     * @param perms A permission, packed into a {@link net.minecraftforge.permissions.api.PermBuilderFactory.PermReg}
+     * @param perms A permission, packed into a {@link net.minecraftforge.permissions.api.PermReg}
      */
-    public static void registerPermissions(PermBuilderFactory.PermReg perms){
+    public static void registerPermissions(PermReg perms){
         central.add(perms);
+    }
+
+    public static void addPermissionsToFactory(){
+        FACTORY.registerPermissions(central);
     }
 }

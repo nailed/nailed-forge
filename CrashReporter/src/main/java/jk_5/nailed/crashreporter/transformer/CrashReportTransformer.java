@@ -29,7 +29,7 @@ public class CrashReportTransformer implements IClassTransformer {
 
     private byte[] transformCrashReport(byte[] bytes){
         ClassNode cnode = ASMHelper.createClassNode(bytes);
-        MethodNode mnode = ASMHelper.findMethod(new Mapping("net/minecraft/crash/CrashReport", "func_147149_a", "(Ljava/io/File;)Z"), cnode);
+        MethodNode mnode = ASMHelper.findMethod(new Mapping("net/minecraft/crash/CrashReport", "saveToFile", "(Ljava/io/File;)Z"), cnode);
 
         InsnList insn = new InsnList();
         insn.add(new VarInsnNode(Opcodes.ALOAD, 0));

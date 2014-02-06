@@ -23,6 +23,8 @@ import jk_5.nailed.map.stat.StatTypeManager;
 import jk_5.nailed.map.teleport.TeleportEventListenerEffect;
 import jk_5.nailed.map.teleport.TeleportEventListenerForge;
 import jk_5.nailed.network.NailedNetworkHandler;
+import jk_5.nailed.permissions.NailedPermissionFactory;
+import jk_5.nailed.permissions.PermissionEventHandler;
 import jk_5.nailed.players.NailedPlayerRegistry;
 import jk_5.nailed.server.command.*;
 import jk_5.nailed.teamspeak.TeamspeakClient;
@@ -34,6 +36,9 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.permissions.api.PermReg;
+import net.minecraftforge.permissions.api.PermissionsManager;
+import net.minecraftforge.permissions.api.RegisteredPermValue;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -53,6 +58,7 @@ public class NailedServer {
 
     @Getter private static IrcBot ircBot;
     @Getter private static TeamspeakClient teamspeakClient;
+    @Getter private static NailedPermissionFactory permissionFactory;
 
     public NailedServer(){
         NailedAPI.setMapLoader(new NailedMapLoader());
@@ -91,6 +97,7 @@ public class NailedServer {
         MinecraftForge.EVENT_BUS.register(new StatEventHandler());
         MinecraftForge.EVENT_BUS.register(new TeleportEventListenerForge());
         MinecraftForge.EVENT_BUS.register(new TeleportEventListenerEffect());
+        MinecraftForge.EVENT_BUS.register(new PermissionEventHandler());
         FMLCommonHandler.instance().bus().register(NailedAPI.getPlayerRegistry());
         FMLCommonHandler.instance().bus().register(NailedAPI.getMapLoader());
         FMLCommonHandler.instance().bus().register(new InvSeeTicker());
@@ -112,6 +119,10 @@ public class NailedServer {
         DimensionManager.unregisterDimension(-1);
         DimensionManager.unregisterDimension(1);
 
+        NailedLog.info("Registering permissionmanager");
+        permissionFactory = new NailedPermissionFactory();
+        PermissionsManager.setPermFactory(permissionFactory, NailedServer.modid);
+
         ircBot = new IrcBot();
         teamspeakClient = new TeamspeakClient();
     }
@@ -124,6 +135,17 @@ public class NailedServer {
 
         NailedLog.info("Registering achievements");
         NailedAchievements.init();
+
+        PermissionsManager.registerPermissions(new PermReg("nailed.commands.test1", RegisteredPermValue.FALSE, null));
+        PermissionsManager.registerPermissions(new PermReg("nailed.commands.test2", RegisteredPermValue.FALSE, null));
+        PermissionsManager.registerPermissions(new PermReg("nailed.commands.test3", RegisteredPermValue.FALSE, null));
+        PermissionsManager.registerPermissions(new PermReg("nailed.commands.test4", RegisteredPermValue.FALSE, null));
+        PermissionsManager.registerPermissions(new PermReg("nailed.commands.test5", RegisteredPermValue.FALSE, null));
+        PermissionsManager.registerPermissions(new PermReg("nailed.commands.test6", RegisteredPermValue.FALSE, null));
+        PermissionsManager.registerPermissions(new PermReg("nailed.commands.test.t1", RegisteredPermValue.FALSE, null));
+        PermissionsManager.registerPermissions(new PermReg("nailed.commands.test.t2", RegisteredPermValue.FALSE, null));
+        PermissionsManager.registerPermissions(new PermReg("nailed.commands.test.t3", RegisteredPermValue.FALSE, null));
+        PermissionsManager.registerPermissions(new PermReg("nailed.commands.test.t4", RegisteredPermValue.FALSE, null));
     }
 
     @EventHandler
@@ -178,5 +200,14 @@ public class NailedServer {
     @SuppressWarnings("unused")
     public void serverAboutToStart(FMLServerAboutToStartEvent event){
         IpcManager.instance().start();
+    }
+
+    @EventHandler
+    @SuppressWarnings("unused")
+    public void serverStarted(FMLServerStartedEvent event){
+        PermissionsManager.addPermissionsToFactory();
+
+        NailedLog.info("Reading permission config");
+        permissionFactory.readConfig();
     }
 }
