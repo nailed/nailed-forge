@@ -36,9 +36,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.permissions.api.PermReg;
 import net.minecraftforge.permissions.api.PermissionsManager;
-import net.minecraftforge.permissions.api.RegisteredPermValue;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -136,16 +134,8 @@ public class NailedServer {
         NailedLog.info("Registering achievements");
         NailedAchievements.init();
 
-        PermissionsManager.registerPermissions(new PermReg("nailed.commands.test1", RegisteredPermValue.FALSE, null));
-        PermissionsManager.registerPermissions(new PermReg("nailed.commands.test2", RegisteredPermValue.FALSE, null));
-        PermissionsManager.registerPermissions(new PermReg("nailed.commands.test3", RegisteredPermValue.FALSE, null));
-        PermissionsManager.registerPermissions(new PermReg("nailed.commands.test4", RegisteredPermValue.FALSE, null));
-        PermissionsManager.registerPermissions(new PermReg("nailed.commands.test5", RegisteredPermValue.FALSE, null));
-        PermissionsManager.registerPermissions(new PermReg("nailed.commands.test6", RegisteredPermValue.FALSE, null));
-        PermissionsManager.registerPermissions(new PermReg("nailed.commands.test.t1", RegisteredPermValue.FALSE, null));
-        PermissionsManager.registerPermissions(new PermReg("nailed.commands.test.t2", RegisteredPermValue.FALSE, null));
-        PermissionsManager.registerPermissions(new PermReg("nailed.commands.test.t3", RegisteredPermValue.FALSE, null));
-        PermissionsManager.registerPermissions(new PermReg("nailed.commands.test.t4", RegisteredPermValue.FALSE, null));
+        NailedLog.info("Registering permissions");
+        //PermissionsManager.registerPermission("nailed.commands.test1");
     }
 
     @EventHandler

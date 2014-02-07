@@ -129,8 +129,16 @@ public final class PermissionsManager {
      *
      * @param perms A permission, packed into a {@link net.minecraftforge.permissions.api.PermReg}
      */
-    public static void registerPermissions(PermReg perms){
+    public static void registerPermission(PermReg perms){
         central.add(perms);
+    }
+
+    public static void registerPermission(String node){
+        registerPermission(node, RegisteredPermValue.FALSE);
+    }
+
+    public static void registerPermission(String node, RegisteredPermValue defaultValue){
+        central.add(new PermReg(node, defaultValue, null));
     }
 
     public static void addPermissionsToFactory(){

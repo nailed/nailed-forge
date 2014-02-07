@@ -5,7 +5,6 @@ import com.google.common.collect.Maps;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import net.minecraftforge.permissions.api.PermissionsManager;
 import net.minecraftforge.permissions.api.RegisteredPermValue;
 import net.minecraftforge.permissions.api.UnregisterredPermissionException;
@@ -19,25 +18,21 @@ import java.util.Map;
  * @author jk-5
  */
 @RequiredArgsConstructor
-public class Group {
+public class User {
 
     @Getter(AccessLevel.PACKAGE) private final Map<String, Boolean> permissions = Maps.newHashMap();
-    @Getter private final List<Group> inheritions = Lists.newArrayList();
+    @Getter private final List<Group> groups = Lists.newArrayList();
     @Getter private final String name;
 
-    @Getter @Setter @GroupOption("prefix") private String prefix = "";
-    @Getter @Setter @GroupOption("suffix") private String suffix = "";
-    @Getter @Setter @GroupOption("default") private boolean isDefault = false;
-
-    public RegisteredPermValue hasPermission(String node){
-        return this.hasPermission(node, ((NailedPermissionFactory) PermissionsManager.getPermFactory()).getPerms().get(node));
+    public RegisteredPermValue getPermissionLevel(String node){
+        return this.getPermissionLevel(node, ((NailedPermissionFactory) PermissionsManager.getPermFactory()).getPerms().get(node));
     }
 
-    RegisteredPermValue hasPermission(String node, RegisteredPermValue def){
+    private RegisteredPermValue getPermissionLevel(String node, RegisteredPermValue def){
         if(def == null){
             throw new UnregisterredPermissionException(node);
         }
-        for(Group group : this.inheritions){
+        for(Group group : this.groups){
             def = group.hasPermission(node, def);
         }
         Boolean allowed = this.permissions.get(node);
@@ -49,5 +44,18 @@ public class Group {
             }
         }
         return def;
+    }
+
+    public boolean hasPermission(String node){
+        RegisteredPermValue value = this.getPermissionLevel(node);
+        if(value == RegisteredPermValue.FALSE) return false;
+        if(value == RegisteredPermValue.TRUE) return true;
+        if(value == RegisteredPermValue.OP) return this.isOp();
+        if(value == RegisteredPermValue.NONOP) return !this.isOp();
+        return false;
+    }
+
+    public boolean isOp(){
+        return NailedPermissionFactory.isOp(this.name);
     }
 }

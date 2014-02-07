@@ -1,11 +1,12 @@
 package jk_5.nailed.permissions;
 
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
-import com.google.common.collect.TreeMultimap;
 import cpw.mods.fml.common.FMLCommonHandler;
 import jk_5.nailed.NailedLog;
+import lombok.Getter;
 import net.minecraft.dispenser.ILocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -16,7 +17,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.permissions.api.PermBuilderFactory;
 import net.minecraftforge.permissions.api.PermReg;
+import net.minecraftforge.permissions.api.RegisteredPermValue;
 import net.minecraftforge.permissions.api.context.*;
+import org.apache.commons.io.IOUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -37,9 +40,10 @@ public class NailedPermissionFactory implements PermBuilderFactory<NailedPermiss
     private static final File configDir = new File("permissions");
     private static final IContext GLOBAL = new IContext() {};
     private static final Map<String, Field> groupOptions = Maps.newHashMap();
-    private final Multimap<String, String> allowedPerms = TreeMultimap.create();
     private final Set<Group> groups = Sets.newHashSet();
-    private final Set<String> perms = Sets.newTreeSet();
+    private final Map<String, User> users = Maps.newHashMap();
+    private Group defaultGroup;
+    @Getter private final Map<String, RegisteredPermValue> perms = Maps.newHashMap();
 
     static {
         configDir.mkdirs();
@@ -56,12 +60,12 @@ public class NailedPermissionFactory implements PermBuilderFactory<NailedPermiss
 
     @Override
     public NailedPermissionBuilder builder(){
-        return new NailedPermissionBuilder();
+        return new NailedPermissionBuilder(this);
     }
 
     @Override
     public NailedPermissionBuilder builder(String username, String permNode){
-        return new NailedPermissionBuilder().setUserName(username).setPermNode(permNode);
+        return new NailedPermissionBuilder(this).setUserName(username).setPermNode(permNode);
     }
 
     @Override
@@ -109,17 +113,21 @@ public class NailedPermissionFactory implements PermBuilderFactory<NailedPermiss
             if(this.isRegistered(perm.key)){
                 continue;
             }
-            this.perms.add(perm.key);
+            this.perms.put(perm.key, perm.role);
         }
     }
 
     public void readConfig(){
         this.groups.clear();
-        BufferedReader reader;
+        this.users.clear();
+        this.defaultGroup = null;
+        Multimap<Group, String> inheritions = ArrayListMultimap.create();
+        BufferedReader reader = null;
         File groupsFile = new File(configDir, "groups.cfg");
         try{
             Group group = null;
             boolean readingPerms = false;
+            boolean readingInheritions = false;
             reader = new BufferedReader(new FileReader(groupsFile));
             int lineNumber = 0;
             while(true){
@@ -127,7 +135,7 @@ public class NailedPermissionFactory implements PermBuilderFactory<NailedPermiss
                 lineNumber++;
                 if(line == null){
                     break;
-                }else if(line.startsWith("#") || line.trim().isEmpty()){
+                }else if(line.trim().startsWith("#") || line.trim().isEmpty()){
                 }else if(group == null && line.contains("{")){
                     String name = line.substring(0, line.indexOf('{')).trim();
                     group = new Group(name);
@@ -157,23 +165,34 @@ public class NailedPermissionFactory implements PermBuilderFactory<NailedPermiss
                         }else{
                             field.set(group, value);
                         }
+                        if(key.equalsIgnoreCase("default") && isBoolean && val){
+                            this.defaultGroup = group;
+                        }
                     }else if(line.contains("Permissions") && line.contains("{")){
                         readingPerms = true;
                     }else if(line.contains("}") && readingPerms){
                         readingPerms = false;
+                    }else if(line.contains("Inherits") && line.contains("{")){
+                        readingInheritions = true;
+                    }else if(line.contains("}") && readingInheritions){
+                        readingInheritions = false;
+                    }else if(readingInheritions){
+                        inheritions.put(group, line.trim());
                     }else if(readingPerms){
                         String node = line.trim();
+                        boolean allowed = !node.startsWith("-");
+                        if(!allowed){
+                            node = node.substring(1);
+                        }
                         if(node.endsWith("*")){
                             String base = node.substring(0, node.indexOf('*'));
-                            for(String perm : this.perms){
-                                if(perm.startsWith(base)){
-                                    group.addPermission(perm);
+                            for(Map.Entry<String, RegisteredPermValue> perm : this.perms.entrySet()){
+                                if(perm.getKey().startsWith(base)){
+                                    group.getPermissions().put(perm.getKey(), allowed);
                                 }
                             }
-                        }else if(node.startsWith("-") && group.getPermissions().contains(node.substring(1))){
-                            group.getPermissions().remove(node.substring(1));
                         }else{
-                            group.addPermission(line.trim());
+                            group.getPermissions().put(node, allowed);
                         }
                     }else if(line.contains("}")){
                         this.groups.add(group);
@@ -185,26 +204,107 @@ public class NailedPermissionFactory implements PermBuilderFactory<NailedPermiss
             NailedLog.error(e.getMessage());
         }catch(Exception e){
             NailedLog.error(e, "Error while parsing groups.cfg file");
+        }finally{
+            IOUtils.closeQuietly(reader);
         }
 
-        NailedLog.info("Permission parse info:");
+        //Now all the groups are read, try to resolve all the inheritions
+        Map<String, Group> groupNames = Maps.newHashMap();
         for(Group group : this.groups){
-            NailedLog.info("-- Group " + group.getName());
-            NailedLog.info("-- " + group.getName() + " -- " + group.getPrefix());
-            NailedLog.info("-- " + group.getName() + " -- " + group.getSuffix());
-            NailedLog.info("-- " + group.getName() + " -- " + group.isDefault());
-            NailedLog.info("-- " + group.getName() + " -- Permissions:");
-            for(String perm : group.getPermissions()){
-                NailedLog.info("-- " + group.getName() + " ----- " + perm);
+            groupNames.put(group.getName().toLowerCase(), group);
+        }
+        for(Group group : this.groups){
+            for(String name : inheritions.get(group)){
+                group.getInheritions().add(groupNames.get(name.toLowerCase()));
+            }
+        }
+
+        File usersFile = new File(configDir, "users.cfg");
+        try{
+            reader = new BufferedReader(new FileReader(usersFile));
+            User user = null;
+            int lineNumber = 0;
+            boolean readingPerms = false;
+            boolean readingGroups = false;
+            while(true){
+                String line = reader.readLine();
+                lineNumber++;
+                if(line == null){
+                    break;
+                }else if(line.trim().startsWith("#") || line.trim().isEmpty()){
+                }else if(user == null && line.contains("{")){
+                    String name = line.substring(0, line.indexOf('{')).trim();
+                    user = new User(name);
+                }else if(user != null){
+                    if(line.contains("Permissions") && line.contains("{")){
+                        readingPerms = true;
+                    }else if(line.contains("}") && readingPerms){
+                        readingPerms = false;
+                    }else if(line.contains("Groups") && line.contains("{")){
+                        readingGroups = true;
+                    }else if(line.contains("}") && readingGroups){
+                        readingGroups = false;
+                    }else if(readingGroups){
+                        Group group = groupNames.get(line.trim().toLowerCase());
+                        if(group == null) throw new ConfigParseException("Group \"" + line.trim() + "\" does not exist, on line " + lineNumber + " in " + usersFile.getAbsolutePath());
+                        user.getGroups().add(group);
+                    }else if(readingPerms){
+                        String node = line.trim();
+                        boolean allowed = !node.startsWith("-");
+                        if(!allowed){
+                            node = node.substring(1);
+                        }
+                        if(node.endsWith("*")){
+                            String base = node.substring(0, node.indexOf('*'));
+                            for(Map.Entry<String, RegisteredPermValue> perm : this.perms.entrySet()){
+                                if(perm.getKey().startsWith(base)){
+                                    user.getPermissions().put(perm.getKey(), allowed);
+                                }
+                            }
+                        }else{
+                            user.getPermissions().put(node, allowed);
+                        }
+                    }else if(line.contains("}")){
+                        this.users.put(user.getName(), user);
+                        user = null;
+                    }
+                }
+            }
+        }catch(ConfigParseException e){
+            NailedLog.error(e.getMessage());
+        }catch(Exception e){
+            NailedLog.error(e, "Error while parsing groups.cfg file");
+        }finally{
+            IOUtils.closeQuietly(reader);
+        }
+
+        //Now set users that don't have a group to the default group, if we have one
+        if(this.defaultGroup != null){
+            for(User user : this.users.values()){
+                if(user.getGroups().isEmpty()){
+                    user.getGroups().add(this.defaultGroup);
+                }
             }
         }
     }
 
-    private boolean isRegistered(String node){
-        return this.perms.contains(node);
+    public User getUserInfo(String username){
+        User ret = this.users.get(username);
+        if(ret == null){ //This user is not listed in the config file. Create one with the default group
+            ret = new User(username);
+            if(this.defaultGroup != null){
+                ret.getGroups().add(this.defaultGroup);
+            }
+            this.users.put(username, ret);
+        }
+        return ret;
     }
 
-    private static boolean isOp(String username){
+    private boolean isRegistered(String node){
+        return this.perms.containsKey(node);
+    }
+
+    public static boolean isOp(String username){
         MinecraftServer server = FMLCommonHandler.instance().getSidedDelegate().getServer();
 
         if (server.isSinglePlayer()){
