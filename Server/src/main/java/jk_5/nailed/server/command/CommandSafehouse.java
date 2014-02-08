@@ -12,9 +12,8 @@ import jk_5.nailed.api.player.Player;
  */
 public class CommandSafehouse extends NailedCommand {
 
-    @Override
-    public String getCommandName(){
-        return "safehouse";
+    public CommandSafehouse(){
+        super("safehouse");
     }
 
     @Override

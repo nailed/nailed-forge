@@ -11,9 +11,8 @@ import jk_5.nailed.api.player.Player;
  */
 public class CommandLobby extends NailedCommand {
 
-    @Override
-    public String getCommandName(){
-        return "lobby";
+    public CommandLobby(){
+        super("lobby");
     }
 
     @Override

@@ -13,9 +13,8 @@ import net.minecraft.util.ChunkCoordinates;
  */
 public class CommandFirework extends NailedCommand {
 
-    @Override
-    public String getCommandName(){
-        return "firework";
+    public CommandFirework(){
+        super("firework");
     }
 
     @Override

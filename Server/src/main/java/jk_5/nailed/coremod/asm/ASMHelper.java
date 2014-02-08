@@ -43,7 +43,7 @@ public class ASMHelper {
     }
 
     public static byte[] createBytes(ClassNode cnode, int flags){
-        ClassWriter cw = new ClassWriter(flags);
+        ClassWriter cw = new NailedClassWriter(flags);
         cnode.accept(cw);
         return cw.toByteArray();
     }

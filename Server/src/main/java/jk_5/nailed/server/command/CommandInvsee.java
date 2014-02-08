@@ -4,6 +4,7 @@ import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.util.invsee.InventoryOtherPlayer;
+import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -21,9 +22,8 @@ import java.util.List;
  */
 public class CommandInvsee extends NailedCommand {
 
-    @Override
-    public String getCommandName(){
-        return "invsee";
+    public CommandInvsee(){
+        super("invsee");
     }
 
     @Override
@@ -48,6 +48,6 @@ public class CommandInvsee extends NailedCommand {
     @Override
     public List addTabCompletionOptions(ICommandSender iCommandSender, String[] strings){
         if(strings.length != 1) return Arrays.asList();
-        return getListOfStringsMatchingLastWord(strings, MinecraftServer.getServer().getAllUsernames());
+        return CommandBase.getListOfStringsMatchingLastWord(strings, MinecraftServer.getServer().getAllUsernames());
     }
 }

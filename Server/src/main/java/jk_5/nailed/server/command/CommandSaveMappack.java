@@ -13,9 +13,8 @@ import net.minecraft.util.IChatComponent;
  */
 public class CommandSaveMappack extends NailedCommand {
 
-    @Override
-    public String getCommandName(){
-        return "savemappack";
+    public CommandSaveMappack(){
+        super("savemappack");
     }
 
     @Override

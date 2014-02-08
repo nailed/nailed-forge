@@ -12,9 +12,8 @@ import net.minecraft.util.ChatComponentText;
  */
 public class CommandFps extends NailedCommand {
 
-    @Override
-    public String getCommandName(){
-        return "fps";
+    public CommandFps(){
+        super("fps");
     }
 
     @Override

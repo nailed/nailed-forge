@@ -13,14 +13,8 @@ import net.minecraft.util.ChatComponentText;
  */
 public class CommandIrc extends NailedCommand {
 
-    @Override
-    public String getCommandName() {
-        return "irc";
-    }
-
-    @Override
-    public int getRequiredPermissionLevel() {
-        return 3;
+    public CommandIrc(){
+        super("irc");
     }
 
     @Override

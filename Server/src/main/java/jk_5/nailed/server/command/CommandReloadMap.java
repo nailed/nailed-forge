@@ -3,6 +3,7 @@ package jk_5.nailed.server.command;
 import com.google.common.collect.Lists;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
+import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -21,9 +22,8 @@ import java.util.List;
  */
 public class CommandReloadMap extends NailedCommand {
 
-    @Override
-    public String getCommandName(){
-        return "reloadmap";
+    public CommandReloadMap(){
+        super("reloadmap");
     }
 
     @Override
@@ -40,9 +40,9 @@ public class CommandReloadMap extends NailedCommand {
         map.reloadFromMappack();
 
         IChatComponent component = new ChatComponentText("Reloaded map " + map.getSaveFileName());
-        component.func_150256_b().func_150209_a(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText("Go to the map")));
-        component.func_150256_b().func_150238_a(EnumChatFormatting.GREEN);
-        sender.func_145747_a(component);
+        component.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText("Go to the map")));
+        component.getChatStyle().setColor(EnumChatFormatting.GREEN);
+        sender.addChatMessage(component);
     }
 
     @Override
@@ -52,6 +52,6 @@ public class CommandReloadMap extends NailedCommand {
         for(Map map : NailedAPI.getMapLoader().getMaps()){
             ret.add(map.getSaveFileName());
         }
-        return getListOfStringsFromIterableMatchingLastWord(args, ret);
+        return CommandBase.getListOfStringsFromIterableMatchingLastWord(args, ret);
     }
 }

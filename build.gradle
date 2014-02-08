@@ -35,7 +35,7 @@ version = '2.0-SNAPSHOT'
 
 nailed {
     minecraftVersion = '1.7.2'
-    forgeVersion = '10.12.0.1023'
+    forgeVersion = '10.12.0.1024'
 
     versionName = 'Nailed-1.7.2'
     mainClass = 'net.minecraft.launchwrapper.Launch'

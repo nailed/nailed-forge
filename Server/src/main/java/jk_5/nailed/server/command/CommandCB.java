@@ -12,14 +12,8 @@ import net.minecraft.util.ChatComponentText;
  */
 public class CommandCB extends NailedCommand {
 
-    @Override
-    public String getCommandName(){
-        return "cb";
-    }
-
-    @Override
-    public boolean canCommandSenderUseCommand(ICommandSender par1ICommandSender){
-        return true;
+    public CommandCB(){
+        super("cb");
     }
 
     @Override

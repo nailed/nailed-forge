@@ -2,6 +2,7 @@ package jk_5.nailed.server.command;
 
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
+import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.NumberInvalidException;
 import net.minecraft.util.ChatComponentText;
@@ -15,9 +16,8 @@ import net.minecraft.util.IChatComponent;
  */
 public class CommandTime extends NailedCommand {
 
-    @Override
-    public String getCommandName(){
-        return "time";
+    public CommandTime(){
+        super("time");
     }
 
     @Override
@@ -29,9 +29,9 @@ public class CommandTime extends NailedCommand {
                     int target;
                     if(args[1].equals("day")) target = 6000;
                     else if(args[1].equals("night")) target = 18000;
-                    else target = parseIntBounded(sender, args[1], 0, 23999);
+                    else target = CommandBase.parseIntBounded(sender, args[1], 0, 23999);
                     if(!hasWorld && args.length == 3){
-                        map = NailedAPI.getMapLoader().getMap(parseInt(sender, args[2]));
+                        map = NailedAPI.getMapLoader().getMap(CommandBase.parseInt(sender, args[2]));
                     }
                     if(map != null){
                         map.getWorld().setWorldTime(target);
@@ -39,7 +39,7 @@ public class CommandTime extends NailedCommand {
                 }
             }else{
                 try{
-                    int number = parseInt(sender, args[0]);
+                    int number = CommandBase.parseInt(sender, args[0]);
                     map = NailedAPI.getMapLoader().getMap(number);
                     if(map != null){
                         IChatComponent component = new ChatComponentText("Current time in " + map.getSaveFileName() + ": " + map.getWorld().getWorldTime());

@@ -14,14 +14,8 @@ import net.minecraft.util.IChatComponent;
  */
 public class CommandReloadMappacks extends NailedCommand {
 
-    @Override
-    public String getCommandName(){
-        return "reloadmappacks";
-    }
-
-    @Override
-    public int getRequiredPermissionLevel(){
-        return 3;
+    public CommandReloadMappacks(){
+        super("mappacks");
     }
 
     @Override

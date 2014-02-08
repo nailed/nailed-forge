@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.player.Player;
+import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -18,14 +19,8 @@ import java.util.List;
  */
 public class CommandGoto extends NailedCommand {
 
-    @Override
-    public String getCommandName(){
-        return "goto";
-    }
-
-    @Override
-    public int getRequiredPermissionLevel(){
-        return 3;
+    public CommandGoto(){
+        super("goto");
     }
 
     @Override
@@ -50,6 +45,6 @@ public class CommandGoto extends NailedCommand {
         for(Map map : NailedAPI.getMapLoader().getMaps()){
             ret.add(map.getSaveFileName());
         }
-        return getListOfStringsFromIterableMatchingLastWord(strings, ret);
+        return CommandBase.getListOfStringsFromIterableMatchingLastWord(strings, ret);
     }
 }

@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.map.NailedMap;
+import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 
@@ -17,14 +18,8 @@ import java.util.List;
  */
 public class CommandToggleDownfall extends NailedCommand {
 
-    @Override
-    public String getCommandName(){
-        return "toggledownfall";
-    }
-
-    @Override
-    public int getRequiredPermissionLevel(){
-        return 2;
+    public CommandToggleDownfall(){
+        super("toggledownfall");
     }
 
     @Override
@@ -57,6 +52,6 @@ public class CommandToggleDownfall extends NailedCommand {
         for(Map map : NailedAPI.getMapLoader().getMaps()){
             ret.add(map.getSaveFileName());
         }
-        return getListOfStringsFromIterableMatchingLastWord(strings, ret);
+        return CommandBase.getListOfStringsFromIterableMatchingLastWord(strings, ret);
     }
 }

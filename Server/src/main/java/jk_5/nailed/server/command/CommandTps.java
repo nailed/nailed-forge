@@ -1,5 +1,7 @@
 package jk_5.nailed.server.command;
 
+import jk_5.nailed.api.map.Map;
+import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
@@ -18,23 +20,17 @@ public class CommandTps extends NailedCommand {
 
     private static final DecimalFormat timeFormatter = new DecimalFormat("########0.000");
 
-    @Override
-    public String getCommandName(){
-        return "tps";
+    public CommandTps(){
+        super("tps");
     }
 
     @Override
-    public boolean canCommandSenderUseCommand(ICommandSender par1ICommandSender){
-        return true;
-    }
-
-    @Override
-    public void process(ICommandSender sender, String[] args){
+    public void processCommandWithMap(ICommandSender sender, Map map, String[] args){
         MinecraftServer server = MinecraftServer.getServer();
         int dim = 0;
         boolean summary = true;
         if (args.length > 1){
-            dim = parseInt(sender, args[1]);
+            dim = CommandBase.parseInt(sender, args[1]);
             summary = false;
         }
         if (summary){

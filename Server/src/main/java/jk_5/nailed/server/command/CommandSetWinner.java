@@ -6,6 +6,7 @@ import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.PossibleWinner;
 import jk_5.nailed.api.map.team.Team;
 import jk_5.nailed.api.player.Player;
+import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -23,14 +24,8 @@ import java.util.List;
  */
 public class CommandSetWinner extends NailedCommand {
 
-    @Override
-    public String getCommandName(){
-        return "setwinner";
-    }
-
-    @Override
-    public int getRequiredPermissionLevel(){
-        return 2;
+    public CommandSetWinner(){
+        super("setwinner");
     }
 
     @Override
@@ -58,6 +53,6 @@ public class CommandSetWinner extends NailedCommand {
         for(Team team : map.getTeamManager().getTeams()){
             teams.add(team.getTeamId());
         }
-        return getListOfStringsFromIterableMatchingLastWord(args, teams);
+        return CommandBase.getListOfStringsFromIterableMatchingLastWord(args, teams);
     }
 }

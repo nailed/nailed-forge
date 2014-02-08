@@ -4,6 +4,7 @@ import jk_5.nailed.api.Gamemode;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.player.Player;
+import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,19 +20,13 @@ import java.util.List;
  */
 public class CommandGamemode extends NailedCommand {
 
-    @Override
-    public String getCommandName(){
-        return "gamemode";
+    public CommandGamemode(){
+        super("gamemode");
     }
 
     @Override
     public List getCommandAliases(){
         return Arrays.asList("gm");
-    }
-
-    @Override
-    public int getRequiredPermissionLevel(){
-        return 2;
     }
 
     @Override
@@ -83,9 +78,9 @@ public class CommandGamemode extends NailedCommand {
 
     public List addTabCompletionOptions(ICommandSender sender, String[] args){
         if(args.length == 1){
-            return getListOfStringsMatchingLastWord(args, "survival", "creative", "adventure");
+            return CommandBase.getListOfStringsMatchingLastWord(args, "survival", "creative", "adventure");
         }else if(args.length == 2){
-            return getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames());
+            return CommandBase.getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames());
         }
         return null;
     }

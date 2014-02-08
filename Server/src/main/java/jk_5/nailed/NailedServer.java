@@ -31,6 +31,7 @@ import jk_5.nailed.teamspeak.TeamspeakClient;
 import jk_5.nailed.util.invsee.InvSeeTicker;
 import lombok.Getter;
 import net.minecraft.command.CommandHandler;
+import net.minecraft.command.ICommand;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
@@ -172,6 +173,7 @@ public class NailedServer {
         ch.registerCommand(new CommandTps());
         ch.registerCommand(new CommandFps());
         ch.registerCommand(new CommandCB());
+        ch.registerCommand(new CommandReloadPermissions());
 
         ch.getCommands().remove("tp");
         ch.getCommands().remove("toggledownfall");
@@ -195,6 +197,16 @@ public class NailedServer {
     @EventHandler
     @SuppressWarnings("unused")
     public void serverStarted(FMLServerStartedEvent event){
+        NailedLog.info("Registering all command permissions");
+        CommandHandler ch = (CommandHandler) MinecraftServer.getServer().getCommandManager();
+
+        for(Object obj : ch.getCommands().values()){
+            ICommand command = (ICommand) obj;
+            if(command instanceof PermissionCommand){
+                PermissionsManager.registerPermission(((PermissionCommand) command).getPermissionNode());
+            }
+        }
+
         PermissionsManager.addPermissionsToFactory();
 
         NailedLog.info("Reading permission config");

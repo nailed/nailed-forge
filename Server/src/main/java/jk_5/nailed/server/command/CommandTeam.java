@@ -6,6 +6,7 @@ import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.team.Team;
 import jk_5.nailed.api.player.Player;
+import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -21,14 +22,8 @@ import java.util.List;
  */
 public class CommandTeam extends NailedCommand {
 
-    @Override
-    public String getCommandName() {
-        return "team";
-    }
-
-    @Override
-    public int getRequiredPermissionLevel(){
-        return 2;
+    public CommandTeam(){
+        super("team");
     }
 
     @Override
@@ -53,10 +48,10 @@ public class CommandTeam extends NailedCommand {
     @Override
     public List addTabCompletionOptions(ICommandSender iCommandSender, String[] strings){
         Map map = NailedAPI.getMapLoader().getMap(iCommandSender.getEntityWorld());
-        if(strings.length == 1) return getListOfStringsMatchingLastWord(strings, "join");
+        if(strings.length == 1) return CommandBase.getListOfStringsMatchingLastWord(strings, "join");
         else if(strings.length == 2){
             if(strings[0].equalsIgnoreCase("join")){
-                return getListOfStringsMatchingLastWord(strings, MinecraftServer.getServer().getAllUsernames());
+                return CommandBase.getListOfStringsMatchingLastWord(strings, MinecraftServer.getServer().getAllUsernames());
             }
         }else if(strings.length == 3){
             if(strings[0].equalsIgnoreCase("join")){
@@ -64,7 +59,7 @@ public class CommandTeam extends NailedCommand {
                 for(Team team : map.getTeamManager().getTeams()){
                     teams.add(team.getTeamId());
                 }
-                return getListOfStringsFromIterableMatchingLastWord(strings, teams);
+                return CommandBase.getListOfStringsFromIterableMatchingLastWord(strings, teams);
             }
         }
         return Arrays.asList();

@@ -16,7 +16,7 @@ import java.util.Map;
  */
 @Name("Nailed|Core")
 @MCVersion("1.7.2")
-@TransformerExclusions({"jk_5.nailed.coremod.transformers."})
+@TransformerExclusions({"jk_5.nailed.coremod.transformers.", "jk_5.nailed.coremod.asm."})
 @SuppressWarnings("unused")
 public class NailedFMLPlugin implements IFMLLoadingPlugin {
 
@@ -24,16 +24,15 @@ public class NailedFMLPlugin implements IFMLLoadingPlugin {
 
     @Override
     public String[] getASMTransformerClass() {
-        if(FMLLaunchHandler.side().isClient()){
+        if(FMLLaunchHandler.side().isServer()){
             return new String[]{
-                    //"jk_5.nailed.coremod.transformers.AbstractClientPlayerTransformer"
-            };
-        }else{
-            return new String[]{
+                    "jk_5.nailed.coremod.transformers.ClassHeirachyTransformer",
+                    "jk_5.nailed.coremod.transformers.CommandTransformer",
                     "jk_5.nailed.coremod.transformers.MinecraftServerTransformer",
                     "jk_5.nailed.coremod.transformers.DimensionManagerTransformer"
             };
         }
+        return new String[0];
     }
 
     @Override

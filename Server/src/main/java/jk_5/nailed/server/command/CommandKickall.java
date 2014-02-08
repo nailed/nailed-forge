@@ -16,9 +16,8 @@ import java.util.List;
  */
 public class CommandKickall extends NailedCommand {
 
-    @Override
-    public String getCommandName(){
-        return "kickall";
+    public CommandKickall(){
+        super("kickall");
     }
 
     @Override

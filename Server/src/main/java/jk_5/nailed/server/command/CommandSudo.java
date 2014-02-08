@@ -5,6 +5,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.player.Player;
+import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -19,9 +20,8 @@ import java.util.List;
  */
 public class CommandSudo extends NailedCommand {
 
-    @Override
-    public String getCommandName(){
-        return "sudo";
+    public CommandSudo(){
+        super("sudo");
     }
 
     @Override
@@ -39,6 +39,6 @@ public class CommandSudo extends NailedCommand {
     @Override
     public List addTabCompletionOptions(ICommandSender iCommandSender, String[] strings){
         if(strings.length != 1) return Arrays.asList();
-        return getListOfStringsMatchingLastWord(strings, MinecraftServer.getServer().getAllUsernames());
+        return CommandBase.getListOfStringsMatchingLastWord(strings, MinecraftServer.getServer().getAllUsernames());
     }
 }

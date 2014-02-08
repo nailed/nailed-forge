@@ -10,14 +10,8 @@ import net.minecraft.command.ICommandSender;
  */
 public class CommandStartGame extends NailedCommand {
 
-    @Override
-    public String getCommandName() {
-        return "startgame";
-    }
-
-    @Override
-    public int getRequiredPermissionLevel(){
-        return 3;
+    public CommandStartGame(){
+        super("startgame");
     }
 
     @Override

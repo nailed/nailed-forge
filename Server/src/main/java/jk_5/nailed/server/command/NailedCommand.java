@@ -3,21 +3,49 @@ package jk_5.nailed.server.command;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.player.Player;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+
+import java.util.List;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-public abstract class NailedCommand extends CommandBase {
+@RequiredArgsConstructor
+public abstract class NailedCommand implements ICommand {
+
+    @Getter
+    private final String commandName;
 
     @Override
     public String getCommandUsage(ICommandSender icommandsender){
-        return "commands.nailed." + this.getCommandName() + ".usage";
+        return "commands.nailed." + this.commandName + ".usage";
+    }
+
+    @Override
+    public List getCommandAliases(){
+        return null;
+    }
+
+    @Override
+    public boolean canCommandSenderUseCommand(ICommandSender var1){
+        return true; //Permissions will be checked by the permissionsmanager using the commandevent
+    }
+
+    @Override
+    public List addTabCompletionOptions(ICommandSender var1, String[] var2){
+        return null;
+    }
+
+    @Override
+    public boolean isUsernameIndex(String[] var1, int var2){
+        return false;
     }
 
     @Override
@@ -45,8 +73,13 @@ public abstract class NailedCommand extends CommandBase {
         throw new CommandException("commands.nailed.error.notValid");
     }
 
+    @SuppressWarnings("NullableProblems")
     public final int compareTo(Object o){
         return this.compareTo((ICommand)o);
+    }
+
+    public final int compareTo(ICommand command){
+        return this.commandName.compareTo(command.getCommandName());
     }
 
     public static EntityPlayerMP getTargetPlayer(ICommandSender sender, String target){
@@ -76,7 +109,7 @@ public abstract class NailedCommand extends CommandBase {
                 arg = arg.substring(1);
             }
 
-            value += parseDouble(par1ICommandSender, arg);
+            value += CommandBase.parseDouble(par1ICommandSender, arg);
 
             if(!isDouble && !isRelative){
                 value += 0.5D;

@@ -8,6 +8,7 @@ import jk_5.nailed.api.map.Spawnpoint;
 import jk_5.nailed.api.map.teleport.TeleportOptions;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.map.teleport.TeleportHelper;
+import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.PlayerSelector;
@@ -29,20 +30,14 @@ import java.util.List;
  */
 public class CommandTP extends NailedCommand {
 
-    @Override
-    public String getCommandName(){
-        return "tp";
-    }
-
-    @Override
-    public int getRequiredPermissionLevel(){
-        return 2;
+    public CommandTP(){
+        super("tp");
     }
 
     @Override
     public List addTabCompletionOptions(ICommandSender par1ICommandSender, String[] args){
-        if(args.length == 1) return getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getConfigurationManager().getAllUsernames());
-        if(args.length == 2) return getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getConfigurationManager().getAllUsernames());
+        if(args.length == 1) return CommandBase.getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getConfigurationManager().getAllUsernames());
+        if(args.length == 2) return CommandBase.getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getConfigurationManager().getAllUsernames());
         return null;
     }
 
@@ -144,7 +139,7 @@ public class CommandTP extends NailedCommand {
                 }
                 dest.setDestination(map);
             }else{
-                map = NailedAPI.getMapLoader().getMap(parseInt(sender, data));
+                map = NailedAPI.getMapLoader().getMap(CommandBase.parseInt(sender, data));
                 if(map != null){
                     Mappack mappack = map.getMappack();
                     if(mappack != null){
