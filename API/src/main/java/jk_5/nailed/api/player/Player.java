@@ -45,4 +45,5 @@ public interface Player extends PossibleWinner {
     public Spawnpoint getLocation();
     public Gamemode getGameMode();
     public void setGameMode(Gamemode mode);
+    public boolean hasPermission(String node);
 }

@@ -28,6 +28,10 @@ public class User {
         return this.getPermissionLevel(node, ((NailedPermissionFactory) PermissionsManager.getPermFactory()).getPerms().get(node));
     }
 
+    public Group getMainGroup(){
+        return this.groups.size() > 0 ? this.groups.get(this.groups.size() - 1) : null;
+    }
+
     private RegisteredPermValue getPermissionLevel(String node, RegisteredPermValue def){
         if(def == null){
             throw new UnregisterredPermissionException(node);

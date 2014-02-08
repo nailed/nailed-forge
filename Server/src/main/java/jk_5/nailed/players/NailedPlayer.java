@@ -11,6 +11,8 @@ import jk_5.nailed.api.player.Player;
 import jk_5.nailed.map.teleport.TeleportHelper;
 import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.network.NailedPacket;
+import jk_5.nailed.permissions.Group;
+import jk_5.nailed.permissions.User;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -37,6 +39,7 @@ public class NailedPlayer implements Player {
     @Getter private boolean online = false;
     @Getter @Setter private int teamSpeakClientID = -1;
     @Getter @Setter private int fps;
+    @Getter @Setter private User permissionInfo;
 
     public void sendNotification(String message){
         this.sendNotification(message, null);
@@ -75,7 +78,12 @@ public class NailedPlayer implements Player {
     }
 
     public String getChatPrefix(){
-        return this.getTeam().getColor() + (this.isOp() ? "@" : "") + this.getUsername() + ChatColor.RESET;
+        Group group = this.permissionInfo.getMainGroup();
+        if(group == null){
+            return this.getTeam().getColor() + this.getUsername() + ChatColor.RESET;
+        }else{
+            return this.getTeam().getColor() + group.getPrefix() + this.getUsername() + group.getSuffix() + ChatColor.RESET;
+        }
     }
 
     public Team getTeam(){
@@ -142,5 +150,10 @@ public class NailedPlayer implements Player {
     @Override
     public String getWinnerColoredName(){
         return this.getWinnerName();
+    }
+
+    @Override
+    public boolean hasPermission(String node){
+        return this.permissionInfo.hasPermission(node);
     }
 }
