@@ -44,7 +44,7 @@ public class CommandTransformer implements IClassTransformer {
             methodGetNode.visitLdcInsn(mod.toLowerCase() + ".commands.");
             methodGetNode.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;");
             methodGetNode.visitVarInsn(Opcodes.ALOAD, 0);
-            methodGetNode.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "net/minecraft/command/ICommand", "getCommandName", "()Ljava/lang/String;");
+            methodGetNode.visitMethodInsn(Opcodes.INVOKEINTERFACE, "net/minecraft/command/ICommand", "getCommandName", "()Ljava/lang/String;");
             methodGetNode.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/StringBuilder", "append", "(Ljava/lang/String;)Ljava/lang/StringBuilder;");
             methodGetNode.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/StringBuilder", "toString", "()Ljava/lang/String;");
             methodGetNode.visitInsn(Opcodes.ARETURN);
