@@ -3,6 +3,8 @@ package jk_5.nailed.server.command;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.permissions.NailedPermissionFactory;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.permissions.api.PermBuilderFactory;
 import net.minecraftforge.permissions.api.PermissionsManager;
 
@@ -23,6 +25,9 @@ public class CommandReloadPermissions extends NailedCommand {
         if(factory instanceof NailedPermissionFactory){
             NailedPermissionFactory permFactory = (NailedPermissionFactory) factory;
             permFactory.readConfig();
+            ChatComponentText component = new ChatComponentText("Reloaded permissions!");
+            component.getChatStyle().setColor(EnumChatFormatting.GREEN);
+            sender.addChatMessage(component);
         }
     }
 }
