@@ -23,7 +23,7 @@ buildscript {
         classpath 'jk_5.asyncirc:ASyncIRCClient:0.1-SNAPSHOT'
 
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.1-SNAPSHOT'
-        classpath 'jk_5.nailed.gradle:nailed-gradle:1.1-SNAPSHOT'
+        classpath 'jk_5.nailed.gradle:nailed-gradle:1.2-SNAPSHOT'
     }
 }
 

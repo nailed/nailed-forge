@@ -12,6 +12,7 @@ import jk_5.nailed.map.teleport.TeleportHelper;
 import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.network.NailedPacket;
 import jk_5.nailed.permissions.Group;
+import jk_5.nailed.permissions.NailedPermissionFactory;
 import jk_5.nailed.permissions.User;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.WorldSettings;
+import net.minecraftforge.permissions.api.PermissionsManager;
 
 /**
  * No description given
@@ -39,7 +41,6 @@ public class NailedPlayer implements Player {
     @Getter private boolean online = false;
     @Getter @Setter private int teamSpeakClientID = -1;
     @Getter @Setter private int fps;
-    @Getter @Setter private User permissionInfo;
 
     public void sendNotification(String message){
         this.sendNotification(message, null);
@@ -78,11 +79,16 @@ public class NailedPlayer implements Player {
     }
 
     public String getChatPrefix(){
-        Group group = this.permissionInfo.getMainGroup();
-        if(group == null){
-            return this.getTeam().getColor() + this.getUsername() + ChatColor.RESET;
+        User info = this.getPermissionInfo();
+        if(info != null){
+            Group group = info.getMainGroup();
+            if(group == null){
+                return this.getTeam().getColor() + this.getUsername() + ChatColor.RESET;
+            }else{
+                return this.getTeam().getColor() + group.getPrefix() + this.getUsername() + group.getSuffix() + ChatColor.RESET;
+            }
         }else{
-            return this.getTeam().getColor() + group.getPrefix() + this.getUsername() + group.getSuffix() + ChatColor.RESET;
+            return this.getTeam().getColor() + this.getUsername() + ChatColor.RESET;
         }
     }
 
@@ -152,8 +158,15 @@ public class NailedPlayer implements Player {
         return this.getWinnerName();
     }
 
+    public User getPermissionInfo(){
+        if(PermissionsManager.getPermFactory() instanceof NailedPermissionFactory){
+            return ((NailedPermissionFactory) PermissionsManager.getPermFactory()).getUserInfo(this.getUsername());
+        }
+        return null;
+    }
+
     @Override
     public boolean hasPermission(String node){
-        return this.permissionInfo.hasPermission(node);
+        return PermissionsManager.checkPerm(this.getEntity(), node);
     }
 }

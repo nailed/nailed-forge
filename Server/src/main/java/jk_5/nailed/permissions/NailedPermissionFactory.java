@@ -7,8 +7,7 @@ import com.google.common.collect.Sets;
 import cpw.mods.fml.common.FMLCommonHandler;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.players.NailedPlayer;
-import jk_5.nailed.players.NailedPlayerRegistry;
+import jk_5.nailed.api.player.Player;
 import lombok.Getter;
 import net.minecraft.dispenser.ILocation;
 import net.minecraft.entity.Entity;
@@ -290,11 +289,8 @@ public class NailedPermissionFactory implements PermBuilderFactory<NailedPermiss
             }
         }
 
-        //Finally, give the playerregistry's player objects a reference to their permission info for quick lookup
-        NailedPlayerRegistry registry = (NailedPlayerRegistry) NailedAPI.getPlayerRegistry();
-        for(User user : this.users.values()){
-            NailedPlayer player = (NailedPlayer) registry.getPlayerByUsername(user.getName());
-            player.setPermissionInfo(user);
+        for(Player player : NailedAPI.getPlayerRegistry().getPlayers()){
+            player.getEntity().refreshDisplayName();
         }
     }
 
