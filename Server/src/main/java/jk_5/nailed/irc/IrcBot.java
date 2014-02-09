@@ -1,8 +1,6 @@
 package jk_5.nailed.irc;
 
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Multimap;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.NailedServer;
@@ -122,7 +120,7 @@ public class IrcBot extends PircBot {
             component.getChatStyle().setColor(EnumChatFormatting.GRAY);
             component.appendText(" <");
             IChatComponent comp = new ChatComponentText(sender);
-            comp.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(hostname)));
+            comp.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(login + "@" + hostname)));
             component.appendSibling(comp);
             component.appendText("> ");
 
@@ -135,9 +133,9 @@ public class IrcBot extends PircBot {
                     if(msg.length() > 0){ //Write everything we read
                         comp = new ChatComponentText(msg);
                         comp.getChatStyle().setColor(color);
-                        comp.getChatStyle().setBold(bold);
-                        comp.getChatStyle().setItalic(italic);
-                        comp.getChatStyle().setUnderlined(underline);
+                        if(bold) comp.getChatStyle().setBold(true);
+                        if(italic) comp.getChatStyle().setItalic(true);
+                        if(underline) comp.getChatStyle().setUnderlined(true);
                         component.appendSibling(comp);
                     }
                     //if(msg.length() < i + 1) break;
@@ -145,16 +143,13 @@ public class IrcBot extends PircBot {
                     msg = "";
                     color = colors.get(code);
                     i += 2;
-
-                    Multimap<String, EnumChatFormatting> codes = HashMultimap.create();
-
                 }else if(current == '\u000F'){ //Reset
                     if(msg.length() > 0){ //Write everything we read
                         comp = new ChatComponentText(msg);
                         comp.getChatStyle().setColor(color);
-                        comp.getChatStyle().setBold(bold);
-                        comp.getChatStyle().setItalic(italic);
-                        comp.getChatStyle().setUnderlined(underline);
+                        if(bold) comp.getChatStyle().setBold(true);
+                        if(italic) comp.getChatStyle().setItalic(true);
+                        if(underline) comp.getChatStyle().setUnderlined(true);
                         component.appendSibling(comp);
                     }
                     msg = "";
@@ -164,9 +159,9 @@ public class IrcBot extends PircBot {
                     if(msg.length() > 0){ //Write everything we read
                         comp = new ChatComponentText(msg);
                         comp.getChatStyle().setColor(color);
-                        comp.getChatStyle().setBold(bold);
-                        comp.getChatStyle().setItalic(italic);
-                        comp.getChatStyle().setUnderlined(underline);
+                        if(bold) comp.getChatStyle().setBold(true);
+                        if(italic) comp.getChatStyle().setItalic(true);
+                        if(underline) comp.getChatStyle().setUnderlined(true);
                         component.appendSibling(comp);
                     }
                     msg = "";
@@ -176,9 +171,9 @@ public class IrcBot extends PircBot {
                     if(msg.length() > 0){ //Write everything we read
                         comp = new ChatComponentText(msg);
                         comp.getChatStyle().setColor(color);
-                        comp.getChatStyle().setBold(bold);
-                        comp.getChatStyle().setItalic(italic);
-                        comp.getChatStyle().setUnderlined(underline);
+                        if(bold) comp.getChatStyle().setBold(true);
+                        if(italic) comp.getChatStyle().setItalic(true);
+                        if(underline) comp.getChatStyle().setUnderlined(true);
                         component.appendSibling(comp);
                     }
                     msg = "";
@@ -188,9 +183,9 @@ public class IrcBot extends PircBot {
                     if(msg.length() > 0){ //Write everything we read
                         comp = new ChatComponentText(msg);
                         comp.getChatStyle().setColor(color);
-                        comp.getChatStyle().setBold(bold);
-                        comp.getChatStyle().setItalic(italic);
-                        comp.getChatStyle().setUnderlined(underline);
+                        if(bold) comp.getChatStyle().setBold(true);
+                        if(italic) comp.getChatStyle().setItalic(true);
+                        if(underline) comp.getChatStyle().setUnderlined(true);
                         component.appendSibling(comp);
                     }
                     msg = "";
@@ -203,9 +198,9 @@ public class IrcBot extends PircBot {
             if(msg.length() > 0){
                 comp = new ChatComponentText(msg);
                 comp.getChatStyle().setColor(color);
-                comp.getChatStyle().setBold(bold);
-                comp.getChatStyle().setItalic(italic);
-                comp.getChatStyle().setUnderlined(underline);
+                if(bold) comp.getChatStyle().setBold(true);
+                if(italic) comp.getChatStyle().setItalic(true);
+                if(underline) comp.getChatStyle().setUnderlined(true);
                 component.appendSibling(comp);
             }
 
