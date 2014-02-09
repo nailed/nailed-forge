@@ -14,6 +14,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.common.MinecraftForge;
+import org.jibble.pircbot.Colors;
 import org.jibble.pircbot.PircBot;
 
 /**
@@ -88,13 +89,31 @@ public class IrcBot extends PircBot {
         if(message.equals("!list") || message.equals("!players")){
             this.sendMessage(channel, configManager.getCurrentPlayerCount() + " online players: " + configManager.getPlayerListAsString());
         }else{
+            message = message.replaceAll(Colors.BLACK, ChatColor.BLACK.toString());
+            message = message.replaceAll(Colors.BLUE, ChatColor.BLUE.toString());
+            message = message.replaceAll(Colors.BOLD, ChatColor.BOLD.toString());
+            message = message.replaceAll(Colors.BROWN, ChatColor.GOLD.toString());
+            message = message.replaceAll(Colors.CYAN, ChatColor.AQUA.toString());
+            message = message.replaceAll(Colors.DARK_BLUE, ChatColor.DARK_BLUE.toString());
+            message = message.replaceAll(Colors.DARK_GRAY, ChatColor.DARK_GRAY.toString());
+            message = message.replaceAll(Colors.DARK_GREEN, ChatColor.DARK_GREEN.toString());
+            message = message.replaceAll(Colors.GREEN, ChatColor.GREEN.toString());
+            message = message.replaceAll(Colors.LIGHT_GRAY, ChatColor.GRAY.toString());
+            message = message.replaceAll(Colors.MAGENTA, ChatColor.LIGHT_PURPLE.toString());
+            message = message.replaceAll(Colors.NORMAL, ChatColor.RESET.toString());
+            message = message.replaceAll(Colors.OLIVE, ChatColor.DARK_GREEN.toString());
+            message = message.replaceAll(Colors.PURPLE, ChatColor.DARK_PURPLE.toString());
+            message = message.replaceAll(Colors.RED, ChatColor.RED.toString());
+            message = message.replaceAll(Colors.TEAL, ChatColor.DARK_AQUA.toString());
+            message = message.replaceAll(Colors.UNDERLINE, ChatColor.UNDERLINE.toString());
+            message = message.replaceAll(Colors.WHITE, ChatColor.WHITE.toString());
+            message = message.replaceAll(Colors.YELLOW, ChatColor.YELLOW.toString());
             configManager.sendChatMsg(new ChatComponentText(ChatColor.GRAY + "[" + channel + "]" + ChatColor.RESET + " <" + sender + "> " + message));
         }
     }
 
     @Override
     protected void onPrivateMessage(String sender, String login, String hostname, String message) {
-                                                            //sendChatMsg - Broadcast chat
         MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText(ChatColor.GRAY + "[" + sender + "]" + ChatColor.RESET + " <" + sender + "> " + message));
     }
 
