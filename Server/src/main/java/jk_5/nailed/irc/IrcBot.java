@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.NailedServer;
-import jk_5.nailed.api.ChatColor;
 import jk_5.nailed.api.config.ConfigTag;
 import jk_5.nailed.api.events.PlayerChatEvent;
 import jk_5.nailed.api.events.PlayerJoinEvent;
@@ -123,130 +122,105 @@ public class IrcBot extends PircBot {
             comp.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(login + "@" + hostname)));
             component.appendSibling(comp);
             message = "> " + message;
-
-            String msg = "";
-            EnumChatFormatting color = null;
-            boolean bold = false, underline = false, italic = false;
-            for(int i = 0; i < message.length(); i++){
-                char current = message.charAt(i);
-                if(current == '\u0003'){ //Every IRC colorcode starts with this magic char
-                    if(msg.length() > 0){ //Write everything we read
-                        comp = new ChatComponentText(msg);
-                        if(color != EnumChatFormatting.WHITE && color != EnumChatFormatting.RESET) comp.getChatStyle().setColor(color);
-                        if(bold) comp.getChatStyle().setBold(true);
-                        if(italic) comp.getChatStyle().setItalic(true);
-                        if(underline) comp.getChatStyle().setUnderlined(true);
-                        component.appendSibling(comp);
-                    }
-                    //if(msg.length() < i + 1) break;
-                    String code = current + "" + message.charAt(i + 1) + "" + message.charAt(i + 2);
-                    msg = "";
-                    color = colors.get(code);
-                    i += 2;
-                }else if(current == '\u000F'){ //Reset
-                    if(msg.length() > 0){ //Write everything we read
-                        comp = new ChatComponentText(msg);
-                        if(color != EnumChatFormatting.WHITE && color != EnumChatFormatting.RESET) comp.getChatStyle().setColor(color);
-                        if(bold) comp.getChatStyle().setBold(true);
-                        if(italic) comp.getChatStyle().setItalic(true);
-                        if(underline) comp.getChatStyle().setUnderlined(true);
-                        component.appendSibling(comp);
-                    }
-                    msg = "";
-                    color = null;
-                    underline = italic = bold = false;
-                }else if(current == '\u0002'){ //Bold
-                    if(msg.length() > 0){ //Write everything we read
-                        comp = new ChatComponentText(msg);
-                        if(color != EnumChatFormatting.WHITE && color != EnumChatFormatting.RESET) comp.getChatStyle().setColor(color);
-                        if(bold) comp.getChatStyle().setBold(true);
-                        if(italic) comp.getChatStyle().setItalic(true);
-                        if(underline) comp.getChatStyle().setUnderlined(true);
-                        component.appendSibling(comp);
-                    }
-                    msg = "";
-                    color = null;
-                    bold = true;
-                }else if(current == '\u001F'){ //Underline
-                    if(msg.length() > 0){ //Write everything we read
-                        comp = new ChatComponentText(msg);
-                        if(color != EnumChatFormatting.WHITE && color != EnumChatFormatting.RESET) comp.getChatStyle().setColor(color);
-                        if(bold) comp.getChatStyle().setBold(true);
-                        if(italic) comp.getChatStyle().setItalic(true);
-                        if(underline) comp.getChatStyle().setUnderlined(true);
-                        component.appendSibling(comp);
-                    }
-                    msg = "";
-                    color = null;
-                    underline = true;
-                }else if(current == '\u0016'){ //Reverse / italic (We use italic)
-                    if(msg.length() > 0){ //Write everything we read
-                        comp = new ChatComponentText(msg);
-                        if(color != EnumChatFormatting.WHITE && color != EnumChatFormatting.RESET) comp.getChatStyle().setColor(color);
-                        if(bold) comp.getChatStyle().setBold(true);
-                        if(italic) comp.getChatStyle().setItalic(true);
-                        if(underline) comp.getChatStyle().setUnderlined(true);
-                        component.appendSibling(comp);
-                    }
-                    msg = "";
-                    color = null;
-                    italic = true;
-                }else{
-                    msg += current;
-                }
-            }
-            if(msg.length() > 0){
-                comp = new ChatComponentText(msg);
-                if(color != EnumChatFormatting.WHITE && color != EnumChatFormatting.RESET) comp.getChatStyle().setColor(color);
-                if(bold) comp.getChatStyle().setBold(true);
-                if(italic) comp.getChatStyle().setItalic(true);
-                if(underline) comp.getChatStyle().setUnderlined(true);
-                component.appendSibling(comp);
-            }
-
-            NailedLog.info(IChatComponent.Serializer.func_150696_a(component));
+            this.append(component, message);
             configManager.sendChatMsg(component);
         }
     }
 
     @Override
     protected void onPrivateMessage(String sender, String login, String hostname, String message) {
-        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText(ChatColor.GRAY + "[" + sender + "]" + ChatColor.RESET + " <" + sender + "> " + message));
+        ChatComponentText component = new ChatComponentText("[");
+        component.getChatStyle().setColor(EnumChatFormatting.GRAY);
+        IChatComponent comp = new ChatComponentText(sender);
+        comp.getChatStyle().setColor(EnumChatFormatting.GRAY);
+        comp.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(login + "@" + hostname)));
+        component.appendSibling(comp);
+        comp = new ChatComponentText("] ");
+        comp.getChatStyle().setColor(EnumChatFormatting.GRAY);
+        component.appendSibling(comp);
+        this.append(component, message);
+        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(component);
     }
 
     @Override
     protected void onAction(String sender, String login, String hostname, String target, String action) {
-        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText(ChatColor.GRAY + "[" + channel + "]" + ChatColor.RESET + " * " + sender + " " + action));
+        ChatComponentText component = new ChatComponentText("[" + target + "]");
+        component.getChatStyle().setColor(EnumChatFormatting.GRAY);
+        component.appendText(" * ");
+        IChatComponent comp = new ChatComponentText(sender);
+        comp.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(login + "@" + hostname)));
+        component.appendSibling(comp);
+        this.append(component, " " + action);
+        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(component);
     }
 
     @Override
     protected void onJoin(String channel, String sender, String login, String hostname) {
-        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText(ChatColor.GRAY + "[" + channel + "]" + ChatColor.RESET + " * " + sender + " joined the channel"));
+        ChatComponentText component = new ChatComponentText("[" + channel + "]");
+        component.getChatStyle().setColor(EnumChatFormatting.GRAY);
+        component.appendText(" * ");
+        IChatComponent comp = new ChatComponentText(sender);
+        comp.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(login + "@" + hostname)));
+        component.appendSibling(comp);
+        component.appendText(" joined the channel");
+        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(component);
     }
 
     @Override
     protected void onPart(String channel, String sender, String login, String hostname) {
-        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText(ChatColor.GRAY + "[" + channel + "]" + ChatColor.RESET + " * " + sender + " left the channel"));
+        ChatComponentText component = new ChatComponentText("[" + channel + "]");
+        component.getChatStyle().setColor(EnumChatFormatting.GRAY);
+        component.appendText(" * ");
+        IChatComponent comp = new ChatComponentText(sender);
+        comp.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(login + "@" + hostname)));
+        component.appendSibling(comp);
+        component.appendText(" left the channel");
+        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(component);
     }
 
     @Override
     protected void onNickChange(String oldNick, String login, String hostname, String newNick) {
-        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText(ChatColor.GRAY + "[" + channel + "]" + ChatColor.RESET + " * " + oldNick + " is now known as " + newNick));
+        ChatComponentText component = new ChatComponentText("[" + channel + "]");
+        component.getChatStyle().setColor(EnumChatFormatting.GRAY);
+        component.appendText(" * ");
+        IChatComponent comp = new ChatComponentText(oldNick);
+        comp.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(login + "@" + hostname)));
+        component.appendSibling(comp);
+        component.appendText(" is now known as " + newNick);
+        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(component);
     }
 
     @Override
     protected void onKick(String channel, String kickerNick, String kickerLogin, String kickerHostname, String recipientNick, String reason) {
-        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText(ChatColor.GRAY + "[" + channel + "]" + ChatColor.RESET + " * " + recipientNick + " was kicked by " + kickerNick + " (" + reason + ")"));
+        ChatComponentText component = new ChatComponentText("[" + channel + "]");
+        component.getChatStyle().setColor(EnumChatFormatting.GRAY);
+        component.appendText(" * " + recipientNick + " was kicked by ");
+        IChatComponent comp = new ChatComponentText(kickerNick);
+        comp.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(kickerLogin + "@" + kickerHostname)));
+        component.appendSibling(comp);
+        component.appendText(" (" + reason + ")");
+        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(component);
     }
 
     @Override
     protected void onQuit(String sourceNick, String sourceLogin, String sourceHostname, String reason) {
-        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText(ChatColor.GRAY + "[" + channel + "]" + ChatColor.RESET + " * " + sourceNick + " left irc (" + reason + ")"));
+        ChatComponentText component = new ChatComponentText("[" + channel + "]");
+        component.getChatStyle().setColor(EnumChatFormatting.GRAY);
+        component.appendText(" * ");
+        IChatComponent comp = new ChatComponentText(sourceNick);
+        comp.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(sourceLogin + "@" + sourceHostname)));
+        component.appendSibling(comp);
+        component.appendText(" left irc (" + reason + ")");
+        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(component);
     }
 
     @Override
     protected void onTopic(String channel, String topic, String setBy, long date, boolean changed) {
-        if(changed) MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText(ChatColor.GRAY + "[" + channel + "]" + ChatColor.RESET + " * " + setBy + " set the topic: " + topic));
+        if(!changed) return;
+        ChatComponentText component = new ChatComponentText("[" + channel + "]");
+        component.getChatStyle().setColor(EnumChatFormatting.GRAY);
+        component.appendText(" * " + setBy + " set the topic: " + topic);
+        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(component);
     }
 
     private class ConnectThread extends Thread {
@@ -259,6 +233,89 @@ public class IrcBot extends PircBot {
             }catch(Exception e){
                 NailedLog.warn("An error was thrown while connecting to irc");
             }
+        }
+    }
+
+    private void append(IChatComponent component, String message){
+        IChatComponent comp;
+        String msg = "";
+        EnumChatFormatting color = null;
+        boolean bold = false, underline = false, italic = false;
+        for(int i = 0; i < message.length(); i++){
+            char current = message.charAt(i);
+            if(current == '\u0003'){ //Every IRC colorcode starts with this magic char
+                if(msg.length() > 0){ //Write everything we read
+                    comp = new ChatComponentText(msg);
+                    if(color != EnumChatFormatting.WHITE && color != EnumChatFormatting.RESET) comp.getChatStyle().setColor(color);
+                    if(bold) comp.getChatStyle().setBold(true);
+                    if(italic) comp.getChatStyle().setItalic(true);
+                    if(underline) comp.getChatStyle().setUnderlined(true);
+                    component.appendSibling(comp);
+                }
+                //if(msg.length() < i + 1) break;
+                String code = current + "" + message.charAt(i + 1) + "" + message.charAt(i + 2);
+                msg = "";
+                color = colors.get(code);
+                i += 2;
+            }else if(current == '\u000F'){ //Reset
+                if(msg.length() > 0){ //Write everything we read
+                    comp = new ChatComponentText(msg);
+                    if(color != EnumChatFormatting.WHITE && color != EnumChatFormatting.RESET) comp.getChatStyle().setColor(color);
+                    if(bold) comp.getChatStyle().setBold(true);
+                    if(italic) comp.getChatStyle().setItalic(true);
+                    if(underline) comp.getChatStyle().setUnderlined(true);
+                    component.appendSibling(comp);
+                }
+                msg = "";
+                color = null;
+                underline = italic = bold = false;
+            }else if(current == '\u0002'){ //Bold
+                if(msg.length() > 0){ //Write everything we read
+                    comp = new ChatComponentText(msg);
+                    if(color != EnumChatFormatting.WHITE && color != EnumChatFormatting.RESET) comp.getChatStyle().setColor(color);
+                    if(bold) comp.getChatStyle().setBold(true);
+                    if(italic) comp.getChatStyle().setItalic(true);
+                    if(underline) comp.getChatStyle().setUnderlined(true);
+                    component.appendSibling(comp);
+                }
+                msg = "";
+                color = null;
+                bold = true;
+            }else if(current == '\u001F'){ //Underline
+                if(msg.length() > 0){ //Write everything we read
+                    comp = new ChatComponentText(msg);
+                    if(color != EnumChatFormatting.WHITE && color != EnumChatFormatting.RESET) comp.getChatStyle().setColor(color);
+                    if(bold) comp.getChatStyle().setBold(true);
+                    if(italic) comp.getChatStyle().setItalic(true);
+                    if(underline) comp.getChatStyle().setUnderlined(true);
+                    component.appendSibling(comp);
+                }
+                msg = "";
+                color = null;
+                underline = true;
+            }else if(current == '\u0016'){ //Reverse / italic (We use italic)
+                if(msg.length() > 0){ //Write everything we read
+                    comp = new ChatComponentText(msg);
+                    if(color != EnumChatFormatting.WHITE && color != EnumChatFormatting.RESET) comp.getChatStyle().setColor(color);
+                    if(bold) comp.getChatStyle().setBold(true);
+                    if(italic) comp.getChatStyle().setItalic(true);
+                    if(underline) comp.getChatStyle().setUnderlined(true);
+                    component.appendSibling(comp);
+                }
+                msg = "";
+                color = null;
+                italic = true;
+            }else{
+                msg += current;
+            }
+        }
+        if(msg.length() > 0){
+            comp = new ChatComponentText(msg);
+            if(color != EnumChatFormatting.WHITE && color != EnumChatFormatting.RESET) comp.getChatStyle().setColor(color);
+            if(bold) comp.getChatStyle().setBold(true);
+            if(italic) comp.getChatStyle().setItalic(true);
+            if(underline) comp.getChatStyle().setUnderlined(true);
+            component.appendSibling(comp);
         }
     }
 }
