@@ -1,6 +1,8 @@
 package jk_5.nailed.irc;
 
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Multimap;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.NailedServer;
@@ -143,6 +145,9 @@ public class IrcBot extends PircBot {
                     msg = "";
                     color = colors.get(code);
                     i += 2;
+
+                    Multimap<String, EnumChatFormatting> codes = HashMultimap.create();
+
                 }else if(current == '\u000F'){ //Reset
                     if(msg.length() > 0){ //Write everything we read
                         comp = new ChatComponentText(msg);
@@ -195,12 +200,14 @@ public class IrcBot extends PircBot {
                     msg += current;
                 }
             }
-            comp = new ChatComponentText(msg);
-            comp.getChatStyle().setColor(color);
-            comp.getChatStyle().setBold(bold);
-            comp.getChatStyle().setItalic(italic);
-            comp.getChatStyle().setUnderlined(underline);
-            component.appendSibling(comp);
+            if(msg.length() > 0){
+                comp = new ChatComponentText(msg);
+                comp.getChatStyle().setColor(color);
+                comp.getChatStyle().setBold(bold);
+                comp.getChatStyle().setItalic(italic);
+                comp.getChatStyle().setUnderlined(underline);
+                component.appendSibling(comp);
+            }
 
             NailedLog.info(IChatComponent.Serializer.func_150696_a(component));
             configManager.sendChatMsg(component);
