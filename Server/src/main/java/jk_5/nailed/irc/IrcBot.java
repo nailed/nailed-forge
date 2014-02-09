@@ -1,5 +1,6 @@
 package jk_5.nailed.irc;
 
+import com.google.common.collect.ImmutableMap;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.NailedServer;
@@ -10,12 +11,17 @@ import jk_5.nailed.api.events.PlayerJoinEvent;
 import jk_5.nailed.api.events.PlayerLeaveEvent;
 import lombok.Getter;
 import lombok.Setter;
+import net.minecraft.event.HoverEvent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.MinecraftForge;
 import org.jibble.pircbot.Colors;
 import org.jibble.pircbot.PircBot;
+
+import java.util.Map;
 
 /**
  * No description given
@@ -30,6 +36,27 @@ public class IrcBot extends PircBot {
     private String serverPassword;
     private final String channel;
     private String channelPassword;
+
+    private static final Map<String, EnumChatFormatting> colors = ImmutableMap.<String, EnumChatFormatting>builder()
+            .put(Colors.BLACK, EnumChatFormatting.WHITE)
+            .put(Colors.BLUE, EnumChatFormatting.BLUE)
+            //.put(Colors.BOLD, EnumChatFormatting.BOLD)
+            .put(Colors.BROWN, EnumChatFormatting.GOLD)
+            .put(Colors.CYAN, EnumChatFormatting.AQUA)
+            .put(Colors.DARK_BLUE, EnumChatFormatting.DARK_BLUE)
+            .put(Colors.DARK_GRAY, EnumChatFormatting.DARK_GRAY)
+            .put(Colors.DARK_GREEN, EnumChatFormatting.DARK_GREEN)
+            .put(Colors.GREEN, EnumChatFormatting.GREEN)
+            .put(Colors.LIGHT_GRAY, EnumChatFormatting.GRAY)
+            .put(Colors.MAGENTA, EnumChatFormatting.LIGHT_PURPLE)
+            .put(Colors.NORMAL, EnumChatFormatting.RESET)
+            .put(Colors.OLIVE, EnumChatFormatting.DARK_GREEN)
+            .put(Colors.PURPLE, EnumChatFormatting.DARK_PURPLE)
+            .put(Colors.RED, EnumChatFormatting.RED)
+            .put(Colors.TEAL, EnumChatFormatting.DARK_AQUA)
+            //.put(Colors.UNDERLINE, EnumChatFormatting.UNDERLINE)
+            .put(Colors.WHITE, EnumChatFormatting.BLACK)
+            .put(Colors.YELLOW, EnumChatFormatting.YELLOW).build();
 
     public IrcBot(){
         ConfigTag tag = NailedServer.getConfig().getTag("irc").useBraces();
@@ -89,26 +116,94 @@ public class IrcBot extends PircBot {
         if(message.equals("!list") || message.equals("!players")){
             this.sendMessage(channel, configManager.getCurrentPlayerCount() + " online players: " + configManager.getPlayerListAsString());
         }else{
-            message = message.replaceAll(Colors.BLACK, ChatColor.WHITE.toString());
-            message = message.replaceAll(Colors.BLUE, ChatColor.BLUE.toString());
-            message = message.replaceAll(Colors.BOLD, ChatColor.BOLD.toString());
-            message = message.replaceAll(Colors.BROWN, ChatColor.GOLD.toString());
-            message = message.replaceAll(Colors.CYAN, ChatColor.AQUA.toString());
-            message = message.replaceAll(Colors.DARK_BLUE, ChatColor.DARK_BLUE.toString());
-            message = message.replaceAll(Colors.DARK_GRAY, ChatColor.DARK_GRAY.toString());
-            message = message.replaceAll(Colors.DARK_GREEN, ChatColor.DARK_GREEN.toString());
-            message = message.replaceAll(Colors.GREEN, ChatColor.GREEN.toString());
-            message = message.replaceAll(Colors.LIGHT_GRAY, ChatColor.GRAY.toString());
-            message = message.replaceAll(Colors.MAGENTA, ChatColor.LIGHT_PURPLE.toString());
-            message = message.replaceAll(Colors.NORMAL, ChatColor.RESET.toString());
-            message = message.replaceAll(Colors.OLIVE, ChatColor.DARK_GREEN.toString());
-            message = message.replaceAll(Colors.PURPLE, ChatColor.DARK_PURPLE.toString());
-            message = message.replaceAll(Colors.RED, ChatColor.RED.toString());
-            message = message.replaceAll(Colors.TEAL, ChatColor.DARK_AQUA.toString());
-            message = message.replaceAll(Colors.UNDERLINE, ChatColor.UNDERLINE.toString());
-            message = message.replaceAll(Colors.WHITE, ChatColor.BLACK.toString());
-            message = message.replaceAll(Colors.YELLOW, ChatColor.YELLOW.toString());
-            configManager.sendChatMsg(new ChatComponentText(ChatColor.GRAY + "[" + channel + "]" + ChatColor.RESET + " <" + sender + "> " + message));
+            ChatComponentText component = new ChatComponentText("[" + channel + "]");
+            component.getChatStyle().setColor(EnumChatFormatting.GRAY);
+            component.appendText(" <");
+            IChatComponent comp = new ChatComponentText(sender);
+            comp.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(hostname)));
+            component.appendSibling(comp);
+            component.appendText("> ");
+
+            String msg = "";
+            EnumChatFormatting color = null;
+            boolean bold = false, underline = false, italic = false;
+            for(int i = 0; i < message.length(); i++){
+                char current = message.charAt(i);
+                if(current == '\u0003'){ //Every IRC colorcode starts with this magic char
+                    if(msg.length() > 0){ //Write everything we read
+                        comp = new ChatComponentText(msg);
+                        comp.getChatStyle().setColor(color);
+                        comp.getChatStyle().setBold(bold);
+                        comp.getChatStyle().setItalic(italic);
+                        comp.getChatStyle().setUnderlined(underline);
+                        component.appendSibling(comp);
+                    }
+                    //if(msg.length() < i + 1) break;
+                    String code = current + "" + message.charAt(i + 1) + "" + message.charAt(i + 2);
+                    msg = "";
+                    color = colors.get(code);
+                    i += 3;
+                }else if(current == '\u000F'){ //Reset
+                    if(msg.length() > 0){ //Write everything we read
+                        comp = new ChatComponentText(msg);
+                        comp.getChatStyle().setColor(color);
+                        comp.getChatStyle().setBold(bold);
+                        comp.getChatStyle().setItalic(italic);
+                        comp.getChatStyle().setUnderlined(underline);
+                        component.appendSibling(comp);
+                    }
+                    msg = "";
+                    color = null;
+                    underline = italic = bold = false;
+                }else if(current == '\u0002'){ //Bold
+                    if(msg.length() > 0){ //Write everything we read
+                        comp = new ChatComponentText(msg);
+                        comp.getChatStyle().setColor(color);
+                        comp.getChatStyle().setBold(bold);
+                        comp.getChatStyle().setItalic(italic);
+                        comp.getChatStyle().setUnderlined(underline);
+                        component.appendSibling(comp);
+                    }
+                    msg = "";
+                    color = null;
+                    bold = true;
+                }else if(current == '\u001F'){ //Underline
+                    if(msg.length() > 0){ //Write everything we read
+                        comp = new ChatComponentText(msg);
+                        comp.getChatStyle().setColor(color);
+                        comp.getChatStyle().setBold(bold);
+                        comp.getChatStyle().setItalic(italic);
+                        comp.getChatStyle().setUnderlined(underline);
+                        component.appendSibling(comp);
+                    }
+                    msg = "";
+                    color = null;
+                    underline = true;
+                }else if(current == '\u0016'){ //Reverse / italic (We use italic)
+                    if(msg.length() > 0){ //Write everything we read
+                        comp = new ChatComponentText(msg);
+                        comp.getChatStyle().setColor(color);
+                        comp.getChatStyle().setBold(bold);
+                        comp.getChatStyle().setItalic(italic);
+                        comp.getChatStyle().setUnderlined(underline);
+                        component.appendSibling(comp);
+                    }
+                    msg = "";
+                    color = null;
+                    italic = true;
+                }else{
+                    msg += current;
+                }
+            }
+            comp = new ChatComponentText(msg);
+            comp.getChatStyle().setColor(color);
+            comp.getChatStyle().setBold(bold);
+            comp.getChatStyle().setItalic(italic);
+            comp.getChatStyle().setUnderlined(underline);
+            component.appendSibling(comp);
+
+            NailedLog.info(IChatComponent.Serializer.func_150696_a(component));
+            configManager.sendChatMsg(component);
         }
     }
 
