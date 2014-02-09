@@ -142,7 +142,7 @@ public class IrcBot extends PircBot {
                     String code = current + "" + message.charAt(i + 1) + "" + message.charAt(i + 2);
                     msg = "";
                     color = colors.get(code);
-                    i += 3;
+                    i += 2;
                 }else if(current == '\u000F'){ //Reset
                     if(msg.length() > 0){ //Write everything we read
                         comp = new ChatComponentText(msg);
