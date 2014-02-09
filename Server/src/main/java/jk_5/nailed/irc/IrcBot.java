@@ -89,7 +89,7 @@ public class IrcBot extends PircBot {
         if(message.equals("!list") || message.equals("!players")){
             this.sendMessage(channel, configManager.getCurrentPlayerCount() + " online players: " + configManager.getPlayerListAsString());
         }else{
-            message = message.replaceAll(Colors.BLACK, ChatColor.BLACK.toString());
+            message = message.replaceAll(Colors.BLACK, ChatColor.WHITE.toString());
             message = message.replaceAll(Colors.BLUE, ChatColor.BLUE.toString());
             message = message.replaceAll(Colors.BOLD, ChatColor.BOLD.toString());
             message = message.replaceAll(Colors.BROWN, ChatColor.GOLD.toString());
@@ -106,7 +106,7 @@ public class IrcBot extends PircBot {
             message = message.replaceAll(Colors.RED, ChatColor.RED.toString());
             message = message.replaceAll(Colors.TEAL, ChatColor.DARK_AQUA.toString());
             message = message.replaceAll(Colors.UNDERLINE, ChatColor.UNDERLINE.toString());
-            message = message.replaceAll(Colors.WHITE, ChatColor.WHITE.toString());
+            message = message.replaceAll(Colors.WHITE, ChatColor.BLACK.toString());
             message = message.replaceAll(Colors.YELLOW, ChatColor.YELLOW.toString());
             configManager.sendChatMsg(new ChatComponentText(ChatColor.GRAY + "[" + channel + "]" + ChatColor.RESET + " <" + sender + "> " + message));
         }
