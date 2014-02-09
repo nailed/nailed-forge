@@ -1,6 +1,7 @@
 package jk_5.nailed.crashreporter;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import java.util.*;
 
@@ -11,28 +12,28 @@ import java.util.*;
  */
 public class HandlerRegistry {
 
-    private static final Map<String, PasteProvider> PasteProviders = new HashMap<String, PasteProvider>();
+    private static final Map<String, PasteProvider> pasteProviders = Maps.newLinkedHashMap();
     private static final Map<String, NotificationHandler> notificationHandlers = new HashMap<String, NotificationHandler>();
 
     public static void registerPasteProvider(String id, PasteProvider provider){
-        if(PasteProviders.containsKey(id))
-            throw new IllegalArgumentException("Pastebin provider " + id + " already registered by " + PasteProviders.get(id) + " when registering " + provider);
+        if(pasteProviders.containsKey(id))
+            throw new IllegalArgumentException("Pastebin provider " + id + " already registered by " + pasteProviders.get(id) + " when registering " + provider);
 
-        PasteProviders.put(id, provider);
+        pasteProviders.put(id, provider);
     }
 
     public static PasteProvider getPasteProvider(String id){
-        return PasteProviders.get(id);
+        return pasteProviders.get(id);
     }
 
     public static List<PasteProvider> getPasteProviders(){
-        List<PasteProvider> providers = new ArrayList<PasteProvider>(PasteProviders.size());
-        providers.addAll(PasteProviders.values());
+        List<PasteProvider> providers = new ArrayList<PasteProvider>(pasteProviders.size());
+        providers.addAll(pasteProviders.values());
         return providers;
     }
 
     public static Map<String, PasteProvider> getAllPasteProviders(){
-        return Collections.unmodifiableMap(PasteProviders);
+        return Collections.unmodifiableMap(pasteProviders);
     }
 
     public static void registerNotificationHandler(String id, NotificationHandler provider){
