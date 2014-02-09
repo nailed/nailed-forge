@@ -3,6 +3,7 @@ package jk_5.nailed.crashreporter;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import jk_5.nailed.crashreporter.notificationhandlers.NotificationHandlerIrc;
 import jk_5.nailed.crashreporter.pasteproviders.PasteProviderHastebin;
+import jk_5.nailed.crashreporter.pasteproviders.PasteProviderPastebin;
 
 import java.util.Map;
 
@@ -15,6 +16,7 @@ import java.util.Map;
 public class Loader implements IFMLLoadingPlugin {
 
     public Loader(){
+        HandlerRegistry.registerPasteProvider("pastebin", new PasteProviderPastebin());
         HandlerRegistry.registerPasteProvider("hastebin", new PasteProviderHastebin());
 
         HandlerRegistry.registerNotificationHandler("irc", new NotificationHandlerIrc());
