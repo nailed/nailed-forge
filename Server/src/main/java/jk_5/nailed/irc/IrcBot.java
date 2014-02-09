@@ -122,7 +122,7 @@ public class IrcBot extends PircBot {
             IChatComponent comp = new ChatComponentText(sender);
             comp.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(login + "@" + hostname)));
             component.appendSibling(comp);
-            component.appendText("> ");
+            message = "> " + message;
 
             String msg = "";
             EnumChatFormatting color = null;
