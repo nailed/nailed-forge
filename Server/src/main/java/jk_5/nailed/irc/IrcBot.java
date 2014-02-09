@@ -132,7 +132,7 @@ public class IrcBot extends PircBot {
                 if(current == '\u0003'){ //Every IRC colorcode starts with this magic char
                     if(msg.length() > 0){ //Write everything we read
                         comp = new ChatComponentText(msg);
-                        comp.getChatStyle().setColor(color);
+                        if(color != EnumChatFormatting.WHITE && color != EnumChatFormatting.RESET) comp.getChatStyle().setColor(color);
                         if(bold) comp.getChatStyle().setBold(true);
                         if(italic) comp.getChatStyle().setItalic(true);
                         if(underline) comp.getChatStyle().setUnderlined(true);
@@ -146,7 +146,7 @@ public class IrcBot extends PircBot {
                 }else if(current == '\u000F'){ //Reset
                     if(msg.length() > 0){ //Write everything we read
                         comp = new ChatComponentText(msg);
-                        comp.getChatStyle().setColor(color);
+                        if(color != EnumChatFormatting.WHITE && color != EnumChatFormatting.RESET) comp.getChatStyle().setColor(color);
                         if(bold) comp.getChatStyle().setBold(true);
                         if(italic) comp.getChatStyle().setItalic(true);
                         if(underline) comp.getChatStyle().setUnderlined(true);
@@ -158,7 +158,7 @@ public class IrcBot extends PircBot {
                 }else if(current == '\u0002'){ //Bold
                     if(msg.length() > 0){ //Write everything we read
                         comp = new ChatComponentText(msg);
-                        comp.getChatStyle().setColor(color);
+                        if(color != EnumChatFormatting.WHITE && color != EnumChatFormatting.RESET) comp.getChatStyle().setColor(color);
                         if(bold) comp.getChatStyle().setBold(true);
                         if(italic) comp.getChatStyle().setItalic(true);
                         if(underline) comp.getChatStyle().setUnderlined(true);
@@ -170,7 +170,7 @@ public class IrcBot extends PircBot {
                 }else if(current == '\u001F'){ //Underline
                     if(msg.length() > 0){ //Write everything we read
                         comp = new ChatComponentText(msg);
-                        comp.getChatStyle().setColor(color);
+                        if(color != EnumChatFormatting.WHITE && color != EnumChatFormatting.RESET) comp.getChatStyle().setColor(color);
                         if(bold) comp.getChatStyle().setBold(true);
                         if(italic) comp.getChatStyle().setItalic(true);
                         if(underline) comp.getChatStyle().setUnderlined(true);
@@ -182,7 +182,7 @@ public class IrcBot extends PircBot {
                 }else if(current == '\u0016'){ //Reverse / italic (We use italic)
                     if(msg.length() > 0){ //Write everything we read
                         comp = new ChatComponentText(msg);
-                        comp.getChatStyle().setColor(color);
+                        if(color != EnumChatFormatting.WHITE && color != EnumChatFormatting.RESET) comp.getChatStyle().setColor(color);
                         if(bold) comp.getChatStyle().setBold(true);
                         if(italic) comp.getChatStyle().setItalic(true);
                         if(underline) comp.getChatStyle().setUnderlined(true);
@@ -197,7 +197,7 @@ public class IrcBot extends PircBot {
             }
             if(msg.length() > 0){
                 comp = new ChatComponentText(msg);
-                comp.getChatStyle().setColor(color);
+                if(color != EnumChatFormatting.WHITE && color != EnumChatFormatting.RESET) comp.getChatStyle().setColor(color);
                 if(bold) comp.getChatStyle().setBold(true);
                 if(italic) comp.getChatStyle().setItalic(true);
                 if(underline) comp.getChatStyle().setUnderlined(true);
