@@ -58,7 +58,7 @@ public class DimensionManagerTransformer implements IClassTransformer {
         ((MethodInsnNode) mnode.instructions.get(offset + 1)).name = data.get("getSaveFormatName");
         ((MethodInsnNode) mnode.instructions.get(offset + 1)).desc = data.get("getSaveFormatSig");
         list.add(new VarInsnNode(Opcodes.ALOAD, 7));
-        list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "jk_5/nailed/api/map/Map", "getSaveFileName", "()Ljava/lang/String;"));
+        list.add(new MethodInsnNode(Opcodes.INVOKEINTERFACE, "jk_5/nailed/api/map/Map", "getSaveFileName", "()Ljava/lang/String;"));
         list.add(new InsnNode(Opcodes.ICONST_1));
         list.add(new MethodInsnNode(Opcodes.INVOKEINTERFACE, data.get("iSaveFormatName"), data.get("getSaveLoaderName"), data.get("getSaveLoaderSig")));
         mnode.instructions.insert(mnode.instructions.get(offset + 1), list);
@@ -74,6 +74,7 @@ public class DimensionManagerTransformer implements IClassTransformer {
         while(mnode.instructions.get(offset).getOpcode() != Opcodes.ALOAD) offset ++;
         offset += 2;
         ((VarInsnNode) mnode.instructions.get(offset)).var = 7;
+        ((MethodInsnNode) mnode.instructions.get(offset + 1)).setOpcode(Opcodes.INVOKEINTERFACE);
         ((MethodInsnNode) mnode.instructions.get(offset + 1)).owner = "jk_5/nailed/api/map/Map";
         ((MethodInsnNode) mnode.instructions.get(offset + 1)).name = "getSaveFileName";
         ((MethodInsnNode) mnode.instructions.get(offset + 1)).desc = "()Ljava/lang/String;";
