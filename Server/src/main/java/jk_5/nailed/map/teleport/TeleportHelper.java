@@ -30,8 +30,11 @@ public class TeleportHelper {
     private static MinecraftServer mcServer = null;
 
     public static boolean travelEntity(Entity entity, TeleportOptions options){
-        Map destMap = options.getDestination();
         Map currentMap = NailedAPI.getMapLoader().getMap(entity.worldObj);
+        Map destMap = options.getDestination();
+        if(destMap == null){
+            destMap = currentMap;
+        }
         World destWorld = destMap.getWorld();
         if(destWorld.isRemote) return false;
         if(options == null) return false;

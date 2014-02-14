@@ -1,6 +1,7 @@
 package jk_5.nailed.api.map;
 
 import jk_5.nailed.api.config.ConfigTag;
+import jk_5.nailed.api.map.teleport.TeleportOptions;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ChunkCoordinates;
 
@@ -57,6 +58,12 @@ public class Spawnpoint extends ChunkCoordinates {
 
     public static Spawnpoint readFromConfig(ConfigTag tag){
         return new Spawnpoint(tag.getTag("x").getIntValue(), tag.getTag("y").getIntValue(64), tag.getTag("z").getIntValue(), tag.getTag("yaw").getIntValue(0), tag.getTag("pitch").getIntValue(0));
+    }
+
+    public TeleportOptions teleport(){
+        TeleportOptions options = new TeleportOptions();
+        options.setCoordinates(this);
+        return options;
     }
 
     public void writeToConfig(ConfigTag tag){

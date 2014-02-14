@@ -11,7 +11,6 @@ import jk_5.nailed.map.teleport.TeleportHelper;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.PlayerSelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -112,16 +111,6 @@ public class CommandTP extends NailedCommand {
             sender.addChatMessage(new ChatComponentTranslation(e.getMessage()));
             sender.addChatMessage(new ChatComponentTranslation(this.getCommandUsage(sender)));
         }
-    }
-
-    private static EntityPlayerMP[] getPlayersList(ICommandSender sender, String pattern){
-        EntityPlayerMP[] players = PlayerSelector.matchPlayers(sender, pattern);
-        if(players == null){
-            Player p = NailedAPI.getPlayerRegistry().getPlayerByUsername(pattern);
-            if(p == null) throw new CommandException("commands.nailed.tp.fail.notarget");
-            players = new EntityPlayerMP[]{p.getEntity()};
-        }
-        return players;
     }
 
     private static TeleportOptions getDestination(ICommandSender sender, String data){
