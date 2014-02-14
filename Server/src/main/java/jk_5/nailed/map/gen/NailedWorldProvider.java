@@ -134,6 +134,11 @@ public class NailedWorldProvider extends WorldProvider implements MappackContain
     }
 
     @Override
+    public ChunkCoordinates getSpawnPoint(){
+        return this.getRandomizedSpawnPoint();
+    }
+
+    @Override
     public int getRespawnDimension(EntityPlayerMP player){
         return player.dimension;
     }

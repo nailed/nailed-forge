@@ -17,7 +17,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentTranslation;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
@@ -51,9 +50,9 @@ public class CommandTP extends NailedCommand {
         try{
             if(args.length == 1){
                 //  /tp destinationPlayer
-                Pair<Entity, TeleportOptions> data;
+                EntityPlayer teleporting;
                 if(sender instanceof EntityPlayer){
-                    data = new MutablePair<Entity, TeleportOptions>((EntityPlayer) sender, null);
+                    teleporting = (EntityPlayer) sender;
                 }else{
                     throw new CommandException("commands.nailed.tp.fail.notarget");
                 }
@@ -64,7 +63,7 @@ public class CommandTP extends NailedCommand {
                 TeleportOptions option = new TeleportOptions();
                 option.setCoordinates(target.getLocation());
                 option.setDestination(target.getCurrentMap());
-                data.setValue(option);
+                options.add(new ImmutablePair<Entity, TeleportOptions>(teleporting, option));
             }else if(args.length == 2){
                 //  /tp teleportingPlayer destinationPlayer | destinationMap
                 EntityPlayerMP[] players = getPlayersList(sender, args[0]);
