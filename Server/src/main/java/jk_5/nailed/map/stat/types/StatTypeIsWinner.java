@@ -30,7 +30,7 @@ public class StatTypeIsWinner implements IStatType {
                         stat.enable();
                     }
                     Player p = NailedAPI.getPlayerRegistry().getPlayerByUsername((String) stat.load("watchingWinnerPlayer"));
-                    if(p.getCurrentMap() == controller.getMap() && p == winner){
+                    if(p != null && p.getCurrentMap() == controller.getMap() && p == winner){
                         stat.enable();
                     }
                 }

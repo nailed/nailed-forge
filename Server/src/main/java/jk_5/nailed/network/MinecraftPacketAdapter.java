@@ -10,6 +10,7 @@ import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.sign.Sign;
 import jk_5.nailed.api.map.sign.SignCommandHandler;
+import jk_5.nailed.api.player.Player;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.NetworkManager;
@@ -53,7 +54,11 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
                 if(key.startsWith("death.")){
                     String died = ChatColor.stripColor(((ChatComponentText) translation.getFormatArgs()[0]).getUnformattedTextForChat());
                     if(died.startsWith("@")) died = died.substring(1);
-                    EntityPlayerMP diedPlayer = NailedAPI.getPlayerRegistry().getPlayerByUsername(died).getEntity();
+                    Player ply = NailedAPI.getPlayerRegistry().getPlayerByUsername(died);
+                    if(ply == null){
+                        ply = NailedAPI.getPlayerRegistry().getPlayerByUsername(died.substring(1));
+                    }
+                    EntityPlayerMP diedPlayer = ply.getEntity();
                     if(player.dimension == diedPlayer.dimension){
                         NailedLog.info("Send death message for " + diedPlayer.getDisplayName() + " to " + player.getDisplayName());
                     }else return;

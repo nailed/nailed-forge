@@ -9,6 +9,7 @@ import jk_5.nailed.api.map.stat.Stat;
 import jk_5.nailed.api.map.stat.StatManager;
 import jk_5.nailed.api.map.stat.StatMode;
 import jk_5.nailed.api.player.Player;
+import jk_5.nailed.blocks.NailedBlocks;
 import jk_5.nailed.gui.IGuiReturnHandler;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -182,6 +183,7 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
     }
 
     public void scheduleRedstoneUpdate(){
-        this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, this.blockType);
+        //this.worldObj.notifyBlockChange(this.xCoord, this.yCoord, this.zCoord, NailedBlocks.stat);
+        this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, NailedBlocks.stat);
     }
 }

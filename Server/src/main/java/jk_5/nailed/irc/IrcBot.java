@@ -115,10 +115,12 @@ public class IrcBot extends PircBot {
         if(message.equals("!list") || message.equals("!players")){
             this.sendMessage(channel, configManager.getCurrentPlayerCount() + " online players: " + configManager.getPlayerListAsString());
         }else{
-            ChatComponentText component = new ChatComponentText("[" + channel + "]");
-            component.getChatStyle().setColor(EnumChatFormatting.GRAY);
+            ChatComponentText component = new ChatComponentText("");
+            IChatComponent comp = new ChatComponentText("[" + channel + "]");
+            comp.getChatStyle().setColor(EnumChatFormatting.GRAY);
+            component.appendSibling(comp);
             component.appendText(" <");
-            IChatComponent comp = new ChatComponentText(sender);
+            comp = new ChatComponentText(sender);
             comp.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(login + "@" + hostname)));
             component.appendSibling(comp);
             message = "> " + message;
@@ -129,9 +131,11 @@ public class IrcBot extends PircBot {
 
     @Override
     protected void onPrivateMessage(String sender, String login, String hostname, String message) {
-        ChatComponentText component = new ChatComponentText("[");
-        component.getChatStyle().setColor(EnumChatFormatting.GRAY);
-        IChatComponent comp = new ChatComponentText(sender);
+        ChatComponentText component = new ChatComponentText("");
+        IChatComponent comp = new ChatComponentText("[");
+        comp.getChatStyle().setColor(EnumChatFormatting.GRAY);
+        component.appendSibling(comp);
+        comp = new ChatComponentText(sender);
         comp.getChatStyle().setColor(EnumChatFormatting.GRAY);
         comp.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(login + "@" + hostname)));
         component.appendSibling(comp);
@@ -144,10 +148,12 @@ public class IrcBot extends PircBot {
 
     @Override
     protected void onAction(String sender, String login, String hostname, String target, String action) {
-        ChatComponentText component = new ChatComponentText("[" + target + "]");
-        component.getChatStyle().setColor(EnumChatFormatting.GRAY);
+        ChatComponentText component = new ChatComponentText("");
+        IChatComponent comp = new ChatComponentText("[" + target + "]");
+        comp.getChatStyle().setColor(EnumChatFormatting.GRAY);
+        component.appendSibling(comp);
         component.appendText(" * ");
-        IChatComponent comp = new ChatComponentText(sender);
+        comp = new ChatComponentText(sender);
         comp.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(login + "@" + hostname)));
         component.appendSibling(comp);
         this.append(component, " " + action);
@@ -156,10 +162,12 @@ public class IrcBot extends PircBot {
 
     @Override
     protected void onJoin(String channel, String sender, String login, String hostname) {
-        ChatComponentText component = new ChatComponentText("[" + channel + "]");
-        component.getChatStyle().setColor(EnumChatFormatting.GRAY);
+        ChatComponentText component = new ChatComponentText("");
+        IChatComponent comp = new ChatComponentText("[" + channel + "]");
+        comp.getChatStyle().setColor(EnumChatFormatting.GRAY);
+        component.appendSibling(comp);
         component.appendText(" * ");
-        IChatComponent comp = new ChatComponentText(sender);
+        comp = new ChatComponentText(sender);
         comp.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(login + "@" + hostname)));
         component.appendSibling(comp);
         component.appendText(" joined the channel");
@@ -168,10 +176,12 @@ public class IrcBot extends PircBot {
 
     @Override
     protected void onPart(String channel, String sender, String login, String hostname) {
-        ChatComponentText component = new ChatComponentText("[" + channel + "]");
-        component.getChatStyle().setColor(EnumChatFormatting.GRAY);
+        ChatComponentText component = new ChatComponentText("");
+        IChatComponent comp = new ChatComponentText("[" + channel + "]");
+        comp.getChatStyle().setColor(EnumChatFormatting.GRAY);
+        component.appendSibling(comp);
         component.appendText(" * ");
-        IChatComponent comp = new ChatComponentText(sender);
+        comp = new ChatComponentText(sender);
         comp.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(login + "@" + hostname)));
         component.appendSibling(comp);
         component.appendText(" left the channel");
@@ -180,10 +190,12 @@ public class IrcBot extends PircBot {
 
     @Override
     protected void onNickChange(String oldNick, String login, String hostname, String newNick) {
-        ChatComponentText component = new ChatComponentText("[" + channel + "]");
-        component.getChatStyle().setColor(EnumChatFormatting.GRAY);
+        ChatComponentText component = new ChatComponentText("");
+        IChatComponent comp = new ChatComponentText("[" + channel + "]");
+        comp.getChatStyle().setColor(EnumChatFormatting.GRAY);
+        component.appendSibling(comp);
         component.appendText(" * ");
-        IChatComponent comp = new ChatComponentText(oldNick);
+        comp = new ChatComponentText(oldNick);
         comp.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(login + "@" + hostname)));
         component.appendSibling(comp);
         component.appendText(" is now known as " + newNick);
@@ -192,10 +204,12 @@ public class IrcBot extends PircBot {
 
     @Override
     protected void onKick(String channel, String kickerNick, String kickerLogin, String kickerHostname, String recipientNick, String reason) {
-        ChatComponentText component = new ChatComponentText("[" + channel + "]");
-        component.getChatStyle().setColor(EnumChatFormatting.GRAY);
+        ChatComponentText component = new ChatComponentText("");
+        IChatComponent comp = new ChatComponentText("[" + channel + "]");
+        comp.getChatStyle().setColor(EnumChatFormatting.GRAY);
+        component.appendSibling(comp);
         component.appendText(" * " + recipientNick + " was kicked by ");
-        IChatComponent comp = new ChatComponentText(kickerNick);
+        comp = new ChatComponentText(kickerNick);
         comp.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(kickerLogin + "@" + kickerHostname)));
         component.appendSibling(comp);
         component.appendText(" (" + reason + ")");
@@ -204,10 +218,12 @@ public class IrcBot extends PircBot {
 
     @Override
     protected void onQuit(String sourceNick, String sourceLogin, String sourceHostname, String reason) {
-        ChatComponentText component = new ChatComponentText("[" + channel + "]");
-        component.getChatStyle().setColor(EnumChatFormatting.GRAY);
+        ChatComponentText component = new ChatComponentText("");
+        IChatComponent comp = new ChatComponentText("[" + channel + "]");
+        comp.getChatStyle().setColor(EnumChatFormatting.GRAY);
+        component.appendSibling(comp);
         component.appendText(" * ");
-        IChatComponent comp = new ChatComponentText(sourceNick);
+        comp = new ChatComponentText(sourceNick);
         comp.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(sourceLogin + "@" + sourceHostname)));
         component.appendSibling(comp);
         component.appendText(" left irc (" + reason + ")");
@@ -217,8 +233,10 @@ public class IrcBot extends PircBot {
     @Override
     protected void onTopic(String channel, String topic, String setBy, long date, boolean changed) {
         if(!changed) return;
-        ChatComponentText component = new ChatComponentText("[" + channel + "]");
-        component.getChatStyle().setColor(EnumChatFormatting.GRAY);
+        ChatComponentText component = new ChatComponentText("");
+        IChatComponent comp = new ChatComponentText("[" + channel + "]");
+        comp.getChatStyle().setColor(EnumChatFormatting.GRAY);
+        component.appendSibling(comp);
         component.appendText(" * " + setBy + " set the topic: " + topic);
         MinecraftServer.getServer().getConfigurationManager().sendChatMsg(component);
     }

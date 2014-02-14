@@ -73,4 +73,9 @@ public class BlockStat extends BlockMulti implements ITileEntityProvider {
         if(tile == null || !(tile instanceof TileEntityStatEmitter)) return 0;
         return ((TileEntityStatEmitter) tile).isSignalEnabled() ? 15 : 0;
     }
+
+    @Override
+    public boolean shouldCheckWeakPower(IBlockAccess world, int x, int y, int z, int side){
+        return false;
+    }
 }
