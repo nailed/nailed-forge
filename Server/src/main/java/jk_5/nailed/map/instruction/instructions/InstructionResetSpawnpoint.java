@@ -32,7 +32,7 @@ public class InstructionResetSpawnpoint implements IInstruction {
     public void execute(GameController controller) {
         if(this.target.equals("@a")){
             for(Player player : controller.getMap().getPlayers()){
-                //player.setSpawnpoint(null); //TODO: implement this!
+                player.setSpawnpoint(null);
             }
         }else{
             Team team = controller.getMap().getTeamManager().getTeam(this.target);

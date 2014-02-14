@@ -36,8 +36,7 @@ public class InstructionSetSpawnpoint implements IInstruction {
     public void execute(GameController controller) {
         if(this.target.equals("@a")){
             for(Player player : controller.getMap().getPlayers()){
-                //TODO: player only spawnpoints
-                //player.getEntity().setHealth(this.health);
+                player.setSpawnpoint(this.spawnpoint);
             }
         }else{
             Team team = controller.getMap().getTeamManager().getTeam(this.target);

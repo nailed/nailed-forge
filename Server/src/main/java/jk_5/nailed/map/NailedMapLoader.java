@@ -199,7 +199,9 @@ public class NailedMapLoader implements MapLoader {
         Player player = NailedAPI.getPlayerRegistry().getPlayer((EntityPlayer) event.entity);
         if(player == null) return;
         if(!player.getCurrentMap().getInstructionController().isRunning()) return;
-        if(player.getTeam() instanceof TeamUndefined){
+        if(player.getSpawnpoint() != null){
+            player.getEntity().setSpawnChunk(player.getSpawnpoint(), true);
+        }else if(player.getTeam() instanceof TeamUndefined){
             Map map = player.getCurrentMap();
             Mappack mappack = map.getMappack();
             if(mappack != null && mappack.getMappackMetadata().isChoosingRandomSpawnpointAtRespawn()){
