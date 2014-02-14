@@ -1,6 +1,5 @@
 package jk_5.nailed.network;
 
-import cpw.mods.fml.relauncher.ReflectionHelper;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
@@ -60,13 +59,13 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
                     }
                     EntityPlayerMP diedPlayer = ply.getEntity();
                     if(player.dimension == diedPlayer.dimension){
-                        NailedLog.info("Send death message for " + diedPlayer.getDisplayName() + " to " + player.getDisplayName());
+                        NailedLog.info("Send death message for " + diedPlayer.getDisplayName().replace("%", "%%") + " to " + player.getDisplayName().replace("%", "%%"));
                     }else return;
                 }
             }
         }else if(msg instanceof S33PacketUpdateSign){
             S33PacketUpdateSign signPacket = (S33PacketUpdateSign) msg;
-            String[] lines = ReflectionHelper.getPrivateValue(S33PacketUpdateSign.class, signPacket, "field_149349_d");
+            String[] lines = signPacket.field_149349_d;
             if(lines[0].equalsIgnoreCase("$mappack")){
                 Map map = NailedAPI.getMapLoader().getMap(player.worldObj);
                 Sign sign = map.getSignCommandHandler().getSign(signPacket.field_149352_a, signPacket.field_149350_b, signPacket.field_149351_c);

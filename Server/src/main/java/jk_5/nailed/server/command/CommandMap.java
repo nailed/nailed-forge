@@ -8,6 +8,7 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
+import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
@@ -37,9 +38,12 @@ public class CommandMap extends NailedCommand {
             if(mappack == null) throw new CommandException("Mappack does not exist");
             Map map = NailedAPI.getMapLoader().createMapServer(mappack);
 
-            IChatComponent component = new ChatComponentText("Loading " + map.getSaveFileName());
-            component.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText("Go to the map")));
+            IChatComponent component = new ChatComponentText("Loading ");
             component.getChatStyle().setColor(EnumChatFormatting.GREEN);
+            IChatComponent comp = new ChatComponentText(map.getSaveFileName());
+            comp.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText("Teleport to the map")));
+            comp.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/goto " + map.getSaveFileName()));
+            component.appendSibling(comp);
             sender.addChatMessage(component);
         }else if(args[0].equalsIgnoreCase("remove")){
             if(args.length == 1) throw new WrongUsageException("/map remove <mapid>");

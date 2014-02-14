@@ -335,5 +335,8 @@ public class IrcBot extends PircBot {
             if(underline) comp.getChatStyle().setUnderlined(true);
             component.appendSibling(comp);
         }
+        //for(IChatComponent c : (List<IChatComponent>) component.getSiblings()){
+            //http(s)?://(([A-Za-z0-9]+)\.)+([A-Za-z0-9]{2,4})(/)?
+        //}
     }
 }
