@@ -16,27 +16,33 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class InstructionSetFoodlevel implements IInstruction {
 
-    private String team;
+    private String target;
     private int foodLevel;
 
     @Override
     public void injectArguments(String args) {
         String[] data = args.split(" ", 2);
-        this.team = data[0];
+        this.target = data[0];
         this.foodLevel = Integer.parseInt(data[1]);
     }
 
     @Override
     public IInstruction cloneInstruction() {
-        return new InstructionSetFoodlevel(this.team, this.foodLevel);
+        return new InstructionSetFoodlevel(this.target, this.foodLevel);
     }
 
     @Override
     public void execute(GameController controller) {
-        Team team = controller.getMap().getTeamManager().getTeam(this.team);
-        if(team == null) return;
-        for(Player player : team.getMembers()){
-            player.getEntity().getFoodStats().addStats(this.foodLevel - player.getEntity().getFoodStats().getFoodLevel(), 0);
+        if(this.target.equals("@a")){
+            for(Player player : controller.getMap().getPlayers()){
+                player.getEntity().getFoodStats().addStats(this.foodLevel - player.getEntity().getFoodStats().getFoodLevel(), 0);
+            }
+        }else{
+            Team team = controller.getMap().getTeamManager().getTeam(this.target);
+            if(team == null) return;
+            for(Player player : team.getMembers()){
+                player.getEntity().getFoodStats().addStats(this.foodLevel - player.getEntity().getFoodStats().getFoodLevel(), 0);
+            }
         }
     }
 }

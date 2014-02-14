@@ -3,6 +3,7 @@ package jk_5.nailed.map.instruction.instructions;
 import jk_5.nailed.api.map.GameController;
 import jk_5.nailed.api.map.IInstruction;
 import jk_5.nailed.api.map.team.Team;
+import jk_5.nailed.api.player.Player;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
@@ -15,21 +16,27 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class InstructionResetSpawnpoint implements IInstruction {
 
-    private String team;
+    private String target;
 
     @Override
     public void injectArguments(String args) {
-        this.team = args;
+        this.target = args;
     }
 
     @Override
     public IInstruction cloneInstruction() {
-        return new InstructionResetSpawnpoint(this.team);
+        return new InstructionResetSpawnpoint(this.target);
     }
 
     @Override
     public void execute(GameController controller) {
-        Team team = controller.getMap().getTeamManager().getTeam(this.team);
-        if(team != null) team.setSpawnpoint(null);
+        if(this.target.equals("@a")){
+            for(Player player : controller.getMap().getPlayers()){
+                //player.setSpawnpoint(null); //TODO: implement this!
+            }
+        }else{
+            Team team = controller.getMap().getTeamManager().getTeam(this.target);
+            if(team != null) team.setSpawnpoint(null);
+        }
     }
 }

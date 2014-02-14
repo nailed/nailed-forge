@@ -16,24 +16,30 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class InstructionResetExperience implements IInstruction {
 
-    private String team;
+    private String target;
 
     @Override
     public void injectArguments(String args) {
-        this.team = args;
+        this.target = args;
     }
 
     @Override
     public IInstruction cloneInstruction() {
-        return new InstructionResetExperience(this.team);
+        return new InstructionResetExperience(this.target);
     }
 
     @Override
     public void execute(GameController controller) {
-        Team team = controller.getMap().getTeamManager().getTeam(this.team);
-        if(team != null){
-            for(Player player : team.getMembers()){
+        if(this.target.equals("@a")){
+            for(Player player : controller.getMap().getPlayers()){
                 player.getEntity().addExperienceLevel(-1000000);
+            }
+        }else{
+            Team team = controller.getMap().getTeamManager().getTeam(this.target);
+            if(team != null){
+                for(Player player : team.getMembers()){
+                    player.getEntity().addExperienceLevel(-1000000);
+                }
             }
         }
     }

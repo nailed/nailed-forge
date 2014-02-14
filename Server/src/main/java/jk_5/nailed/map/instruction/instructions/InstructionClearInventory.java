@@ -17,26 +17,36 @@ import net.minecraft.entity.player.EntityPlayer;
 @AllArgsConstructor
 public class InstructionClearInventory implements IInstruction {
 
-    private String team;
+    private String target;
 
     @Override
     public void injectArguments(String args) {
-        this.team = args;
+        this.target = args;
     }
 
     @Override
     public IInstruction cloneInstruction() {
-        return new InstructionClearInventory(this.team);
+        return new InstructionClearInventory(this.target);
     }
 
     @Override
     public void execute(GameController controller) {
-        Team team = controller.getMap().getTeamManager().getTeam(this.team);
-        for(Player player : team.getMembers()){
-            EntityPlayer ent = player.getEntity();
-            ent.inventory.clearInventory(null, -1);
-            ent.inventoryContainer.detectAndSendChanges();
-            //if(!ent.capabilities.isCreativeMode) ent.updateHeldItem();
+        if(this.target.equals("@a")){
+            for(Player player : controller.getMap().getPlayers()){
+                EntityPlayer ent = player.getEntity();
+                ent.inventory.clearInventory(null, -1);
+                ent.inventoryContainer.detectAndSendChanges();
+                //if(!ent.capabilities.isCreativeMode) ent.updateHeldItem();
+            }
+        }else{
+            Team team = controller.getMap().getTeamManager().getTeam(this.target);
+            if(team == null) return;
+            for(Player player : team.getMembers()){
+                EntityPlayer ent = player.getEntity();
+                ent.inventory.clearInventory(null, -1);
+                ent.inventoryContainer.detectAndSendChanges();
+                //if(!ent.capabilities.isCreativeMode) ent.updateHeldItem();
+            }
         }
     }
 }
