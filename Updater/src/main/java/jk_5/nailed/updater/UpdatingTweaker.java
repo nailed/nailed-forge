@@ -17,6 +17,7 @@ public class UpdatingTweaker implements ITweaker {
     public static String name = "NailedTest";
     public static File gameDir = new File(".");
     public static File assetsDir = new File("assets");
+    public static String mainClass;
 
     @Override
     public void acceptOptions(List<String> args, File gameDir, File assetsDir, String profile){
@@ -41,12 +42,12 @@ public class UpdatingTweaker implements ITweaker {
 
     @Override
     public void injectIntoClassLoader(LaunchClassLoader classLoader){
-
+        Updater2.addToClassLoader(classLoader);
     }
 
     @Override
     public String getLaunchTarget(){
-        return "net.minecraft.client.main.Main";
+        return mainClass;
     }
 
     @Override
