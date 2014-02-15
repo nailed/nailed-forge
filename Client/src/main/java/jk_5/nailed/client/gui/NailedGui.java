@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import jk_5.nailed.client.blocks.tileentity.IGuiTileEntity;
 import jk_5.nailed.client.network.ClientNetworkHandler;
-import jk_5.nailed.client.network.NailedPacket;
+import jk_5.nailed.network.NailedPacket;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiLabel;

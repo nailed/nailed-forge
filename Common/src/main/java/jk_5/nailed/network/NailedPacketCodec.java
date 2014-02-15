@@ -1,9 +1,10 @@
-package jk_5.nailed.client.network;
+package jk_5.nailed.network;
 
 import cpw.mods.fml.common.network.FMLIndexedMessageToMessageCodec;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
+import jk_5.nailed.map.script.ScriptPacket;
 
 /**
  * No description given
@@ -25,6 +26,16 @@ public class NailedPacketCodec extends FMLIndexedMessageToMessageCodec<NailedPac
         this.addDiscriminator(8, NailedPacket.MapData.class);
         this.addDiscriminator(9, NailedPacket.Particle.class);
         this.addDiscriminator(10, NailedPacket.FPSSummary.class);
+        this.addDiscriminator(11, NailedPacket.OpenTerminalGui.class);
+
+        this.addDiscriminator(20, ScriptPacket.RemoveTerminal.class);
+        this.addDiscriminator(21, ScriptPacket.UpdateTerminal.class);
+        this.addDiscriminator(22, ScriptPacket.RequestTerminalUpdate.class);
+        this.addDiscriminator(23, ScriptPacket.ClientKeyTyped.class);
+        this.addDiscriminator(24, ScriptPacket.ClientMouseClicked.class);
+        this.addDiscriminator(25, ScriptPacket.ClientStringTyped.class);
+        this.addDiscriminator(26, ScriptPacket.Interrupt.class);
+        this.addDiscriminator(27, ScriptPacket.ClientEvent.class);
     }
 
     @Override

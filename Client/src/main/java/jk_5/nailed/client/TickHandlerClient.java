@@ -4,7 +4,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import jk_5.nailed.client.blocks.tileentity.NailedTileEntity;
 import jk_5.nailed.client.network.ClientNetworkHandler;
-import jk_5.nailed.client.network.NailedPacket;
+import jk_5.nailed.network.NailedPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,6 +22,7 @@ public class TickHandlerClient {
     private boolean wasJumping = false;
     private boolean wasSneaking = false;
     private int ellapsedTicks = 0;
+    private static long totalTicks = 0;
 
     @SubscribeEvent
     @SuppressWarnings("unused")
@@ -45,6 +46,7 @@ public class TickHandlerClient {
             ClientNetworkHandler.sendPacketToServer(new NailedPacket.FPSSummary(Minecraft.debugFPS));
             this.ellapsedTicks = -1;
         }
+        totalTicks++;
         this.ellapsedTicks++;
     }
 
@@ -58,5 +60,9 @@ public class TickHandlerClient {
             if (te instanceof NailedTileEntity) return (NailedTileEntity) te;
         }
         return null;
+    }
+
+    public static boolean blinkOn(){
+        return totalTicks / 6 % 2 == 0;
     }
 }

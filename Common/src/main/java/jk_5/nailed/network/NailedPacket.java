@@ -1,4 +1,4 @@
-package jk_5.nailed.client.network;
+package jk_5.nailed.network;
 
 import com.google.common.base.Charsets;
 import cpw.mods.fml.common.network.ByteBufUtils;
@@ -27,7 +27,23 @@ public abstract class NailedPacket {
 
         @Override
         public void encode(ByteBuf buffer){
-            //We can only receive this packet.
+            byte mode;
+            if(this.icon == null && this.color == 0xFFFFFF){
+                mode = 0;
+            }else if(this.color == 0xFFFFFF){
+                mode = 1;
+            }else{
+                mode = 2;
+            }
+            buffer.writeByte(mode);
+            ByteBufUtils.writeUTF8String(buffer, this.message);
+            if(mode >= 1){
+                ByteBufUtils.writeUTF8String(buffer, this.icon.getResourceDomain());
+                ByteBufUtils.writeUTF8String(buffer, this.icon.getResourcePath());
+            }
+            if(mode == 2){
+                buffer.writeInt(this.color);
+            }
         }
 
         @Override
@@ -60,7 +76,10 @@ public abstract class NailedPacket {
 
         @Override
         public void decode(ByteBuf buffer){
-            //NOOP
+            this.x = buffer.readInt();
+            this.y = buffer.readInt();
+            this.z = buffer.readInt();
+            this.type = buffer.readByte();
         }
     }
 
@@ -81,7 +100,10 @@ public abstract class NailedPacket {
 
         @Override
         public void decode(ByteBuf buffer){
-            //NOOP
+            this.x = buffer.readInt();
+            this.y = buffer.readInt();
+            this.z = buffer.readInt();
+            this.data = buffer.copy();
         }
     }
 
@@ -94,7 +116,10 @@ public abstract class NailedPacket {
 
         @Override
         public void encode(ByteBuf buffer){
-            //NOOP
+            buffer.writeInt(this.x);
+            buffer.writeInt(this.y);
+            buffer.writeInt(this.z);
+            buffer.writeBytes(this.data);
         }
 
         @Override
@@ -115,7 +140,10 @@ public abstract class NailedPacket {
 
         @Override
         public void encode(ByteBuf buffer){
-            //NOOP
+            buffer.writeInt(this.x);
+            buffer.writeInt(this.y);
+            buffer.writeInt(this.z);
+            buffer.writeBytes(this.data);
         }
 
         @Override
@@ -136,7 +164,11 @@ public abstract class NailedPacket {
 
         @Override
         public void encode(ByteBuf buffer){
-            //Receive-only
+            buffer.writeBoolean(this.display);
+
+            byte[] utf8Bytes = this.data.getBytes(Charsets.UTF_8);
+            buffer.writeInt(utf8Bytes.length);
+            buffer.writeBytes(utf8Bytes);
         }
 
         @Override
@@ -155,12 +187,14 @@ public abstract class NailedPacket {
 
         public String username;
         public boolean isSkin;
+        public boolean isUrl;
         public String skin;
 
         @Override
         public void encode(ByteBuf buffer){
             ByteBufUtils.writeUTF8String(buffer, this.username);
             buffer.writeBoolean(this.isSkin);
+            buffer.writeBoolean(this.isUrl);
 
             byte[] utf8Bytes = this.skin.getBytes(Charsets.UTF_8);
             buffer.writeInt(utf8Bytes.length);
@@ -188,7 +222,9 @@ public abstract class NailedPacket {
 
         @Override
         public void encode(ByteBuf buffer){
-
+            ByteBufUtils.writeUTF8String(buffer, this.skinName);
+            buffer.writeBoolean(this.isCape);
+            buffer.writeBytes(this.data);
         }
 
         @Override
@@ -208,13 +244,14 @@ public abstract class NailedPacket {
 
         @Override
         public void encode(ByteBuf buffer){
-
+            buffer.writeInt(this.dimId);
+            buffer.writeBytes(this.data);
         }
 
         @Override
         public void decode(ByteBuf buffer){
             this.dimId = buffer.readInt();
-            this.data = buffer.copy();
+            this.data = buffer.slice();
         }
     }
 
@@ -227,7 +264,10 @@ public abstract class NailedPacket {
 
         @Override
         public void encode(ByteBuf buffer){
-
+            buffer.writeDouble(this.x);
+            buffer.writeDouble(this.y);
+            buffer.writeDouble(this.z);
+            ByteBufUtils.writeUTF8String(buffer, this.name);
         }
 
         @Override
@@ -252,7 +292,14 @@ public abstract class NailedPacket {
 
         @Override
         public void decode(ByteBuf buffer){
-
+            this.fps = buffer.readInt();
         }
+    }
+
+    @NoArgsConstructor
+    public static class OpenTerminalGui extends NailedPacket {
+
+        @Override public void encode(ByteBuf buffer){}
+        @Override public void decode(ByteBuf buffer){}
     }
 }

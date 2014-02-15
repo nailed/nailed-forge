@@ -9,6 +9,7 @@ import jk_5.nailed.client.achievement.NailedAchievements;
 import jk_5.nailed.client.blocks.NailedBlocks;
 import jk_5.nailed.client.map.NailedWorldProvider;
 import jk_5.nailed.client.network.ClientNetworkHandler;
+import jk_5.nailed.client.render.FixedWidthFontRenderer;
 import jk_5.nailed.client.render.NotificationRenderer;
 import jk_5.nailed.client.render.RenderEventHandler;
 import jk_5.nailed.client.skinsync.SkinSync;
@@ -39,6 +40,7 @@ public class NailedClient {
     @Getter private static Collection<Integer> registeredDimensions;
 
     @Getter private static int providerID;
+    @Getter private static FixedWidthFontRenderer fixedWidthFontRenderer;
 
     public NailedClient(){
         if(FMLLaunchHandler.side().isServer()){
@@ -89,5 +91,7 @@ public class NailedClient {
     public void init(FMLInitializationEvent event){
         NailedLog.info("Registering achievements");
         NailedAchievements.init();
+
+        fixedWidthFontRenderer = new FixedWidthFontRenderer();
     }
 }

@@ -2,6 +2,7 @@ package jk_5.nailed.map;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.network.FMLOutboundHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -16,7 +17,10 @@ import jk_5.nailed.api.map.MappackMetadata;
 import jk_5.nailed.api.map.Spawnpoint;
 import jk_5.nailed.api.map.teleport.TeleportOptions;
 import jk_5.nailed.api.player.Player;
+import jk_5.nailed.api.scripting.IMachineSynchronizer;
 import jk_5.nailed.map.gameloop.InstructionController;
+import jk_5.nailed.map.script.MachineSynchronizer;
+import jk_5.nailed.map.script.Terminal;
 import jk_5.nailed.map.sign.SignCommandHandler;
 import jk_5.nailed.map.stat.StatManager;
 import jk_5.nailed.map.weather.WeatherController;
@@ -51,6 +55,7 @@ public class NailedMap implements Map {
     @Getter private boolean dataResyncRequired = true;
     @Getter private WeatherController weatherController;
     @Getter private SignCommandHandler signCommandHandler;
+    @Getter private IMachineSynchronizer machineSynchronizer;
 
     public NailedMap(Mappack mappack, int id){
         this.ID = id;
@@ -60,6 +65,7 @@ public class NailedMap implements Map {
         this.instructionController = new InstructionController(this);
         this.weatherController = new WeatherController(this);
         this.signCommandHandler = new SignCommandHandler(this);
+        this.machineSynchronizer = new MachineSynchronizer(this, Terminal.WIDTH, Terminal.HEIGHT);
         NailedAPI.getMapLoader().registerMap(this);
     }
 
@@ -97,6 +103,8 @@ public class NailedMap implements Map {
             world.setAllowedSpawnTypes(meta.isSpawnHostileMobs() && world.difficultySetting.getDifficultyId() > 0, meta.isSpawnFriendlyMobs());
         }
 
+        this.machineSynchronizer.turnOn();
+
         NailedLog.info("Registered map " + this.getSaveFileName());
     }
 
@@ -130,6 +138,11 @@ public class NailedMap implements Map {
         this.teamManager.onPlayerLeftMap(player);
         this.amountOfPlayers --;
         NailedMapLoader.instance().checkShouldStart(this);
+    }
+
+    @Override
+    public void onTick(TickEvent.ServerTickEvent event){
+        this.machineSynchronizer.update();
     }
 
     public String getSaveFileName(){

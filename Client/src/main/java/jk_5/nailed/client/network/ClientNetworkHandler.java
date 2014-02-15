@@ -6,6 +6,9 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
 import io.netty.channel.ChannelPipeline;
 import jk_5.nailed.client.network.handlers.*;
+import jk_5.nailed.client.scripting.ScriptPacketHandler;
+import jk_5.nailed.network.NailedPacket;
+import jk_5.nailed.network.NailedPacketCodec;
 
 /**
  * No description given
@@ -30,6 +33,10 @@ public class ClientNetworkHandler {
         pipeline.addAfter(targetName, "StoreSkinHandler", new StoreSkinHandler());
         pipeline.addAfter(targetName, "MapDataHandler", new MapDataHandler());
         pipeline.addAfter(targetName, "ParticleHandler", new ParticleHandler());
+        pipeline.addAfter(targetName, "TerminalGuiHandler", new TerminalGuiHandler());
+
+        pipeline.addAfter(targetName, "Script-TerminalDeletedHandler", new ScriptPacketHandler.TerminalDeletedHandler());
+        pipeline.addAfter(targetName, "Script-TerminalUpdateHandler", new ScriptPacketHandler.TerminalUpdateHandler());
     }
 
     public static void sendPacketToServer(NailedPacket packet){

@@ -7,4 +7,4 @@ include 'Client'
 include 'Updater'
 include 'CrashReporter'
 include 'Native'
-
+include 'Common'

@@ -1,0 +1,6 @@
+term.setTextColour(colours.textColorHighlite)
+print("Rebooting...")
+term.setTextColour(colours.textColorNormal)
+
+sleep(1)
+os.reboot()

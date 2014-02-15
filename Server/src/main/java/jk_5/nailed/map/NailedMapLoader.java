@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.events.MapCreatedEvent;
@@ -259,8 +260,16 @@ public class NailedMapLoader implements MapLoader {
         }
     }
 
+    @SubscribeEvent
+    public void onTick(TickEvent.ServerTickEvent event){
+        for(int i = 0; i < this.maps.size(); i++){
+            this.maps.get(i).onTick(event);
+        }
+    }
+
     @Override
     public void removeMap(Map map){
+        map.getMachineSynchronizer().destroy();
         DimensionManager.unloadWorld(map.getID());
         this.maps.remove(map);
         MinecraftForge.EVENT_BUS.post(new MapRemovedEvent(map));

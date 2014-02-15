@@ -3,7 +3,7 @@ package jk_5.nailed.client.network.handlers;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import jk_5.nailed.client.blocks.tileentity.NailedTileEntity;
-import jk_5.nailed.client.network.NailedPacket;
+import jk_5.nailed.network.NailedPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 

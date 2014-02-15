@@ -7,5 +7,5 @@ jar.manifest{
 
 dependencies {
     packed 'jk_5.asyncirc:ASyncIRCClient:0.1-SNAPSHOT'
-    compile project(":CrashReporter")
+    compile project(":Common")
 }

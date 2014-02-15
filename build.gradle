@@ -43,6 +43,7 @@ nailed {
 
     deployedMod = 'Client'                          //
     deployedMod = 'CrashReporter'                   //
+    deployedMod = 'Common'                          //
     deployed = 'Updater'                            //
 
     tweaker = 'jk_5.nailed.updater.UpdatingTweaker'     //
@@ -59,7 +60,7 @@ nailed {
 }
 
 minecraft{
-    version = '1.7.2-10.12.0.1025'
+    version = '1.7.2-10.12.0.1029'
     assetDir = 'runtime/client/assets'
 }
 

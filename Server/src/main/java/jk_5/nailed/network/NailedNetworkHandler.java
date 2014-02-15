@@ -6,6 +6,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
+import jk_5.nailed.map.script.ScriptPacketHandler;
 import jk_5.nailed.network.handlers.FMLHandshakeHandler;
 import jk_5.nailed.network.handlers.FPSSummaryHandler;
 import jk_5.nailed.network.handlers.GuiReturnDataHandler;
@@ -36,6 +37,13 @@ public class NailedNetworkHandler {
         pipeline.addAfter(targetName, "MovementEventHandler", new MovementEventHandler());
         pipeline.addAfter(targetName, "GuiReturnDataHandler", new GuiReturnDataHandler());
         pipeline.addAfter(targetName, "FPSSummaryHandler", new FPSSummaryHandler());
+
+        pipeline.addAfter(targetName, "Script-RequestUpdateHandler", new ScriptPacketHandler.RequestUpdateHandler());
+        pipeline.addAfter(targetName, "Script-ClientKeyTypedHandler", new ScriptPacketHandler.ClientKeyTypedHandler());
+        pipeline.addAfter(targetName, "Script-ClientMouseClickedHandler", new ScriptPacketHandler.ClientMouseClickedHandler());
+        pipeline.addAfter(targetName, "Script-ClientStringTypedHandler", new ScriptPacketHandler.ClientStringTypedHandler());
+        pipeline.addAfter(targetName, "Script-ClientInterruptHandler", new ScriptPacketHandler.ClientInterruptHandler());
+        pipeline.addAfter(targetName, "Script-FireClientEventHandler", new ScriptPacketHandler.FireClientEventHandler());
     }
 
     public static void sendPacketToAllPlayersInDimension(NailedPacket packet, int dimension){
