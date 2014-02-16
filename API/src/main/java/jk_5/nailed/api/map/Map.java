@@ -6,7 +6,6 @@ import jk_5.nailed.api.map.stat.StatManager;
 import jk_5.nailed.api.map.team.TeamManager;
 import jk_5.nailed.api.map.teleport.TeleportOptions;
 import jk_5.nailed.api.player.Player;
-import jk_5.nailed.api.scripting.IMachineSynchronizer;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
 
@@ -47,5 +46,4 @@ public interface Map {
     public void onGameStarted();
     public void onGameEnded();
     public void onTick(TickEvent.ServerTickEvent event);
-    public IMachineSynchronizer getMachineSynchronizer();
 }

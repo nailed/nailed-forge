@@ -38,12 +38,8 @@ public class NailedNetworkHandler {
         pipeline.addAfter(targetName, "GuiReturnDataHandler", new GuiReturnDataHandler());
         pipeline.addAfter(targetName, "FPSSummaryHandler", new FPSSummaryHandler());
 
-        pipeline.addAfter(targetName, "Script-RequestUpdateHandler", new ScriptPacketHandler.RequestUpdateHandler());
-        pipeline.addAfter(targetName, "Script-ClientKeyTypedHandler", new ScriptPacketHandler.ClientKeyTypedHandler());
-        pipeline.addAfter(targetName, "Script-ClientMouseClickedHandler", new ScriptPacketHandler.ClientMouseClickedHandler());
-        pipeline.addAfter(targetName, "Script-ClientStringTypedHandler", new ScriptPacketHandler.ClientStringTypedHandler());
-        pipeline.addAfter(targetName, "Script-ClientInterruptHandler", new ScriptPacketHandler.ClientInterruptHandler());
-        pipeline.addAfter(targetName, "Script-FireClientEventHandler", new ScriptPacketHandler.FireClientEventHandler());
+        pipeline.addAfter(targetName, "Script-QueueEventHandler", new ScriptPacketHandler.QueueEventHandler());
+        pipeline.addAfter(targetName, "Script-StateEventHandler", new ScriptPacketHandler.StateEventHandler());
     }
 
     public static void sendPacketToAllPlayersInDimension(NailedPacket packet, int dimension){

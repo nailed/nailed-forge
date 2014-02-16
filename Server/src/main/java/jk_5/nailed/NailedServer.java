@@ -13,6 +13,7 @@ import jk_5.nailed.api.events.RegisterInstructionEvent;
 import jk_5.nailed.blocks.NailedBlocks;
 import jk_5.nailed.ipc.IpcManager;
 import jk_5.nailed.irc.IrcBot;
+import jk_5.nailed.item.NailedItems;
 import jk_5.nailed.map.NailedMapLoader;
 import jk_5.nailed.map.gen.NailedWorldProvider;
 import jk_5.nailed.map.instruction.InstructionReader;
@@ -103,6 +104,7 @@ public class NailedServer {
 
         NailedLog.info("Registering blocks");
         NailedBlocks.init();
+        NailedItems.init();
 
         NailedLog.info("Registering Nailed WorldProvider");
         NailedServer.providerID = NailedServer.config.getTag("providerId").setComment("The id for the nailed world provider").getIntValue(10);

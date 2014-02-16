@@ -9,10 +9,9 @@ public interface IAPIEnvironment {
 
     public ScriptingMachine getMachine();
     public int getMachineID();
-    public MachineSynchronizer getSynchronizer();
     public Terminal getTerminal();
     public FileSystem getFileSystem();
-    public void queueEvent(String paramString, Object[] paramArrayOfObject);
+    public void queueEvent(String paramString, Object... paramArrayOfObject);
     public void shutdown();
-    public void reboot(int paramInt);
+    public void reboot();
 }

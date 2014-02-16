@@ -7,7 +7,7 @@ package jk_5.nailed.map.script;
  */
 public class FileSystemException extends Exception {
 
-    public FileSystemException(String message){
+    FileSystemException(String message){
         super(message);
     }
 }

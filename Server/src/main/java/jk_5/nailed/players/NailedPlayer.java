@@ -42,6 +42,7 @@ public class NailedPlayer implements Player {
     @Getter @Setter private int teamSpeakClientID = -1;
     @Getter @Setter private int fps;
     @Getter @Setter private Spawnpoint spawnpoint;
+    @Getter @Setter private int pdaID = -1;
 
     public void sendNotification(String message){
         this.sendNotification(message, null);

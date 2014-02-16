@@ -1,14 +1,11 @@
 package jk_5.nailed.map.script;
 
 import com.google.common.collect.Lists;
-import jk_5.nailed.NailedLog;
-import jk_5.nailed.api.scripting.ILuaAPI;
 import jk_5.nailed.api.scripting.IMount;
 import jk_5.nailed.map.script.api.FileSystemApi;
 import jk_5.nailed.map.script.api.OSApi;
 import jk_5.nailed.map.script.api.TermApi;
 import lombok.Getter;
-import net.minecraft.nbt.NBTTagCompound;
 import org.apache.commons.io.IOUtils;
 
 import java.io.InputStream;
@@ -26,56 +23,52 @@ public class ScriptingMachine {
     private boolean isUnloaded = false;
 
     private static IMount romMount = null;
-    private MachineSynchronizer machineSynchronizer;
-    private int id = -1;
-    private int delayedStart = -1;
-    private byte[] delayedStartData = null;
-    private int state = MachineState.OFF;
+
+    private final int id;
+    @Getter private final IMachine machine;
+    private int ticksSinceStart = -1;
+    private boolean blinking = false;
+    private boolean startupRequested = false;
+    private MachineState state = MachineState.OFF;
     private LuaMachine luaMachine = null;
     private List<ILuaAPI> apis = Lists.newArrayList();
     @Getter private APIEnvironment apiEnvironment = new APIEnvironment(this);
     private Terminal terminal;
     private FileSystem fileSystem = null;
-    private int lastTermState = 15;
 
-    public ScriptingMachine(MachineSynchronizer synchronizer, Terminal terminal){
+    public ScriptingMachine(IMachine machine, Terminal terminal, int id){
         ScriptThread.start();
 
-        this.machineSynchronizer = synchronizer;
+        this.id = id;
+        this.machine = machine;
         this.terminal = terminal;
 
         createAPIs();
     }
 
-    public String getDescription(){
-        return this.machineSynchronizer.getDescription();
+    public void turnOn(){
+        if(this.state == MachineState.OFF){
+            this.startupRequested = true;
+        }
     }
 
-    public void turnOn(byte[] previousState){
-        startScriptingMachine(previousState);
-    }
-
-    public void turnOff(){
-        stopScriptingMachine(false, 0);
+    public void shutdown(){
+        stopScriptingMachine(false);
     }
 
     public void reboot(){
-        reboot(0);
-    }
-
-    private void reboot(int delay){
-        stopScriptingMachine(true, delay);
+        stopScriptingMachine(true);
     }
 
     public boolean isOn(){
         synchronized(this){
-            return (this.state == 2) || (this.isUnloaded);
+            return this.state == MachineState.RUNNING || this.isUnloaded;
         }
     }
 
     public void abort(boolean hard){
         synchronized(this){
-            if(this.state == 2){
+            if(this.state == MachineState.RUNNING){
                 if(hard){
                     this.luaMachine.abortHard("Too long without yielding");
                 }else{
@@ -87,7 +80,7 @@ public class ScriptingMachine {
 
     public void destroy(){
         synchronized(this){
-            turnOff();
+            shutdown();
         }
     }
 
@@ -95,131 +88,54 @@ public class ScriptingMachine {
         synchronized(this){
             if(isOn()){
                 this.isUnloaded = true;
-                stopScriptingMachine(false, 0);
+                this.stopScriptingMachine(false);
             }
         }
-    }
-
-    public synchronized void writeToNBT(NBTTagCompound nbttagcompound){
-        int id = getID();
-        if(id >= 0){
-            nbttagcompound.setString("userDir", Integer.toString(id));
-        }
-    }
-
-    public synchronized void readFromNBT(NBTTagCompound nbttagcompound){
-        String userDir = nbttagcompound.getString("userDir");
-        if(userDir != null && userDir.length() > 0){
-            try{
-                setID(Integer.parseInt(userDir));
-            }catch(NumberFormatException e){
-                NailedLog.error("Error: Machine has non-numerical userDir; this is not allowed. A new ID will be assigned.");
-                setID(-1);
-            }
-        }
-
-        this.delayedStart = 0;
-        this.delayedStartData = null;
     }
 
     public int getID(){
-        synchronized(this){
-            return this.id;
-        }
-    }
-
-    private int getOrCreateID(){
-        synchronized(this){
-            if(this.id < 0){
-                this.id = this.machineSynchronizer.getMachineID();
-            }
-            return this.id;
-        }
-    }
-
-    public void setID(int id){
-        synchronized(this){
-            this.id = id;
-        }
-    }
-
-    public void pressKey(char ch, int key){
-        synchronized(this){
-            if(this.state == 2){
-                if(key >= 0){
-                    queueLuaEvent("key", key);
-                }
-
-                if(ALLOWED_CHARS.indexOf(ch) != -1){
-                    queueLuaEvent("char", "" + ch);
-                }
-            }
-        }
-    }
-
-    public void clickMouse(int charX, int charY, int button){
-        synchronized(this){
-            if(this.state == 2){
-                switch(button){
-                    case 0: case 1: case 2:
-                        queueLuaEvent("mouse_click", button + 1, charX + 1, charY + 1);
-                        break;
-                    case 3:
-                        queueLuaEvent("mouse_scroll", 1, charX + 1, charY + 1);
-                        break;
-                    case 4:
-                        queueLuaEvent("mouse_scroll", -1, charX + 1, charY + 1);
-                        break;
-                    case 5: case 6: case 7:
-                        queueLuaEvent("mouse_drag", button - 5 + 1, charX + 1, charY + 1);
-                        break;
-                }
-            }
-        }
-    }
-
-    public void terminate(){
-        synchronized(this){
-            if(this.state == 2){
-                queueLuaEvent("terminate");
-            }
-        }
+        return this.id;
     }
 
     public void advance(double _dt){
         synchronized(this){
-            if(this.delayedStart >= 0){
-                this.delayedStart -= 1;
-                if(this.delayedStart <= 0){
-                    turnOn(this.delayedStartData);
-                    this.delayedStart = -1;
-                    this.delayedStartData = null;
+            if(this.ticksSinceStart >= 0){
+                this.ticksSinceStart += 1;
+            }
+            if(this.startupRequested && (this.ticksSinceStart < 0 || this.ticksSinceStart > 50)){
+                this.startScriptingMachine();
+                this.startupRequested = false;
+            }
+            if(this.state == MachineState.RUNNING){
+                synchronized(this.apis){
+                    for(ILuaAPI api : this.apis){
+                        api.advance(_dt);
+                    }
                 }
             }
         }
 
         synchronized(this.terminal){
-            boolean blinking = (this.terminal.isCursorBlink()) && (this.terminal.getCursorX() >= 0) && (this.terminal.getCursorX() < this.terminal.getWidth()) && (this.terminal.getCursorY() >= 0) && (this.terminal.getCursorY() < this.terminal.getHeight());
-
-            int termState = blinking ? 256 : 0;
-            if(termState != this.lastTermState){
-                this.lastTermState = termState;
+            boolean blinking = this.terminal.isCursorBlink() && this.terminal.getCursorX() >= 0 && this.terminal.getCursorX() < this.terminal.getWidth() && this.terminal.getCursorY() >= 0 && this.terminal.getCursorY() < this.terminal.getHeight();
+            if(blinking != this.blinking){
+                this.blinking = blinking;
             }
         }
     }
 
     public boolean isBlinking(){
         synchronized(this.terminal){
-            return isOn() && ((this.lastTermState & 0x100) > 0);
+            return isOn() && this.blinking;
         }
     }
 
     private boolean initFileSystem(){
-        int id = getOrCreateID();
+        int id = this.getID();
         try{
-            this.fileSystem = new FileSystem("hdd", this.machineSynchronizer.createSaveDirMount("machine/" + id, this.machineSynchronizer.getMachineSpaceLimit()));
+            ServerMachine machine = (ServerMachine) this.machine;
+            this.fileSystem = new FileSystem("hdd", machine.createSaveDirMount("machine/" + id, machine.getMachineSpaceLimit()));
             if(romMount == null){
-                romMount = this.machineSynchronizer.createResourceMount("nailed", "lua/rom");
+                romMount = machine.createResourceMount("nailed", "lua/rom");
             }
             if(romMount != null){
                 this.fileSystem.mount("rom", "rom", romMount);
@@ -286,12 +202,13 @@ public class ScriptingMachine {
         }
     }
 
-    private void startScriptingMachine(final byte[] previousState){
+    private void startScriptingMachine(){
         synchronized(this){
-            if(this.state != 0){
+            if(this.state != MachineState.OFF){
                 return;
             }
-            this.state = 1;
+            this.state = MachineState.STARTING;
+            this.ticksSinceStart = 0;
         }
 
         ScriptThread.queueTask(new ScriptThread.Task() {
@@ -304,7 +221,7 @@ public class ScriptingMachine {
             @Override
             public void execute(){
                 synchronized(this){
-                    if(ScriptingMachine.this.state != 1){
+                    if(ScriptingMachine.this.state != MachineState.STARTING){
                         return;
                     }
 
@@ -322,8 +239,8 @@ public class ScriptingMachine {
                         ScriptingMachine.this.terminal.setCursorPos(0, ScriptingMachine.this.terminal.getCursorY() + 1);
                         ScriptingMachine.this.terminal.write("Contact the server admin");
 
-                        ScriptingMachine.this.state = 2;
-                        ScriptingMachine.this.stopScriptingMachine(false, 0);
+                        ScriptingMachine.this.state = MachineState.RUNNING;
+                        ScriptingMachine.this.stopScriptingMachine(false);
                         return;
                     }
 
@@ -334,31 +251,28 @@ public class ScriptingMachine {
                         ScriptingMachine.this.terminal.setCursorPos(0, ScriptingMachine.this.terminal.getCursorY() + 1);
                         ScriptingMachine.this.terminal.write("Contact the server admin");
 
-                        ScriptingMachine.this.state = 2;
-                        ScriptingMachine.this.stopScriptingMachine(false, 0);
+                        ScriptingMachine.this.state = MachineState.RUNNING;
+                        ScriptingMachine.this.stopScriptingMachine(false);
                         return;
                     }
 
-                    if(previousState == null){
-                        //noinspection SynchronizeOnNonFinalField
-                        synchronized(ScriptingMachine.this.luaMachine){
-                            //noinspection NullArgumentToVariableArgMethod
-                            ScriptingMachine.this.luaMachine.handleEvent(null, null);
-                        }
+                    //noinspection SynchronizeOnNonFinalField
+                    synchronized(ScriptingMachine.this.luaMachine){
+                        //noinspection NullArgumentToVariableArgMethod
+                        ScriptingMachine.this.luaMachine.handleEvent(null, null);
                     }
-
-                    ScriptingMachine.this.state = 2;
+                    ScriptingMachine.this.state = MachineState.RUNNING;
                 }
             }
         }, this);
     }
 
-    private void stopScriptingMachine(final boolean reboot, final int rebootDelay){
+    private void stopScriptingMachine(final boolean reboot){
         synchronized(this){
-            if(this.state != 2){
+            if(this.state != MachineState.RUNNING){
                 return;
             }
-            this.state = 3;
+            this.state = MachineState.STOPPING;
         }
 
         ScriptThread.queueTask(new ScriptThread.Task() {
@@ -371,7 +285,7 @@ public class ScriptingMachine {
             @Override
             public void execute(){
                 synchronized(this){
-                    if(ScriptingMachine.this.state != 3){
+                    if(ScriptingMachine.this.state != MachineState.STOPPING){
                         return;
                     }
 
@@ -401,24 +315,18 @@ public class ScriptingMachine {
                         }
                     }
 
-                    ScriptingMachine.this.state = 0;
+                    ScriptingMachine.this.state = MachineState.OFF;
                     if(reboot){
-                        ScriptingMachine.this.delayedStart = rebootDelay;
-                        ScriptingMachine.this.delayedStartData = null;
+                        ScriptingMachine.this.startupRequested = true;
                     }
                 }
             }
         }, this);
     }
 
-    @SuppressWarnings("NullArgumentToVariableArgMethod")
-    public void queueLuaEvent(String event){
-        queueLuaEvent(event, null);
-    }
-
-    public void queueLuaEvent(final String event, final Object... arguments){
+    public void queueEvent(final String event, final Object... arguments){
         synchronized(this){
-            if(this.state != 2){
+            if(this.state != MachineState.RUNNING){
                 return;
             }
         }
@@ -431,7 +339,7 @@ public class ScriptingMachine {
 
             public void execute(){
                 synchronized(this){
-                    if(ScriptingMachine.this.state != 2){
+                    if(ScriptingMachine.this.state != MachineState.RUNNING){
                         return;
                     }
                 }
@@ -443,7 +351,7 @@ public class ScriptingMachine {
                         ScriptingMachine.this.terminal.write("Error resuming bios.lua");
                         ScriptingMachine.this.terminal.setCursorPos(0, ScriptingMachine.this.terminal.getCursorY() + 1);
                         ScriptingMachine.this.terminal.write("Contact the server admin");
-                        ScriptingMachine.this.stopScriptingMachine(false, 0);
+                        ScriptingMachine.this.stopScriptingMachine(false);
                     }
                 }
             }
@@ -469,11 +377,6 @@ public class ScriptingMachine {
         }
 
         @Override
-        public MachineSynchronizer getSynchronizer(){
-            return this.machine.machineSynchronizer;
-        }
-
-        @Override
         public Terminal getTerminal(){
             return this.machine.terminal;
         }
@@ -484,18 +387,18 @@ public class ScriptingMachine {
         }
 
         @Override
-        public void queueEvent(String event, Object[] args){
-            this.machine.queueLuaEvent(event, args);
+        public void queueEvent(String event, Object... args){
+            this.machine.queueEvent(event, args);
         }
 
         @Override
         public void shutdown(){
-            this.machine.turnOff();
+            this.machine.shutdown();
         }
 
         @Override
-        public void reboot(int startupDelay){
-            this.machine.reboot(startupDelay);
+        public void reboot(){
+            this.machine.reboot();
         }
     }
 }

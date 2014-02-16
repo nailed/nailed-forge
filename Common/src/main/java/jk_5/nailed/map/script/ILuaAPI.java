@@ -1,4 +1,4 @@
-package jk_5.nailed.api.scripting;
+package jk_5.nailed.map.script;
 
 /**
  * No description given

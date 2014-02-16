@@ -269,7 +269,9 @@ public class NailedMapLoader implements MapLoader {
 
     @Override
     public void removeMap(Map map){
-        map.getMachineSynchronizer().destroy();
+        if(map instanceof NailedMap){
+            ((NailedMap) map).getMachine().destroy();
+        }
         DimensionManager.unloadWorld(map.getID());
         this.maps.remove(map);
         MinecraftForge.EVENT_BUS.post(new MapRemovedEvent(map));

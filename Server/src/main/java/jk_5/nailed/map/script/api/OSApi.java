@@ -1,10 +1,9 @@
 package jk_5.nailed.map.script.api;
 
 import com.google.common.collect.Lists;
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.scripting.ILuaAPI;
-import jk_5.nailed.api.scripting.ILuaContext;
 import jk_5.nailed.map.script.IAPIEnvironment;
+import jk_5.nailed.map.script.ILuaAPI;
+import jk_5.nailed.map.script.ILuaContext;
 import jk_5.nailed.map.script.ScriptingMachine;
 
 import java.util.Arrays;
@@ -45,7 +44,7 @@ public class OSApi implements ILuaAPI {
         this.timers = Lists.newArrayList();
         this.alarms = Lists.newArrayList();
         this.clock = 0.0D;
-        this.time = NailedAPI.getMapLoader().getMap(this.machine.getID()).getWorld().getWorldTime();
+        this.time = this.machine.getMachine().getTimeOfDay();
     }
 
     public void advance(double _dt){
@@ -156,7 +155,7 @@ public class OSApi implements ILuaAPI {
                 this.apiEnvironment.shutdown();
                 return null;
             case 4:
-                this.apiEnvironment.reboot(this.rebootTimer);
+                this.apiEnvironment.reboot();
                 this.rebootTimer = 60;
                 return null;
             case 5:

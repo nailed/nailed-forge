@@ -7,14 +7,18 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.FMLLaunchHandler;
 import jk_5.nailed.client.achievement.NailedAchievements;
 import jk_5.nailed.client.blocks.NailedBlocks;
+import jk_5.nailed.client.item.NailedItems;
 import jk_5.nailed.client.map.NailedWorldProvider;
 import jk_5.nailed.client.network.ClientNetworkHandler;
 import jk_5.nailed.client.render.FixedWidthFontRenderer;
 import jk_5.nailed.client.render.NotificationRenderer;
 import jk_5.nailed.client.render.RenderEventHandler;
+import jk_5.nailed.client.scripting.ClientMachine;
 import jk_5.nailed.client.skinsync.SkinSync;
 import jk_5.nailed.client.util.config.ConfigFile;
+import jk_5.nailed.map.script.MachineRegistry;
 import lombok.Getter;
+import lombok.Setter;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.LogManager;
@@ -35,6 +39,8 @@ public class NailedClient {
     @Getter private static final String minecraftVersion = "1.7.2";
     @Getter private static ConfigFile config;
     @Getter private static CreativeTabNailed creativeTab;
+    @Getter private static MachineRegistry<ClientMachine> machines = new MachineRegistry<ClientMachine>();
+    @Getter @Setter private static int playerMachineID;
 
     @Getter @Mod.Instance(modid) private static NailedClient instance;
     @Getter private static Collection<Integer> registeredDimensions;
@@ -73,6 +79,7 @@ public class NailedClient {
 
         NailedLog.info("Registering blocks");
         NailedBlocks.init();
+        NailedItems.init();
 
         NailedLog.info("Registering Nailed WorldProvider");
         NailedClient.providerID = NailedClient.config.getTag("providerId").setComment("The id for the nailed world provider").getIntValue(10);

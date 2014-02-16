@@ -297,9 +297,25 @@ public abstract class NailedPacket {
     }
 
     @NoArgsConstructor
+    @AllArgsConstructor
     public static class OpenTerminalGui extends NailedPacket {
 
-        @Override public void encode(ByteBuf buffer){}
-        @Override public void decode(ByteBuf buffer){}
+        public int instanceId;
+        public int width;
+        public int height;
+
+        @Override
+        public void encode(ByteBuf buffer){
+            buffer.writeInt(this.instanceId);
+            buffer.writeInt(this.width);
+            buffer.writeInt(this.height);
+        }
+
+        @Override
+        public void decode(ByteBuf buffer){
+            this.instanceId = buffer.readInt();
+            this.width = buffer.readInt();
+            this.height = buffer.readInt();
+        }
     }
 }

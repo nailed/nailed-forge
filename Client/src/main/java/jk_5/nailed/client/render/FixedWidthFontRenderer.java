@@ -21,8 +21,8 @@ public class FixedWidthFontRenderer {
 
     public static final int FONT_WIDTH = 6;
     public static final int FONT_HEIGHT = 9;
-    private static final String ALLOWED_CHARS = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_'abcdefghijklmnopqrstuvwxyz{|}~⌂ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜø£Ø×ƒáíóúñÑªº¿®¬½¼¡«»";
-    private static final String BASE16 = "0123456789abcdef";
+    public static final String ALLOWED_CHARS = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_'abcdefghijklmnopqrstuvwxyz{|}~⌂ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜø£Ø×ƒáíóúñÑªº¿®¬½¼¡«»";
+    public static final String BASE16 = "0123456789abcdef";
 
     public static final int[] colours = {0x191919, 0xcc4c4c, 0x57a64e, 0x7f664c, 0x253192, 0xb266e5, 0x4c99b2, 0x999999, 0x4c4c4c, 0xf2b2cc, 0x7fcc19, 0xdede6c, 0x99b2f2, 0xe57fd8, 0xf2b233, 0xf0f0f0};
 

@@ -1,9 +1,6 @@
 package jk_5.nailed.map.script.api;
 
 import com.google.common.collect.Maps;
-import jk_5.nailed.api.scripting.ILuaAPI;
-import jk_5.nailed.api.scripting.ILuaContext;
-import jk_5.nailed.api.scripting.ILuaObject;
 import jk_5.nailed.map.script.*;
 
 import java.io.IOException;
@@ -40,7 +37,7 @@ public class FileSystemApi implements ILuaAPI {
     }
 
     public String[] getMethodNames(){
-        return new String[]{"list", "combine", "getName", "getSize", "exists", "isDir", "isReadOnly", "makeDir", "move", "copy", "delete", "open", "getDrive", "getFreeSpace"};
+        return new String[]{"list", "combine", "getName", "getSize", "exists", "isDir", "isReadOnly", "makeDir", "move", "copy", "delete", "open", "getDrive", "getFreeSpace", "find"};
     }
 
     public Object[] callMethod(ILuaContext context, int method, Object[] args)
@@ -212,12 +209,10 @@ public class FileSystemApi implements ILuaAPI {
                 }
                 String path11 = (String) args[0];
                 try{
-                    synchronized(this.fileSystem){
-                        if(!this.fileSystem.exists(path11)){
-                            return null;
-                        }
-                        return new Object[]{this.fileSystem.getMountLabel(path11)};
+                    if(!this.fileSystem.exists(path11)){
+                        return null;
                     }
+                    return new Object[]{this.fileSystem.getMountLabel(path11)};
                 }catch(FileSystemException e){
                     throw new Exception(e.getMessage());
                 }
@@ -228,13 +223,27 @@ public class FileSystemApi implements ILuaAPI {
                 }
                 String path12 = (String) args[0];
                 try{
-                    synchronized(this.fileSystem){
-                        long freeSpace = this.fileSystem.getFreeSpace(path12);
-                        if(freeSpace >= 0L){
-                            return new Object[]{freeSpace};
-                        }
-                        return new Object[]{"unlimited"};
+                    long freeSpace = this.fileSystem.getFreeSpace(path12);
+                    if(freeSpace >= 0L){
+                        return new Object[]{freeSpace};
                     }
+                    return new Object[]{"unlimited"};
+                }catch(FileSystemException e){
+                    throw new Exception(e.getMessage());
+                }
+
+            case 14:
+                if(args.length != 1 || args[0] == null || !(args[0] instanceof String)){
+                    throw new Exception("Expected string");
+                }
+                String path13 = (String) args[0];
+                try{
+                    String[] results = this.fileSystem.find(path13);
+                    Map<Integer, String> table = Maps.newHashMap();
+                    for(int i = 0; i < results.length; i++){
+                        table.put(i + 1, results[i]);
+                    }
+                    return new Object[]{table};
                 }catch(FileSystemException e){
                     throw new Exception(e.getMessage());
                 }

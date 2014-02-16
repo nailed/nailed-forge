@@ -1,5 +1,7 @@
 package jk_5.nailed.map.script;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
+import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 
 import java.util.Arrays;
@@ -13,6 +15,8 @@ public class Terminal {
 
     public static final int WIDTH = 51;
     public static final int HEIGHT = 19;
+    public static final int PDAWIDTH = 20;
+    public static final int PDAHEIGHT = 27;
     public static final String base16 = "0123456789abcdef";
 
     @Getter private int cursorX = 0;
@@ -27,8 +31,6 @@ public class Terminal {
     private String[] lines;
     private String[] colorLines;
     @Getter private boolean changed = false;
-    @Getter private boolean[] lineChanged;
-    @Getter private boolean[] colorLineChanged;
 
     public Terminal(int width, int height){
         this.width = width;
@@ -39,8 +41,6 @@ public class Terminal {
 
         this.lines = new String[this.height];
         this.colorLines = new String[this.height];
-        this.lineChanged = new boolean[this.height];
-        this.colorLineChanged = new boolean[this.height];
 
         for(int i = 0; i < this.height; i++){
             this.lines[i] = this.emptyLine;
@@ -66,8 +66,6 @@ public class Terminal {
 
         this.lines = new String[this.height];
         this.colorLines = new String[this.height];
-        this.lineChanged = new boolean[this.height];
-        this.colorLineChanged = new boolean[this.height];
 
         for(int i = 0; i < this.height; i++){
             if(i < oldHeight){
@@ -90,8 +88,6 @@ public class Terminal {
                 this.lines[i] = this.emptyLine;
                 this.colorLines[i] = this.emptyColorLine;
             }
-            this.lineChanged[i] = true;
-            this.colorLineChanged[i] = true;
         }
 
         this.changed = true;
@@ -190,11 +186,9 @@ public class Terminal {
 
                 if(!this.lines[this.cursorY].equals(oldLine)){
                     this.changed = true;
-                    this.lineChanged[this.cursorY] = true;
                 }
                 if(!this.colorLines[this.cursorY].equals(oldColorLine)){
                     this.changed = true;
-                    this.colorLineChanged[this.cursorY] = true;
                 }
             }
         }
@@ -215,11 +209,9 @@ public class Terminal {
 
             if(!newLines[y].equals(this.lines[y])){
                 this.changed = true;
-                this.lineChanged[y] = true;
             }
             if(!newColorLines[y].equals(this.colorLines[y])){
                 this.changed = true;
-                this.colorLineChanged[y] = true;
             }
         }
         this.lines = newLines;
@@ -230,13 +222,11 @@ public class Terminal {
         for(int y = 0; y < this.height; y++){
             if(!this.lines[y].equals(this.emptyLine)){
                 this.lines[y] = this.emptyLine;
-                this.lineChanged[y] = true;
                 this.changed = true;
             }
 
             if(!this.colorLines[y].equals(this.emptyColorLine)){
                 this.colorLines[y] = this.emptyColorLine;
-                this.colorLineChanged[y] = true;
                 this.changed = true;
             }
         }
@@ -246,13 +236,11 @@ public class Terminal {
         if(this.cursorY >= 0 && this.cursorY < this.height){
             if(!this.lines[this.cursorY].equals(this.emptyLine)){
                 this.lines[this.cursorY] = this.emptyLine;
-                this.lineChanged[this.cursorY] = true;
                 this.changed = true;
             }
 
             if(!this.colorLines[this.cursorY].equals(this.emptyColorLine)){
                 this.colorLines[this.cursorY] = this.emptyColorLine;
-                this.colorLineChanged[this.cursorY] = true;
                 this.changed = true;
             }
         }
@@ -268,9 +256,6 @@ public class Terminal {
     public void setLine(int y, String line, String color){
         this.lines[y] = (line + this.emptyLine).substring(0, this.width);
         this.colorLines[y] = (color + this.emptyColorLine).substring(0, this.width * 2);
-
-        this.lineChanged[y] = true;
-        this.colorLineChanged[y] = true;
         this.changed = true;
     }
 
@@ -284,10 +269,32 @@ public class Terminal {
     public void clearChanged(){
         if(this.changed){
             this.changed = false;
-            for(int y = 0; y < this.height; y++){
-                this.lineChanged[y] = false;
-                this.colorLineChanged[y] = false;
-            }
         }
+    }
+
+    public void writeData(ByteBuf buffer){
+        buffer.writeInt(this.cursorX);
+        buffer.writeInt(this.cursorY);
+        buffer.writeBoolean(this.cursorBlink);
+        buffer.writeInt(this.textColor);
+        buffer.writeInt(this.backgroundColor);
+        for(int i = 0; i < this.height; i++){
+            ByteBufUtils.writeUTF8String(buffer, this.lines[i]);
+            ByteBufUtils.writeUTF8String(buffer, this.colorLines[i]);
+        }
+    }
+
+    public void readData(ByteBuf buffer){
+        this.cursorX = buffer.readInt();
+        this.cursorY = buffer.readInt();
+        this.cursorBlink = buffer.readBoolean();
+        this.textColor = buffer.readInt();
+        this.backgroundColor = buffer.readInt();
+        for(int n = 0; n < this.height; n++){
+            this.lines[n] = ByteBufUtils.readUTF8String(buffer);
+            this.colorLines[n] = ByteBufUtils.readUTF8String(buffer);
+        }
+        this.rebuildEmptyColorLine();
+        this.changed = true;
     }
 }

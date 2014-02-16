@@ -48,4 +48,6 @@ public interface Player extends PossibleWinner {
     public boolean hasPermission(String node);
     public void setSpawnpoint(Spawnpoint spawnpoint);
     public Spawnpoint getSpawnpoint();
+    public void setPdaID(int id);
+    public int getPdaID();
 }

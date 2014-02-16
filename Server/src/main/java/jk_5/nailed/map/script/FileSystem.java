@@ -10,6 +10,7 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * No description given
@@ -32,7 +33,7 @@ public class FileSystem {
     public void unload(){
         synchronized(this.openFiles){
             while(this.openFiles.size() > 0){
-                IMountedFile file = (IMountedFile) this.openFiles.iterator().next();
+                IMountedFile file = this.openFiles.iterator().next();
                 try{
                     file.close();
                 }catch(IOException e){
@@ -117,8 +118,7 @@ public class FileSystem {
         return path;
     }
 
-    public synchronized long getSize(String path)
-            throws FileSystemException{
+    public synchronized long getSize(String path) throws FileSystemException{
         path = sanitizePath(path);
         MountWrapper mount = getMount(path);
         return mount.getSize(path);
@@ -139,6 +139,31 @@ public class FileSystem {
 
         String[] array = new String[list.size()];
         list.toArray(array);
+        return array;
+    }
+
+    private void findIn(String dir, List<String> matches, Pattern wildPattern) throws FileSystemException{
+        String[] list = list(dir);
+        for(int i = 0; i < list.length; i++){
+            String entry = list[i];
+            String entryPath = dir + "/" + entry;
+            if(wildPattern.matcher(entryPath).matches()){
+                matches.add(entryPath);
+            }
+            if(isDir(entryPath)){
+                findIn(entryPath, matches, wildPattern);
+            }
+        }
+    }
+
+    public synchronized String[] find(String wildPath) throws FileSystemException{
+        wildPath = sanitizePath(wildPath, true);
+        Pattern wildPattern = Pattern.compile("^\\Q" + wildPath.replaceAll("\\*", "\\\\E[^\\\\/]*\\\\Q") + "\\E$");
+        List matches = new ArrayList();
+        findIn("", matches, wildPattern);
+
+        String[] array = new String[matches.size()];
+        matches.toArray(array);
         return array;
     }
 
@@ -432,16 +457,19 @@ public class FileSystem {
     }
 
     private static String sanitizePath(String path){
+        return sanitizePath(path, false);
+    }
+
+    private static String sanitizePath(String path, boolean allowWildcards){
         path = path.replace('\\', '/');
 
-        int[] illegalChars = {34, 60, 62, 124, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 58, 42, 63};
-        Arrays.sort(illegalChars);
+        char[] specialChars = {'"', ':', '<', '>', '?', '|'};
 
         StringBuilder cleanName = new StringBuilder();
         for(int i = 0; i < path.length(); i++){
-            int c = path.charAt(i);
-            if(Arrays.binarySearch(illegalChars, c) < 0){
-                cleanName.append((char) c);
+            char c = path.charAt(i);
+            if((c >= ' ') && (Arrays.binarySearch(specialChars, c) < 0) && ((allowWildcards) || (c != '*'))){
+                cleanName.append(c);
             }
         }
         path = cleanName.toString();

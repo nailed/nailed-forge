@@ -1,11 +1,7 @@
 package jk_5.nailed.map.script;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import jk_5.nailed.NailedLog;
-import jk_5.nailed.api.scripting.ILuaAPI;
-import jk_5.nailed.api.scripting.ILuaContext;
-import jk_5.nailed.api.scripting.ILuaObject;
 import org.luaj.vm2.*;
 import org.luaj.vm2.lib.OneArgFunction;
 import org.luaj.vm2.lib.VarArgFunction;
@@ -119,7 +115,7 @@ public class LuaMachine {
                 }
                 biosContent = content.toString();
             }catch(IOException e){
-                throw new LuaError("Could not read file");
+                throw new LuaError("Could not read bios file");
             }
             LuaValue program = this.luaAssert.call(this.luaLoadString.call(LuaValue.valueOf(biosContent), LuaValue.valueOf("bios")));
             this.luaMainRoutine = this.luaCoroutineCreate.call(program);
@@ -274,26 +270,31 @@ public class LuaMachine {
             return LuaValue.valueOf(s);
         }else if(object instanceof Map){
             boolean clearProcessing = false;
-            if(this.processingValue == null){
-                this.processingValue = Maps.newHashMap();
-                clearProcessing = true;
-            }
-            if(this.processingValue.containsKey(object)){
-                return this.processingValue.get(object);
-            }
+            try{
+                if(this.processingValue == null){
+                    this.processingValue = Maps.newIdentityHashMap();
+                    clearProcessing = true;
+                }
+                if(this.processingValue.containsKey(object)){
+                    return this.processingValue.get(object);
+                }
 
-            LuaValue table = new LuaTable();
-            this.processingValue.put((Map) object, table);
+                LuaValue table = new LuaTable();
+                this.processingValue.put((Map) object, table);
 
-            for(Map.Entry<Object, Object> e : ((Map<Object, Object>) object).entrySet()){
-                table.set(toValue(e.getKey()), toValue(e.getValue()));
+                for(Map.Entry<Object, Object> e : ((Map<Object, Object>) object).entrySet()){
+                    LuaValue key = toValue(e.getKey());
+                    LuaValue value = toValue(e.getValue());
+                    if((!key.isnil()) && (!value.isnil())){
+                        table.set(key, value);
+                    }
+                }
+                return table;
+            }finally{
+                if (clearProcessing){
+                    this.processingValue = null;
+                }
             }
-
-            if (clearProcessing){
-                this.processingValue = null;
-            }
-
-            return table;
         }else if(object instanceof ILuaObject){
             return wrapLuaObject((ILuaObject) object);
         }
@@ -329,58 +330,35 @@ public class LuaMachine {
                 return value.toString();
             case 5:
                 boolean clearProcessing = false;
+                try{
+                    if (processing == null){
+                        processing = Maps.newIdentityHashMap();
+                        clearProcessing = true;
+                    }else if(processing.containsKey(value)){
+                        return processing.get(value);
+                    }
+                    Map<Object, Object> ret = Maps.newHashMap();
+                    processing.put((LuaTable) value, ret);
 
-                if (processing == null){
-                    processing = Maps.newHashMap();
-                    clearProcessing = true;
-                }
-
-                if(tree != null && tree.contains(value)){
-                    return null;
-                }
-
-                if (processing.containsKey(value)){
-                    return processing.get(value);
-                }
-
-                Map<Object, Object> ret = Maps.newHashMap();
-
-                processing.put((LuaTable) value, ret);
-
-                boolean clearTree = false;
-
-                if (tree == null){
-                    tree = Lists.newArrayList();
-                    clearTree = true;
-                }
-
-                tree.add(value);
-
-                LuaValue k = LuaValue.NIL;
-                while (true){
-                    Varargs n = value.next(k);
-                    if((k = n.arg1()).isnil()) break;
-                    LuaValue v = n.arg(2);
-
-                    Object key = toObject(k);
-                    Object val = toObject(v);
-
-                    if (key != null && (val != null)) {
-                        ret.put(key, val);
+                    LuaValue k = LuaValue.NIL;
+                    Varargs keyvalue;
+                    while (true){
+                        keyvalue = value.next(k);
+                        k = keyvalue.arg1();
+                        if(k.isnil()) break;
+                        LuaValue v = keyvalue.arg(2);
+                        Object key = toObject(k);
+                        Object val = toObject(v);
+                        if (key != null && (val != null)) {
+                            ret.put(key, val);
+                        }
+                    }
+                    return ret;
+                }finally{
+                    if (clearProcessing){
+                        processing = null;
                     }
                 }
-
-                tree.remove(value);
-
-                if (clearTree){
-                    tree = null;
-                }
-
-                if (clearProcessing){
-                    processing = null;
-                }
-
-                return ret;
             case 2:
         }
 
