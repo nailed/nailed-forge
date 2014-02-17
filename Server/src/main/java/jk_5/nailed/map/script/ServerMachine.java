@@ -25,6 +25,7 @@ public class ServerMachine extends ServerTerminal implements IMachine {
     @Getter @Setter private World world;
     @Getter private final int instanceId;
     private final ScriptingMachine machine;
+    @Getter @Setter private File preferredSaveDir = null;
 
     public ServerMachine(World world, int id, int instanceId, int termWidth, int termHeight){
         super(termWidth, termHeight);

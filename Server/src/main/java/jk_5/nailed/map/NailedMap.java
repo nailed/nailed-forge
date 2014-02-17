@@ -112,6 +112,7 @@ public class NailedMap implements Map {
         }
 
         this.machine = new ServerMachine(world, MachineRegistry.getNextId(), ServerMachine.REGISTRY.getUnusedInstanceID(), Terminal.WIDTH, Terminal.HEIGHT);
+        this.machine.setPreferredSaveDir(new File(this.getSaveFolder(), "machine"));
         ServerMachine.REGISTRY.add(this.machine.getId(), this.machine);
         this.machine.turnOn();
 

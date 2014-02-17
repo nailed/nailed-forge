@@ -8,6 +8,7 @@ import jk_5.nailed.map.script.api.TermApi;
 import lombok.Getter;
 import org.apache.commons.io.IOUtils;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.List;
 
@@ -133,7 +134,14 @@ public class ScriptingMachine {
         int id = this.getID();
         try{
             ServerMachine machine = (ServerMachine) this.machine;
-            this.fileSystem = new FileSystem("hdd", machine.createSaveDirMount("machine/" + id, machine.getMachineSpaceLimit()));
+            File dir = machine.getPreferredSaveDir();
+            IMount saveDirMount;
+            if(dir == null){
+                saveDirMount = machine.createSaveDirMount("machine/" + id, machine.getMachineSpaceLimit());
+            }else{
+                saveDirMount = new FileMount(dir, machine.getMachineSpaceLimit());
+            }
+            this.fileSystem = new FileSystem("hdd", saveDirMount);
             if(romMount == null){
                 romMount = machine.createResourceMount("nailed", "lua/rom");
             }
