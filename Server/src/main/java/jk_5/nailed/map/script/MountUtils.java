@@ -29,7 +29,7 @@ public class MountUtils {
                 IMount mount;
                 if(jar.getName().endsWith(".class")){
                     //Somehow we are not in a jar. Development environment?
-                    mounts.add(mount = new FileMount(new File(jar.getParentFile().getParentFile().getParentFile(), subPath), 0)); //FIXME: size limit?
+                    mounts.add(mount = new ReadOnlyMount(new File(jar.getParentFile().getParentFile().getParentFile(), subPath)));
                 }else{
                     mounts.add(mount = new JarMount(jar, subPath));
                 }

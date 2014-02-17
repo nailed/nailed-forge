@@ -2,6 +2,7 @@ package jk_5.nailed.api.map;
 
 import io.netty.buffer.ByteBuf;
 import jk_5.nailed.api.map.stat.StatConfig;
+import jk_5.nailed.api.scripting.IMount;
 
 import java.io.File;
 
@@ -66,4 +67,6 @@ public interface Mappack {
      * @return The data from the mappack icon (PNG) used for displaying in the webinterface and ingame
      */
     ByteBuf getMappackIcon();
+
+    IMount createMount();
 }

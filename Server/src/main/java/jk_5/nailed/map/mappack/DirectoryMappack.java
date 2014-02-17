@@ -9,10 +9,12 @@ import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.MapBuilder;
 import jk_5.nailed.api.map.Mappack;
 import jk_5.nailed.api.map.MappackMetadata;
+import jk_5.nailed.api.scripting.IMount;
 import jk_5.nailed.map.DiscardedMappackInitializationException;
 import jk_5.nailed.map.MappackInitializationException;
 import jk_5.nailed.map.instruction.InstructionList;
 import jk_5.nailed.map.instruction.InstructionParseException;
+import jk_5.nailed.map.script.ReadOnlyMount;
 import jk_5.nailed.map.stat.StatConfig;
 import lombok.Getter;
 import lombok.Setter;
@@ -157,5 +159,10 @@ public class DirectoryMappack implements Mappack {
 
         }
         return buf;
+    }
+
+    @Override
+    public IMount createMount(){
+        return new ReadOnlyMount(new File(this.mappackFolder, "lua"));
     }
 }

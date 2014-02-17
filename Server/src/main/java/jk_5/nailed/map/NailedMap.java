@@ -17,7 +17,9 @@ import jk_5.nailed.api.map.MappackMetadata;
 import jk_5.nailed.api.map.Spawnpoint;
 import jk_5.nailed.api.map.teleport.TeleportOptions;
 import jk_5.nailed.api.player.Player;
+import jk_5.nailed.api.scripting.IMount;
 import jk_5.nailed.map.gameloop.InstructionController;
+import jk_5.nailed.map.script.FileSystemException;
 import jk_5.nailed.map.script.MachineRegistry;
 import jk_5.nailed.map.script.ServerMachine;
 import jk_5.nailed.map.script.Terminal;
@@ -55,7 +57,10 @@ public class NailedMap implements Map {
     @Getter private boolean dataResyncRequired = true;
     @Getter private WeatherController weatherController;
     @Getter private SignCommandHandler signCommandHandler;
+
     @Getter private ServerMachine machine;
+    private IMount mappackMount;
+    private boolean mounted = false;
 
     public NailedMap(Mappack mappack, int id){
         this.ID = id;
@@ -66,6 +71,10 @@ public class NailedMap implements Map {
         this.weatherController = new WeatherController(this);
         this.signCommandHandler = new SignCommandHandler(this);
         NailedAPI.getMapLoader().registerMap(this);
+
+        if(this.mappack == null){
+            this.mounted = true; //Don't try to mount anything when we don't have a mappack
+        }
     }
 
     public void initMapServer(){
@@ -144,6 +153,19 @@ public class NailedMap implements Map {
     @Override
     public void onTick(TickEvent.ServerTickEvent event){
         this.machine.update();
+        if(!this.mounted && this.machine.getApiEnvironment().getFileSystem() != null){
+            if(this.mappackMount == null && this.mappack != null){
+                this.mappackMount = this.mappack.createMount();
+                if(this.mappackMount != null){
+                    try{
+                        this.machine.getApiEnvironment().getFileSystem().mount("mappack", "mappack", this.mappackMount);
+                    }catch(FileSystemException e){
+                        NailedLog.error(e, "Error while mounting mappack folder to machine\'s filesystem");
+                    }
+                }
+                this.mounted = true;
+            }
+        }
     }
 
     public String getSaveFileName(){

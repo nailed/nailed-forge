@@ -9,6 +9,7 @@ import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.MapBuilder;
 import jk_5.nailed.api.map.Mappack;
 import jk_5.nailed.api.map.MappackMetadata;
+import jk_5.nailed.api.scripting.IMount;
 import jk_5.nailed.map.DiscardedMappackInitializationException;
 import jk_5.nailed.map.MappackInitializationException;
 import jk_5.nailed.map.instruction.InstructionList;
@@ -165,6 +166,11 @@ public class ZipMappack implements Mappack {
         }catch(IOException ioe){
             NailedLog.error(ioe, "Error while unpacking file");
         }
+        return null;
+    }
+
+    @Override
+    public IMount createMount(){
         return null;
     }
 }
