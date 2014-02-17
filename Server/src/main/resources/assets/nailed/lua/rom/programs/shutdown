@@ -1,5 +1,5 @@
-term.setTextColour(colours.textColorHighlite)
+term.setTextColour(colors.textColorHighlite)
 print("Shutting down...")
-term.setTextColour(colours.textColorNormal)
+term.setTextColour(colors.textColorNormal)
 sleep(1)
 os.shutdown()

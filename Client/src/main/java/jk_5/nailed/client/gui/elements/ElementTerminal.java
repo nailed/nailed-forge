@@ -127,7 +127,7 @@ public class ElementTerminal extends Gui {
         if(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL)){
             if(Keyboard.isKeyDown(Keyboard.KEY_C)){
                 if(this.terminateTimer < 1.0F){
-                    this.terminateTimer += 0.05F;
+                    this.terminateTimer += 1.0F;
                     if(this.terminateTimer >= 1.0F){
                         if(this.machine != null){
                             this.machine.queueEvent("terminate");

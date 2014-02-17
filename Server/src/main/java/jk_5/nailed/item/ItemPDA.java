@@ -4,6 +4,7 @@ import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.map.script.MachineRegistry;
 import jk_5.nailed.map.script.ServerMachine;
+import jk_5.nailed.map.script.Terminal;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -30,7 +31,7 @@ public class ItemPDA extends Item {
         if(machine == null){
             int id = MachineRegistry.getNextId();
             player.setPdaID(id);
-            machine = new ServerMachine(world, id, instId, 26, 20);
+            machine = new ServerMachine(world, id, instId, Terminal.PDAWIDTH, Terminal.PDAHEIGHT);
             ServerMachine.REGISTRY.add(id, machine);
         }
         if(machine.getWorld() != world){
