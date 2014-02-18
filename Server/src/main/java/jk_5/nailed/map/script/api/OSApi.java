@@ -56,7 +56,7 @@ public class OSApi implements ILuaAPI {
                 Timer t = (Timer) it.next();
                 t.timeLeft -= _dt;
                 if(t.timeLeft <= 0.0D){
-                    queueLuaEvent("timer", new Object[]{t.token});
+                    queueLuaEvent("timer", t.token);
                     it.remove();
                 }
             }
@@ -64,10 +64,7 @@ public class OSApi implements ILuaAPI {
         }
 
         synchronized(this.alarms){
-            double prevTime = this.time;
-            //double time = this.machine.getTimeOfDay();
-
-            double timeLast = prevTime;
+            double timeLast = this.time;
             double timeNow = time;
             if(timeNow < timeLast){
                 timeNow += 24.0D;
@@ -95,11 +92,9 @@ public class OSApi implements ILuaAPI {
                 it = finishedAlarms.iterator();
                 while(it.hasNext()){
                     Alarm al = (Alarm) it.next();
-                    queueLuaEvent("alarm", new Object[]{Integer.valueOf(al.token)});
+                    queueLuaEvent("alarm", al.token);
                 }
             }
-
-            this.time = time;
         }
 
         if(this.rebootTimer > 0){
@@ -179,7 +174,7 @@ public class OSApi implements ILuaAPI {
         return null;
     }
 
-    private void queueLuaEvent(String event, Object[] args){
+    private void queueLuaEvent(String event, Object... args){
         this.apiEnvironment.queueEvent(event, args);
     }
 

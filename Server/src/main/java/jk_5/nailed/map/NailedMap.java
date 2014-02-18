@@ -11,10 +11,7 @@ import jk_5.nailed.NailedLog;
 import jk_5.nailed.NailedServer;
 import jk_5.nailed.api.ChatColor;
 import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.Mappack;
-import jk_5.nailed.api.map.MappackMetadata;
-import jk_5.nailed.api.map.Spawnpoint;
+import jk_5.nailed.api.map.*;
 import jk_5.nailed.api.map.teleport.TeleportOptions;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.api.scripting.IMount;
@@ -57,6 +54,7 @@ public class NailedMap implements Map {
     @Getter private boolean dataResyncRequired = true;
     @Getter private WeatherController weatherController;
     @Getter private SignCommandHandler signCommandHandler;
+    @Getter private GameManager gameManager;
 
     @Getter private ServerMachine machine;
     private IMount mappackMount;

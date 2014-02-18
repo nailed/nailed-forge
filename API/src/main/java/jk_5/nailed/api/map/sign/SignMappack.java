@@ -41,7 +41,11 @@ public class SignMappack extends Sign {
         }else{
             ret[2] = Integer.toString(this.linkedMap.getAmountOfPlayers());
         }
-        ret[3] = this.linkedMappack.getMappackMetadata().getName();
+        if(this.linkedMappack != null){
+            ret[3] = this.linkedMappack.getMappackMetadata().getName();
+        }else{
+            ret[3] = "";
+        }
         return ret;
     }
 

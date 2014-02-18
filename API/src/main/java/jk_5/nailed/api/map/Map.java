@@ -46,4 +46,5 @@ public interface Map {
     public void onGameStarted();
     public void onGameEnded();
     public void onTick(TickEvent.ServerTickEvent event);
+    public GameManager getGameManager();
 }

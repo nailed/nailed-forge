@@ -2,7 +2,9 @@ package jk_5.nailed.map.script;
 
 import com.google.common.collect.Lists;
 import jk_5.nailed.api.scripting.IMount;
+import jk_5.nailed.api.scripting.IWritableMount;
 import jk_5.nailed.map.script.api.FileSystemApi;
+import jk_5.nailed.map.script.api.MapApi;
 import jk_5.nailed.map.script.api.OSApi;
 import jk_5.nailed.map.script.api.TermApi;
 import lombok.Getter;
@@ -135,7 +137,7 @@ public class ScriptingMachine {
         try{
             ServerMachine machine = (ServerMachine) this.machine;
             File dir = machine.getPreferredSaveDir();
-            IMount saveDirMount;
+            IWritableMount saveDirMount;
             if(dir == null){
                 saveDirMount = machine.createSaveDirMount("machine/" + id, machine.getMachineSpaceLimit());
             }else{
@@ -164,10 +166,7 @@ public class ScriptingMachine {
         this.apis.add(new TermApi(this.apiEnvironment));
         this.apis.add(new FileSystemApi(this.apiEnvironment));
         this.apis.add(new OSApi(this.apiEnvironment));
-        //this.apis.add(new BitAPI(this.apiEnvironment));
-        //if(this.machineSynchronizer.isHTTPEnabled()){
-        //    this.apis.add(new HTTPAPI(this.apiEnvironment));
-        //}
+        this.apis.add(new MapApi(this.apiEnvironment));
     }
 
     private void initLua(){
