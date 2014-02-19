@@ -33,7 +33,7 @@ public class ScriptingMachine {
     private boolean blinking = false;
     private boolean startupRequested = false;
     private MachineState state = MachineState.OFF;
-    private LuaMachine luaMachine = null;
+    @Getter private LuaMachine luaMachine = null;
     private List<ILuaAPI> apis = Lists.newArrayList();
     @Getter private APIEnvironment apiEnvironment = new APIEnvironment(this);
     private Terminal terminal;

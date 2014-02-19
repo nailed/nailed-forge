@@ -15,6 +15,7 @@ import jk_5.nailed.api.map.*;
 import jk_5.nailed.api.map.teleport.TeleportOptions;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.api.scripting.IMount;
+import jk_5.nailed.map.game.NailedGameManager;
 import jk_5.nailed.map.gameloop.InstructionController;
 import jk_5.nailed.map.script.FileSystemException;
 import jk_5.nailed.map.script.MachineRegistry;
@@ -68,6 +69,7 @@ public class NailedMap implements Map {
         this.instructionController = new InstructionController(this);
         this.weatherController = new WeatherController(this);
         this.signCommandHandler = new SignCommandHandler(this);
+        this.gameManager = new NailedGameManager(this);
         NailedAPI.getMapLoader().registerMap(this);
 
         if(this.mappack == null){

@@ -302,7 +302,7 @@ public class LuaMachine {
         return LuaValue.NIL;
     }
 
-    private LuaValue[] toValues(Object[] objects, int leaveEmpty){
+    public LuaValue[] toValues(Object[] objects, int leaveEmpty){
         if(objects == null || objects.length == 0){
             return new LuaValue[leaveEmpty];
         }
@@ -318,7 +318,7 @@ public class LuaMachine {
         return values;
     }
 
-    private static Object toObject(LuaValue value){
+    public static Object toObject(LuaValue value){
         switch (value.type()){
             case -1: case 0:
                 return null;
@@ -359,7 +359,12 @@ public class LuaMachine {
                         processing = null;
                     }
                 }
-            case 2:
+            case 2: break;
+            case 6:
+                return value;
+            default:
+                System.out.println("Type: " + value.type());
+                System.out.println("Class: " + value.getClass().getName());
         }
 
         return null;

@@ -11,4 +11,5 @@ public interface GameManager {
     public boolean isWatchUnready();
     public void setWinnerInterrupt(boolean winnerInterrupt);
     public boolean isWinnerInterrupt();
+    public void setCountdownMessage(String message);
 }

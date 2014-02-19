@@ -9,10 +9,10 @@ import jk_5.nailed.api.ChatColor;
  */
 public class Utils {
 
-    public static String secondsToShortTimeString(int secs){
-        int hours = secs / 3600;
-        int minutes = (secs % 3600) / 60;
-        int seconds = secs % 60;
+    public static String secondsToShortTimeString(long secs){
+        long hours = secs / 3600;
+        long minutes = (secs % 3600) / 60;
+        long seconds = secs % 60;
         StringBuilder builder = new StringBuilder();
         boolean append = false;
         if(hours != 0 || append){
@@ -38,11 +38,11 @@ public class Utils {
         return builder.toString();
     }
 
-    public static String secondsToLongTimeString(int secs){
+    public static String secondsToLongTimeString(long secs){
         if (secs < 60) return String.format("%d second%s", secs, (secs == 1) ? "" : "s");
-        int hours = secs / 3600;
-        int minutes = (secs % 3600) / 60;
-        int seconds = secs % 60;
+        long hours = secs / 3600;
+        long minutes = (secs % 3600) / 60;
+        long seconds = secs % 60;
         StringBuilder builder = new StringBuilder();
         boolean hasText = false;
         if(hours > 0){
