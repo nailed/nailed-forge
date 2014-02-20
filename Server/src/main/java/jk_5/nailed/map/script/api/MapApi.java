@@ -1,16 +1,20 @@
 package jk_5.nailed.map.script.api;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonParseException;
+import jk_5.nailed.api.Gamemode;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.MappackMetadata;
+import jk_5.nailed.api.map.Spawnpoint;
 import jk_5.nailed.api.map.team.Team;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.map.script.*;
-import jk_5.nailed.util.Utils;
 import lombok.RequiredArgsConstructor;
+import net.minecraft.util.FoodStats;
 import net.minecraft.util.IChatComponent;
+import net.minecraft.world.EnumDifficulty;
+import net.minecraft.world.World;
 import org.luaj.vm2.LuaClosure;
 import org.luaj.vm2.LuaValue;
 
@@ -24,7 +28,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MapApi implements ILuaAPI {
 
-    private static final Joiner argsJoiner = Joiner.on(' ').skipNulls();
     private final IAPIEnvironment env;
     private Map map;
 
@@ -61,7 +64,9 @@ public class MapApi implements ILuaAPI {
                 "forEachPlayer",
                 "forEachTeam",
                 "getTeam",
-                "countdown"
+                "setDifficulty",
+                "sendTimeUpdate",
+                "setTime"
         };
     }
 
@@ -69,28 +74,45 @@ public class MapApi implements ILuaAPI {
     public Object[] callMethod(ILuaContext context, int method, Object[] arguments) throws Exception{
         switch(method){
             case 0: //sendNotification
-                this.map.broadcastNotification(argsJoiner.join(arguments));
-            case 1: //sendChatComponent
-                try{
-                    IChatComponent comp = IChatComponent.Serializer.func_150699_a(argsJoiner.join(arguments));
-                    this.map.broadcastChatMessage(comp);
-                }catch(JsonParseException e){
-                    throw new Exception("Chat message is not of json format");
+                if(arguments.length == 1 && arguments[0] instanceof String){
+                    this.map.broadcastNotification((String) arguments[0]);
+                }else{
+                    throw new Exception("Expected 1 string argument");
                 }
+                break;
+            case 1: //sendChatComponent
+                if(arguments.length == 1 && arguments[0] instanceof String){
+                    try{
+                        IChatComponent comp = IChatComponent.Serializer.func_150699_a((String) arguments[0]);
+                        this.map.broadcastChatMessage(comp);
+                    }catch(JsonParseException e){
+                        throw new Exception("Chat message is not of json format");
+                    }
+                }else{
+                    throw new Exception("Expected 1 string argument");
+                }
+                break;
             case 2: //sendChat
-                this.map.broadcastChatMessage(argsJoiner.join(arguments));
+                if(arguments.length == 1 && arguments[0] instanceof String){
+                    this.map.broadcastChatMessage((String) arguments[0]);
+                }else{
+                    throw new Exception("Expected 1 string argument");
+                }
+                break;
             case 3: //watchUnready
                 if(arguments.length == 1 && arguments[0] instanceof Boolean){
                     this.map.getGameManager().setWatchUnready((Boolean) arguments[0]);
                 }else{
                     throw new Exception("Expected 1 boolean argument");
                 }
+                break;
             case 4: //winnerInterrupt
                 if(arguments.length == 1 && arguments[0] instanceof Boolean){
                     this.map.getGameManager().setWinnerInterrupt((Boolean) arguments[0]);
                 }else{
                     throw new Exception("Expected 1 boolean argument");
                 }
+                break;
             case 5: //getPlayers
                 List<Player> players = this.map.getPlayers();
                 java.util.Map<Integer, ILuaObject> table = Maps.newHashMap();
@@ -116,6 +138,7 @@ public class MapApi implements ILuaAPI {
                 }else{
                     throw new Exception("Excpected 1 function as argument");
                 }
+                break;
             case 8: //forEachTeam
                 if(arguments.length == 1 && arguments[0] instanceof LuaClosure){
                     LuaClosure closure = (LuaClosure) arguments[0];
@@ -133,24 +156,31 @@ public class MapApi implements ILuaAPI {
                 }else{
                     throw new Exception("Excpected 1 string argument");
                 }
-            case 10: //countdown
-                if(arguments.length == 2 && arguments[0] instanceof Double && arguments[1] instanceof String){
-                    try{
-                        long ellapsed = 0;
-                        long seconds = Math.round((Double) arguments[0]);
-                        String message = (String) arguments[1];
-                        do{
-                            this.map.getGameManager().setCountdownMessage(message.replace("%s", Utils.secondsToShortTimeString(seconds - ellapsed)));
-                            Thread.sleep(1000);
-                            ellapsed ++;
-                        }while(ellapsed != seconds);
-                    }catch(Exception e){
-                        e.printStackTrace();
-                        throw new Exception(e);
-                    }
+            case 10: //setDifficulty
+                if(arguments.length == 1 && arguments[0] instanceof Double){
+                    MappackMetadata meta = this.map.getMappack().getMappackMetadata();
+                    World server = this.map.getWorld();
+                    int difficulty = ((Double) arguments[0]).intValue();
+                    server.difficultySetting = EnumDifficulty.getDifficultyEnum(difficulty);
+                    server.setAllowedSpawnTypes(meta.isSpawnHostileMobs() && difficulty > 0, meta.isSpawnFriendlyMobs());
                 }else{
-                    throw new Exception("Excpected 1 int argument and 1 string argument");
+                    throw new Exception("Excpected 1 int argument");
                 }
+                break;
+            case 11: //sendTimeUpdate
+                if(arguments.length == 1 && arguments[0] instanceof String){
+                    this.map.getGameManager().setCountdownMessage((String) arguments[0]);
+                }else{
+                    throw new Exception("Expected 1 string argument");
+                }
+                break;
+            case 12: //setTime
+                if(arguments.length == 1 && arguments[0] instanceof Double){
+                    this.map.getWorld().setWorldTime(((Double) arguments[0]).intValue() % 24000);
+                }else{
+                    throw new Exception("Expected 1 int argument");
+                }
+                break;
         }
         return null;
     }
@@ -164,7 +194,13 @@ public class MapApi implements ILuaAPI {
             public String[] getMethodNames(){
                 return new String[]{
                         "getUsername",
-                        "getTeam"
+                        "getTeam",
+                        "clearInventory",
+                        "setSpawn",
+                        "setGamemode",
+                        "setHealth",
+                        "setFood",
+                        "setExperience"
                 };
             }
 
@@ -175,6 +211,48 @@ public class MapApi implements ILuaAPI {
                         return new Object[]{player.getUsername()};
                     case 1: //getTeam
                         return new Object[]{MapApi.this.wrapTeam(player.getTeam())};
+                    case 2: //clearInventory
+                        return new Object[]{player.getEntity().inventory.clearInventory(null, -1)};
+                    case 3: //setSpawn
+                        if(arguments.length == 3 && arguments[0] instanceof Double && arguments[1] instanceof Double && arguments[2] instanceof Double){
+                            Spawnpoint spawn = new Spawnpoint(((Double) arguments[0]).intValue(), ((Double) arguments[1]).intValue(), ((Double) arguments[2]).intValue());
+                            player.setSpawnpoint(spawn);
+                        }else if(arguments.length == 5 && arguments[0] instanceof Double && arguments[1] instanceof Double && arguments[2] instanceof Double && arguments[3] instanceof Double && arguments[4] instanceof Double){
+                            Spawnpoint spawn = new Spawnpoint(((Double) arguments[0]).intValue(), ((Double) arguments[1]).intValue(), ((Double) arguments[2]).intValue(), ((Double) arguments[3]).floatValue(), ((Double) arguments[4]).floatValue());
+                            player.setSpawnpoint(spawn);
+                        }else{
+                            throw new Exception("Expected 3 int arguments, and 2 optional float arguments");
+                        }
+                        break;
+                    case 4: //setGamemode
+                        if(arguments.length == 1 && arguments[0] instanceof Double){
+                            player.setGameMode(Gamemode.fromId(((Double) arguments[0]).intValue()));
+                        }else{
+                            throw new Exception("Expected 3 int arguments, and 2 optional float arguments");
+                        }
+                        break;
+                    case 5: //setHealth
+                        if(arguments.length == 1 && arguments[0] instanceof Double){
+                            player.getEntity().setHealth(((Double) arguments[0]).floatValue());
+                        }else{
+                            throw new Exception("Expected 1 int argument");
+                        }
+                        break;
+                    case 6: //setFood
+                        if(arguments.length == 1 && arguments[0] instanceof Double){
+                            FoodStats foodStats = player.getEntity().getFoodStats();
+                            foodStats.addStats(((Double) arguments[0]).intValue() - foodStats.getFoodLevel(), 0);
+                        }else{
+                            throw new Exception("Expected 1 int argument");
+                        }
+                        break;
+                    case 7: //setExperience
+                        if(arguments.length == 1 && arguments[0] instanceof Double){
+                            player.getEntity().experienceLevel = ((Double) arguments[0]).intValue();
+                        }else{
+                            throw new Exception("Expected 1 int argument");
+                        }
+                        break;
                 }
                 return null;
             }
@@ -191,7 +269,8 @@ public class MapApi implements ILuaAPI {
                 return new String[]{
                         "getName",
                         "getPlayers",
-                        "forEachPlayer"
+                        "forEachPlayer",
+                        "setSpawn"
                 };
             }
 
@@ -215,7 +294,21 @@ public class MapApi implements ILuaAPI {
                             for(int i = 0; i < players1.size(); i++){
                                 closure.invoke(LuaValue.varargsOf(machine.toValues(new Object[]{MapApi.this.wrapPlayer(players1.get(i))}, 0)));
                             }
+                        }else{
+                            throw new Exception("Excpected 1 function as argument");
                         }
+                        break;
+                    case 3: //setSpawn
+                        if(arguments.length == 3 && arguments[0] instanceof Double && arguments[1] instanceof Double && arguments[2] instanceof Double){
+                            Spawnpoint spawn = new Spawnpoint(((Double) arguments[0]).intValue(), ((Double) arguments[1]).intValue(), ((Double) arguments[2]).intValue());
+                            team.setSpawnpoint(spawn);
+                        }else if(arguments.length == 5 && arguments[0] instanceof Double && arguments[1] instanceof Double && arguments[2] instanceof Double && arguments[3] instanceof Double && arguments[4] instanceof Double){
+                            Spawnpoint spawn = new Spawnpoint(((Double) arguments[0]).intValue(), ((Double) arguments[1]).intValue(), ((Double) arguments[2]).intValue(), ((Double) arguments[3]).floatValue(), ((Double) arguments[4]).floatValue());
+                            team.setSpawnpoint(spawn);
+                        }else{
+                            throw new Exception("Expected 3 int arguments, and 2 optional float arguments");
+                        }
+                        break;
                 }
                 return null;
             }
