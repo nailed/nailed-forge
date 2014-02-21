@@ -27,6 +27,7 @@ import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.permissions.NailedPermissionFactory;
 import jk_5.nailed.permissions.PermissionEventHandler;
 import jk_5.nailed.players.NailedPlayerRegistry;
+import jk_5.nailed.players.JoinMessageSender;
 import jk_5.nailed.server.command.*;
 import jk_5.nailed.teamspeak.TeamspeakClient;
 import jk_5.nailed.util.invsee.InvSeeTicker;
@@ -59,6 +60,7 @@ public class NailedServer {
     @Getter private static IrcBot ircBot;
     @Getter private static TeamspeakClient teamspeakClient;
     @Getter private static NailedPermissionFactory permissionFactory;
+    @Getter private static File configDir;
 
     public NailedServer(){
         NailedAPI.setMapLoader(new NailedMapLoader());
@@ -73,8 +75,10 @@ public class NailedServer {
     @EventHandler
     @SuppressWarnings("unused")
     public void preInit(FMLPreInitializationEvent event){
+        configDir = new File(event.getModConfigurationDirectory(), "nailed");
+        
         NailedLog.info("Creating config file");
-        config = new ConfigFile(event.getSuggestedConfigurationFile()).setComment("Nailed main config file");
+        config = new ConfigFile(new File(configDir, "config.cfg")).setComment("Nailed main config file");
 
         if(NailedAPI.getMapLoader().getMapsFolder().exists()){
             NailedLog.info("Clearing away old maps folder");
@@ -82,7 +86,11 @@ public class NailedServer {
             File dest = new File(new File(".", "mapbackups"), new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()));
             NailedAPI.getMapLoader().getMapsFolder().renameTo(dest);
         }
-
+        
+        NailedLog.info("Loading join message");
+        JoinMessageSender joinMessageSender = new JoinMessageSender();
+        joinMessageSender.readConfig(configDir);
+        
         NailedLog.info("Loading achievements");
         NailedAchievements.addAchievements();
 
@@ -101,6 +109,7 @@ public class NailedServer {
         FMLCommonHandler.instance().bus().register(NailedAPI.getPlayerRegistry());
         FMLCommonHandler.instance().bus().register(NailedAPI.getMapLoader());
         FMLCommonHandler.instance().bus().register(new InvSeeTicker());
+        FMLCommonHandler.instance().bus().register(joinMessageSender);
 
         NailedLog.info("Registering blocks");
         NailedBlocks.init();
