@@ -8,6 +8,7 @@ import jk_5.nailed.api.config.ConfigTag;
 import jk_5.nailed.api.events.PlayerChatEvent;
 import jk_5.nailed.api.events.PlayerJoinEvent;
 import jk_5.nailed.api.events.PlayerLeaveEvent;
+import jk_5.nailed.util.Utils;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.event.HoverEvent;
@@ -125,6 +126,7 @@ public class IrcBot extends PircBot {
             component.appendSibling(comp);
             message = "> " + message;
             this.append(component, message);
+            Utils.minifyChatComponent(component);
             configManager.sendChatMsg(component);
         }
     }
@@ -143,6 +145,7 @@ public class IrcBot extends PircBot {
         comp.getChatStyle().setColor(EnumChatFormatting.GRAY);
         component.appendSibling(comp);
         this.append(component, message);
+        Utils.minifyChatComponent(component);
         MinecraftServer.getServer().getConfigurationManager().sendChatMsg(component);
     }
 
@@ -157,6 +160,7 @@ public class IrcBot extends PircBot {
         comp.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(login + "@" + hostname)));
         component.appendSibling(comp);
         this.append(component, " " + action);
+        Utils.minifyChatComponent(component);
         MinecraftServer.getServer().getConfigurationManager().sendChatMsg(component);
     }
 
@@ -171,6 +175,7 @@ public class IrcBot extends PircBot {
         comp.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(login + "@" + hostname)));
         component.appendSibling(comp);
         component.appendText(" joined the channel");
+        Utils.minifyChatComponent(component);
         MinecraftServer.getServer().getConfigurationManager().sendChatMsg(component);
     }
 
@@ -185,6 +190,7 @@ public class IrcBot extends PircBot {
         comp.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(login + "@" + hostname)));
         component.appendSibling(comp);
         component.appendText(" left the channel");
+        Utils.minifyChatComponent(component);
         MinecraftServer.getServer().getConfigurationManager().sendChatMsg(component);
     }
 
@@ -199,6 +205,7 @@ public class IrcBot extends PircBot {
         comp.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(login + "@" + hostname)));
         component.appendSibling(comp);
         component.appendText(" is now known as " + newNick);
+        Utils.minifyChatComponent(component);
         MinecraftServer.getServer().getConfigurationManager().sendChatMsg(component);
     }
 
@@ -213,6 +220,7 @@ public class IrcBot extends PircBot {
         comp.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(kickerLogin + "@" + kickerHostname)));
         component.appendSibling(comp);
         component.appendText(" (" + reason + ")");
+        Utils.minifyChatComponent(component);
         MinecraftServer.getServer().getConfigurationManager().sendChatMsg(component);
     }
 
@@ -227,6 +235,7 @@ public class IrcBot extends PircBot {
         comp.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(sourceLogin + "@" + sourceHostname)));
         component.appendSibling(comp);
         component.appendText(" left irc (" + reason + ")");
+        Utils.minifyChatComponent(component);
         MinecraftServer.getServer().getConfigurationManager().sendChatMsg(component);
     }
 
@@ -238,6 +247,7 @@ public class IrcBot extends PircBot {
         comp.getChatStyle().setColor(EnumChatFormatting.GRAY);
         component.appendSibling(comp);
         component.appendText(" * " + setBy + " set the topic: " + topic);
+        Utils.minifyChatComponent(component);
         MinecraftServer.getServer().getConfigurationManager().sendChatMsg(component);
     }
 
@@ -264,10 +274,10 @@ public class IrcBot extends PircBot {
             if(current == '\u0003'){ //Every IRC colorcode starts with this magic char
                 if(msg.length() > 0){ //Write everything we read
                     comp = new ChatComponentText(msg);
-                    if(color != EnumChatFormatting.WHITE && color != EnumChatFormatting.RESET) comp.getChatStyle().setColor(color);
-                    if(bold) comp.getChatStyle().setBold(true);
-                    if(italic) comp.getChatStyle().setItalic(true);
-                    if(underline) comp.getChatStyle().setUnderlined(true);
+                    comp.getChatStyle().setColor(color);
+                    comp.getChatStyle().setBold(bold);
+                    comp.getChatStyle().setItalic(italic);
+                    comp.getChatStyle().setUnderlined(underline);
                     component.appendSibling(comp);
                 }
                 //if(msg.length() < i + 1) break;
@@ -278,10 +288,10 @@ public class IrcBot extends PircBot {
             }else if(current == '\u000F'){ //Reset
                 if(msg.length() > 0){ //Write everything we read
                     comp = new ChatComponentText(msg);
-                    if(color != EnumChatFormatting.WHITE && color != EnumChatFormatting.RESET) comp.getChatStyle().setColor(color);
-                    if(bold) comp.getChatStyle().setBold(true);
-                    if(italic) comp.getChatStyle().setItalic(true);
-                    if(underline) comp.getChatStyle().setUnderlined(true);
+                    comp.getChatStyle().setColor(color);
+                    comp.getChatStyle().setBold(bold);
+                    comp.getChatStyle().setItalic(italic);
+                    comp.getChatStyle().setUnderlined(underline);
                     component.appendSibling(comp);
                 }
                 msg = "";
@@ -290,10 +300,10 @@ public class IrcBot extends PircBot {
             }else if(current == '\u0002'){ //Bold
                 if(msg.length() > 0){ //Write everything we read
                     comp = new ChatComponentText(msg);
-                    if(color != EnumChatFormatting.WHITE && color != EnumChatFormatting.RESET) comp.getChatStyle().setColor(color);
-                    if(bold) comp.getChatStyle().setBold(true);
-                    if(italic) comp.getChatStyle().setItalic(true);
-                    if(underline) comp.getChatStyle().setUnderlined(true);
+                    comp.getChatStyle().setColor(color);
+                    comp.getChatStyle().setBold(bold);
+                    comp.getChatStyle().setItalic(italic);
+                    comp.getChatStyle().setUnderlined(underline);
                     component.appendSibling(comp);
                 }
                 msg = "";
@@ -302,10 +312,10 @@ public class IrcBot extends PircBot {
             }else if(current == '\u001F'){ //Underline
                 if(msg.length() > 0){ //Write everything we read
                     comp = new ChatComponentText(msg);
-                    if(color != EnumChatFormatting.WHITE && color != EnumChatFormatting.RESET) comp.getChatStyle().setColor(color);
-                    if(bold) comp.getChatStyle().setBold(true);
-                    if(italic) comp.getChatStyle().setItalic(true);
-                    if(underline) comp.getChatStyle().setUnderlined(true);
+                    comp.getChatStyle().setColor(color);
+                    comp.getChatStyle().setBold(bold);
+                    comp.getChatStyle().setItalic(italic);
+                    comp.getChatStyle().setUnderlined(underline);
                     component.appendSibling(comp);
                 }
                 msg = "";
@@ -314,10 +324,10 @@ public class IrcBot extends PircBot {
             }else if(current == '\u0016'){ //Reverse / italic (We use italic)
                 if(msg.length() > 0){ //Write everything we read
                     comp = new ChatComponentText(msg);
-                    if(color != EnumChatFormatting.WHITE && color != EnumChatFormatting.RESET) comp.getChatStyle().setColor(color);
-                    if(bold) comp.getChatStyle().setBold(true);
-                    if(italic) comp.getChatStyle().setItalic(true);
-                    if(underline) comp.getChatStyle().setUnderlined(true);
+                    comp.getChatStyle().setColor(color);
+                    comp.getChatStyle().setBold(bold);
+                    comp.getChatStyle().setItalic(italic);
+                    comp.getChatStyle().setUnderlined(underline);
                     component.appendSibling(comp);
                 }
                 msg = "";
@@ -329,10 +339,10 @@ public class IrcBot extends PircBot {
         }
         if(msg.length() > 0){
             comp = new ChatComponentText(msg);
-            if(color != EnumChatFormatting.WHITE && color != EnumChatFormatting.RESET) comp.getChatStyle().setColor(color);
-            if(bold) comp.getChatStyle().setBold(true);
-            if(italic) comp.getChatStyle().setItalic(true);
-            if(underline) comp.getChatStyle().setUnderlined(true);
+            comp.getChatStyle().setColor(color);
+            comp.getChatStyle().setBold(bold);
+            comp.getChatStyle().setItalic(italic);
+            comp.getChatStyle().setUnderlined(underline);
             component.appendSibling(comp);
         }
         //for(IChatComponent c : (List<IChatComponent>) component.getSiblings()){
