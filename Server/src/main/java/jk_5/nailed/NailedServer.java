@@ -11,6 +11,7 @@ import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.config.ConfigFile;
 import jk_5.nailed.api.events.RegisterInstructionEvent;
 import jk_5.nailed.blocks.NailedBlocks;
+import jk_5.nailed.chat.joinmessage.JoinMessageSender;
 import jk_5.nailed.ipc.IpcManager;
 import jk_5.nailed.irc.IrcBot;
 import jk_5.nailed.item.NailedItems;
@@ -27,7 +28,6 @@ import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.permissions.NailedPermissionFactory;
 import jk_5.nailed.permissions.PermissionEventHandler;
 import jk_5.nailed.players.NailedPlayerRegistry;
-import jk_5.nailed.players.JoinMessageSender;
 import jk_5.nailed.server.command.*;
 import jk_5.nailed.teamspeak.TeamspeakClient;
 import jk_5.nailed.util.invsee.InvSeeTicker;
@@ -61,6 +61,7 @@ public class NailedServer {
     @Getter private static TeamspeakClient teamspeakClient;
     @Getter private static NailedPermissionFactory permissionFactory;
     @Getter private static File configDir;
+    @Getter private static JoinMessageSender joinMessageSender;
 
     public NailedServer(){
         NailedAPI.setMapLoader(new NailedMapLoader());
@@ -76,7 +77,8 @@ public class NailedServer {
     @SuppressWarnings("unused")
     public void preInit(FMLPreInitializationEvent event){
         configDir = new File(event.getModConfigurationDirectory(), "nailed");
-        
+        configDir.mkdirs();
+
         NailedLog.info("Creating config file");
         config = new ConfigFile(new File(configDir, "config.cfg")).setComment("Nailed main config file");
 
@@ -88,7 +90,7 @@ public class NailedServer {
         }
         
         NailedLog.info("Loading join message");
-        JoinMessageSender joinMessageSender = new JoinMessageSender();
+        joinMessageSender = new JoinMessageSender();
         joinMessageSender.readConfig(configDir);
         
         NailedLog.info("Loading achievements");
@@ -147,6 +149,7 @@ public class NailedServer {
         NailedAchievements.init();
 
         NailedLog.info("Registering permissions");
+        joinMessageSender.registerPermissions();
         //PermissionsManager.registerPermission("nailed.commands.test1");
     }
 
