@@ -19,7 +19,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.PrintWriter;
-import java.lang.management.ManagementFactory;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +35,7 @@ public class JoinMessageSender {
     public void readConfig(File configDir){
         this.replacements.clear();
         this.replacements.put("playername", new IReplacement.PlayerName());
+        this.replacements.put("uptime", new IReplacement.Uptime());
 
         this.message.clear();
         File configFile = new File(configDir, "joinmessage.cfg");
@@ -69,7 +69,8 @@ public class JoinMessageSender {
                 writer.println("#");
                 writer.println("# If you want more codes, message me (jk-5) on irc.esper.net, or open an issue on https://github.com/nailed/nailed-forge/issues");
                 writer.println("");
-                writer.println("Welcome §3${playername}§r to §4Nailed");
+                writer.println("&6Welcome &3${playername}&6 to Nailed");
+                writer.println("&6Uptime: &7${uptime}");
             }catch(Exception e){
                 NailedLog.error(e, "Error while writing default join message config file");
             }finally{
@@ -231,11 +232,6 @@ public class JoinMessageSender {
             component.appendSibling(comp);
         }
         Utils.minifyChatComponent(component);
-        NailedLog.info(IChatComponent.Serializer.func_150696_a(component));
         return component;
-    }
-
-    private IChatComponent getUptime(){
-        return new ChatComponentText(Utils.parseTime((int) ManagementFactory.getRuntimeMXBean().getUptime() / 1000));
     }
 }
