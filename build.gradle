@@ -19,11 +19,9 @@ buildscript {
         classpath 'com.google.guava:guava:14.0'
         classpath 'com.google.code.gson:gson:2.2.4'
         classpath 'com.jcraft:jsch:0.1.50'
-        classpath 'io.netty:netty-all:4.0.10.Final'
-        classpath 'jk_5.asyncirc:ASyncIRCClient:0.1-SNAPSHOT'
 
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.1-SNAPSHOT'
-        classpath 'jk_5.nailed.gradle:nailed-gradle:1.2-SNAPSHOT'
+        classpath 'jk_5.nailed.gradle:nailed-gradle:1.3-SNAPSHOT'
     }
 }
 
@@ -32,22 +30,27 @@ apply plugin: 'forge'
 
 version = '2.0-SNAPSHOT'
 
+minecraft{
+    version = '1.7.2-10.12.0.1033'
+    assetDir = 'runtime/client/assets'
+}
+
 nailed {
-    minecraftVersion = '1.7.2'         //minecraft.apiVersion
-    forgeVersion = '10.12.0.1025'      //
+    minecraftVersion = project.minecraft.version
+    forgeVersion = '10.12.0.1033'      //
 
-    versionName = 'Nailed-1.7.2'
-    mainClass = 'net.minecraft.launchwrapper.Launch'//
+    //versionName = 'Nailed-1.7.2'
+    //mainClass = 'net.minecraft.launchwrapper.Launch'//
 
-    loadingMavenUrl = 'http://maven.reening.nl/'    //
+    //loadingMavenUrl = 'http://maven.reening.nl/'    //
 
-    deployedMod = 'Client'                          //
-    deployedMod = 'CrashReporter'                   //
-    deployedMod = 'Common'                          //
-    deployed = 'Updater'                            //
+    //deployedMod = 'Client'                          //
+    //deployedMod = 'CrashReporter'                   //
+    //deployedMod = 'Common'                          //
+    //deployed = 'Updater'                            //
 
-    tweaker = 'jk_5.nailed.updater.UpdatingTweaker'     //
-    tweaker = 'cpw.mods.fml.common.launcher.FMLTweaker' //
+    //tweaker = 'jk_5.nailed.updater.UpdatingTweaker'     //
+    //tweaker = 'cpw.mods.fml.common.launcher.FMLTweaker' //
 
     remoteProfileDir = 'nailed'
 
@@ -55,13 +58,8 @@ nailed {
     deployUsername = 'maven'
     deployPassword = project.deploymaven.password
 
-    ircServer = 'irc.reening.nl'                        //
-    ircChannel = '#nailedupdates'                       //
-}
-
-minecraft{
-    version = '1.7.2-10.12.0.1033'
-    assetDir = 'runtime/client/assets'
+    //ircServer = 'irc.reening.nl'                        //
+    //ircChannel = '#nailedupdates'                       //
 }
 
 allprojects {
@@ -110,7 +108,7 @@ subprojects {
     }
 
     dependencies {
-        compile rootProject
+        //compile rootProject
         compile 'org.projectlombok:lombok:1.12.2'
 
         testCompile 'junit:junit:4.11'

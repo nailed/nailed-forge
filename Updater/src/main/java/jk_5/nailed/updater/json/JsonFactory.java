@@ -2,12 +2,14 @@ package jk_5.nailed.updater.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import jk_5.nailed.updater.FileUtils;
 import jk_5.nailed.updater.Updater2;
-import org.apache.commons.io.IOUtils;
+import jk_5.nailed.updater.json.dependencies.DependencyFile;
 
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -17,7 +19,7 @@ import java.util.Date;
  */
 public class JsonFactory {
 
-    private static final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new EnumAdapterFactory()).registerTypeAdapter(Date.class, new DateAdapter()).registerTypeAdapter(File.class, new FileAdapter()).enableComplexMapKeySerialization().setPrettyPrinting().create();
+    public static final Gson gson = new GsonBuilder().registerTypeAdapterFactory(new EnumAdapterFactory()).registerTypeAdapter(Date.class, new DateAdapter()).registerTypeAdapter(File.class, new FileAdapter()).enableComplexMapKeySerialization().setPrettyPrinting().create();
 
     public static LocalDependencyFile loadLocalDependencyFile(File file){
         Reader reader = null;
@@ -25,26 +27,30 @@ public class JsonFactory {
         try{
             reader = new FileReader(file);
             v = gson.fromJson(reader, LocalDependencyFile.class);
-        }catch(IOException e){
-            Updater2.logger.fatal("IOException while reading local dependency file " + file, e);
+        }catch(FileNotFoundException e){
+            Updater2.logger.info("Local dependency file does not exist. Creating...");
         }finally{
-            IOUtils.closeQuietly(reader);
+            FileUtils.close(reader);
+        }
+        if(v == null){
+            v = new LocalDependencyFile();
+            v.libraries = new ArrayList<LocalLibrary>();
         }
         return v;
     }
 
-    public static RemoteDependencyFile loadRemoteDependencyFile(String url){
+    public static DependencyFile loadRemoteDependencyFile(String url){
         Reader reader = null;
-        RemoteDependencyFile v = null;
+        DependencyFile v = null;
         try{
             reader = new InputStreamReader(new URL(url).openStream());
-            v = gson.fromJson(reader, RemoteDependencyFile.class);
+            v = gson.fromJson(reader, DependencyFile.class);
         }catch(MalformedURLException e){
             Updater2.logger.fatal("Invalid URL format " + url, e);
         }catch(IOException e){
             Updater2.logger.fatal("IOException while reading remote dependency file " + url, e);
         }finally{
-            IOUtils.closeQuietly(reader);
+            FileUtils.close(reader);
         }
         return v;
     }
@@ -57,7 +63,7 @@ public class JsonFactory {
         }catch(IOException e){
             Updater2.logger.fatal("IOException while writing local dependency file " + file, e);
         }finally{
-            IOUtils.closeQuietly(writer);
+            FileUtils.close(writer);
         }
     }
 }

@@ -1,6 +1,5 @@
 package jk_5.nailed.updater.json;
 
-import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.TypeAdapterFactory;
@@ -10,6 +9,7 @@ import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -23,7 +23,7 @@ public class EnumAdapterFactory implements TypeAdapterFactory {
     @Override
     public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type){
         if(!type.getRawType().isEnum()) return null;
-        final Map<String, T> map = Maps.newHashMap();
+        final Map<String, T> map = new HashMap<String, T>();
 
         for(T c : (T[]) type.getRawType().getEnumConstants()){
             map.put(c.toString().toLowerCase(Locale.US), c);

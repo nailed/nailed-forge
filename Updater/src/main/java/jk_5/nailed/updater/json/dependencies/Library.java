@@ -1,19 +1,59 @@
-package jk_5.nailed.updater.json;
+package jk_5.nailed.updater.json.dependencies;
+
+import jk_5.nailed.updater.Constants;
+import jk_5.nailed.updater.json.launcher.Action;
+import jk_5.nailed.updater.json.launcher.ExtractRule;
+import jk_5.nailed.updater.json.launcher.OS;
+import jk_5.nailed.updater.json.launcher.OSRule;
+import lombok.Getter;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-public class RemoteLibrary {
+public class Library {
 
-    public int rev;
     public String id;
     public String name;
     public String url = null;
     public String pattern = null;
     public String tweaker;
-    private Artifact artifact = null;
+    public boolean dev = true;
+    public String[] classLoaderExclusions;
+    public String[] transformerExclusions;
+    public boolean launcher = false;
+    public List<OSRule> rules;
+    public Map<OS, String> natives;
+    public ExtractRule extract;
+
+    private transient Artifact artifact = null;
+    private Action applies = null;
+
+    public boolean applies(){
+        if(applies == null){
+            applies = Action.DISALLOW;
+            if(rules == null){
+                applies = Action.ALLOW;
+            }else{
+                for(OSRule rule : rules){
+                    if(rule.applies())
+                        applies = rule.action;
+                }
+            }
+        }
+        return applies == Action.ALLOW;
+    }
+
+    public Artifact getArtifact(){
+        if(this.artifact == null){
+            this.artifact = new Artifact(this.name);
+        }
+        return this.artifact;
+    }
 
     public String getPath(){
         if(this.artifact == null){
@@ -22,42 +62,39 @@ public class RemoteLibrary {
         return this.artifact.getPath();
     }
 
+    public String getPathNatives(){
+        if(this.natives == null) return null;
+        if(this.artifact == null){
+            this.artifact = new Artifact(name);
+        }
+        return this.artifact.getPath(natives.get(OS.CURRENT));
+    }
+
     public String getArtifactName(){
         if(this.artifact == null){
             this.artifact = new Artifact(this.name);
         }
-        return this.artifact.getArtifact();
+        if(this.natives == null){
+            return this.artifact.getArtifact();
+        }else{
+            return this.artifact.getArtifact(this.natives.get(OS.CURRENT));
+        }
     }
 
     public String getUrl(){
+        String ret = null;
         if(this.artifact == null){
             this.artifact = new Artifact(this.name);
         }
         if(this.url != null){
-            return this.url;
+            ret = this.url;
         }
         if(this.pattern != null){
             return this.pattern.replace("{VERSION}", this.artifact.version);
         }
-        return null;
-    }
-
-    public String getFileUrl(){
-        if(this.artifact == null){
-            this.artifact = new Artifact(this.name);
-        }
-        if(this.url != null){
-            String ret = this.url;
-            if(!ret.endsWith("/")){
-                ret += "/";
-            }
-            ret += this.getPath();
-            return ret;
-        }
-        if(this.pattern != null){
-            return this.pattern.replace("{VERSION}", this.artifact.version);
-        }
-        return null;
+        if(ret == null) ret = Constants.MINECRAFT_MAVEN_URL;
+        if(!ret.endsWith("/")) ret += "/";
+        return ret + this.artifact.getPath();
     }
 
     @Override
@@ -65,7 +102,8 @@ public class RemoteLibrary {
         return this.name;
     }
 
-    private class Artifact {
+    @Getter
+    public class Artifact {
         private String domain;
         private String name;
         private String version;

@@ -2,8 +2,9 @@ package jk_5.nailed.updater;
 
 import net.minecraft.launchwrapper.ITweaker;
 import net.minecraft.launchwrapper.LaunchClassLoader;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import javax.swing.*;
 import java.io.File;
 import java.util.List;
 
@@ -18,14 +19,16 @@ public class UpdatingTweaker implements ITweaker {
     public static File gameDir = new File(".");
     public static File assetsDir = new File("assets");
     public static String mainClass;
+    public static final Logger logger = LogManager.getLogger("Nailed-Updater");
 
     @Override
     public void acceptOptions(List<String> args, File gameDir, File assetsDir, String profile){
-        System.out.println("Started nailed updater");
+        logger.info("Starting nailed updater...");
         UpdatingTweaker.name = profile;
         UpdatingTweaker.gameDir = gameDir;
         UpdatingTweaker.assetsDir = assetsDir;
-        if(Updater.checkForUpdates()){
+        Updater2.run();
+        /*if(Updater.checkForUpdates()){
             if(Updater.getRestartLevel() == 0){
                 System.out.println("Updates are done. We don\'t have to restart");
             }else if(Updater.getRestartLevel() == 1){
@@ -37,12 +40,12 @@ public class UpdatingTweaker implements ITweaker {
                 JOptionPane.showMessageDialog(null, "We updated some files and you have to restart your launcher. After the game shuts down, close your launcher and restart it and hit the \'Play\' button again", "Nailed-Updater", JOptionPane.INFORMATION_MESSAGE);
                 System.exit(0);
             }
-        }
+        }*/
     }
 
     @Override
     public void injectIntoClassLoader(LaunchClassLoader classLoader){
-        Updater2.addToClassLoader(classLoader);
+
     }
 
     @Override

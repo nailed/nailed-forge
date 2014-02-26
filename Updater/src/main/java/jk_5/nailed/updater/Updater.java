@@ -1,4 +1,4 @@
-package jk_5.nailed.updater;
+/*package jk_5.nailed.updater;
 
 import com.google.common.collect.MapDifference;
 import com.google.common.collect.Maps;
@@ -20,7 +20,7 @@ import java.util.Set;
  * No description given
  *
  * @author jk-5
- */
+ *//*
 public class Updater {
 
     private static final String SERVER = "http://maven.reening.nl/";
@@ -283,4 +283,4 @@ public class Updater {
 
         return String.format("%1$0" + hashLength + "x", new BigInteger(1, stream.getMessageDigest().digest()));
     }
-}
+}*/

@@ -1,25 +1,294 @@
 {
-    "mainClass": "net.minecraft.launchwrapper.Launch",
+    "profile": {
+        "name": "Nailed-1.7.2",
+        "releaseTime": "2014-03-23T08:40:46+01:00",
+        "type": "release",
+        "arguments": "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${game_assets} --uuid ${auth_uuid} --accessToken ${auth_access_token}",
+        "mainClass": "net.minecraft.launchwrapper.Launch"
+    },
+    "mainClass": "net.minecraft.client.main.Main",
     "libraries": [
         {
-            "name": "net.minecraftforge:minecraftforge:10.12.0.1025",
+            "id": "nailedUpdater",
+            "name": "jk_5.nailed:Nailed-Updater:0.2",
+            "url": "http://maven.reening.nl",
+            "launcher": true,
+            "dev": false,
+            "tweaker": "jk_5.nailed.updater.UpdatingTweaker"
+        },
+        {
+            "id": "launchwrapper",
+            "name": "net.minecraft:launchwrapper:1.9",
+            "url": "https://libraries.minecraft.net",
+            "launcher": true,
+            "dev": false
+        },
+        {
+            "id": "forge",
+            "name": "net.minecraftforge:forge:1.7.2-10.12.0.1033:universal",
             "url": "http://files.minecraftforge.net/maven/",
             "tweaker": "cpw.mods.fml.common.launcher.FMLTweaker",
             "dev": false
         },
         {
+            "id": "asyncIRC",
             "name": "jk_5.asyncirc:ASyncIRCClient:0.1-SNAPSHOT",
             "url": "http://maven.reening.nl"
         },
         {
+            "id": "crashReporter",
             "name": "jk_5.nailed:Nailed-CrashReporter:0.1-SNAPSHOT",
             "url": "http://maven.reening.nl",
             "dev": false
         },
         {
+            "id": "minecraft",
             "name": "net.minecraft:minecraft:1.7.2",
             "pattern": "http://s3.amazonaws.com/Minecraft.Download/versions/{VERSION}/{VERSION}.jar",
             "dev": false
+        },
+        {
+            "id": "log4japi",
+            "name": "org.apache.logging.log4j:log4j-api:2.0-beta9",
+            "url": "https://libraries.minecraft.net",
+            "launcher": true,
+            "dev": true
+        },
+        {
+            "id": "log4jcore",
+            "name": "org.apache.logging.log4j:log4j-core:2.0-beta9",
+            "url": "https://libraries.minecraft.net",
+            "launcher": true,
+            "dev": false
+        },
+        {
+            "id": "gson",
+            "name": "com.google.code.gson:gson:2.2.4",
+            "url": "https://libraries.minecraft.net",
+            "launcher": true,
+            "dev": true
+        },
+        {
+            "id": "jopt",
+            "name": "net.sf.jopt-simple:jopt-simple:4.5",
+            "url": "https://libraries.minecraft.net",
+            "launcher": true,
+            "dev": false
+        },
+        {
+            "id": "asm",
+            "name": "org.ow2.asm:asm-all:4.1",
+            "url": "https://libraries.minecraft.net",
+            "dev": false
+        },
+        {
+            "id": "scala-library",
+            "name": "org.scala-lang:scala-library:2.10.2",
+            "url" : "http://files.minecraftforge.net/maven/"
+        },
+        {
+            "id": "scala-library",
+            "name": "org.scala-lang:scala-compiler:2.10.2",
+            "url" : "http://files.minecraftforge.net/maven/"
+        },
+        {
+            "id": "vecmath",
+            "name": "java3d:vecmath:1.3.1",
+            "url": "https://libraries.minecraft.net"
+        },
+        {
+            "id": "trove4j",
+            "name": "net.sf.trove4j:trove4j:3.0.3",
+            "url": "https://libraries.minecraft.net"
+        },
+        {
+            "id": "icu4j",
+            "name": "com.ibm.icu:icu4j-core-mojang:51.2",
+            "url": "https://libraries.minecraft.net"
+        },
+        {
+            "id": "lzma",
+            "name": "lzma:lzma:0.0.1",
+            "url": "https://libraries.minecraft.net"
+        },
+        {
+            "id": "jorbis",
+            "name": "com.paulscode:codecjorbis:20101023",
+            "url": "https://libraries.minecraft.net"
+        },
+        {
+            "id": "wav",
+            "name": "com.paulscode:codecwav:20101023",
+            "url": "https://libraries.minecraft.net"
+        },
+        {
+            "id": "jsound",
+            "name": "com.paulscode:libraryjavasound:20101123",
+            "url": "https://libraries.minecraft.net"
+        },
+        {
+            "id": "openal",
+            "name": "com.paulscode:librarylwjglopenal:20100824",
+            "url": "https://libraries.minecraft.net"
+        },
+        {
+            "id": "soundsystem",
+            "name": "com.paulscode:soundsystem:20120107",
+            "url": "https://libraries.minecraft.net"
+        },
+        {
+            "id": "netty",
+            "name": "io.netty:netty-all:4.0.10.Final",
+            "url": "https://libraries.minecraft.net"
+        },
+        {
+            "id": "guava",
+            "name": "com.google.guava:guava:15.0",
+            "url": "https://libraries.minecraft.net"
+        },
+        {
+            "id": "commons-lang",
+            "name": "org.apache.commons:commons-lang3:3.1",
+            "url": "https://libraries.minecraft.net"
+        },
+        {
+            "id": "commons-io",
+            "name": "commons-io:commons-io:2.4",
+            "url": "https://libraries.minecraft.net"
+        },
+        {
+            "id": "jinput",
+            "name": "net.java.jinput:jinput:2.0.5",
+            "url": "https://libraries.minecraft.net"
+        },
+        {
+            "id": "jutils",
+            "name": "net.java.jutils:jutils:1.0.0",
+            "url": "https://libraries.minecraft.net"
+        },
+        {
+            "id": "authlib",
+            "name": "com.mojang:authlib:1.3",
+            "url": "https://libraries.minecraft.net"
+        },
+        {
+            "id": "lwjgl",
+            "name": "org.lwjgl.lwjgl:lwjgl:2.9.0",
+            "rules": [
+                {
+                    "action": "allow"
+                },
+                {
+                    "action": "disallow",
+                    "os": {
+                        "name": "osx"
+                    }
+                }
+            ],
+            "url": "https://libraries.minecraft.net"
+        },
+        {
+            "id": "lwjglutil",
+            "name": "org.lwjgl.lwjgl:lwjgl_util:2.9.0",
+            "rules": [
+                {
+                    "action": "allow"
+                },
+                {
+                    "action": "disallow",
+                    "os": {
+                        "name": "osx"
+                    }
+                }
+            ],
+            "url": "https://libraries.minecraft.net"
+        },
+        {
+            "id": "lwjglplatform",
+            "name": "org.lwjgl.lwjgl:lwjgl-platform:2.9.0",
+            "rules": [
+                {
+                    "action": "allow"
+                },
+                {
+                    "action": "disallow",
+                    "os": {
+                        "name": "osx"
+                    }
+                }
+            ],
+            "natives": {
+                "linux": "natives-linux",
+                "windows": "natives-windows"
+            },
+            "extract": {
+                "exclude": [
+                  "META-INF/"
+                ]
+            },
+            "url": "https://libraries.minecraft.net"
+        },
+        {
+            "id": "lwjgl2",
+            "name": "org.lwjgl.lwjgl:lwjgl:2.9.1-nightly-20131017",
+            "rules": [
+                {
+                    "action": "allow",
+                    "os": {
+                        "name": "osx"
+                    }
+                }
+            ],
+            "url": "https://libraries.minecraft.net"
+        },
+        {
+            "id": "lwjglutil2",
+            "name": "org.lwjgl.lwjgl:lwjgl_util:2.9.1-nightly-20131017",
+            "rules": [
+                {
+                    "action": "allow",
+                    "os": {
+                        "name": "osx"
+                    }
+                }
+            ],
+            "url": "https://libraries.minecraft.net"
+        },
+        {
+            "id": "lwjglplatform",
+            "name": "org.lwjgl.lwjgl:lwjgl-platform:2.9.1-nightly-20131017",
+            "rules": [
+                {
+                    "action": "allow",
+                    "os": {
+                        "name": "osx"
+                    }
+                }
+            ],
+            "natives": {
+                "osx": "natives-osx"
+            },
+            "extract": {
+                "exclude": [
+                    "META-INF/"
+                ]
+            },
+            "url": "https://libraries.minecraft.net"
+        },
+        {
+            "id": "jinputplatform",
+            "name": "net.java.jinput:jinput-platform:2.0.5",
+            "natives": {
+                "linux": "natives-linux",
+                "windows": "natives-windows",
+                "osx": "natives-osx"
+            },
+            "extract": {
+                "exclude": [
+                    "META-INF/"
+                ]
+            },
+            "url": "https://libraries.minecraft.net"
         }
     ]
 }

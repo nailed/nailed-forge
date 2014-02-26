@@ -1,5 +1,9 @@
 version = '0.1-SNAPSHOT'
 
+dependencies {
+    compile rootProject
+}
+
 task javadocJar(type:Jar, dependsOn:javadoc){
     classifier = 'javadoc'
     from 'build/docs/javadoc'
