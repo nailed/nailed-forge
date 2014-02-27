@@ -11,10 +11,11 @@ end
 map.countdown = function(seconds, message)
     local ellapsed = 0
     repeat
-        map.sendTimeUpdate(string.gsub(message, "%s", seconds))
+        local out, num = string.gsub(message, "%%s", (seconds - ellapsed) .. "")
+        map.sendTimeUpdate("" .. out)
         sleep(1)
-        ellapsed ++
-    until ellapsed == seconds
+        ellapsed = ellapsed + 1
+    until ellapsed >= seconds
 end
 
 map.native = function()
