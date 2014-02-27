@@ -16,7 +16,6 @@ import jk_5.nailed.api.map.teleport.TeleportOptions;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.api.scripting.IMount;
 import jk_5.nailed.map.game.NailedGameManager;
-import jk_5.nailed.map.gameloop.InstructionController;
 import jk_5.nailed.map.script.FileSystemException;
 import jk_5.nailed.map.script.MachineRegistry;
 import jk_5.nailed.map.script.ServerMachine;
@@ -50,7 +49,6 @@ public class NailedMap implements Map {
     @Getter private boolean isLoaded = false;
     @Getter private final TeamManager teamManager;
     @Getter private final StatManager statManager;
-    @Getter private final InstructionController instructionController;
     @Getter private int amountOfPlayers = 0;
     @Getter private boolean dataResyncRequired = true;
     @Getter private WeatherController weatherController;
@@ -66,7 +64,6 @@ public class NailedMap implements Map {
         this.mappack = mappack;
         this.teamManager = new TeamManager(this);
         this.statManager = new StatManager(this);
-        this.instructionController = new InstructionController(this);
         this.weatherController = new WeatherController(this);
         this.signCommandHandler = new SignCommandHandler(this);
         this.gameManager = new NailedGameManager(this);

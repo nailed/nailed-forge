@@ -18,6 +18,16 @@ map.countdown = function(seconds, message)
     until ellapsed >= seconds
 end
 
+map.countup = function(message)
+    local ellapsed = 0
+    while true do
+        local out, num = string.gsub(message, "%%s", ellapsed .. "")
+        map.sendTimeUpdate("" .. out)
+        sleep(1)
+        ellapsed = ellapsed + 1
+    end
+end
+
 map.native = function()
     return native
 end

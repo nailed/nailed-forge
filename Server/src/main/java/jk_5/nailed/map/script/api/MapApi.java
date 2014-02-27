@@ -7,9 +7,15 @@ import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.MappackMetadata;
 import jk_5.nailed.api.map.Spawnpoint;
+import jk_5.nailed.api.map.stat.IStatType;
+import jk_5.nailed.api.map.stat.Stat;
 import jk_5.nailed.api.map.team.Team;
+import jk_5.nailed.api.map.teleport.TeleportOptions;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.map.script.*;
+import jk_5.nailed.map.stat.DefaultStat;
+import jk_5.nailed.map.stat.types.StatTypeModifiable;
+import jk_5.nailed.map.teleport.TeleportHelper;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.util.FoodStats;
 import net.minecraft.util.IChatComponent;
@@ -66,7 +72,14 @@ public class MapApi implements ILuaAPI {
                 "getTeam",
                 "setDifficulty",
                 "sendTimeUpdate",
-                "setTime"
+                "setTime",
+                "setWinner",
+                "disableStat",
+                "enableStat",
+                "spreadPlayers",
+                "tpAllToLobby",
+                "remove",
+                "recycle"
         };
     }
 
@@ -181,6 +194,79 @@ public class MapApi implements ILuaAPI {
                     throw new Exception("Expected 1 int argument");
                 }
                 break;
+            case 13: //setWinner
+                if(arguments.length == 1 && arguments[0] instanceof ILuaObject){
+                    try{
+                        ILuaObject obj = (ILuaObject) arguments[0];
+                        String[] names = obj.getMethodNames();
+                        for(int i = 0; i < names.length; i++){
+                            if(names[i].equals("getType")){
+                                String type = (String) obj.callMethod(context, i, arguments)[0];
+                                if(type.equals("player")){
+                                    String username = (String) obj.callMethod(null, 0, null)[0];
+                                    Player player = NailedAPI.getPlayerRegistry().getPlayerByUsername(username);
+                                    if(player == null){
+                                        throw new Exception("Player " + username + " does not exist");
+                                    }
+                                    if(player.getCurrentMap() != this.map){
+                                        throw new Exception("Player " + username + " is not in this world");
+                                    }
+                                    this.map.getGameManager().setWinner(player);
+                                }else if(type.equals("team")){
+                                    String name = (String) obj.callMethod(null, 0, null)[0];
+                                    Team team = this.map.getTeamManager().getTeam(name);
+                                    if(team == null){
+                                        throw new Exception("Team " + name + " does not exist");
+                                    }
+                                    this.map.getGameManager().setWinner(team);
+                                }
+                            }
+                        }
+                    }catch(Exception e){
+                        throw new Exception("The object passed is not a team or player");
+                    }
+                }else{
+                    throw new Exception("Expected 1 player/team argument");
+                }
+                break;
+            case 14: //disableStat
+                if(arguments.length == 1 && arguments[0] instanceof String){
+                    Stat stat = this.map.getStatManager().getStat((String) arguments[0]);
+                    if(stat != null && stat instanceof DefaultStat){
+                        IStatType type = ((DefaultStat) stat).getType();
+                        if(type instanceof StatTypeModifiable){
+                            stat.disable();
+                        }
+                    }
+                }
+                break;
+            case 15: //enableStat
+                if(arguments.length == 1 && arguments[0] instanceof String){
+                    Stat stat = this.map.getStatManager().getStat((String) arguments[0]);
+                    if(stat != null && stat instanceof DefaultStat){
+                        IStatType type = ((DefaultStat) stat).getType();
+                        if(type instanceof StatTypeModifiable){
+                            stat.enable();
+                        }
+                    }
+                }
+                break;
+            case 16: //spreadPlayers
+                for(Player player : this.map.getPlayers()){
+                    Spawnpoint spawn = this.map.getRandomSpawnpoint();
+                    player.getEntity().setLocationAndAngles(spawn.posX + 0.5, spawn.posY, spawn.posZ + 0.5, spawn.yaw, spawn.pitch);
+                }
+                break;
+            case 17: //tpAllToLobby
+                TeleportOptions options = NailedAPI.getMapLoader().getLobby().getSpawnTeleport();
+                for(Player player : this.map.getPlayers()){
+                    TeleportHelper.travelEntity(player.getEntity(), options);
+                }
+                break;
+            case 18: //remove
+                break;
+            case 19: //recycle
+                break;
         }
         return null;
     }
@@ -200,7 +286,8 @@ public class MapApi implements ILuaAPI {
                         "setGamemode",
                         "setHealth",
                         "setFood",
-                        "setExperience"
+                        "setExperience",
+                        "getType"
                 };
             }
 
@@ -253,6 +340,8 @@ public class MapApi implements ILuaAPI {
                             throw new Exception("Expected 1 int argument");
                         }
                         break;
+                    case 8: //getType
+                        return new Object[]{"player"};
                 }
                 return null;
             }
@@ -270,7 +359,8 @@ public class MapApi implements ILuaAPI {
                         "getName",
                         "getPlayers",
                         "forEachPlayer",
-                        "setSpawn"
+                        "setSpawn",
+                        "getType"
                 };
             }
 
@@ -309,6 +399,8 @@ public class MapApi implements ILuaAPI {
                             throw new Exception("Expected 3 int arguments, and 2 optional float arguments");
                         }
                         break;
+                    case 4: //getType
+                        return new Object[]{"team"};
                 }
                 return null;
             }

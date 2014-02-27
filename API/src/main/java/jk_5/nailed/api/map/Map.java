@@ -26,7 +26,6 @@ public interface Map {
     public boolean isLoaded();
     public TeamManager getTeamManager();
     public StatManager getStatManager();
-    public InstructionController getInstructionController();
     public WeatherController getWeatherController();
     public SignCommandHandler getSignCommandHandler();
     public List<Player> getPlayers();
