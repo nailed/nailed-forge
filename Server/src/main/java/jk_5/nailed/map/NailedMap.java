@@ -153,18 +153,20 @@ public class NailedMap implements Map {
 
     @Override
     public void onTick(TickEvent.ServerTickEvent event){
-        this.machine.update();
-        if(!this.mounted && this.machine.getApiEnvironment().getFileSystem() != null){
-            if(this.mappackMount == null && this.mappack != null){
-                this.mappackMount = this.mappack.createMount();
-                if(this.mappackMount != null){
-                    try{
-                        this.machine.getApiEnvironment().getFileSystem().mount("mappack", "mappack", this.mappackMount);
-                    }catch(FileSystemException e){
-                        NailedLog.error(e, "Error while mounting mappack folder to machine\'s filesystem");
+        if(event.phase == TickEvent.Phase.END){
+            this.machine.update();
+            if(!this.mounted && this.machine.getApiEnvironment().getFileSystem() != null){
+                if(this.mappackMount == null && this.mappack != null){
+                    this.mappackMount = this.mappack.createMount();
+                    if(this.mappackMount != null){
+                        try{
+                            this.machine.getApiEnvironment().getFileSystem().mount("mappack", "mappack", this.mappackMount);
+                        }catch(FileSystemException e){
+                            NailedLog.error(e, "Error while mounting mappack folder to machine\'s filesystem");
+                        }
                     }
+                    this.mounted = true;
                 }
-                this.mounted = true;
             }
         }
     }
