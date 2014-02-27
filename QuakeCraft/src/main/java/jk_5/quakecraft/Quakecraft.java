@@ -6,11 +6,8 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import jk_5.nailed.api.ChatColor;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.RayTracer;
-import jk_5.nailed.api.events.RegisterInstructionEvent;
-import jk_5.nailed.api.map.IInstruction;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.player.Player;
 import net.minecraft.entity.Entity;
@@ -23,7 +20,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.Scoreboard;
@@ -120,11 +116,11 @@ public class Quakecraft {
                             score.increseScore(1);
 
                             if(score.getScorePoints() >= 25){
-                                for(IInstruction instruction : map.getInstructionController().getInstructions()){
+                                /*for(IInstruction instruction : map.getInstructionController().getInstructions()){
                                     if(instruction instanceof InstructionAwaitFinalKill){
                                         ((InstructionAwaitFinalKill) instruction).finalKillMade = true;
                                     }
-                                }
+                                }*/
                                 map.broadcastChatMessage(new ChatComponentTranslation("quakecraft.message.winner", player.getUsername()));
                             }
                         }
@@ -152,24 +148,17 @@ public class Quakecraft {
             EntityPlayer player = (EntityPlayer) event.entity;
             if(this.isQuakecraft(event.world)){
                 Map map = NailedAPI.getMapLoader().getMap(event.world);
-                if(map.getInstructionController().isRunning()){
+                /*if(map.getInstructionController().isRunning()){
                     ItemStack stack = new ItemStack(Items.wooden_hoe, 1);
                     stack.setStackDisplayName(ChatColor.RESET + "" + ChatColor.GREEN + "Railgun");
                     player.inventory.setInventorySlotContents(0, stack);
                     player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 1000000, 1, true));
-                }
+                }*/
             }else if(this.isQuakecraft(event.entity.worldObj)){
                 player.inventory.setInventorySlotContents(0, null);
                 player.removePotionEffect(Potion.moveSpeed.id);
             }
         }
-    }
-
-    @SubscribeEvent
-    @SuppressWarnings("unused")
-    public void registerInstructions(RegisterInstructionEvent event){
-        event.register("startquakecraft", InstructionStartQuakecraft.class);
-        event.register("awaitfinakquakekill", InstructionAwaitFinalKill.class);
     }
 
     @SubscribeEvent

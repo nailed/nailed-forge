@@ -47,9 +47,8 @@ public class NailedGameManager implements GameManager {
     }
 
     public void startGame(){
-        //TODO: start lua
         ServerMachine machine = ((NailedMap) this.map).getMachine();
-        machine.getTerminal();
+        machine.queueEvent("game_start"); //Dispatch the game_start event
         StatTypeManager.instance().getStatType(StatTypeGameloopRunning.class).onStart(this.map);
     }
 

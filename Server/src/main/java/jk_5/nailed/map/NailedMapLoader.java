@@ -199,7 +199,7 @@ public class NailedMapLoader implements MapLoader {
         if(!(event.entity instanceof EntityPlayer)) return;
         Player player = NailedAPI.getPlayerRegistry().getPlayer((EntityPlayer) event.entity);
         if(player == null) return;
-        if(!player.getCurrentMap().getInstructionController().isRunning()) return;
+        if(!player.getCurrentMap().getGameManager().isGameRunning()) return;
         if(player.getSpawnpoint() != null){
             player.getEntity().setSpawnChunk(player.getSpawnpoint(), true);
         }else if(player.getTeam() instanceof TeamUndefined){
@@ -287,13 +287,10 @@ public class NailedMapLoader implements MapLoader {
             if(s[0].equals("joinedPlayers")){
                 int players = Integer.parseInt(s[1]);
                 if(map.getAmountOfPlayers() >= players){
-                    map.getInstructionController().startGame();
+                    map.getGameManager().startGame();
                 }else{
-                    InstructionController controller = map.getInstructionController();
-                    Object data = controller.load("watchunready");
-                    if(data == null) controller.save("watchunready", false);
-                    if((Boolean) controller.load("watchunready")){
-                        controller.stopGame();
+                    if(map.getGameManager().isWatchUnready()){
+                        map.getGameManager().stopGame();
                     }
                 }
             }

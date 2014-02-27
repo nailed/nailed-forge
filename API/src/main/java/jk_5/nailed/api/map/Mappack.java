@@ -24,11 +24,6 @@ public interface Mappack {
     MappackMetadata getMappackMetadata();
 
     /**
-     * @return An instructionlist with instructions for the game (may be empty)
-     */
-    InstructionList getInstructionList();
-
-    /**
      * @return The config about which {@link jk_5.nailed.api.map.stat.IStatType}s should be available. May not be null!
      */
     StatConfig getStatConfig();

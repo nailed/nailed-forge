@@ -1,15 +1,11 @@
 package jk_5.quakecraft;
 
-import jk_5.nailed.api.map.GameController;
-import jk_5.nailed.api.map.IInstruction;
-import jk_5.nailed.api.map.TimedInstruction;
-
 /**
  * No description given
  *
  * @author jk-5
  */
-public class InstructionAwaitFinalKill extends TimedInstruction {
+/*public class InstructionAwaitFinalKill extends TimedInstruction {
 
     public boolean finalKillMade = false;
 
@@ -27,4 +23,4 @@ public class InstructionAwaitFinalKill extends TimedInstruction {
     public IInstruction cloneInstruction(){
         return new InstructionAwaitFinalKill();
     }
-}
+}*/

@@ -16,6 +16,6 @@ public class CommandStartGame extends NailedCommand {
 
     @Override
     public void processCommandWithMap(ICommandSender sender, Map map, String[] args){
-        map.getInstructionController().startGame();
+        map.getGameManager().startGame();
     }
 }

@@ -15,4 +15,5 @@ public interface GameManager {
     public void setWinner(PossibleWinner winner);
     public void startGame();
     public void stopGame();
+    public boolean isGameRunning();
 }

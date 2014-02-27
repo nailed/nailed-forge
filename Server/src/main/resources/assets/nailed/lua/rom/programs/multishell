@@ -202,6 +202,10 @@ selectProcess( launchProcess( {
 }, "/rom/programs/shell" ) )
 redrawMenu()
 
+if map.hasMappack() then
+    multishell.launch({}, "rom/programs/gamemanager")
+end
+
 -- Run processes
 while #tProcesses > 0 do
     -- Get the event

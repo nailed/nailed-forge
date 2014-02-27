@@ -79,7 +79,8 @@ public class MapApi implements ILuaAPI {
                 "spreadPlayers",
                 "tpAllToLobby",
                 "remove",
-                "recycle"
+                "recycle",
+                "hasMappack"
         };
     }
 
@@ -267,6 +268,8 @@ public class MapApi implements ILuaAPI {
                 break;
             case 19: //recycle
                 break;
+            case 20: //hasMappack
+                return new Object[]{this.map.getMappack() != null};
         }
         return null;
     }

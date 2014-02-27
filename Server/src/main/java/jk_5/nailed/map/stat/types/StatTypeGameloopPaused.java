@@ -1,9 +1,9 @@
 package jk_5.nailed.map.stat.types;
 
 import jk_5.nailed.api.config.ConfigTag;
+import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.stat.IStatType;
 import jk_5.nailed.api.map.stat.Stat;
-import jk_5.nailed.map.gameloop.InstructionController;
 import jk_5.nailed.map.stat.DefaultStat;
 
 /**
@@ -17,8 +17,8 @@ public class StatTypeGameloopPaused implements IStatType {
     public void readAdditionalData(ConfigTag config, Stat stat) {
     }
 
-    public void onPause(InstructionController controller) {
-        for(Stat stat : controller.getMap().getStatManager().getStats().getStats()){
+    public void onPause(Map map) {
+        for(Stat stat : map.getStatManager().getStats().getStats()){
             if(stat instanceof DefaultStat){
                 if(((DefaultStat) stat).getType() == this){
                     stat.enable();
@@ -27,8 +27,8 @@ public class StatTypeGameloopPaused implements IStatType {
         }
     }
 
-    public void onResume(InstructionController controller) {
-        for(Stat stat : controller.getMap().getStatManager().getStats().getStats()){
+    public void onResume(Map map) {
+        for(Stat stat : map.getStatManager().getStats().getStats()){
             if(stat instanceof DefaultStat){
                 if(((DefaultStat) stat).getType() == this){
                     stat.disable();

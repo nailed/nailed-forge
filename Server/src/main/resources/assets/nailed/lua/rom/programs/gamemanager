@@ -1,0 +1,10 @@
+
+print("Waiting for the game to start")
+while true do
+    local event = os.pullEventRaw()
+    if event == "game_start" then
+        print("Starting the game...")
+        os.run({}, "mappack/gamescript.lua")
+        print("Game finished")
+    end
+end

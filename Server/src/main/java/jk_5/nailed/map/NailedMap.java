@@ -56,8 +56,8 @@ public class NailedMap implements Map {
     @Getter private GameManager gameManager;
 
     @Getter private ServerMachine machine;
-    private IMount mappackMount;
-    private boolean mounted = false;
+    public IMount mappackMount;
+    public boolean mounted = false;
 
     public NailedMap(Mappack mappack, int id){
         this.ID = id;

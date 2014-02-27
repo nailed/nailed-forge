@@ -12,8 +12,6 @@ import jk_5.nailed.api.map.MappackMetadata;
 import jk_5.nailed.api.scripting.IMount;
 import jk_5.nailed.map.DiscardedMappackInitializationException;
 import jk_5.nailed.map.MappackInitializationException;
-import jk_5.nailed.map.instruction.InstructionList;
-import jk_5.nailed.map.instruction.InstructionParseException;
 import jk_5.nailed.map.stat.StatConfig;
 import lombok.Getter;
 import lombok.Setter;
@@ -39,7 +37,6 @@ public class ZipMappack implements Mappack {
     @Getter private final String iconFile;
     @Getter private final File mappackFile;
     @Getter private final MappackMetadata mappackMetadata;
-    @Getter @Setter private InstructionList instructionList;
     @Getter @Setter private StatConfig statConfig;
 
     private ZipMappack(File mappackFile, ConfigFile config){
@@ -55,7 +52,6 @@ public class ZipMappack implements Mappack {
         ConfigFile config = null;
         StatConfig stats = new StatConfig();
         ZipInputStream zipStream = null;
-        InstructionList instructionList = new InstructionList();
         try{
             zipStream = new ZipInputStream(new FileInputStream(file));
             ZipEntry entry = zipStream.getNextEntry();
@@ -63,17 +59,11 @@ public class ZipMappack implements Mappack {
                 if(entry.getName().equals("mappack.cfg")){
                     config = new ConfigFile(new InputStreamReader(zipStream)).setReadOnly();
                     pack = new ZipMappack(file, config);
-                }else if(entry.getName().equals("gameinstructions.cfg")){
-                    instructionList = InstructionList.readFrom(new BufferedReader(new InputStreamReader(zipStream)));
                 }else if(entry.getName().equals("stats.cfg")){
                     stats = new StatConfig(new ConfigFile(new InputStreamReader(zipStream)).setReadOnly());
                 }
                 entry = zipStream.getNextEntry();
             }
-        }catch(InstructionParseException e){
-            NailedLog.error("There was an error in your instruction syntax in " + file.getName());
-            NailedLog.error(e.getMessage());
-            throw new DiscardedMappackInitializationException("Instruction syntax error!", e);
         }catch(FileNotFoundException e){
             NailedLog.error(e, "Discovered mappack file " + file.getPath() + " is gone now? This is impossible");
             throw new DiscardedMappackInitializationException("Mappack file " + file.getPath() + " disappeared!", e);
@@ -85,7 +75,6 @@ public class ZipMappack implements Mappack {
         if(config == null){
             throw new DiscardedMappackInitializationException("mappack.cfg was not found in mappack " + file.getName());
         }
-        pack.setInstructionList(instructionList);
         pack.setStatConfig(stats);
         return pack;
     }

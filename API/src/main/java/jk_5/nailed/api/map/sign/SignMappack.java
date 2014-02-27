@@ -30,7 +30,7 @@ public class SignMappack extends Sign {
         String[] ret = new String[4];
         if(this.linkedMap == null){
             ret[0] = ChatColor.BLUE + "[Create]";
-        }else if(this.linkedMap.getInstructionController().isRunning()){
+        }else if(this.linkedMap.getGameManager().isGameRunning()){
             ret[0] = ChatColor.AQUA + "[Spectate]";
         }else{
             ret[0] = ChatColor.GREEN + "[Join]";

@@ -9,7 +9,6 @@ import jk_5.nailed.achievement.AchievementEventListener;
 import jk_5.nailed.achievement.NailedAchievements;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.config.ConfigFile;
-import jk_5.nailed.api.events.RegisterInstructionEvent;
 import jk_5.nailed.blocks.NailedBlocks;
 import jk_5.nailed.chat.joinmessage.JoinMessageSender;
 import jk_5.nailed.ipc.IpcManager;
@@ -17,7 +16,6 @@ import jk_5.nailed.irc.IrcBot;
 import jk_5.nailed.item.NailedItems;
 import jk_5.nailed.map.NailedMapLoader;
 import jk_5.nailed.map.gen.NailedWorldProvider;
-import jk_5.nailed.map.instruction.InstructionReader;
 import jk_5.nailed.map.mappack.NailedMappackLoader;
 import jk_5.nailed.map.stat.RegisterStatTypeEvent;
 import jk_5.nailed.map.stat.StatEventHandler;
@@ -142,7 +140,6 @@ public class NailedServer {
     @EventHandler
     @SuppressWarnings("unused")
     public void init(FMLInitializationEvent event){
-        MinecraftForge.EVENT_BUS.post(new RegisterInstructionEvent(InstructionReader.instance().getInstructionMap()));
         MinecraftForge.EVENT_BUS.post(new RegisterStatTypeEvent(StatTypeManager.instance().getStatTypes()));
 
         NailedLog.info("Registering achievements");

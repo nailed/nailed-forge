@@ -1,24 +1,11 @@
 package jk_5.quakecraft;
 
-import jk_5.nailed.api.ChatColor;
-import jk_5.nailed.api.map.GameController;
-import jk_5.nailed.api.map.IInstruction;
-import jk_5.nailed.api.player.Player;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.scoreboard.IScoreObjectiveCriteria;
-import net.minecraft.scoreboard.Score;
-import net.minecraft.scoreboard.ScoreObjective;
-import net.minecraft.scoreboard.Scoreboard;
-
 /**
  * No description given
  *
  * @author jk-5
  */
-public class InstructionStartQuakecraft implements IInstruction {
+/*public class InstructionStartQuakecraft implements IInstruction {
 
     @Override
     public void injectArguments(String args){
@@ -52,4 +39,4 @@ public class InstructionStartQuakecraft implements IInstruction {
     public IInstruction cloneInstruction(){
         return new InstructionStartQuakecraft();
     }
-}
+}*/

@@ -24,5 +24,8 @@ public class CommandTerminal extends NailedCommand {
         NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.OpenTerminalGui(machine.getInstanceId(), machine.getTerminal().getWidth(), machine.getTerminal().getHeight()), sender.getEntity());
         machine.turnOn();
         machine.terminalChanged = true; //Force an update
+        NailedMap nm = (NailedMap) map;
+        nm.mounted = map.getMappack() == null; //Also force a remount of the mappack data, if we have a mappack
+        nm.mappackMount = null;
     }
 }

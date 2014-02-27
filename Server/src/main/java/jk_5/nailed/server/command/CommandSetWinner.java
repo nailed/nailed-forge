@@ -38,7 +38,7 @@ public class CommandSetWinner extends NailedCommand {
         }
         if(winner == null) throw new CommandException(args[0] + " is not a player or team");
 
-        map.getInstructionController().setWinner(map.getTeamManager().getTeam(args[0]));
+        map.getGameManager().setWinner(map.getTeamManager().getTeam(args[0]));
 
         IChatComponent component = new ChatComponentText("Winner set to " + args[0]);
         component.getChatStyle().setColor(EnumChatFormatting.GREEN);
