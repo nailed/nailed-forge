@@ -27,6 +27,17 @@ buildscript {
     }
 }
 
+apply from: 'signing.gradle'
+
+if(!project.hasProperty("keystoreLocation"))
+    ext.keystoreLocation = "."
+
+if(!project.hasProperty("keystoreAlias"))
+    ext.keystoreAlias = ""
+
+if(!project.hasProperty("keystorePassword"))
+    ext.keystorePassword = ""
+
 apply plugin: 'nailed'
 apply plugin: 'forge'
 
@@ -105,6 +116,18 @@ subprojects {
                     exclude "META-INF", "META-INF/**", "*META-INF*", "meta-inf"
                     exclude "**.jar", "**/*.jar", "*.jar"
                 }
+            }
+        }
+
+        if(rootProject.keystoreLocation != "."){
+            doLast {
+                project.getLogger().lifecycle("Signing jar " + jar.baseName)
+                ant.signjar(
+                    jar: jar.destinationDir,
+                    keystore: rootProject.keystoreLocation,
+                    alias: rootProject.keystoreAlias,
+                    storepass: rootProject.keystorePassword
+                )
             }
         }
     }
