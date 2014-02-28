@@ -290,7 +290,9 @@ public class NailedPermissionFactory implements PermBuilderFactory<NailedPermiss
         }
 
         for(Player player : NailedAPI.getPlayerRegistry().getPlayers()){
-            player.getEntity().refreshDisplayName();
+            if(player.isOnline()){
+                player.getEntity().refreshDisplayName();
+            }
         }
     }
 

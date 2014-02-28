@@ -9,3 +9,9 @@ dependencies {
     packed 'jk_5.asyncirc:ASyncIRCClient:0.1-SNAPSHOT'
     compile project(":Common")
 }
+
+rootProject.tasks.reobf {
+    reobf(tasks.jar) { spec ->
+        spec.classpath = sourceSets.main.compileClasspath
+    }
+}

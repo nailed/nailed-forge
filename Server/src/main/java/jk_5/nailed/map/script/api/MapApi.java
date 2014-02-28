@@ -22,8 +22,10 @@ import net.minecraft.util.IChatComponent;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import org.luaj.vm2.LuaClosure;
+import org.luaj.vm2.LuaFunction;
 import org.luaj.vm2.LuaValue;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -165,7 +167,7 @@ public class MapApi implements ILuaAPI {
                     throw new Exception("Excpected 1 function as argument");
                 }
             case 9: //getTeam
-                if(arguments.length == 1 && arguments[0] instanceof LuaClosure){
+                if(arguments.length == 1 && arguments[0] instanceof String){
                     return new Object[]{this.wrapTeam(this.map.getTeamManager().getTeam((String) arguments[0]))};
                 }else{
                     throw new Exception("Excpected 1 string argument");
@@ -196,34 +198,30 @@ public class MapApi implements ILuaAPI {
                 }
                 break;
             case 13: //setWinner
-                if(arguments.length == 1 && arguments[0] instanceof ILuaObject){
+                if(arguments.length == 1 && arguments[0] instanceof HashMap){
                     try{
-                        ILuaObject obj = (ILuaObject) arguments[0];
-                        String[] names = obj.getMethodNames();
-                        for(int i = 0; i < names.length; i++){
-                            if(names[i].equals("getType")){
-                                String type = (String) obj.callMethod(context, i, arguments)[0];
-                                if(type.equals("player")){
-                                    String username = (String) obj.callMethod(null, 0, null)[0];
-                                    Player player = NailedAPI.getPlayerRegistry().getPlayerByUsername(username);
-                                    if(player == null){
-                                        throw new Exception("Player " + username + " does not exist");
-                                    }
-                                    if(player.getCurrentMap() != this.map){
-                                        throw new Exception("Player " + username + " is not in this world");
-                                    }
-                                    this.map.getGameManager().setWinner(player);
-                                }else if(type.equals("team")){
-                                    String name = (String) obj.callMethod(null, 0, null)[0];
-                                    Team team = this.map.getTeamManager().getTeam(name);
-                                    if(team == null){
-                                        throw new Exception("Team " + name + " does not exist");
-                                    }
-                                    this.map.getGameManager().setWinner(team);
-                                }
+                        HashMap<String, LuaFunction> obj = (HashMap<String, LuaFunction>) arguments[0];
+                        String type = obj.get("getType").call().checkjstring();
+                        if(type.equals("player")){
+                            String username = obj.get("getUsername").call().checkjstring();
+                            Player player = NailedAPI.getPlayerRegistry().getPlayerByUsername(username);
+                            if(player == null){
+                                throw new Exception("Player " + username + " does not exist");
                             }
+                            if(player.getCurrentMap() != this.map){
+                                throw new Exception("Player " + username + " is not in this world");
+                            }
+                            this.map.getGameManager().setWinner(player);
+                        }else if(type.equals("team")){
+                            String name = obj.get("getID").call().checkjstring();
+                            Team team = this.map.getTeamManager().getTeam(name);
+                            if(team == null){
+                                throw new Exception("Team " + name + " does not exist");
+                            }
+                            this.map.getGameManager().setWinner(team);
                         }
                     }catch(Exception e){
+                        e.printStackTrace();
                         throw new Exception("The object passed is not a team or player");
                     }
                 }else{
@@ -363,7 +361,8 @@ public class MapApi implements ILuaAPI {
                         "getPlayers",
                         "forEachPlayer",
                         "setSpawn",
-                        "getType"
+                        "getType",
+                        "getID"
                 };
             }
 
@@ -404,6 +403,8 @@ public class MapApi implements ILuaAPI {
                         break;
                     case 4: //getType
                         return new Object[]{"team"};
+                    case 5: //getID
+                        return new Object[]{team.getTeamId()};
                 }
                 return null;
             }
