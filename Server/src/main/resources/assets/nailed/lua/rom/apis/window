@@ -241,14 +241,6 @@ function create( parent, nX, nY, nWidth, nHeight, bStartVisible )
         end
     end
 
-    function window.isColor()
-        return parent.isColor()
-    end
-
-    function window.isColour()
-        return term.isColor()
-    end
-
     function window.setTextColor( color )
         nTextColor = color
         if bVisible then
@@ -256,16 +248,8 @@ function create( parent, nX, nY, nWidth, nHeight, bStartVisible )
         end
     end
 
-    function window.setTextColour( color )
-        term.setTextColor( color )
-    end
-
     function window.setBackgroundColor( color )
         nBackgroundColor = color
-    end
-
-    function window.setBackgroundColour( color )
-        term.setBackgroundColor( color )
     end
 
     function window.getSize()

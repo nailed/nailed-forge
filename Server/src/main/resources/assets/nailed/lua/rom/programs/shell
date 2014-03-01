@@ -19,11 +19,11 @@ local tEnv = {
 	[ "multishell" ] = multishell,
 }
 
--- Colours
-local promptColour, textColour, bgColour
-promptColour = colors.textColorHighlite
-textColour = colors.textColorNormal
-bgColour = colors.black
+-- Colors
+local promptColor, textColor, bgColor
+promptColor = colors.textColorHighlite
+textColor = colors.textColorNormal
+bgColor = colors.black
 
 local function run( _sCommand, ... )
 	local sPath = shell.resolveProgram( _sCommand )
@@ -216,10 +216,10 @@ if #tArgs > 0 then
 else
     -- "shell"
     -- Print the header
-    term.setBackgroundColor( bgColour )
-    term.setTextColour( promptColour )
+    term.setBackgroundColor( bgColor )
+    term.setTextColor( promptColor )
     print( os.version() )
-    term.setTextColour( textColour )
+    term.setTextColor( textColor )
 
     -- Run the startup program
     if parentShell == nil then
@@ -230,14 +230,14 @@ else
     local tCommandHistory = {}
     while not bExit do
         term.redirect( parentTerm )
-        term.setBackgroundColor( bgColour )
-        term.setTextColour( promptColour )
+        term.setBackgroundColor( bgColor )
+        term.setTextColor( promptColor )
         if shell.dir() == "" then
             write("$ ")
         else
             write(shell.dir() .. "$ ")
         end
-        term.setTextColour( textColour )
+        term.setTextColor( textColor )
 
         local sLine = read( nil, tCommandHistory )
         table.insert( tCommandHistory, sLine )

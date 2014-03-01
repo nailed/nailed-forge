@@ -216,9 +216,9 @@ function print(...)
 end
 
 function printError(...)
-	term.setTextColour(colors.red)
+	term.setTextColor(colors.red)
 	print(...)
-	term.setTextColour(colors.white)
+	term.setTextColor(colors.white)
 end
 
 function read(_sReplaceChar, _tHistory)

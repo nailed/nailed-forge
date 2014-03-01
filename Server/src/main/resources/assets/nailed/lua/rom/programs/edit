@@ -20,7 +20,7 @@ local scrollX, scrollY = 0,0
 local tLines = {}
 local bRunning = true
 
--- Colours
+-- Colors
 local highlightColor, keywordColor, commentColor, textColor, bgColor
 bgColor = colors.black
 textColor = colors.textColorNormal
@@ -114,12 +114,12 @@ local function tryWrite(sLine, regex, color)
 	local match = string.match(sLine, regex)
 	if match then
 		if type(color) == "number" then
-			term.setTextColour(color)
+			term.setTextColor(color)
 		else
-			term.setTextColour(color(match))
+			term.setTextColor(color(match))
 		end
 		term.write(match)
-		term.setTextColour(textColor)
+		term.setTextColor(textColor)
 		return string.sub(sLine, string.len(match) + 1)
 	end
 	return nil
@@ -169,7 +169,7 @@ local function redrawMenu()
 	term.clearLine()
 
 	local sLeft, sRight
-	local nLeftColour, nLeftHighlight1, nLeftHighlight2
+	local nLeftColor, nLeftHighlight1, nLeftHighlight2
 	if bMenu then
 		local sMenu = ""
 		for n,sItem in ipairs(tMenuItems) do
@@ -180,35 +180,35 @@ local function redrawMenu()
 			sMenu = sMenu.." "..sItem.." "
 		end
 		sLeft = sMenu
-		nLeftColour = textColor
+		nLeftColor = textColor
 	else
 		sLeft = sStatus
-		nLeftColour = highlightColor
+		nLeftColor = highlightColor
 	end
 	
 	-- Left goes last so that it can overwrite the line numbers.
 	sRight = "Ln "..y
-	term.setTextColour(highlightColor)
+	term.setTextColor(highlightColor)
 	term.setCursorPos(w-sRight:len() + 1, h)
 	term.write(sRight)
 
 	sRight = tostring(y)
-	term.setTextColour(textColor)
+	term.setTextColor(textColor)
 	term.setCursorPos(w-sRight:len() + 1, h)
 	term.write(sRight)
 
 	if sLeft then
 		term.setCursorPos(1, h)
-		term.setTextColour(nLeftColour)
+		term.setTextColor(nLeftColor)
 		term.write(sLeft)		
 		if nLeftHighlight1 then
-			term.setTextColour(highlightColor)
+			term.setTextColor(highlightColor)
 			term.setCursorPos(nLeftHighlight1, h)
 			term.write("[")
 			term.setCursorPos(nLeftHighlight2, h)
 			term.write("]")
 		end
-		term.setTextColour(textColor)
+		term.setTextColor(textColor)
 	end
 	
 	-- Cursor highlights selection
@@ -280,7 +280,7 @@ end
 -- Actual program functionality begins
 load(sPath)
 
-term.setBackgroundColour(bgColor)
+term.setBackgroundColor(bgColor)
 term.clear()
 term.setCursorPos(x,y)
 term.setCursorBlink(true)
