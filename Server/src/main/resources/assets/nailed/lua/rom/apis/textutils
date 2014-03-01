@@ -195,3 +195,31 @@ function urlEncode( str )
 	return str	
 end
 
+function secondsToShortTimeString(secs)
+    local hours = secs / 3600
+    local minutes = (secs % 3600) / 60
+    local seconds = secs % 60
+    local ret = ""
+    local append = false
+    if hours ~= 0 or append then
+        ret = ret .. hours
+        ret = ret .. ":"
+        append = true
+    end
+    if minutes ~= 0 or append then
+        ret = ret .. minutes
+        ret = ret .. ":"
+        append = true
+    end
+    if seconds ~= 0 or append then
+        if seconds < 10 and append then
+            ret = ret .. "0"
+        end
+        ret = ret .. seconds
+        if not append then
+            ret = ret .. " Second"
+            if seconds ~= 1 then ret = ret .. "s" end
+        end
+    end
+    return ret
+end
