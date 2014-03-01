@@ -84,7 +84,6 @@ allprojects {
             name = 'reening'
             url = 'http://maven.reening.nl'
         }
-        //flatDir name: 'localRepository', dirs: '/Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/dirtyArtifacts'
     }
 }
 

@@ -7,3 +7,13 @@ jar.manifest{
 dependencies{
     packed 'jk_5.asyncirc:ASyncIRCClient:0.1-SNAPSHOT'
 }
+
+getLogger().lifecycle("Warning! Reobfuscation for CrashReporter is disabled!")
+getLogger().lifecycle("  This is disabled because of a bug in SpecialSource")
+getLogger().lifecycle("  When you need to reobfuscate it, re-enable it in build.gradl")
+
+/*rootProject.tasks.reobf {
+    reobf(tasks.jar) { spec ->
+        spec.classpath = sourceSets.main.compileClasspath
+    }
+}*/
