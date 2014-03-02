@@ -48,7 +48,7 @@ public class ElementTerminal extends Gui {
         if(c == '\026'){
             String clipboard = GuiScreen.getClipboardString();
             if(clipboard != null){
-                int newlineIndex = clipboard.indexOf(System.getProperty("line.seperator"));
+                int newlineIndex = clipboard.indexOf(System.getProperty("line.separator"));
                 if(newlineIndex >= 0){
                     clipboard = clipboard.substring(0, newlineIndex);
                 }

@@ -6,6 +6,7 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import jk_5.nailed.api.ChatColor;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.RayTracer;
 import jk_5.nailed.api.map.Map;
@@ -20,6 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.Scoreboard;
@@ -148,12 +150,12 @@ public class Quakecraft {
             EntityPlayer player = (EntityPlayer) event.entity;
             if(this.isQuakecraft(event.world)){
                 Map map = NailedAPI.getMapLoader().getMap(event.world);
-                /*if(map.getInstructionController().isRunning()){
+                if(map.getGameManager().isGameRunning()){
                     ItemStack stack = new ItemStack(Items.wooden_hoe, 1);
                     stack.setStackDisplayName(ChatColor.RESET + "" + ChatColor.GREEN + "Railgun");
                     player.inventory.setInventorySlotContents(0, stack);
                     player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 1000000, 1, true));
-                }*/
+                }
             }else if(this.isQuakecraft(event.entity.worldObj)){
                 player.inventory.setInventorySlotContents(0, null);
                 player.removePotionEffect(Potion.moveSpeed.id);
