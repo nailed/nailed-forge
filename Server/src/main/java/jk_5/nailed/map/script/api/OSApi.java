@@ -186,8 +186,7 @@ public class OSApi implements ILuaAPI {
         return this.apiEnvironment.getMachineID();
     }
 
-    private class Alarm
-            implements Comparable<Alarm> {
+    private class Alarm implements Comparable<Alarm> {
         double time;
         int token;
 

@@ -10,6 +10,11 @@ Todo:
 - API module
 - Scoreboard API
 
+- player.freeze
+- player.keepHealth / food
+- inventory management (give)
+- death events
+
 Bugs:
 - PULSE_OFF pulses on enable
 - Teamwon stat type doesn't work

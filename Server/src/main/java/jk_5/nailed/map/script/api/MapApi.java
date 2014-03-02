@@ -2,6 +2,7 @@ package jk_5.nailed.map.script.api;
 
 import com.google.common.collect.Maps;
 import com.google.gson.JsonParseException;
+import cpw.mods.fml.relauncher.ReflectionHelper;
 import jk_5.nailed.api.Gamemode;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
@@ -17,6 +18,8 @@ import jk_5.nailed.map.stat.DefaultStat;
 import jk_5.nailed.map.stat.types.StatTypeModifiable;
 import jk_5.nailed.map.teleport.TeleportHelper;
 import lombok.RequiredArgsConstructor;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerCapabilities;
 import net.minecraft.util.FoodStats;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.EnumDifficulty;
@@ -288,7 +291,10 @@ public class MapApi implements ILuaAPI {
                         "setHealth",
                         "setFood",
                         "setExperience",
-                        "getType"
+                        "getType",
+                        "freeze",
+                        "sendChatComponent",
+                        "sendChat"
                 };
             }
 
@@ -343,6 +349,37 @@ public class MapApi implements ILuaAPI {
                         break;
                     case 8: //getType
                         return new Object[]{"player"};
+                    case 9: //freeze
+                        if(arguments.length == 1 && arguments[0] instanceof Boolean){
+                            boolean doFreeze = (Boolean) arguments[0];
+                            EntityPlayerMP entity = player.getEntity();
+                            ReflectionHelper.setPrivateValue(PlayerCapabilities.class, entity.capabilities, doFreeze ? 0f : 0.1f, "walkSpeed");
+                            ReflectionHelper.setPrivateValue(PlayerCapabilities.class, entity.capabilities, doFreeze ? 0f : 0.05f, "flySpeed");
+                            entity.sendPlayerAbilities();
+                        }else{
+                            throw new Exception("Expected 1 boolean argument");
+                        }
+                        break;
+                    case 10: //sendChatComponent
+                        if(arguments.length == 1 && arguments[0] instanceof String){
+                            try{
+                                IChatComponent comp = IChatComponent.Serializer.func_150699_a((String) arguments[0]);
+                                player.sendChat(comp);
+                            }catch(JsonParseException e){
+                                e.printStackTrace();
+                                throw new Exception("Chat message is not of json format");
+                            }
+                        }else{
+                            throw new Exception("Expected 1 string argument");
+                        }
+                        break;
+                    case 11: //sendChat
+                        if(arguments.length == 1 && arguments[0] instanceof String){
+                            player.sendChat((String) arguments[0]);
+                        }else{
+                            throw new Exception("Expected 1 string argument");
+                        }
+                        break;
                 }
                 return null;
             }
