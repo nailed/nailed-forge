@@ -185,10 +185,10 @@ end
 
 function urlEncode( str )
 	if str then
-		str = string.gsub (str, "\n", "\r\n")
-		str = string.gsub (str, "([^%w ])",
+		str = string.gsub(str, "\n", "\r\n")
+		str = string.gsub(str, "([^%w ])",
 		function (c)
-			return string.format ("%%%02X", string.byte(c))
+			return string.format("%%%02X", string.byte(c))
 		end)
 		str = string.gsub (str, " ", "+")
 	end
@@ -196,9 +196,9 @@ function urlEncode( str )
 end
 
 function secondsToShortTimeString(secs)
-    local hours = secs / 3600
-    local minutes = (secs % 3600) / 60
-    local seconds = secs % 60
+    local hours = math.floor(secs / 3600)
+    local minutes = math.floor((secs % 3600) / 60)
+    local seconds = math.floor(secs % 60)
     local ret = ""
     local append = false
     if hours ~= 0 or append then
