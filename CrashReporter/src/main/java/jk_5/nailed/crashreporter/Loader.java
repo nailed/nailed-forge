@@ -5,6 +5,7 @@ import jk_5.nailed.crashreporter.notificationhandlers.NotificationHandlerIrc;
 import jk_5.nailed.crashreporter.pasteproviders.PasteProviderHastebin;
 import jk_5.nailed.crashreporter.pasteproviders.PasteProviderPastebin;
 
+import java.io.File;
 import java.util.Map;
 
 /**
@@ -14,6 +15,8 @@ import java.util.Map;
  */
 @IFMLLoadingPlugin.TransformerExclusions({"jk_5.nailed.crashreporter.transformer."})
 public class Loader implements IFMLLoadingPlugin {
+
+    public static File coremodLocation;
 
     public Loader(){
         HandlerRegistry.registerPasteProvider("pastebin", new PasteProviderPastebin());
@@ -36,12 +39,14 @@ public class Loader implements IFMLLoadingPlugin {
 
     @Override
     public String getSetupClass(){
-        return null;
+        return "jk_5.nailed.crashreporter.CRSanityChecker";
     }
 
     @Override
     public void injectData(Map<String, Object> data){
-
+        if(data.containsKey("coremodLocation")){
+            coremodLocation = (File) data;
+        }
     }
 
     @Override

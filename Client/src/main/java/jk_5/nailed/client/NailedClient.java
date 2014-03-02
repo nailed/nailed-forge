@@ -1,5 +1,6 @@
 package jk_5.nailed.client;
 
+import cpw.mods.fml.common.CertificateHelper;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -49,6 +50,8 @@ public class NailedClient {
     @Getter private static FixedWidthFontRenderer fixedWidthFontRenderer;
 
     public NailedClient(){
+        NailedLog.info("Nailed fingerprint: " + CertificateHelper.getFingerprint(this.getClass().getProtectionDomain().getCodeSource().getCertificates()[0]));
+
         if(FMLLaunchHandler.side().isServer()){
             throw new RuntimeException("Nailed-Client is client-only, don\'t use it on the server!");
         }
