@@ -102,12 +102,16 @@ public class IrcBot extends PircBot {
 
     @Override
     protected void onConnect() {
+        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("Connected to IRC!"));
         NailedLog.info("Connected to irc!");
     }
 
     @Override
     protected void onDisconnect() {
+        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("IRC Connection Lost!"));
         NailedLog.info("Disconnected from irc!");
+
+        //TODO: Start reconnect thread
     }
 
     @Override

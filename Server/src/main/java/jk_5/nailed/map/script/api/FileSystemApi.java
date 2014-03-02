@@ -16,36 +16,57 @@ public class FileSystemApi implements ILuaAPI {
     private IAPIEnvironment environment;
     private FileSystem fileSystem;
 
-    public FileSystemApi(IAPIEnvironment _env){
-        this.environment = _env;
+    public FileSystemApi(IAPIEnvironment environment){
+        this.environment = environment;
         this.fileSystem = null;
     }
 
+    @Override
     public String[] getNames(){
         return new String[]{"fs"};
     }
 
+    @Override
     public void startup(){
         this.fileSystem = this.environment.getFileSystem();
     }
 
+    @Override
     public void advance(double _dt){
     }
 
+    @Override
     public void shutdown(){
         this.fileSystem = null;
     }
 
+    @Override
     public String[] getMethodNames(){
-        return new String[]{"list", "combine", "getName", "getSize", "exists", "isDir", "isReadOnly", "makeDir", "move", "copy", "delete", "open", "getDrive", "getFreeSpace", "find"};
+        return new String[]{
+                "list",
+                "combine",
+                "getName",
+                "getSize",
+                "exists",
+                "isDir",
+                "isReadOnly",
+                "makeDir",
+                "move",
+                "copy",
+                "delete",
+                "open",
+                "getDrive",
+                "getFreeSpace",
+                "find"
+        };
     }
 
-    public Object[] callMethod(ILuaContext context, int method, Object[] args)
-            throws Exception{
+    @Override
+    public Object[] callMethod(ILuaContext context, int method, Object[] args) throws Exception{
         switch(method){
-            case 0:
-                if((args.length != 1) || (args[0] == null) || (!(args[0] instanceof String))){
-                    throw new Exception("Expected string");
+            case 0: //list
+                if(args.length != 1 || args[0] == null || !(args[0] instanceof String)){
+                    throw new Exception("Expected 1 string argument");
                 }
                 String path = (String) args[0];
                 try{
@@ -58,23 +79,22 @@ public class FileSystemApi implements ILuaAPI {
                 }catch(FileSystemException e){
                     throw new Exception(e.getMessage());
                 }
-
             case 1:
-                if((args.length != 2) || (args[0] == null) || (!(args[0] instanceof String)) || (args[1] == null) || (!(args[1] instanceof String))){
-                    throw new Exception("Expected string, string");
+                if(args.length != 2 || args[0] == null || !(args[0] instanceof String) || args[1] == null || !(args[1] instanceof String)){
+                    throw new Exception("Expected 2 string arguments");
                 }
                 String pathA = (String) args[0];
                 String pathB = (String) args[1];
                 return new Object[]{this.fileSystem.combine(pathA, pathB)};
             case 2:
-                if((args.length != 1) || (args[0] == null) || (!(args[0] instanceof String))){
-                    throw new Exception("Expected string");
+                if(args.length != 1 || args[0] == null || !(args[0] instanceof String)){
+                    throw new Exception("Expected 1 string argument");
                 }
                 String path1 = (String) args[0];
                 return new Object[]{FileSystem.getName(path1)};
             case 3:
-                if((args.length != 1) || (args[0] == null) || (!(args[0] instanceof String))){
-                    throw new Exception("Expected string");
+                if(args.length != 1 || args[0] == null || !(args[0] instanceof String)){
+                    throw new Exception("Expected 1 string argument");
                 }
                 String path2 = (String) args[0];
                 try{
@@ -82,10 +102,9 @@ public class FileSystemApi implements ILuaAPI {
                 }catch(FileSystemException e){
                     throw new Exception(e.getMessage());
                 }
-
             case 4:
-                if((args.length != 1) || (args[0] == null) || (!(args[0] instanceof String))){
-                    throw new Exception("Expected string");
+                if(args.length != 1 || args[0] == null || !(args[0] instanceof String)){
+                    throw new Exception("Expected 1 string argument");
                 }
                 String path3 = (String) args[0];
                 try{
@@ -93,10 +112,9 @@ public class FileSystemApi implements ILuaAPI {
                 }catch(FileSystemException e){
                     return new Object[]{false};
                 }
-
             case 5:
-                if((args.length != 1) || (args[0] == null) || (!(args[0] instanceof String))){
-                    throw new Exception("Expected string");
+                if(args.length != 1 || args[0] == null || !(args[0] instanceof String)){
+                    throw new Exception("Expected 1 string argument");
                 }
                 String path4 = (String) args[0];
                 try{
@@ -104,10 +122,9 @@ public class FileSystemApi implements ILuaAPI {
                 }catch(FileSystemException e){
                     return new Object[]{false};
                 }
-
             case 6:
-                if((args.length != 1) || (args[0] == null) || (!(args[0] instanceof String))){
-                    throw new Exception("Expected string");
+                if(args.length != 1 || args[0] == null || !(args[0] instanceof String)){
+                    throw new Exception("Expected 1 string argument");
                 }
                 String path5 = (String) args[0];
                 try{
@@ -115,10 +132,9 @@ public class FileSystemApi implements ILuaAPI {
                 }catch(FileSystemException e){
                     return new Object[]{false};
                 }
-
             case 7:
-                if((args.length != 1) || (args[0] == null) || (!(args[0] instanceof String))){
-                    throw new Exception("Expected string");
+                if(args.length != 1 || args[0] == null || !(args[0] instanceof String)){
+                    throw new Exception("Expected 1 string argument");
                 }
                 String path6 = (String) args[0];
                 try{
@@ -127,10 +143,9 @@ public class FileSystemApi implements ILuaAPI {
                 }catch(FileSystemException e){
                     throw new Exception(e.getMessage());
                 }
-
             case 8:
-                if((args.length != 2) || (args[0] == null) || (!(args[0] instanceof String)) || (args[1] == null) || (!(args[1] instanceof String))){
-                    throw new Exception("Expected string, string");
+                if(args.length != 2 || args[0] == null || !(args[0] instanceof String) || args[1] == null || !(args[1] instanceof String)){
+                    throw new Exception("Expected 2 string arguments");
                 }
                 String path7 = (String) args[0];
                 String dest = (String) args[1];
@@ -140,10 +155,9 @@ public class FileSystemApi implements ILuaAPI {
                 }catch(Exception e){
                     throw new Exception(e.getMessage());
                 }
-
             case 9:
-                if((args.length != 2) || (args[0] == null) || (!(args[0] instanceof String)) || (args[1] == null) || (!(args[1] instanceof String))){
-                    throw new Exception("Expected string, string");
+                if(args.length != 2 || args[0] == null || !(args[0] instanceof String) || args[1] == null || !(args[1] instanceof String)){
+                    throw new Exception("Expected 2 string arguments");
                 }
                 String path8 = (String) args[0];
                 String dest1 = (String) args[1];
@@ -153,10 +167,9 @@ public class FileSystemApi implements ILuaAPI {
                 }catch(Exception e){
                     throw new Exception(e.getMessage());
                 }
-
             case 10:
-                if((args.length != 1) || (args[0] == null) || (!(args[0] instanceof String))){
-                    throw new Exception("Expected string");
+                if(args.length != 1 || args[0] == null || !(args[0] instanceof String)){
+                    throw new Exception("Expected 1 string argument");
                 }
                 String path9 = (String) args[0];
                 try{
@@ -165,10 +178,9 @@ public class FileSystemApi implements ILuaAPI {
                 }catch(FileSystemException e){
                     throw new Exception(e.getMessage());
                 }
-
             case 11:
-                if((args.length != 2) || (args[0] == null) || (!(args[0] instanceof String)) || (args[1] == null) || (!(args[1] instanceof String))){
-                    throw new Exception("Expected string, string");
+                if(args.length != 2 || args[0] == null || !(args[0] instanceof String) || args[1] == null || !(args[1] instanceof String)){
+                    throw new Exception("Expected 2 string arguments");
                 }
                 String path10 = (String) args[0];
                 String mode = (String) args[1];
@@ -176,36 +188,29 @@ public class FileSystemApi implements ILuaAPI {
                     if(mode.equals("r")){
                         IMountedFileNormal reader = this.fileSystem.openForRead(path10);
                         return wrapBufferedReader(reader);
-                    }
-                    if(mode.equals("w")){
+                    }else if(mode.equals("w")){
                         IMountedFileNormal writer = this.fileSystem.openForWrite(path10, false);
                         return wrapBufferedWriter(writer);
-                    }
-                    if(mode.equals("a")){
+                    }else if(mode.equals("a")){
                         IMountedFileNormal writer = this.fileSystem.openForWrite(path10, true);
                         return wrapBufferedWriter(writer);
-                    }
-                    if(mode.equals("rb")){
+                    }else if(mode.equals("rb")){
                         IMountedFileBinary reader = this.fileSystem.openForBinaryRead(path10);
                         return wrapInputStream(reader);
-                    }
-                    if(mode.equals("wb")){
+                    }else if(mode.equals("wb")){
                         IMountedFileBinary writer = this.fileSystem.openForBinaryWrite(path10, false);
                         return wrapOutputStream(writer);
-                    }
-                    if(mode.equals("ab")){
+                    }else if(mode.equals("ab")){
                         IMountedFileBinary writer = this.fileSystem.openForBinaryWrite(path10, true);
                         return wrapOutputStream(writer);
                     }
-
                     throw new Exception("Unsupported mode");
                 }catch(FileSystemException e){
                     return null;
                 }
-
             case 12:
-                if((args.length != 1) || (args[0] == null) || (!(args[0] instanceof String))){
-                    throw new Exception("Expected string");
+                if(args.length != 1 || args[0] == null || !(args[0] instanceof String)){
+                    throw new Exception("Expected 1 string argument");
                 }
                 String path11 = (String) args[0];
                 try{
@@ -216,10 +221,9 @@ public class FileSystemApi implements ILuaAPI {
                 }catch(FileSystemException e){
                     throw new Exception(e.getMessage());
                 }
-
             case 13:
-                if((args.length != 1) || (args[0] == null) || (!(args[0] instanceof String))){
-                    throw new Exception("Expected string");
+                if(args.length != 1 || args[0] == null || !(args[0] instanceof String)){
+                    throw new Exception("Expected 1 string argument");
                 }
                 String path12 = (String) args[0];
                 try{
@@ -231,10 +235,9 @@ public class FileSystemApi implements ILuaAPI {
                 }catch(FileSystemException e){
                     throw new Exception(e.getMessage());
                 }
-
             case 14:
                 if(args.length != 1 || args[0] == null || !(args[0] instanceof String)){
-                    throw new Exception("Expected string");
+                    throw new Exception("Expected 1 string argument");
                 }
                 String path13 = (String) args[0];
                 try{
@@ -247,19 +250,24 @@ public class FileSystemApi implements ILuaAPI {
                 }catch(FileSystemException e){
                     throw new Exception(e.getMessage());
                 }
-
         }
         return null;
     }
 
     private static Object[] wrapBufferedReader(final IMountedFileNormal reader){
         return new Object[]{new ILuaObject() {
+
+            @Override
             public String[] getMethodNames(){
-                return new String[]{"readLine", "readAll", "close"};
+                return new String[]{
+                        "readLine",
+                        "readAll",
+                        "close"
+                };
             }
 
-            public Object[] callMethod(ILuaContext context, int method, Object[] args)
-                    throws Exception{
+            @Override
+            public Object[] callMethod(ILuaContext context, int method, Object[] args) throws Exception{
                 switch(method){
                     case 0:
                         try{
@@ -271,7 +279,6 @@ public class FileSystemApi implements ILuaAPI {
                         }catch(IOException e){
                             return null;
                         }
-
                     case 1:
                         try{
                             StringBuilder result = new StringBuilder("");
@@ -287,7 +294,6 @@ public class FileSystemApi implements ILuaAPI {
                         }catch(IOException e){
                             return null;
                         }
-
                     case 2:
                         try{
                             reader.close();
@@ -295,7 +301,6 @@ public class FileSystemApi implements ILuaAPI {
                         }catch(IOException e){
                             return null;
                         }
-
                 }
                 return null;
             }
@@ -305,19 +310,27 @@ public class FileSystemApi implements ILuaAPI {
 
     private static Object[] wrapBufferedWriter(final IMountedFileNormal writer){
         return new Object[]{new ILuaObject() {
+
+            @Override
             public String[] getMethodNames(){
-                return new String[]{"write", "writeLine", "close", "flush"};
+                return new String[]{
+                        "write",
+                        "writeLine",
+                        "close",
+                        "flush"
+                };
             }
 
-            public Object[] callMethod(ILuaContext context, int method, Object[] args)
-                    throws Exception{
+            @Override
+            public Object[] callMethod(ILuaContext context, int method, Object[] args) throws Exception{
                 switch(method){
                     case 0:
                         String text;
-                        if((args.length > 0) && (args[0] != null))
+                        if(args.length > 0 && args[0] != null){
                             text = args[0].toString();
-                        else
+                        }else{
                             text = "";
+                        }
                         try{
                             writer.write(text, 0, text.length(), false);
                             return null;
@@ -326,17 +339,17 @@ public class FileSystemApi implements ILuaAPI {
                         }
                     case 1:
                         String text1;
-                        if((args.length > 0) && (args[0] != null))
+                        if(args.length > 0 && args[0] != null){
                             text1 = args[0].toString();
-                        else
+                        }else{
                             text1 = "";
+                        }
                         try{
                             writer.write(text1, 0, text1.length(), true);
                             return null;
                         }catch(IOException e){
                             throw new Exception(e.getMessage());
                         }
-
                     case 2:
                         try{
                             writer.close();
@@ -344,7 +357,6 @@ public class FileSystemApi implements ILuaAPI {
                         }catch(IOException e){
                             return null;
                         }
-
                     case 3:
                         try{
                             writer.flush();
@@ -352,7 +364,6 @@ public class FileSystemApi implements ILuaAPI {
                         }catch(IOException e){
                             return null;
                         }
-
                 }
                 return null;
             }
@@ -362,12 +373,16 @@ public class FileSystemApi implements ILuaAPI {
 
     private static Object[] wrapInputStream(final IMountedFileBinary reader){
         return new Object[]{new ILuaObject() {
+
+            @Override
             public String[] getMethodNames(){
-                return new String[]{"read", "close"};
+                return new String[]{
+                        "read","close"
+                };
             }
 
-            public Object[] callMethod(ILuaContext context, int method, Object[] args)
-                    throws Exception{
+            @Override
+            public Object[] callMethod(ILuaContext context, int method, Object[] args) throws Exception {
                 switch(method){
                     case 0:
                         try{
@@ -379,7 +394,6 @@ public class FileSystemApi implements ILuaAPI {
                         }catch(IOException e){
                             return null;
                         }
-
                     case 1:
                         try{
                             reader.close();
@@ -387,26 +401,26 @@ public class FileSystemApi implements ILuaAPI {
                         }catch(IOException e){
                             return null;
                         }
-
                 }
                 return null;
             }
-        }
-        };
+        }};
     }
 
     private static Object[] wrapOutputStream(final IMountedFileBinary writer){
         return new Object[]{new ILuaObject() {
+
+            @Override
             public String[] getMethodNames(){
                 return new String[]{"write", "close", "flush"};
             }
 
-            public Object[] callMethod(ILuaContext context, int method, Object[] args)
-                    throws Exception{
+            @Override
+            public Object[] callMethod(ILuaContext context, int method, Object[] args) throws Exception {
                 switch(method){
                     case 0:
                         try{
-                            if((args.length > 0) && ((args[0] instanceof Double))){
+                            if(args.length > 0 && args[0] instanceof Double){
                                 int number = ((Double) args[0]).intValue();
                                 writer.write(number);
                             }
@@ -414,7 +428,6 @@ public class FileSystemApi implements ILuaAPI {
                         }catch(IOException e){
                             throw new Exception(e.getMessage());
                         }
-
                     case 1:
                         try{
                             writer.close();
@@ -422,7 +435,6 @@ public class FileSystemApi implements ILuaAPI {
                         }catch(IOException e){
                             return null;
                         }
-
                     case 2:
                         try{
                             writer.flush();
@@ -430,11 +442,9 @@ public class FileSystemApi implements ILuaAPI {
                         }catch(IOException e){
                             return null;
                         }
-
                 }
                 return null;
             }
-        }
-        };
+        }};
     }
 }

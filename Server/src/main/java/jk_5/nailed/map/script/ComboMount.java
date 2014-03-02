@@ -22,6 +22,7 @@ public class ComboMount implements IMount {
         this.parts = parts;
     }
 
+    @Override
     public boolean exists(String path) throws IOException{
         for(int i = this.parts.length - 1; i >= 0; i--){
             IMount part = this.parts[i];
@@ -32,6 +33,7 @@ public class ComboMount implements IMount {
         return false;
     }
 
+    @Override
     public boolean isDirectory(String path) throws IOException{
         for(int i = this.parts.length - 1; i >= 0; i--){
             IMount part = this.parts[i];
@@ -42,6 +44,7 @@ public class ComboMount implements IMount {
         return false;
     }
 
+    @Override
     public void list(String path, List<String> contents) throws IOException{
         List<String> foundFiles = null;
         int foundDirs = 0;
@@ -70,8 +73,8 @@ public class ComboMount implements IMount {
         }
     }
 
-    public long getSize(String path)
-            throws IOException{
+    @Override
+    public long getSize(String path) throws IOException{
         for(int i = this.parts.length - 1; i >= 0; i--){
             IMount part = this.parts[i];
             if(part.exists(path)){
@@ -81,8 +84,8 @@ public class ComboMount implements IMount {
         throw new IOException("No such file");
     }
 
-    public InputStream openForRead(String path)
-            throws IOException{
+    @Override
+    public InputStream openForRead(String path) throws IOException{
         for(int i = this.parts.length - 1; i >= 0; i--){
             IMount part = this.parts[i];
             if((part.exists(path)) && (!part.isDirectory(path))){

@@ -50,6 +50,12 @@ public class CommandTransformer implements IClassTransformer {
             methodGetNode.visitInsn(Opcodes.ARETURN);
             cnode.methods.add(methodGetNode);
 
+            /*MethodNode permissionNode = ASMHelper.findMethod(new Mapping("net/minecraft/command/ICommand", "canCommandSenderUseCommand", "(Lnet/minecraft/command/ICommandSender;)Z"), cnode);
+            InsnList insn = new InsnList();
+            insn.add(new InsnNode(Opcodes.ICONST_1));
+            insn.add(new InsnNode(Opcodes.IRETURN));
+            permissionNode.instructions.insert(insn);*/
+
             return ASMHelper.createBytes(cnode, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
         }else{
             return bytes;

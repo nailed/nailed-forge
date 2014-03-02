@@ -23,24 +23,25 @@ public class FileMount implements IWritableMount {
         this.usedSpace = created() ? measureUsedSpace(rootPath) : MINIMUM_FILE_SIZE;
     }
 
+    @Override
     public boolean exists(String path) throws IOException{
         if(!created()){
             return path.length() == 0;
         }
-
         File file = getRealPath(path);
         return file.exists();
     }
 
+    @Override
     public boolean isDirectory(String path) throws IOException{
         if(!created()){
             return path.length() == 0;
         }
-
         File file = getRealPath(path);
         return (file.exists()) && (file.isDirectory());
     }
 
+    @Override
     public void list(String path, List<String> contents) throws IOException{
         if(!created()){
             if(path.length() != 0){
@@ -48,7 +49,7 @@ public class FileMount implements IWritableMount {
             }
         }else{
             File file = getRealPath(path);
-            if((file.exists()) && (file.isDirectory())){
+            if(file.exists() && file.isDirectory()){
                 String[] paths = file.list();
                 for(String subPath : paths){
                     if(new File(file, subPath).exists()){
@@ -61,6 +62,7 @@ public class FileMount implements IWritableMount {
         }
     }
 
+    @Override
     public long getSize(String path) throws IOException{
         if(!created()){
             if(path.length() == 0){
@@ -72,24 +74,24 @@ public class FileMount implements IWritableMount {
                 if(file.isDirectory()){
                     return 0L;
                 }
-
                 return file.length();
             }
         }
-
         throw new IOException("No such file");
     }
 
+    @Override
     public InputStream openForRead(String path) throws IOException{
         if(created()){
             File file = getRealPath(path);
-            if((file.exists()) && (!file.isDirectory())){
+            if(file.exists() && !file.isDirectory()){
                 return new FileInputStream(file);
             }
         }
         throw new IOException("No such file");
     }
 
+    @Override
     public void makeDirectory(String path) throws IOException{
         create();
         File file = getRealPath(path);
@@ -101,7 +103,6 @@ public class FileMount implements IWritableMount {
             if(getRemainingSpace() < MINIMUM_FILE_SIZE){
                 throw new IOException("Out of space");
             }
-
             boolean success = file.mkdirs();
             if(success){
                 this.usedSpace += MINIMUM_FILE_SIZE;
@@ -111,11 +112,11 @@ public class FileMount implements IWritableMount {
         }
     }
 
+    @Override
     public void delete(String path) throws IOException{
         if(path.length() == 0){
             throw new IOException("Access denied");
         }
-
         if(created()){
             File file = getRealPath(path);
             if(file.exists()){
@@ -141,10 +142,11 @@ public class FileMount implements IWritableMount {
         }
     }
 
+    @Override
     public OutputStream openForWrite(String path) throws IOException{
         create();
         File file = getRealPath(path);
-        if((file.exists()) && (file.isDirectory())){
+        if(file.exists() && file.isDirectory()){
             throw new IOException("Cannot write to directory");
         }
 
@@ -152,7 +154,6 @@ public class FileMount implements IWritableMount {
             if(getRemainingSpace() < MINIMUM_FILE_SIZE){
                 throw new IOException("Out of space");
             }
-
             this.usedSpace += MINIMUM_FILE_SIZE;
         }else{
             this.usedSpace -= Math.max(file.length(), MINIMUM_FILE_SIZE);
@@ -161,6 +162,7 @@ public class FileMount implements IWritableMount {
         return new CountingOutputStream(new FileOutputStream(file, false), MINIMUM_FILE_SIZE);
     }
 
+    @Override
     public OutputStream openForAppend(String path) throws IOException{
         if(created()){
             File file = getRealPath(path);
@@ -173,10 +175,10 @@ public class FileMount implements IWritableMount {
 
             return new CountingOutputStream(new FileOutputStream(file, true), Math.max(MINIMUM_FILE_SIZE - file.length(), 0L));
         }
-
         throw new IOException("No such file");
     }
 
+    @Override
     public long getRemainingSpace() throws IOException{
         return Math.max(this.capacity - this.usedSpace, 0L);
     }
@@ -223,30 +225,29 @@ public class FileMount implements IWritableMount {
             this.m_ignoredBytesLeft = bytesToIgnore;
         }
 
-        public void close()
-                throws IOException{
+        @Override
+        public void close() throws IOException{
             this.m_innerStream.close();
         }
 
-        public void flush()
-                throws IOException{
+        @Override
+        public void flush() throws IOException{
             this.m_innerStream.flush();
         }
 
-        public void write(byte[] b)
-                throws IOException{
+        @Override
+        public void write(byte[] b) throws IOException{
             count(b.length);
             this.m_innerStream.write(b);
         }
 
-        public void write(byte[] b, int off, int len)
-                throws IOException{
+        @Override
+        public void write(byte[] b, int off, int len) throws IOException{
             count(len);
             this.m_innerStream.write(b, off, len);
         }
 
-        public void write(int b)
-                throws IOException{
+        public void write(int b) throws IOException{
             count(1L);
             this.m_innerStream.write(b);
         }
