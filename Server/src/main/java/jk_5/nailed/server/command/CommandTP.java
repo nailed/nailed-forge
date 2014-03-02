@@ -88,10 +88,6 @@ public class CommandTP extends NailedCommand {
                 options.add(new ImmutablePair<Entity, TeleportOptions>(teleporting, option));
             }else if(args.length == 4){
                 //  /tp teleportingPlayer x y z
-                Player target = NailedAPI.getPlayerRegistry().getPlayerByUsername(args[0]);
-                if(target == null){
-                    throw new CommandException("commands.nailed.tp.fail.notarget");
-                }
                 EntityPlayerMP[] players = getPlayersList(sender, args[0]);
                 for(EntityPlayerMP player : players){
                     int x = (int) Math.floor(handleRelativeNumber(sender, player.posX, args[1]));
@@ -99,7 +95,7 @@ public class CommandTP extends NailedCommand {
                     int z = (int) Math.floor(handleRelativeNumber(sender, player.posZ, args[3]));
                     TeleportOptions option = new TeleportOptions();
                     option.setCoordinates(new Spawnpoint(x, y, z, player.rotationYaw, player.rotationPitch));
-                    option.setDestination(target.getCurrentMap());
+                    option.setDestination(NailedAPI.getMapLoader().getMap(player.worldObj));
                     options.add(new ImmutablePair<Entity, TeleportOptions>(player, option));
                 }
             }
