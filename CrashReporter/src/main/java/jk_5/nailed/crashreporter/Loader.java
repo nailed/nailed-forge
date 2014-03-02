@@ -45,7 +45,7 @@ public class Loader implements IFMLLoadingPlugin {
     @Override
     public void injectData(Map<String, Object> data){
         if(data.containsKey("coremodLocation")){
-            coremodLocation = (File) data;
+            coremodLocation = (File) data.get("coremodLocation");
         }
     }
 

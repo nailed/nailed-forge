@@ -7,6 +7,7 @@ jar.manifest{
 
 dependencies {
     packed 'pircbot:pircbot:1.5.0'
+    compile rootProject
     compile project(":Common")
     compile project(":API")
 }

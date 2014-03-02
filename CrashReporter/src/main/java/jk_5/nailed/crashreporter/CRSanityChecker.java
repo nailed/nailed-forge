@@ -27,13 +27,15 @@ public class CRSanityChecker implements IFMLCallHook {
         if(source.getLocation().getProtocol().equals("jar")){
             Certificate[] certs = source.getCertificates();
             if(certs == null){
+                CrashReporter.getLogger().fatal("No fingerprint was found for CrashReporter");
                 throw new RuntimeException("Nailed CrashReporter is not signed! Please get a new one, or contact jk-5");
             }
             for(Certificate cert : certs){
                 String fingerprint = CertificateHelper.getFingerprint(cert);
                 if(fingerprint.equals(FINGERPRINT)){
-                    CrashReporter.getLogger().info("Found a valid CrashReporter fingerprint!");
+                    CrashReporter.getLogger().info("Found valid fingerprint for CrashReporter. Certificate fingerprint " + fingerprint);
                 }else{
+                    CrashReporter.getLogger().fatal("Found invalid fingerprint for CrashReporter. Certificate fingerprint " + fingerprint);
                     throw new RuntimeException("Nailed CrashReporter is not signed! Please get a new one, or contact jk-5");
                 }
             }

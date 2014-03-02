@@ -133,7 +133,6 @@ subprojects {
     }
 
     dependencies {
-        compile rootProject
         compile 'org.projectlombok:lombok:1.12.2'
 
         testCompile 'junit:junit:4.11'

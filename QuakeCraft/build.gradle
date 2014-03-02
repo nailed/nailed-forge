@@ -1,6 +1,7 @@
 version = '0.1-SNAPSHOT'
 
 dependencies {
+    compile rootProject
     compile project(":API")
     runtime project(":Server")
 }
