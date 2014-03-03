@@ -124,7 +124,7 @@ public class NailedPlayer implements Player {
     }
 
     public void onChangedDimension() {
-
+        NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.TimeUpdate(true, ""), this.getEntity());
     }
 
     public void onRespawn() {
