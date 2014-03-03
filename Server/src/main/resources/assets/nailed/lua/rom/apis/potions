@@ -1,0 +1,24 @@
+
+speed = 1
+slowness = 2
+haste = 3
+miningfatigue = 4
+strength = 5
+healing = 6
+harming = 7
+jumpboost = 8
+confusion = 9
+regeneration = 10
+resistance = 11
+fireresistance = 12
+waterbreathing = 13
+invisibility = 14
+blindness = 15
+nightvision = 16
+hunger = 17
+weakness = 18
+poison = 19
+wither = 20
+healthboost = 21
+absorption = 22
+saturation = 23
