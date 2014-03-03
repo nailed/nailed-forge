@@ -20,6 +20,7 @@ import jk_5.nailed.map.teleport.TeleportHelper;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.PlayerCapabilities;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.FoodStats;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.EnumDifficulty;
@@ -294,7 +295,9 @@ public class MapApi implements ILuaAPI {
                         "getType",
                         "freeze",
                         "sendChatComponent",
-                        "sendChat"
+                        "sendChat",
+                        "addPotionEffect",
+                        "removePotionEffect"
                 };
             }
 
@@ -378,6 +381,28 @@ public class MapApi implements ILuaAPI {
                             player.sendChat((String) arguments[0]);
                         }else{
                             throw new Exception("Expected 1 string argument");
+                        }
+                        break;
+                    case 12: //addPotionEffect
+                        EntityPlayerMP entity = player.getEntity();
+                        if(arguments.length == 2 && arguments[0] instanceof Double && arguments[1] instanceof Double){
+                            int id = ((Double) arguments[0]).intValue();
+                            int duration = ((Double) arguments[1]).intValue();
+                            entity.addPotionEffect(new PotionEffect(id, duration, 0, true));
+                        }else if(arguments.length == 3 && arguments[0] instanceof Double && arguments[1] instanceof Double && arguments[2] instanceof Double){
+                            int id = ((Double) arguments[0]).intValue();
+                            int duration = ((Double) arguments[1]).intValue();
+                            int amplifier = ((Double) arguments[2]).intValue();
+                            entity.addPotionEffect(new PotionEffect(id, duration, amplifier, true));
+                        }else{
+                            throw new Exception("Expected 2 or 3 int arguments");
+                        }
+                        break;
+                    case 13: //removePotionEffect
+                        if(arguments.length == 1 && arguments[0] instanceof Double){
+                            player.getEntity().removePotionEffect(((Double) arguments[0]).intValue());
+                        }else{
+                            throw new Exception("Expected 1 int argument");
                         }
                         break;
                 }

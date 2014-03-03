@@ -1,13 +1,10 @@
 Todo:
 - Add transformer obf mappings
-- Some kind of permission system
 - Zone protection
 - Add a lot of chat commands
 - Login gui
 - Skinsync
 - Native cypher
-- Dynamic instructions
-- API module
 - Scoreboard API
 
 - player.freeze
