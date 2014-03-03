@@ -15,7 +15,7 @@ import net.minecraft.util.IChatComponent;
 public class CommandReloadMappacks extends NailedCommand {
 
     public CommandReloadMappacks(){
-        super("mappacks");
+        super("reloadmappacks");
     }
 
     @Override

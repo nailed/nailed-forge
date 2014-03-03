@@ -218,6 +218,7 @@ public class NailedMap implements Map {
     @Override
     public Spawnpoint getRandomSpawnpoint(){
         List<Spawnpoint> spawnpoints = mappack.getMappackMetadata().getRandomSpawnpoints();
+        if(spawnpoints.size() == 0) return null;
         return spawnpoints.get(NailedMapLoader.instance().getRandomSpawnpointSelector().nextInt(spawnpoints.size()));
     }
 

@@ -257,6 +257,9 @@ public class MapApi implements ILuaAPI {
             case 16: //spreadPlayers
                 for(Player player : this.map.getPlayers()){
                     Spawnpoint spawn = this.map.getRandomSpawnpoint();
+                    if(spawn == null){
+                        throw new Exception("No random spawnpoints were found");
+                    }
                     player.getEntity().setLocationAndAngles(spawn.posX + 0.5, spawn.posY, spawn.posZ + 0.5, spawn.yaw, spawn.pitch);
                 }
                 break;
