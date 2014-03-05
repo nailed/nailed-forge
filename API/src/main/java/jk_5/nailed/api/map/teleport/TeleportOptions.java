@@ -32,6 +32,7 @@ public class TeleportOptions {
     }
 
     @Override
+    @SuppressWarnings("CloneDoesntDeclareCloneNotSupportedException")
     public TeleportOptions clone(){
         return new TeleportOptions(this.coordinates, this.yaw, this.pitch, this.destination, this.maintainMomentum, this.sound);
     }

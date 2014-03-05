@@ -116,6 +116,13 @@ public class NailedMapLoader implements MapLoader {
         //SkinSyncManager.getInstance().setPlayerSkin(event.player, "skinTest");
     }
 
+    @SubscribeEvent
+    @SuppressWarnings("unused")
+    public void playerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event){
+        Map map = this.getMap(event.player.worldObj);
+        map.onPlayerLeft(NailedAPI.getPlayerRegistry().getPlayer(event.player));
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGH)
     @SuppressWarnings("unused")
     public void onWorldLoad(WorldEvent.Load event){
@@ -127,7 +134,7 @@ public class NailedMapLoader implements MapLoader {
     @SuppressWarnings("unused")
     public void onChangeDimension(PlayerChangedDimensionEvent event){
         event.oldMap.onPlayerLeft(event.player);
-        event.newMap.onPlayerJoined(event.player);
+        //event.newMap.onPlayerJoined(event.player); //This will be called in the onEntitySpawn listener
         for(Map map : this.maps){
             map.getSignCommandHandler().onPlayerLeftMap(event.oldMap, event.player);
             map.getSignCommandHandler().onPlayerJoinMap(event.newMap, event.player);

@@ -16,6 +16,7 @@ import jk_5.nailed.api.map.teleport.TeleportOptions;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.api.scripting.IMount;
 import jk_5.nailed.map.game.NailedGameManager;
+import jk_5.nailed.map.scoreboard.NailedScoreboardManager;
 import jk_5.nailed.map.script.FileSystemException;
 import jk_5.nailed.map.script.MachineRegistry;
 import jk_5.nailed.map.script.ServerMachine;
@@ -54,6 +55,7 @@ public class NailedMap implements Map {
     @Getter private WeatherController weatherController;
     @Getter private SignCommandHandler signCommandHandler;
     @Getter private GameManager gameManager;
+    @Getter private NailedScoreboardManager scoreboardManager;
 
     @Getter private ServerMachine machine;
     public IMount mappackMount;
@@ -67,6 +69,7 @@ public class NailedMap implements Map {
         this.weatherController = new WeatherController(this);
         this.signCommandHandler = new SignCommandHandler(this);
         this.gameManager = new NailedGameManager(this);
+        this.scoreboardManager = new NailedScoreboardManager(this);
         NailedAPI.getMapLoader().registerMap(this);
 
         if(this.mappack == null){
@@ -136,6 +139,7 @@ public class NailedMap implements Map {
 
     @Override
     public void onPlayerJoined(Player player){
+        this.scoreboardManager.onPlayerJoinedMap(player);
         this.teamManager.onPlayerJoinedMap(player);
         this.amountOfPlayers ++;
         NailedMapLoader.instance().checkShouldStart(this);
@@ -143,6 +147,7 @@ public class NailedMap implements Map {
 
     @Override
     public void onPlayerLeft(Player player){
+        this.scoreboardManager.onPlayerLeftMap(player);
         this.teamManager.onPlayerLeftMap(player);
         this.amountOfPlayers --;
         NailedMapLoader.instance().checkShouldStart(this);
@@ -200,7 +205,7 @@ public class NailedMap implements Map {
     public List<Player> getPlayers(){
         List<Player> ret = Lists.newArrayList();
         for(Player player : NailedAPI.getPlayerRegistry().getPlayers()){
-            if(player.getCurrentMap() == this){
+            if(player.isOnline() && player.getCurrentMap() == this){
                 ret.add(player);
             }
         }

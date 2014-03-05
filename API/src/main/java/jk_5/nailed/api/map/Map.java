@@ -1,6 +1,7 @@
 package jk_5.nailed.api.map;
 
 import cpw.mods.fml.common.gameevent.TickEvent;
+import jk_5.nailed.api.map.scoreboard.ScoreboardManager;
 import jk_5.nailed.api.map.sign.SignCommandHandler;
 import jk_5.nailed.api.map.stat.StatManager;
 import jk_5.nailed.api.map.team.TeamManager;
@@ -46,4 +47,5 @@ public interface Map {
     public void onGameEnded();
     public void onTick(TickEvent.ServerTickEvent event);
     public GameManager getGameManager();
+    public ScoreboardManager getScoreboardManager();
 }
