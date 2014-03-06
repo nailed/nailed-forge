@@ -72,22 +72,12 @@ public class TeamManager implements jk_5.nailed.api.map.team.TeamManager {
             this.playerTeamMap.put(player, this.defaultTeam);
             player.getEntity().refreshDisplayName();
         }
-        Team team = this.playerTeamMap.get(player);
-        if(team.getScoreboardTeam() != null){
-            //player.sendPacket(new Packet209SetPlayerTeam(team.getScoreboardTeam(), 0));
-        }
-        team.addPlayerToScoreboardTeam(player);
     }
 
     public void onPlayerLeftMap(Player player){
         if(!this.playerTeamMap.containsKey(player)){
             this.playerTeamMap.put(player, this.defaultTeam);
             player.getEntity().refreshDisplayName();
-        }
-        Team team = this.playerTeamMap.get(player);
-        team.removePlayerFromScoreboardTeam(player);
-        if(team.getScoreboardTeam() != null){
-            //player.sendPacket(new Packet209SetPlayerTeam(team.getScoreboardTeam(), 1));
         }
     }
 

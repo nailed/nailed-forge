@@ -4,8 +4,8 @@ import jk_5.nailed.api.ChatColor;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.PossibleWinner;
 import jk_5.nailed.api.map.Spawnpoint;
+import jk_5.nailed.api.map.scoreboard.ScoreboardTeam;
 import jk_5.nailed.api.player.Player;
-import net.minecraft.scoreboard.ScorePlayerTeam;
 
 import java.util.List;
 
@@ -31,8 +31,8 @@ public interface Team extends PossibleWinner {
     public void setFriendlyFireEnabled(boolean enabled);
     public boolean canSeeFriendlyInvisibles();
     public void setSeeFriendlyInvisibles(boolean enabled);
-    public ScorePlayerTeam getScoreboardTeam();
-    public void setScoreboardTeam(ScorePlayerTeam team);
+    public ScoreboardTeam getScoreboardTeam();
+    public void setScoreboardTeam(ScoreboardTeam team);
     public Spawnpoint getSpawnpoint();
     public void setSpawnpoint(Spawnpoint spawnpoint);
     public String getColoredName();

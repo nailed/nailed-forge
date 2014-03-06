@@ -5,13 +5,12 @@ import jk_5.nailed.api.ChatColor;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.Spawnpoint;
+import jk_5.nailed.api.map.scoreboard.ScoreboardTeam;
 import jk_5.nailed.api.map.team.Team;
 import jk_5.nailed.api.player.Player;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import net.minecraft.scoreboard.ScorePlayerTeam;
-import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 
@@ -34,21 +33,18 @@ public class NailedTeam implements Team {
     @Getter private boolean ready = false;
     @Getter @Setter private boolean friendlyFireEnabled = false;
     @Setter private boolean seeFriendlyInvisibles = false;
-    @Getter @Setter private ScorePlayerTeam scoreboardTeam;
+    @Getter @Setter private ScoreboardTeam scoreboardTeam;
     @Getter @Setter private Spawnpoint spawnpoint;
     @Getter @Setter private int teamSpeakChannelID = -1;
 
     public void onWorldSet(){
-        String name = "map" + this.map.getID() + this.teamId;
-        Scoreboard scoreboard = this.map.getWorld().getScoreboard();
-        ScorePlayerTeam scoreplayerteam = scoreboard.createTeam(name);
-        if(scoreplayerteam == null){
-            this.scoreboardTeam = scoreboard.createTeam(name);
-            this.scoreboardTeam.setTeamName(this.name);
-            this.scoreboardTeam.setAllowFriendlyFire(this.friendlyFireEnabled);
-            this.scoreboardTeam.setSeeFriendlyInvisiblesEnabled(this.seeFriendlyInvisibles);
-            this.scoreboardTeam.setNamePrefix(this.color.toString());
-            this.scoreboardTeam.setNameSuffix(ChatColor.RESET.toString());
+        if(this.scoreboardTeam == null){
+            this.scoreboardTeam = this.map.getScoreboardManager().getOrCreateTeam(this.teamId);
+            this.scoreboardTeam.setDisplayName(this.name);
+            this.scoreboardTeam.setFriendlyFire(this.friendlyFireEnabled);
+            this.scoreboardTeam.setFriendlyInvisiblesVisible(this.friendlyFireEnabled);
+            this.scoreboardTeam.setPrefix(this.color.toString());
+            this.scoreboardTeam.setSuffix(ChatColor.RESET.toString());
         }
     }
 
@@ -103,13 +99,12 @@ public class NailedTeam implements Team {
 
     public void addPlayerToScoreboardTeam(Player player){
         if(this.scoreboardTeam == null) return;
-        this.map.getWorld().getScoreboard().func_151392_a(player.getUsername(), this.scoreboardTeam.getRegisteredName());
-        //this.map.getWorld().getScoreboard().addPlayerToTeam(player.getUsername(), this.scoreboardTeam);
+        this.scoreboardTeam.addPlayer(player);
     }
 
     public void removePlayerFromScoreboardTeam(Player player){
         if(this.scoreboardTeam == null) return;
-        this.map.getWorld().getScoreboard().removePlayerFromTeams(player.getUsername());
+        this.scoreboardTeam.removePlayer(player);
     }
 
     @Override
