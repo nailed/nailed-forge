@@ -7,6 +7,7 @@ import jk_5.nailed.api.map.PossibleWinner;
 import jk_5.nailed.api.map.Spawnpoint;
 import jk_5.nailed.api.map.team.Team;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.Packet;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
@@ -50,4 +51,5 @@ public interface Player extends PossibleWinner {
     public Spawnpoint getSpawnpoint();
     public void setPdaID(int id);
     public int getPdaID();
+    public NetHandlerPlayServer getNetHandler();
 }

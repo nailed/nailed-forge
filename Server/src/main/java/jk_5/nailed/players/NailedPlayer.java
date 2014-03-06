@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S2BPacketChangeGameState;
 import net.minecraft.server.MinecraftServer;
@@ -43,6 +44,7 @@ public class NailedPlayer implements Player {
     @Getter @Setter private int fps;
     @Getter @Setter private Spawnpoint spawnpoint;
     @Getter @Setter private int pdaID = -1;
+    @Getter private NetHandlerPlayServer netHandler;
 
     public void sendNotification(String message){
         this.sendNotification(message, null);
@@ -69,7 +71,7 @@ public class NailedPlayer implements Player {
     }
 
     public void sendPacket(Packet packet){
-        this.getEntity().playerNetServerHandler.sendPacket(packet);
+        this.netHandler.sendPacket(packet);
     }
 
     public EntityPlayerMP getEntity(){
@@ -117,10 +119,12 @@ public class NailedPlayer implements Player {
 
     public void onLogin() {
         this.online = true;
+        this.netHandler = this.getEntity().playerNetServerHandler;
     }
 
     public void onLogout() {
         this.online = false;
+        this.netHandler = null;
     }
 
     public void onChangedDimension() {

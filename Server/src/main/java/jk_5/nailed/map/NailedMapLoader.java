@@ -109,6 +109,9 @@ public class NailedMapLoader implements MapLoader {
     @SubscribeEvent
     @SuppressWarnings("unused")
     public void playerLoggedIn(PlayerEvent.PlayerLoggedInEvent event){
+        Map map = this.getMap(event.player.worldObj);
+        map.onPlayerJoined(NailedAPI.getPlayerRegistry().getPlayer(event.player));
+
         if(event.player.worldObj.provider instanceof NailedWorldProvider){
             ((NailedWorldProvider) event.player.worldObj.provider).sendMapData(event.player);
         }
@@ -134,7 +137,7 @@ public class NailedMapLoader implements MapLoader {
     @SuppressWarnings("unused")
     public void onChangeDimension(PlayerChangedDimensionEvent event){
         event.oldMap.onPlayerLeft(event.player);
-        //event.newMap.onPlayerJoined(event.player); //This will be called in the onEntitySpawn listener
+        event.newMap.onPlayerJoined(event.player);
         for(Map map : this.maps){
             map.getSignCommandHandler().onPlayerLeftMap(event.oldMap, event.player);
             map.getSignCommandHandler().onPlayerJoinMap(event.newMap, event.player);
@@ -162,7 +165,7 @@ public class NailedMapLoader implements MapLoader {
             if(Math.floor(player.posX) == worldSpawn.posX && Math.floor(player.posZ) == worldSpawn.posZ){
                 event.entity.setLocationAndAngles(spawn.posX + 0.5, spawn.posY, spawn.posZ + 0.5, spawn.yaw, spawn.pitch);
                 player.setGameType(mappack.getMappackMetadata().getGamemode());
-                map.onPlayerJoined(NailedAPI.getPlayerRegistry().getOrCreatePlayer(player.getGameProfile()));
+                //map.onPlayerJoined(NailedAPI.getPlayerRegistry().getOrCreatePlayer(player.getGameProfile()));
             }
         }
     }

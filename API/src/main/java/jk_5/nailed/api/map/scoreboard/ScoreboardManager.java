@@ -23,4 +23,7 @@ public interface ScoreboardManager {
      * @param objective The objective to display
      */
     public void setDisplay(DisplayType type, Objective objective);
+
+    public ScoreboardTeam getOrCreateTeam(String id);
+    public ScoreboardTeam getTeam(String id);
 }

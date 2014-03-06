@@ -27,6 +27,8 @@ import jk_5.nailed.map.weather.WeatherController;
 import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.network.NailedPacket;
 import lombok.Getter;
+import net.minecraft.network.Packet;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.GameRules;
@@ -44,18 +46,18 @@ import java.util.List;
  */
 public class NailedMap implements Map {
 
-    @Getter private int ID = DimensionManager.getNextFreeDimId();
+    @Getter private int ID;
     @Getter private final Mappack mappack;
     @Getter private World world;
     @Getter private boolean isLoaded = false;
     @Getter private final TeamManager teamManager;
     @Getter private final StatManager statManager;
-    @Getter private int amountOfPlayers = 0;
     @Getter private boolean dataResyncRequired = true;
     @Getter private WeatherController weatherController;
     @Getter private SignCommandHandler signCommandHandler;
     @Getter private GameManager gameManager;
     @Getter private NailedScoreboardManager scoreboardManager;
+    @Getter private List<Player> players = Lists.newArrayList();
 
     @Getter private ServerMachine machine;
     public IMount mappackMount;
@@ -70,6 +72,7 @@ public class NailedMap implements Map {
         this.signCommandHandler = new SignCommandHandler(this);
         this.gameManager = new NailedGameManager(this);
         this.scoreboardManager = new NailedScoreboardManager(this);
+
         NailedAPI.getMapLoader().registerMap(this);
 
         if(this.mappack == null){
@@ -79,7 +82,7 @@ public class NailedMap implements Map {
 
     public void initMapServer(){
         if(this.isLoaded) return;
-        NailedLog.info("Initializing %d", this.getID());
+        NailedLog.info("Initializing %s", this.getSaveFileName());
 
         DimensionManager.registerDimension(this.getID(), NailedServer.getProviderID());
         DimensionManager.initDimension(this.getID());
@@ -94,7 +97,6 @@ public class NailedMap implements Map {
     public void setWorld(World world){
         Preconditions.checkNotNull(world);
         this.world = world;
-        //world.worldScoreboard = NailedAPI.getMapLoader().getLobby().world.worldScoreboard; //TODO: re-enable
         if(world.provider != null) this.ID = world.provider.dimensionId;
         this.isLoaded = true;
         this.teamManager.onWorldSet();
@@ -129,7 +131,7 @@ public class NailedMap implements Map {
     @Override
     public void reloadFromMappack(){
         for(Player player : this.getPlayers()){
-            player.getEntity().playerNetServerHandler.kickPlayerFromServer("[" + ChatColor.GREEN + "Nailed" + ChatColor.RESET + "] Reloading the map you were in"); //kickPlayerFromServer
+            player.getEntity().playerNetServerHandler.kickPlayerFromServer("[" + ChatColor.GREEN + "Nailed" + ChatColor.RESET + "] Reloading the map you were in");
         }
         this.unloadAndRemove();
         this.mappack.prepareWorld(this.getSaveFolder());
@@ -141,7 +143,7 @@ public class NailedMap implements Map {
     public void onPlayerJoined(Player player){
         this.scoreboardManager.onPlayerJoinedMap(player);
         this.teamManager.onPlayerJoinedMap(player);
-        this.amountOfPlayers ++;
+        this.players.add(player);
         NailedMapLoader.instance().checkShouldStart(this);
     }
 
@@ -149,7 +151,7 @@ public class NailedMap implements Map {
     public void onPlayerLeft(Player player){
         this.scoreboardManager.onPlayerLeftMap(player);
         this.teamManager.onPlayerLeftMap(player);
-        this.amountOfPlayers --;
+        this.players.remove(player);
         NailedMapLoader.instance().checkShouldStart(this);
     }
 
@@ -202,20 +204,12 @@ public class NailedMap implements Map {
         this.broadcastChatMessage(new ChatComponentText(message));
     }
 
-    public List<Player> getPlayers(){
-        List<Player> ret = Lists.newArrayList();
-        for(Player player : NailedAPI.getPlayerRegistry().getPlayers()){
-            if(player.isOnline() && player.getCurrentMap() == this){
-                ret.add(player);
-            }
-        }
-        return ret;
-    }
-
+    @Override
     public void onGameStarted(){
         this.teamManager.onGameStarted();
     }
 
+    @Override
     public void onGameEnded(){
         this.teamManager.onGameEnded();
     }
@@ -235,7 +229,18 @@ public class NailedMap implements Map {
         this.dataResyncRequired = false;
     }
 
+    @Override
     public void broadcastNotification(String msg){
         NailedNetworkHandler.sendPacketToAllPlayersInDimension(new NailedPacket.Notification(msg, null, 0xFFFFFF), this.getID());
+    }
+
+    @Override
+    public void broadcastPacket(Packet packet){
+        MinecraftServer.getServer().getConfigurationManager().sendPacketToAllPlayersInDimension(packet, this.getID());
+    }
+
+    @Override
+    public int getAmountOfPlayers(){
+        return this.players.size();
     }
 }

@@ -10,6 +10,9 @@ import jk_5.nailed.api.map.Map;
 public interface Objective {
 
     public Map getMap();
-    public String getID();
+    public String getId();
     public String getDisplayName();
+    public void setDisplayName(String displayName);
+    public Score getScore(String name);
+    public void removeScore(Score score);
 }
