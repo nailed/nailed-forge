@@ -25,6 +25,12 @@ public class ScoreImpl implements Score {
     }
 
     @Override
+    public void addValue(int value){
+        this.value += value;
+        this.update();
+    }
+
+    @Override
     public void update(){
         S3CPacketUpdateScore p = new S3CPacketUpdateScore();
         p.field_149329_a = this.name;

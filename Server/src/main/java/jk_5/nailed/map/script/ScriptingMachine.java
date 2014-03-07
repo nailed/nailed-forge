@@ -3,10 +3,7 @@ package jk_5.nailed.map.script;
 import com.google.common.collect.Lists;
 import jk_5.nailed.api.scripting.IMount;
 import jk_5.nailed.api.scripting.IWritableMount;
-import jk_5.nailed.map.script.api.FileSystemApi;
-import jk_5.nailed.map.script.api.MapApi;
-import jk_5.nailed.map.script.api.OSApi;
-import jk_5.nailed.map.script.api.TermApi;
+import jk_5.nailed.map.script.api.*;
 import lombok.Getter;
 import org.apache.commons.io.IOUtils;
 
@@ -167,6 +164,7 @@ public class ScriptingMachine {
         this.apis.add(new FileSystemApi(this.apiEnvironment));
         this.apis.add(new OSApi(this.apiEnvironment));
         this.apis.add(new MapApi(this.apiEnvironment));
+        this.apis.add(new ScoreboardApi(this.apiEnvironment));
     }
 
     private void initLua(){

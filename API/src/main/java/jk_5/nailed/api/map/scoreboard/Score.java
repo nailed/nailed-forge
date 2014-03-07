@@ -10,5 +10,6 @@ public interface Score {
     public String getName();
     public int getValue();
     public void setValue(int value);
+    public void addValue(int value);
     public void update();
 }

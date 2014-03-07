@@ -137,14 +137,14 @@ public class MapApi implements ILuaAPI {
                 List<Player> players = this.map.getPlayers();
                 java.util.Map<Integer, ILuaObject> table = Maps.newHashMap();
                 for(int i = 0; i < players.size(); i++){
-                    table.put(i + 1, this.wrapPlayer(players.get(i)));
+                    table.put(i + 1, wrapPlayer(this.env, players.get(i)));
                 }
                 return new Object[]{table};
             case 6: //getTeams
                 List<Team> teams = this.map.getTeamManager().getTeams();
                 java.util.Map<Integer, ILuaObject> table1 = Maps.newHashMap();
                 for(int i = 0; i < teams.size(); i++){
-                    table1.put(i + 1, this.wrapTeam(teams.get(i)));
+                    table1.put(i + 1, wrapTeam(this.env, teams.get(i)));
                 }
                 return new Object[]{table1};
             case 7: //forEachPlayer
@@ -153,7 +153,7 @@ public class MapApi implements ILuaAPI {
                     LuaMachine machine = this.env.getMachine().getLuaMachine();
                     List<Player> players1 = this.map.getPlayers();
                     for(int i = 0; i < players1.size(); i++){
-                        closure.invoke(LuaValue.varargsOf(machine.toValues(new Object[]{this.wrapPlayer(players1.get(i))}, 0)));
+                        closure.invoke(LuaValue.varargsOf(machine.toValues(new Object[]{wrapPlayer(this.env, players1.get(i))}, 0)));
                     }
                 }else{
                     throw new Exception("Excpected 1 function as argument");
@@ -165,14 +165,14 @@ public class MapApi implements ILuaAPI {
                     LuaMachine machine = this.env.getMachine().getLuaMachine();
                     List<Team> teams1 = this.map.getTeamManager().getTeams();
                     for(int i = 0; i < teams1.size(); i++){
-                        closure.invoke(LuaValue.varargsOf(machine.toValues(new Object[]{this.wrapTeam(teams1.get(i))}, 0)));
+                        closure.invoke(LuaValue.varargsOf(machine.toValues(new Object[]{wrapTeam(this.env, teams1.get(i))}, 0)));
                     }
                 }else{
                     throw new Exception("Excpected 1 function as argument");
                 }
             case 9: //getTeam
                 if(arguments.length == 1 && arguments[0] instanceof String){
-                    return new Object[]{this.wrapTeam(this.map.getTeamManager().getTeam((String) arguments[0]))};
+                    return new Object[]{wrapTeam(this.env, this.map.getTeamManager().getTeam((String) arguments[0]))};
                 }else{
                     throw new Exception("Excpected 1 string argument");
                 }
@@ -279,7 +279,7 @@ public class MapApi implements ILuaAPI {
         return null;
     }
 
-    private ILuaObject wrapPlayer(final Player player){
+    public static ILuaObject wrapPlayer(final IAPIEnvironment env, final Player player){
         if(player == null){
             return null;
         }
@@ -310,7 +310,7 @@ public class MapApi implements ILuaAPI {
                     case 0: //getUsername
                         return new Object[]{player.getUsername()};
                     case 1: //getTeam
-                        return new Object[]{MapApi.this.wrapTeam(player.getTeam())};
+                        return new Object[]{wrapTeam(env, player.getTeam())};
                     case 2: //clearInventory
                         return new Object[]{player.getEntity().inventory.clearInventory(null, -1)};
                     case 3: //setSpawn
@@ -414,7 +414,7 @@ public class MapApi implements ILuaAPI {
         };
     }
 
-    private ILuaObject wrapTeam(final Team team){
+    public static ILuaObject wrapTeam(final IAPIEnvironment env, final Team team){
         if(team == null){
             return null;
         }
@@ -440,16 +440,16 @@ public class MapApi implements ILuaAPI {
                         List<Player> players = team.getMembers();
                         java.util.Map<Integer, ILuaObject> table = Maps.newHashMap();
                         for(int i = 0; i < players.size(); i++){
-                            table.put(i + 1, MapApi.this.wrapPlayer(players.get(i)));
+                            table.put(i + 1, wrapPlayer(env, players.get(i)));
                         }
                         return new Object[]{table};
                     case 2: //forEachPlayer
                         if(arguments.length == 1 && arguments[0] instanceof LuaClosure){
                             LuaClosure closure = (LuaClosure) arguments[0];
-                            LuaMachine machine = MapApi.this.env.getMachine().getLuaMachine();
+                            LuaMachine machine = env.getMachine().getLuaMachine();
                             List<Player> players1 = team.getMembers();
                             for(int i = 0; i < players1.size(); i++){
-                                closure.invoke(LuaValue.varargsOf(machine.toValues(new Object[]{MapApi.this.wrapPlayer(players1.get(i))}, 0)));
+                                closure.invoke(LuaValue.varargsOf(machine.toValues(new Object[]{wrapPlayer(env, players1.get(i))}, 0)));
                             }
                         }else{
                             throw new Exception("Excpected 1 function as argument");
