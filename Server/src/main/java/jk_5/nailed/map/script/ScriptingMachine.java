@@ -165,6 +165,7 @@ public class ScriptingMachine {
         this.apis.add(new OSApi(this.apiEnvironment));
         this.apis.add(new MapApi(this.apiEnvironment));
         this.apis.add(new ScoreboardApi(this.apiEnvironment));
+        this.apis.add(new EventApi(this.apiEnvironment));
     }
 
     private void initLua(){

@@ -2,6 +2,7 @@ package jk_5.nailed.map.script;
 
 import com.google.common.collect.Maps;
 import jk_5.nailed.NailedLog;
+import jk_5.nailed.map.script.api.EventApi;
 import org.luaj.vm2.*;
 import org.luaj.vm2.lib.OneArgFunction;
 import org.luaj.vm2.lib.VarArgFunction;
@@ -38,6 +39,8 @@ public class LuaMachine {
     private Map<Map, LuaValue> processingValue;
     private static Map<LuaTable, Map> processing;
     private static List<LuaValue> tree;
+
+    private EventApi eventApi;
 
     public LuaMachine(){
         this.luaGlobals = JsePlatform.debugGlobals();
@@ -93,6 +96,9 @@ public class LuaMachine {
         for(String name : names){
             this.luaGlobals.set(name, table);
         }
+        if(api instanceof EventApi){
+            this.eventApi = (EventApi) api;
+        }
     }
 
     public void loadBios(InputStream inputStream){
@@ -129,6 +135,7 @@ public class LuaMachine {
 
     public void handleEvent(String eventName, Object... args){
         if(this.luaMainRoutine == null) return;
+        this.eventApi.onEvent(eventName, args);
         if(this.eventFilter != null && eventName != null && !eventName.equals(this.eventFilter) && !eventName.equals("terminate")){
             return;
         }
