@@ -3,6 +3,7 @@ package jk_5.nailed.map.script.api;
 import com.google.common.collect.Maps;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.scoreboard.DisplayType;
 import jk_5.nailed.api.map.scoreboard.Objective;
 import jk_5.nailed.api.map.scoreboard.ScoreboardManager;
 import jk_5.nailed.api.map.scoreboard.ScoreboardTeam;
@@ -53,7 +54,8 @@ public class ScoreboardApi implements ILuaAPI {
     public String[] getMethodNames(){
         return new String[]{
                 "getObjective",
-                "getTeam"
+                "getTeam",
+                "setDisplay"
         };
     }
 
@@ -74,6 +76,50 @@ public class ScoreboardApi implements ILuaAPI {
                 }else{
                     throw new Exception("Expected 1 string argument");
                 }
+            case 2: //setDisplay
+                if(arguments.length == 1 && arguments[0] instanceof HashMap){
+                    try{
+                        HashMap<String, LuaFunction> obj = (HashMap<String, LuaFunction>) arguments[0];
+                        String type = obj.get("getType").call().checkjstring();
+                        if(type.equals("objective")){
+                            String id = obj.get("getId").call().checkjstring();
+                            Objective objective = this.manager.getObjective(id);
+                            if(objective == null){
+                                throw new Exception("Objective " + id + " does not exist");
+                            }
+                            DisplayType typ = null;
+                            String inType = (String) arguments[0];
+                            if(inType.equalsIgnoreCase("list")){
+                                typ = DisplayType.PLAYER_LIST;
+                            }else if(inType.equalsIgnoreCase("belowName")){
+                                typ = DisplayType.BELOW_NAME;
+                            }else if(inType.equalsIgnoreCase("sidebar")){
+                                typ = DisplayType.SIDEBAR;
+                            }
+                            this.manager.setDisplay(typ, objective);
+                            return new Object[]{};
+                        }
+                    }catch(Exception e){
+                        e.printStackTrace();
+                        throw new Exception("The object passed is not a player");
+                    }
+                }
+
+                if(arguments.length == 2 && arguments[0] instanceof String && arguments[1] instanceof String){
+                    DisplayType type = null;
+                    String inType = (String) arguments[0];
+                    if(inType.equalsIgnoreCase("list")){
+                        type = DisplayType.PLAYER_LIST;
+                    }else if(inType.equalsIgnoreCase("belowName")){
+                        type = DisplayType.BELOW_NAME;
+                    }else if(inType.equalsIgnoreCase("sidebar")){
+                        type = DisplayType.SIDEBAR;
+                    }
+                    this.manager.setDisplay(type, this.manager.getObjective((String) arguments[1]));
+                }else{
+                    throw new Exception("Expected 1 string argument");
+                }
+                break;
         }
         return new Object[0];
     }
