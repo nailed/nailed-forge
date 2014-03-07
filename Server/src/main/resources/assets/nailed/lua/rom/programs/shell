@@ -4,7 +4,7 @@ local parentShell = shell
 local parentTerm = term.current()
 
 if multishell then
-    multishell.setTitle( multishell.getCurrent(), "shell" )
+    multishell.setTitle(multishell.getCurrent(), "shell")
 end
 
 local bExit = false
@@ -15,8 +15,8 @@ local tProgramStack = {}
 
 local shell = {}
 local tEnv = {
-	[ "shell" ] = shell,
-	[ "multishell" ] = multishell,
+	["shell"] = shell,
+	["multishell"] = multishell,
 }
 
 -- Colors
@@ -25,39 +25,39 @@ promptColor = colors.textColorHighlite
 textColor = colors.textColorNormal
 bgColor = colors.black
 
-local function run( _sCommand, ... )
-	local sPath = shell.resolveProgram( _sCommand )
+local function run(_sCommand, ...)
+	local sPath = shell.resolveProgram(_sCommand)
 	if sPath ~= nil then
 		tProgramStack[#tProgramStack + 1] = sPath
 		if multishell then
-		    multishell.setTitle( multishell.getCurrent(), fs.getName( sPath ) )
+		    multishell.setTitle(multishell.getCurrent(), fs.getName(sPath))
 		end
-   		local result = os.run( tEnv, sPath, ... )
+   		local result = os.run(tEnv, sPath, ...)
 		tProgramStack[#tProgramStack] = nil
 		if multishell then
 		    if #tProgramStack > 0 then
-    		    multishell.setTitle( multishell.getCurrent(), fs.getName( tProgramStack[#tProgramStack] ) )
+    		    multishell.setTitle(multishell.getCurrent(), fs.getName(tProgramStack[#tProgramStack]))
     		else
-    		    multishell.setTitle( multishell.getCurrent(), "shell" )
+    		    multishell.setTitle(multishell.getCurrent(), "shell")
     		end
 		end
 		return result
    	else
-    	printError( "No such program" )
+    	printError("No such program")
     	return false
     end
 end
 
-local function tokenise( ... )
-    local sLine = table.concat( { ... }, " " )
+local function tokenise(...)
+    local sLine = table.concat({ ... }, " ")
 	local tWords = {}
     local bQuoted = false
-    for match in string.gmatch( sLine .. "\"", "(.-)\"" ) do
+    for match in string.gmatch(sLine .. "\"", "(.-)\"") do
         if bQuoted then
-            table.insert( tWords, match )
+            table.insert(tWords, match)
         else
-            for m in string.gmatch( match, "[^ \t]+" ) do
-                table.insert( tWords, m )
+            for m in string.gmatch(match, "[^ \t]+") do
+                table.insert(tWords, m)
             end
         end
         bQuoted = not bQuoted
@@ -66,11 +66,11 @@ local function tokenise( ... )
 end
 
 -- Install shell API
-function shell.run( ... )
-	local tWords = tokenise( ... )
+function shell.run(...)
+	local tWords = tokenise(...)
 	local sCommand = tWords[1]
 	if sCommand then
-		return run( sCommand, unpack( tWords, 2 ) )
+		return run(sCommand, unpack(tWords, 2))
 	end
 	return false
 end
@@ -83,7 +83,7 @@ function shell.dir()
 	return sDir
 end
 
-function shell.setDir( _sDir )
+function shell.setDir(_sDir)
 	sDir = _sDir
 end
 
@@ -91,30 +91,30 @@ function shell.path()
 	return sPath
 end
 
-function shell.setPath( _sPath )
+function shell.setPath(_sPath)
 	sPath = _sPath
 end
 
-function shell.resolve( _sPath )
-	local sStartChar = string.sub( _sPath, 1, 1 )
+function shell.resolve(_sPath)
+	local sStartChar = string.sub(_sPath, 1, 1)
 	if sStartChar == "/" or sStartChar == "\\" then
-		return fs.combine( "", _sPath )
+		return fs.combine("", _sPath)
 	else
-		return fs.combine( sDir, _sPath )
+		return fs.combine(sDir, _sPath)
 	end
 end
 
-function shell.resolveProgram( _sCommand )
+function shell.resolveProgram(_sCommand)
 	-- Substitute aliases firsts
-	if tAliases[ _sCommand ] ~= nil then
-		_sCommand = tAliases[ _sCommand ]
+	if tAliases[_sCommand] ~= nil then
+		_sCommand = tAliases[_sCommand]
 	end
 
     -- If the path is a global path, use it directly
-    local sStartChar = string.sub( _sCommand, 1, 1 )
+    local sStartChar = string.sub(_sCommand, 1, 1)
     if sStartChar == "/" or sStartChar == "\\" then
-    	local sPath = fs.combine( "", _sCommand )
-    	if fs.exists( sPath ) and not fs.isDir( sPath ) then
+    	local sPath = fs.combine("", _sCommand)
+    	if fs.exists(sPath) and not fs.isDir(sPath) then
 			return sPath
     	end
 		return nil
@@ -122,8 +122,8 @@ function shell.resolveProgram( _sCommand )
     
  	-- Otherwise, look on the path variable
     for sPath in string.gmatch(sPath, "[^:]+") do
-    	sPath = fs.combine( shell.resolve( sPath ), _sCommand )
-    	if fs.exists( sPath ) and not fs.isDir( sPath ) then
+    	sPath = fs.combine(shell.resolve(sPath), _sCommand)
+    	if fs.exists(sPath) and not fs.isDir(sPath) then
 			return sPath
     	end
     end
@@ -132,18 +132,18 @@ function shell.resolveProgram( _sCommand )
 	return nil
 end
 
-function shell.programs( _bIncludeHidden )
+function shell.programs(_bIncludeHidden)
 	local tItems = {}
 	
 	-- Add programs from the path
     for sPath in string.gmatch(sPath, "[^:]+") do
-    	sPath = shell.resolve( sPath )
-		if fs.isDir( sPath ) then
-			local tList = fs.list( sPath )
-			for n,sFile in pairs( tList ) do
-				if not fs.isDir( fs.combine( sPath, sFile ) ) and
-				   (_bIncludeHidden or string.sub( sFile, 1, 1 ) ~= ".") then
-					tItems[ sFile ] = true
+    	sPath = shell.resolve(sPath)
+		if fs.isDir(sPath) then
+			local tList = fs.list(sPath)
+			for n,sFile in pairs(tList) do
+				if not fs.isDir(fs.combine(sPath, sFile)) and
+				   (_bIncludeHidden or string.sub(sFile, 1, 1) ~= ".") then
+					tItems[sFile] = true
 				end
 			end
 		end
@@ -151,10 +151,10 @@ function shell.programs( _bIncludeHidden )
 
 	-- Sort and return
 	local tItemList = {}
-	for sItem, b in pairs( tItems ) do
-		table.insert( tItemList, sItem )
+	for sItem, b in pairs(tItems) do
+		table.insert(tItemList, sItem)
 	end
-	table.sort( tItemList )
+	table.sort(tItemList)
 	return tItemList
 end
 
@@ -165,44 +165,44 @@ function shell.getRunningProgram()
 	return nil
 end
 
-function shell.setAlias( _sCommand, _sProgram )
-	tAliases[ _sCommand ] = _sProgram
+function shell.setAlias(_sCommand, _sProgram)
+	tAliases[_sCommand] = _sProgram
 end
 
-function shell.clearAlias( _sCommand )
-	tAliases[ _sCommand ] = nil
+function shell.clearAlias(_sCommand)
+	tAliases[_sCommand] = nil
 end
 
 function shell.aliases()
 	-- Add aliases
 	local tCopy = {}
-	for sAlias, sCommand in pairs( tAliases ) do
+	for sAlias, sCommand in pairs(tAliases) do
 		tCopy[sAlias] = sCommand
 	end
 	return tCopy
 end
 
-function shell.launch( ... )
+function shell.launch(...)
     if multishell then
-        local tWords = tokenise( ... )
+        local tWords = tokenise(...)
         local sCommand = tWords[1]
         if sCommand then
-        	local sPath = shell.resolveProgram( sCommand )
+        	local sPath = shell.resolveProgram(sCommand)
         	if sPath == "rom/programs/shell" then
-                return multishell.launch( tEnv, sPath, unpack( tWords, 2 ) )
+                return multishell.launch(tEnv, sPath, unpack(tWords, 2))
             elseif sPath ~= nil then
-                return multishell.launch( tEnv, "rom/programs/shell", sPath, unpack( tWords, 2 ) )
+                return multishell.launch(tEnv, "rom/programs/shell", sPath, unpack(tWords, 2))
             else
-                printError( "No such program" )
+                printError("No such program")
             end
         end
     end
     return nil
 end
 	
-function shell.switch( nID )
+function shell.switch(nID)
     if multishell then
-        multishell.setFocus( nID )
+        multishell.setFocus(nID)
     end
 end
 
@@ -211,36 +211,36 @@ local tArgs = { ... }
 if #tArgs > 0 then
     -- "shell x y z"
     -- Run the program specified on the commandline
-    shell.run( ... )
+    shell.run(...)
 
 else
     -- "shell"
     -- Print the header
-    term.setBackgroundColor( bgColor )
-    term.setTextColor( promptColor )
-    print( os.version() )
-    term.setTextColor( textColor )
+    term.setBackgroundColor(bgColor)
+    term.setTextColor(promptColor)
+    print(os.version())
+    term.setTextColor(textColor)
 
     -- Run the startup program
     if parentShell == nil then
-        shell.run( "/rom/startup" )
+        shell.run("/rom/startup.lua")
     end
 
     -- Read commands and execute them
     local tCommandHistory = {}
     while not bExit do
-        term.redirect( parentTerm )
-        term.setBackgroundColor( bgColor )
-        term.setTextColor( promptColor )
+        term.redirect(parentTerm)
+        term.setBackgroundColor(bgColor)
+        term.setTextColor(promptColor)
         if shell.dir() == "" then
             write("$ ")
         else
-            write(shell.dir() .. "$ ")
+            write(shell.dir() .. " $ ")
         end
-        term.setTextColor( textColor )
+        term.setTextColor(textColor)
 
-        local sLine = read( nil, tCommandHistory )
-        table.insert( tCommandHistory, sLine )
-        shell.run( sLine )
+        local sLine = read(nil, tCommandHistory)
+        table.insert(tCommandHistory, sLine)
+        shell.run(sLine)
     end
 end

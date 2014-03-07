@@ -165,7 +165,6 @@ public class NailedMapLoader implements MapLoader {
             if(Math.floor(player.posX) == worldSpawn.posX && Math.floor(player.posZ) == worldSpawn.posZ){
                 event.entity.setLocationAndAngles(spawn.posX + 0.5, spawn.posY, spawn.posZ + 0.5, spawn.yaw, spawn.pitch);
                 player.setGameType(mappack.getMappackMetadata().getGamemode());
-                //map.onPlayerJoined(NailedAPI.getPlayerRegistry().getOrCreatePlayer(player.getGameProfile()));
             }
         }
     }
