@@ -77,7 +77,7 @@ public class ScoreboardApi implements ILuaAPI {
                     throw new Exception("Expected 1 string argument");
                 }
             case 2: //setDisplay
-                if(arguments.length == 1 && arguments[0] instanceof HashMap){
+                if(arguments.length == 2 && arguments[0] instanceof HashMap && arguments[1] instanceof String){
                     try{
                         HashMap<String, LuaFunction> obj = (HashMap<String, LuaFunction>) arguments[0];
                         String type = obj.get("getType").call().checkjstring();
@@ -88,7 +88,7 @@ public class ScoreboardApi implements ILuaAPI {
                                 throw new Exception("Objective " + id + " does not exist");
                             }
                             DisplayType typ = null;
-                            String inType = (String) arguments[0];
+                            String inType = (String) arguments[1];
                             if(inType.equalsIgnoreCase("list")){
                                 typ = DisplayType.PLAYER_LIST;
                             }else if(inType.equalsIgnoreCase("belowName")){
@@ -101,23 +101,10 @@ public class ScoreboardApi implements ILuaAPI {
                         }
                     }catch(Exception e){
                         e.printStackTrace();
-                        throw new Exception("The object passed is not a player");
+                        throw new Exception("The object passed is not an objective");
                     }
-                }
-
-                if(arguments.length == 2 && arguments[0] instanceof String && arguments[1] instanceof String){
-                    DisplayType type = null;
-                    String inType = (String) arguments[0];
-                    if(inType.equalsIgnoreCase("list")){
-                        type = DisplayType.PLAYER_LIST;
-                    }else if(inType.equalsIgnoreCase("belowName")){
-                        type = DisplayType.BELOW_NAME;
-                    }else if(inType.equalsIgnoreCase("sidebar")){
-                        type = DisplayType.SIDEBAR;
-                    }
-                    this.manager.setDisplay(type, this.manager.getObjective((String) arguments[1]));
                 }else{
-                    throw new Exception("Expected 1 string argument");
+                    throw new Exception("Expected 1 objective and 1 string argument");
                 }
                 break;
         }
