@@ -15,6 +15,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.permissions.api.PermissionsManager;
 
 /**
  * No description given
@@ -23,6 +26,8 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 @NoArgsConstructor
 public class TileEntityStatEmitter extends NailedTileEntity implements IStatTileEntity, IGuiTileEntity, IGuiReturnHandler {
+
+    public static final String PERMNODE = "nailed.statEmitter.edit";
 
     @Getter private String programmedName = "";
     @Getter private boolean signalEnabled = false;
@@ -161,8 +166,10 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
 
     @Override
     public boolean canPlayerOpenGui(Player player){
-        if(!player.isOp()){
-            player.sendChat("You need to be an OP to do that");
+        if(!PermissionsManager.getPerm(player.getUsername(), PERMNODE, this).check()){
+            ChatComponentText message = new ChatComponentText("You do not have permission to do that!");
+            message.getChatStyle().setColor(EnumChatFormatting.RED);
+            player.sendChat(message);
             return false;
         }
         return true;

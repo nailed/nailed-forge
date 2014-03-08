@@ -7,6 +7,8 @@ import jk_5.nailed.blocks.tileentity.TileEntityStatEmitter;
 import jk_5.nailed.blocks.tileentity.TileEntityStatModifier;
 import jk_5.nailed.item.ItemBlockMulti;
 import net.minecraft.item.ItemBlock;
+import net.minecraftforge.permissions.api.PermissionsManager;
+import net.minecraftforge.permissions.api.RegisteredPermValue;
 
 /**
  * No description given
@@ -38,6 +40,8 @@ public class NailedBlocks {
         GameRegistry.registerTileEntity(TileEntityStatEmitter.class, "nailed.stat");
         GameRegistry.registerTileEntity(TileEntityStatModifier.class, "nailed.statmodifier");
         GameRegistry.registerTileEntity(TileEntityElevator.class, "nailed.elevator");
+
+        PermissionsManager.registerPermission(TileEntityStatEmitter.PERMNODE, RegisteredPermValue.OP);
     }
 
     private static void registerBlock(NailedBlock block){
