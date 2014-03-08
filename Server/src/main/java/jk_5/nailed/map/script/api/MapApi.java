@@ -86,7 +86,9 @@ public class MapApi implements ILuaAPI {
                 "tpAllToLobby",
                 "remove",
                 "recycle",
-                "hasMappack"
+                "hasMappack",
+                "onStarted",
+                "onStopped"
         };
     }
 
@@ -275,6 +277,16 @@ public class MapApi implements ILuaAPI {
                 break;
             case 20: //hasMappack
                 return new Object[]{this.map.getMappack() != null};
+            case 21: //onStarted
+                this.map.getGameManager().onStarted();
+                break;
+            case 22: //onStopped
+                if(arguments.length == 1 && arguments[0] instanceof Boolean){
+                    this.map.getGameManager().onStopped((Boolean) arguments[0]);
+                }else{
+                    throw new Exception("Expected 1 boolean argument");
+                }
+                break;
         }
         return null;
     }

@@ -60,14 +60,27 @@ local function startGame()
         term.setTextColor(colors.lime)
         print("Starting the game")
         term.setTextColor(colors.white)
+        map.onStarted()
         os.run({print = function(...)
             realPrint(...)
             drawSidebar()
         end}, "/mappack/gamescript.lua")
         gameRunning = false
+        term.setTextColor(colors.lime)
+        print("Game Finished!")
+        term.setTextColor(colors.white)
+        map.onStopped(true)
         drawSidebar()
     end)
     coroutine.resume(gameRoutine)
+end
+
+local function stopGame()
+    gameRunning = false
+    coroutine.resume(gameRoutine, "timer", -1) --force the coroutine to check it's state by dispatching a fake timer event
+    printError("Stopped the game!")
+    map.onStopped(false)
+    drawSidebar()
 end
 
 drawSidebar()
@@ -82,13 +95,12 @@ while true do
     end
     if event == "game_start" then
         startGame()
+    elseif event == "game_stop" then
+        stopGame()
     elseif event == "mouse_click" and p1 == 1 then
         if p2 >= 42 and p2 <= 50 and p3 >= 2 and p3 <=4 then
             if gameRunning then
-                gameRunning = false
-                coroutine.resume(gameRoutine, "timer", -1) --force the coroutine to check it's state by dispatching a fake timer event
-                printError("Stopped the game!")
-                drawSidebar()
+                stopGame()
             else
                 startGame()
             end

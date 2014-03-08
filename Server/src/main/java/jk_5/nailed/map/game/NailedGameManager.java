@@ -3,8 +3,8 @@ package jk_5.nailed.map.game;
 import jk_5.nailed.api.map.GameManager;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.PossibleWinner;
+import jk_5.nailed.api.map.scoreboard.DisplayType;
 import jk_5.nailed.map.NailedMap;
-import jk_5.nailed.map.script.ServerMachine;
 import jk_5.nailed.map.stat.StatTypeManager;
 import jk_5.nailed.map.stat.types.StatTypeGameHasWinner;
 import jk_5.nailed.map.stat.types.StatTypeGameloopRunning;
@@ -47,14 +47,29 @@ public class NailedGameManager implements GameManager {
     }
 
     public void startGame(){
-        ServerMachine machine = ((NailedMap) this.map).getMachine();
-        machine.queueEvent("game_start"); //Dispatch the game_start event
-        StatTypeManager.instance().getStatType(StatTypeGameloopRunning.class).onStart(this.map);
+        ((NailedMap) this.map).getMachine().queueEvent("game_start");
     }
 
     public void stopGame(){
+        ((NailedMap) this.map).getMachine().queueEvent("game_stop");
+    }
+
+    @Override
+    public void onStarted(){
+        this.gameRunning = true;
+        StatTypeManager.instance().getStatType(StatTypeGameloopRunning.class).onStart(this.map);
+    }
+
+    @Override
+    public void onStopped(boolean finished){
         this.gameRunning = false;
         StatTypeManager.instance().getStatType(StatTypeGameloopStopped.class).onEnd(this.map);
         StatTypeManager.instance().getStatType(StatTypeGameloopRunning.class).onEnd(this.map);
+
+        //Reset some stuff
+        this.setCountdownMessage("");
+        this.map.getScoreboardManager().setDisplay(DisplayType.BELOW_NAME, null);
+        this.map.getScoreboardManager().setDisplay(DisplayType.SIDEBAR, null);
+        this.map.getScoreboardManager().setDisplay(DisplayType.BELOW_NAME, null);
     }
 }

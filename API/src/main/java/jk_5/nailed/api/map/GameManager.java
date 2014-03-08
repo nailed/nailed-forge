@@ -16,4 +16,7 @@ public interface GameManager {
     public void startGame();
     public void stopGame();
     public boolean isGameRunning();
+
+    public void onStarted();
+    public void onStopped(boolean finished);
 }
