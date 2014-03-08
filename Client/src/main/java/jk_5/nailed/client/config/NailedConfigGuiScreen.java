@@ -24,7 +24,7 @@ public class NailedConfigGuiScreen extends GuiScreen {
 
     @Override
     protected void actionPerformed(GuiButton par1GuiButton){
-        if (par1GuiButton.enabled && par1GuiButton.id == 1){
+        if(par1GuiButton.enabled && par1GuiButton.id == 1){
             FMLClientHandler.instance().showGuiScreen(this.parent);
         }
     }

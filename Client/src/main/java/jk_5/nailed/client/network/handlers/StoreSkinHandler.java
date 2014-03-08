@@ -3,7 +3,7 @@ package jk_5.nailed.client.network.handlers;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import jk_5.nailed.client.NailedLog;
+import jk_5.nailed.NailedLog;
 import jk_5.nailed.client.skinsync.SkinSync;
 import jk_5.nailed.network.NailedPacket;
 

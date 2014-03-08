@@ -1,7 +1,6 @@
-package jk_5.nailed.client.coremod;
+package jk_5.nailed.common.coremod;
 
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
-import jk_5.nailed.client.Constants;
 
 import java.util.Map;
 
@@ -10,8 +9,8 @@ import java.util.Map;
  *
  * @author jk-5
  */
-@IFMLLoadingPlugin.MCVersion(Constants.MCVERSION)
-public class NailedFMLPlugin implements IFMLLoadingPlugin {
+@IFMLLoadingPlugin.MCVersion
+public class NailedCommonFMLPlugin implements IFMLLoadingPlugin {
 
     @Override
     public String[] getASMTransformerClass(){
@@ -25,16 +24,16 @@ public class NailedFMLPlugin implements IFMLLoadingPlugin {
 
     @Override
     public String getSetupClass(){
-        return "jk_5.nailed.client.coremod.NailedSanityChecker";
+        return "jk_5.nailed.common.coremod.NailedSanityChecker";
     }
 
     @Override
-    public void injectData(Map<String, Object> data){
+    public void injectData(Map<String, Object> stringObjectMap){
 
     }
 
     @Override
     public String getAccessTransformerClass(){
-        return "jk_5.nailed.client.coremod.transformer.AccessTransformer";
+        return null;
     }
 }

@@ -1,11 +1,11 @@
 package jk_5.nailed.client;
 
-import cpw.mods.fml.common.CertificateHelper;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.FMLLaunchHandler;
+import jk_5.nailed.NailedLog;
 import jk_5.nailed.client.achievement.NailedAchievements;
 import jk_5.nailed.client.blocks.NailedBlocks;
 import jk_5.nailed.client.item.NailedItems;
@@ -22,8 +22,6 @@ import lombok.Getter;
 import lombok.Setter;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.Collection;
 
@@ -32,26 +30,21 @@ import java.util.Collection;
  *
  * @author jk-5
  */
-@Mod(modid = NailedClient.modid, version = "0.1", useMetadata = true, certificateFingerprint = "87401ecb3314a1a18fb267281b2432975a7e2e84", guiFactory = "jk_5.nailed.client.config.NailedConfigGuiFactory")
+@Mod(modid = Constants.MODID, version = "0.1", useMetadata = true, certificateFingerprint = "87401ecb3314a1a18fb267281b2432975a7e2e84", guiFactory = "jk_5.nailed.client.config.NailedConfigGuiFactory")
 public class NailedClient {
 
-    @Getter private static final Logger logger = LogManager.getLogger("Nailed");
-    @Getter protected static final String modid = "Nailed";
-    @Getter private static final String minecraftVersion = "1.7.2";
     @Getter private static ConfigFile config;
     @Getter private static CreativeTabNailed creativeTab;
     @Getter private static MachineRegistry<ClientMachine> machines = new MachineRegistry<ClientMachine>();
     @Getter @Setter private static int playerMachineID;
 
-    @Getter @Mod.Instance(modid) private static NailedClient instance;
+    @Getter @Mod.Instance(Constants.MODID) private static NailedClient instance;
     @Getter private static Collection<Integer> registeredDimensions;
 
     @Getter private static int providerID;
     @Getter private static FixedWidthFontRenderer fixedWidthFontRenderer;
 
     public NailedClient(){
-        NailedLog.info("Nailed fingerprint: " + CertificateHelper.getFingerprint(this.getClass().getProtectionDomain().getCodeSource().getCertificates()[0]));
-
         if(FMLLaunchHandler.side().isServer()){
             throw new RuntimeException("Nailed-Client is client-only, don\'t use it on the server!");
         }
@@ -72,7 +65,7 @@ public class NailedClient {
         MinecraftForge.EVENT_BUS.register(new RenderEventHandler());
         MinecraftForge.EVENT_BUS.register(new NotificationRenderer());
         MinecraftForge.EVENT_BUS.register(SkinSync.getInstance());
-        FMLCommonHandler.instance().bus().register(new TickHandlerClient());
+        FMLCommonHandler.instance().bus().register(new TickHandlerClient(config));
 
         //NailedLog.info("Initializing UpdateNotifier");
         //UpdateNotificationManager.init();
