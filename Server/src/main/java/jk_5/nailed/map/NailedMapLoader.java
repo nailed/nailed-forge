@@ -13,6 +13,7 @@ import jk_5.nailed.api.events.PlayerChangedDimensionEvent;
 import jk_5.nailed.api.map.*;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.map.gen.NailedWorldProvider;
+import jk_5.nailed.map.script.api.MapApi;
 import jk_5.nailed.players.TeamUndefined;
 import lombok.Getter;
 import net.minecraft.entity.player.EntityPlayer;
@@ -172,10 +173,16 @@ public class NailedMapLoader implements MapLoader {
     @SubscribeEvent
     @SuppressWarnings("unused")
     public void onDamage(LivingHurtEvent event){
+        Map map = this.getMap(event.entity.worldObj);
         if(event.entity instanceof EntityPlayer && event.source instanceof EntityDamageSource){
             EntityDamageSource source = (EntityDamageSource) event.source;
             if(source.getEntity() instanceof EntityPlayer){
-                Map map = this.getMap(event.entity.worldObj);
+                Player src = NailedAPI.getPlayerRegistry().getPlayer((EntityPlayer) source.getEntity());
+                Player dest = NailedAPI.getPlayerRegistry().getPlayer((EntityPlayer) event.entity);
+                if(map instanceof NailedMap){
+                    NailedMap m = (NailedMap) map;
+                    m.getMachine().queueEvent("player_hit_player", MapApi.wrapPlayer(m.getMachine().getApiEnvironment(), src), MapApi.wrapPlayer(m.getMachine().getApiEnvironment(), dest), event.ammount);
+                }
                 if(map.getMappack() != null){
                     if(!map.getMappack().getMappackMetadata().isPvpEnabled()){
                         if(event.source instanceof PvpIgnoringDamageSource){
@@ -207,12 +214,21 @@ public class NailedMapLoader implements MapLoader {
     public void onDie(LivingDeathEvent event){
         if(!(event.entity instanceof EntityPlayer)) return;
         Player player = NailedAPI.getPlayerRegistry().getPlayer((EntityPlayer) event.entity);
+        Map map = player.getCurrentMap();
         if(player == null) return;
+        if(map instanceof NailedMap){
+            NailedMap m = (NailedMap) map;
+            if(event.source instanceof EntityDamageSource && event.source.getEntity() instanceof EntityPlayer){
+                Player source = NailedAPI.getPlayerRegistry().getPlayer((EntityPlayer) event.source.getEntity());
+                m.getMachine().queueEvent("player_kill_player", MapApi.wrapPlayer(m.getMachine().getApiEnvironment(), source), MapApi.wrapPlayer(m.getMachine().getApiEnvironment(), player), event.source.damageType);
+            }else{
+                m.getMachine().queueEvent("player_die", MapApi.wrapPlayer(m.getMachine().getApiEnvironment(), player), event.source.damageType);
+            }
+        }
         if(!player.getCurrentMap().getGameManager().isGameRunning()) return;
         if(player.getSpawnpoint() != null){
             player.getEntity().setSpawnChunk(player.getSpawnpoint(), true);
         }else if(player.getTeam() instanceof TeamUndefined){
-            Map map = player.getCurrentMap();
             Mappack mappack = map.getMappack();
             if(mappack != null && mappack.getMappackMetadata().isChoosingRandomSpawnpointAtRespawn()){
                 List<Spawnpoint> spawnpoints = mappack.getMappackMetadata().getRandomSpawnpoints();
