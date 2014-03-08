@@ -52,4 +52,5 @@ public interface Player extends PossibleWinner {
     public void setPdaID(int id);
     public int getPdaID();
     public NetHandlerPlayServer getNetHandler();
+    public void sendTimeUpdate(String argument);
 }

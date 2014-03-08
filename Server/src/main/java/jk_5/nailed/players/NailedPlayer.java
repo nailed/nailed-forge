@@ -175,4 +175,9 @@ public class NailedPlayer implements Player {
     public boolean hasPermission(String node){
         return PermissionsManager.checkPerm(this.getEntity(), node);
     }
+
+    @Override
+    public void sendTimeUpdate(String msg){
+        NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.TimeUpdate(true, msg), this.getEntity());
+    }
 }

@@ -312,7 +312,8 @@ public class MapApi implements ILuaAPI {
                         "sendChatComponent",
                         "sendChat",
                         "addPotionEffect",
-                        "removePotionEffect"
+                        "removePotionEffect",
+                        "sendTimeUpdate"
                 };
             }
 
@@ -416,6 +417,13 @@ public class MapApi implements ILuaAPI {
                     case 13: //removePotionEffect
                         if(arguments.length == 1 && arguments[0] instanceof Double){
                             player.getEntity().removePotionEffect(((Double) arguments[0]).intValue());
+                        }else{
+                            throw new Exception("Expected 1 int argument");
+                        }
+                        break;
+                    case 14: //sendTimeUpdate
+                        if(arguments.length == 1 && arguments[0] instanceof String){
+                            player.sendTimeUpdate((String) arguments[0]);
                         }else{
                             throw new Exception("Expected 1 int argument");
                         }
