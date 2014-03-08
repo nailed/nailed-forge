@@ -28,6 +28,7 @@ import jk_5.nailed.permissions.PermissionEventHandler;
 import jk_5.nailed.players.NailedPlayerRegistry;
 import jk_5.nailed.server.command.*;
 import jk_5.nailed.teamspeak.TeamspeakClient;
+import jk_5.nailed.util.couchdb.DatabaseManager;
 import jk_5.nailed.util.invsee.InvSeeTicker;
 import lombok.Getter;
 import net.minecraft.command.CommandHandler;
@@ -86,6 +87,8 @@ public class NailedServer {
             File dest = new File(new File(".", "mapbackups"), new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()));
             NailedAPI.getMapLoader().getMapsFolder().renameTo(dest);
         }
+
+        DatabaseManager.getInstance().readConfig(config.getTag("database"));
         
         NailedLog.info("Loading join message");
         joinMessageSender = new JoinMessageSender();
@@ -147,7 +150,8 @@ public class NailedServer {
 
         NailedLog.info("Registering permissions");
         joinMessageSender.registerPermissions();
-        //PermissionsManager.registerPermission("nailed.commands.test1");
+
+        DatabaseManager.getInstance().init();
     }
 
     @EventHandler
@@ -186,6 +190,7 @@ public class NailedServer {
         ch.registerCommand(new CommandCB());
         ch.registerCommand(new CommandReloadPermissions());
         ch.registerCommand(new CommandTerminal());
+        ch.registerCommand(new CommandRandomSpawnpoint());
 
         ch.getCommands().remove("tp");
         ch.getCommands().remove("toggledownfall");

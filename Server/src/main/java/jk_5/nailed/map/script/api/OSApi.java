@@ -113,7 +113,17 @@ public class OSApi implements ILuaAPI {
     }
 
     public String[] getMethodNames(){
-        return new String[]{"queueEvent", "startTimer", "setAlarm", "shutdown", "reboot", "computerID", "getComputerID", "clock", /*"time", "day"*/};
+        return new String[]{
+                "queueEvent",
+                "startTimer",
+                "setAlarm",
+                "shutdown",
+                "reboot",
+                "computerID",
+                "getComputerID",
+                "clock",
+                "getTicks"
+        };
     }
 
     public Object[] callMethod(ILuaContext context, int method, Object[] args)
@@ -160,6 +170,8 @@ public class OSApi implements ILuaAPI {
                 synchronized(this.timers){
                     return new Object[]{this.clock};
                 }
+            case 8:
+                return new Object[]{this.apiEnvironment.getMachine().getMachine().getWorld().getTotalWorldTime()};
 
             /*case 8:
                 synchronized(this.alarms){

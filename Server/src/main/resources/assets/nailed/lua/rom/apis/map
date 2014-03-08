@@ -21,7 +21,7 @@ end
 map.countup = function(message)
     local ellapsed = 0
     while true do
-        local out, num = string.gsub(message, "%%s", textutils.secondsToShortTimeString(ellapsed))
+        local out, num = string.gsub(message, "%%s", textutils.formatSeconds(ellapsed))
         map.sendTimeUpdate("" .. out)
         sleep(1)
         ellapsed = ellapsed + 1

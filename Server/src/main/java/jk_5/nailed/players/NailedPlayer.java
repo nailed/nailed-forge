@@ -4,6 +4,8 @@ import com.mojang.authlib.GameProfile;
 import jk_5.nailed.api.ChatColor;
 import jk_5.nailed.api.Gamemode;
 import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.database.DataObject;
+import jk_5.nailed.api.database.DataOwner;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.Spawnpoint;
 import jk_5.nailed.api.map.team.Team;
@@ -14,6 +16,7 @@ import jk_5.nailed.network.NailedPacket;
 import jk_5.nailed.permissions.Group;
 import jk_5.nailed.permissions.NailedPermissionFactory;
 import jk_5.nailed.permissions.User;
+import jk_5.nailed.util.couchdb.DatabaseManager;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -34,6 +37,7 @@ import net.minecraftforge.permissions.api.PermissionsManager;
  *
  * @author jk-5
  */
+@DataOwner.DataType("player")
 @RequiredArgsConstructor
 public class NailedPlayer implements Player {
 
@@ -45,6 +49,7 @@ public class NailedPlayer implements Player {
     @Getter @Setter private Spawnpoint spawnpoint;
     @Getter @Setter private int pdaID = -1;
     @Getter private NetHandlerPlayServer netHandler;
+    @Getter private DataObject data = new PlayerData();
 
     public void sendNotification(String message){
         this.sendNotification(message, null);
@@ -125,6 +130,7 @@ public class NailedPlayer implements Player {
     public void onLogout() {
         this.online = false;
         this.netHandler = null;
+        this.saveData();
     }
 
     public void onChangedDimension() {
@@ -179,5 +185,22 @@ public class NailedPlayer implements Player {
     @Override
     public void sendTimeUpdate(String msg){
         NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.TimeUpdate(true, msg), this.getEntity());
+    }
+
+    @Override
+    public void onDataLoaded(){
+
+    }
+
+    /**************** DataOwner ****************/
+
+    @Override
+    public void saveData(){
+        DatabaseManager.saveData(this);
+    }
+
+    @Override
+    public void loadData(){
+        DatabaseManager.loadData(this);
     }
 }

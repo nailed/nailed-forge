@@ -223,3 +223,31 @@ function secondsToShortTimeString(secs)
     end
     return ret
 end
+
+function formatSeconds(secs)
+    local hours = math.floor(secs / 3600)
+    local minutes = math.floor((secs % 3600) / 60)
+    local seconds = math.floor(secs % 60)
+    local ret = ""
+    local append = false
+    if hours ~= 0 or append then
+        ret = ret .. hours
+        ret = ret .. ":"
+        append = true
+    end
+    if minutes ~= 0 or append then
+        if minutes < 10 and append then
+            ret = ret .. "0"
+        end
+        ret = ret .. minutes
+        ret = ret .. ":"
+        append = true
+    end
+    if seconds ~= 0 or append then
+        if seconds < 10 and append then
+            ret = ret .. "0"
+        end
+        ret = ret .. seconds
+    end
+    return ret
+end

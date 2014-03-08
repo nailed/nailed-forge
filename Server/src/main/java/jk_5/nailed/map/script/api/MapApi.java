@@ -20,6 +20,8 @@ import jk_5.nailed.map.teleport.TeleportHelper;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.PlayerCapabilities;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.FoodStats;
 import net.minecraft.util.IChatComponent;
@@ -313,7 +315,8 @@ public class MapApi implements ILuaAPI {
                         "sendChat",
                         "addPotionEffect",
                         "removePotionEffect",
-                        "sendTimeUpdate"
+                        "sendTimeUpdate",
+                        "giveItem"
                 };
             }
 
@@ -426,6 +429,30 @@ public class MapApi implements ILuaAPI {
                             player.sendTimeUpdate((String) arguments[0]);
                         }else{
                             throw new Exception("Expected 1 int argument");
+                        }
+                        break;
+                    case 15: //giveItem
+                        if(arguments.length == 2 && arguments[0] instanceof String && arguments[1] instanceof Double){
+                            int amount = ((Double) arguments[1]).intValue();
+                            String item = (String) arguments[0];
+                            Object i = Item.itemRegistry.getObject(item);
+                            if(i == null){
+                                throw new Exception("Unknown item " + item);
+                            }
+                            ItemStack stack = new ItemStack((Item) i, amount);
+                            player.getEntity().inventory.addItemStackToInventory(stack);
+                        }else if(arguments.length == 3 && arguments[0] instanceof String && arguments[1] instanceof Double && arguments[2] instanceof Double){
+                            int meta = ((Double) arguments[2]).intValue();
+                            int amount = ((Double) arguments[1]).intValue();
+                            String item = (String) arguments[0];
+                            Object i = Item.itemRegistry.getObject(item);
+                            if(i == null){
+                                throw new Exception("Unknown item " + item);
+                            }
+                            ItemStack stack = new ItemStack((Item) i, amount, meta);
+                            player.getEntity().inventory.addItemStackToInventory(stack);
+                        }else{
+                            throw new Exception("Expected 1 string and 1 or 2 int arguments");
                         }
                         break;
                 }

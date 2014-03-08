@@ -2,6 +2,7 @@ package jk_5.nailed.api.player;
 
 import com.mojang.authlib.GameProfile;
 import jk_5.nailed.api.Gamemode;
+import jk_5.nailed.api.database.DataOwner;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.PossibleWinner;
 import jk_5.nailed.api.map.Spawnpoint;
@@ -17,7 +18,7 @@ import net.minecraft.util.ResourceLocation;
  *
  * @author jk-5
  */
-public interface Player extends PossibleWinner {
+public interface Player extends PossibleWinner, DataOwner {
 
     public GameProfile getGameProfile();
     public Map getCurrentMap();
@@ -53,4 +54,5 @@ public interface Player extends PossibleWinner {
     public int getPdaID();
     public NetHandlerPlayServer getNetHandler();
     public void sendTimeUpdate(String argument);
+    public void onDataLoaded();
 }
