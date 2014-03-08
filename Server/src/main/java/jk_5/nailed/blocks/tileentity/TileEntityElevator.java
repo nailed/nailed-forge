@@ -76,4 +76,9 @@ public class TileEntityElevator extends NailedTileEntity implements IMovementEve
             this.activate(player, ForgeDirection.DOWN);
         }
     }
+
+    @Override
+    public boolean canUpdate(){
+        return false;
+    }
 }

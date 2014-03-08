@@ -2,7 +2,6 @@ package jk_5.nailed.client.blocks;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import jk_5.nailed.client.blocks.tileentity.TileEntityElevator;
 import jk_5.nailed.client.blocks.tileentity.TileEntityStatEmitter;
 import jk_5.nailed.client.blocks.tileentity.TileEntityStatModifier;
 import net.minecraft.block.ITileEntityProvider;
@@ -51,8 +50,6 @@ public class BlockStat extends BlockMulti implements ITileEntityProvider {
             return new TileEntityStatEmitter();
         }else if(meta == 1){
             return new TileEntityStatModifier();
-        }else if(meta == 2){
-            return new TileEntityElevator();
         }
         return null;
     }
