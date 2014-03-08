@@ -15,7 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.permissions.api.PermissionsManager;
 
@@ -167,7 +167,7 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
     @Override
     public boolean canPlayerOpenGui(Player player){
         if(!PermissionsManager.getPerm(player.getUsername(), PERMNODE, this).check()){
-            ChatComponentText message = new ChatComponentText("You do not have permission to do that!");
+            ChatComponentTranslation message = new ChatComponentTranslation("nailed.noPermission");
             message.getChatStyle().setColor(EnumChatFormatting.RED);
             player.sendChat(message);
             return false;

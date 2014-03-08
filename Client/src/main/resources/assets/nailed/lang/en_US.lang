@@ -22,3 +22,5 @@ commands.nailed.tp.usage=/tp [teleportingPlayer] <targetPlayer | targetDim [x y 
 
 death.attack.railgun=%s was gibbed by %s
 quakecraft.message.winner=The winner is %s
+
+nailed.noPermission=You do not have permission to do that!
