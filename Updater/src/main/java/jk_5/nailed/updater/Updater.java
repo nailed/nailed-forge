@@ -1,8 +1,10 @@
 package jk_5.nailed.updater;
 
-import com.google.common.collect.MapDifference;
-import com.google.common.collect.Maps;
-import com.google.gson.*;
+import com.google.common.collect.Sets;
+import jk_5.nailed.updater.json.Library;
+import jk_5.nailed.updater.json.LibraryList;
+import jk_5.nailed.updater.json.RestartLevel;
+import jk_5.nailed.updater.json.serialization.LibraryListSerializer;
 import lombok.Getter;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -15,7 +17,6 @@ import java.net.URL;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -29,10 +30,7 @@ public class Updater {
     private static final String SERVER = "http://maven.reening.nl/";
     private static final String VERSIONS_URL = SERVER + "nailed/versions.json";
 
-    private static final Gson prettyGson = new GsonBuilder().setPrettyPrinting().create();
-    private static final JsonParser parser = new JsonParser();
-
-    @Getter private static int restartLevel = 0; //0 = no restart, 1 = game, 2 = launcher
+    @Getter private static RestartLevel restart = RestartLevel.NOTHING;
     private static boolean cleanModsFolder = true;
 
     public static void main(String args[]){
@@ -42,145 +40,93 @@ public class Updater {
     public static boolean checkForUpdates(){
         logger.info("Checking for updates...");
 
-        DownloadMonitor monitor = new DownloadMonitor();
-        int progress = 0;
+        //DownloadMonitor monitor = new DownloadMonitor();
+        //int progress = 0;
 
-        JsonObject remote = readRemoteVersionData();
-        JsonObject local = readLocalVersionData();
+        LibraryList remote = readRemoteLibraryList();
+        LibraryList local = readLocalLibraryList();
 
         if(cleanModsFolder){
-            monitor.setNote("Cleaning up the mods folder...");
+            //monitor.setNote("Cleaning up the mods folder...");
             File modsFolder = resolve("{MC_GAME_DIR}/mods/");
             if(!modsFolder.exists()) modsFolder.mkdir();
             for(File file : modsFolder.listFiles()){
                 file.delete();
             }
-            for(Map.Entry<String, JsonElement> e : local.entrySet()){
-                if(e.getValue().getAsJsonObject().get("destination").getAsString().contains("{MC_GAME_DIR}/mods/")){
-                    e.getValue().getAsJsonObject().remove("rev");
-                    e.getValue().getAsJsonObject().addProperty("rev", -1);
+            for(Library library : local.libraries){
+                if(library.destination.contains("{MC_GAME_DIR}/mods/")){
+                    library.rev = -1;
                 }
             }
         }
 
-        MapDifference diff = Maps.difference(entrySetToMap(local.entrySet()), entrySetToMap(remote.entrySet()));
+        Set<Library> download = Sets.newHashSet();
 
-        monitor.setMaximum(diff.entriesOnlyOnLeft().size() + diff.entriesOnlyOnRight().size() + diff.entriesDiffering().size());
+        for(Library library : remote.libraries){
+            Library loc = null;
+            for(Library l : local.libraries){
+                if(l.name.equals(library.name)){
+                    loc = l;
+                }
+            }
+            if(loc == null){
+                logger.info("New remote library " + library.name + " will be downloaded");
+                download.add(library); //Download it!
+            }else{
+                logger.info("Library " + library.name + " is outdated");
+                logger.info("  Local rev: " + loc.rev);
+                logger.info("  Remote rev: " + library.rev);
+                if(library.rev > loc.rev){
+                    download.add(library); //Outdated. Redownload!
+                }
+            }
+        }
 
         boolean updated = false;
 
-        if(diff.entriesOnlyOnLeft().size() > 0){
-            logger.info("Found files that could be removed locally:");
-            monitor.setNote("Checking removable files");
-            Set<Map.Entry<String, JsonObject>> entries = diff.entriesOnlyOnLeft().entrySet();
-            for(Map.Entry<String, JsonObject> e : entries){
-                monitor.setNote("Removing " + e.getKey());
-                logger.info("Removing " + e.getKey());
-                File dest = resolve(e.getValue().get("destination").getAsString());
-                if(dest.isFile()) dest.delete();
-                File checksum = new File(dest.getAbsolutePath() + ".sha");
-                if(checksum.isFile()) checksum.delete();
-                updated = true;
-                if(e.getValue().has("restart")){
-                    String restart = e.getValue().get("restart").getAsString();
-                    if(restart.equals("game") && restartLevel <= 1){
-                        restartLevel = 1;
-                    }else if(restart.equals("launcher") && restartLevel <= 2){
-                        restartLevel = 2;
-                    }
+        for(Library library : download){
+            logger.info("Downloading " + library.name);
+            boolean u = updateFile(library);
+            updated |= u;
+            if(u){
+                local.libraries.add(library);
+                if(library.restart == RestartLevel.GAME && restart == RestartLevel.NOTHING){
+                    restart = RestartLevel.GAME;
+                }else if(library.restart == RestartLevel.LAUNCHER && (restart == RestartLevel.NOTHING || restart == RestartLevel.GAME)){
+                    restart = RestartLevel.LAUNCHER;
                 }
-                local.remove(e.getKey());
-                monitor.setProgress(progress++);
             }
-        }
-        if(diff.entriesOnlyOnRight().size() > 0){
-            logger.info("Found files that where added. Downloading them...");
-            monitor.setNote("Checking added files");
-            Set<Map.Entry<String, JsonObject>> entries = diff.entriesOnlyOnRight().entrySet();
-            for(Map.Entry<String, JsonObject> e : entries){
-                monitor.setNote("Downloading " + e.getKey());
-                boolean u = updateFile(e.getValue(), e.getKey());
-                updated |= u;
-                if(u){
-                    local.add(e.getKey(), e.getValue());
-                    if(e.getValue().has("restart")){
-                        String restart = e.getValue().get("restart").getAsString();
-                        if(restart.equals("game") && restartLevel <= 1){
-                            restartLevel = 1;
-                        }else if(restart.equals("launcher") && restartLevel <= 2){
-                            restartLevel = 2;
-                        }
-                    }
-                }
-                monitor.setProgress(progress++);
-            }
-        }
-        if(diff.entriesDiffering().size() > 0){
-            logger.info("Found files that are differing from remote. Checking them...");
-            monitor.setNote("Checking updates");
-            Set<Map.Entry<String, MapDifference.ValueDifference<JsonObject>>> entries = diff.entriesDiffering().entrySet();
-            for(Map.Entry<String, MapDifference.ValueDifference<JsonObject>> e : entries){
-                monitor.setNote("Checking " + e.getKey());
-                logger.info("Checking " + e.getKey());
-                int localRev = e.getValue().leftValue().get("rev").getAsInt();
-                int remoteRev = e.getValue().rightValue().get("rev").getAsInt();
-                logger.info("  Local rev: " + localRev);
-                logger.info("  Remote rev: " + remoteRev);
-                if(remoteRev > localRev){
-                    monitor.setNote("Downloading " + e.getKey());
-                    logger.info("Remote has newer version than we have. Redownloading...");
-                    File dest = resolve(e.getValue().leftValue().get("destination").getAsString());
-                    if(dest.isFile()) dest.delete();
-                    File checksum = new File(dest.getAbsolutePath() + ".sha");
-                    if(checksum.isFile()) checksum.delete();
-                    updateFile(e.getValue().rightValue(), e.getKey());
-                    updated = true;
-                    local.remove(e.getKey());
-                    local.add(e.getKey(), e.getValue().rightValue());
-                    if(e.getValue().rightValue().has("restart")){
-                        String restart = e.getValue().rightValue().get("restart").getAsString();
-                        if(restart.equals("game") && restartLevel <= 1){
-                            restartLevel = 1;
-                        }else if(restart.equals("launcher") && restartLevel <= 2){
-                            restartLevel = 2;
-                        }
-                    }
-                }
-                monitor.setProgress(progress++);
-            }
+            //monitor.setProgress(progress++);
         }
 
         if(updated){
-            monitor.setNote("Writing local versions file");
+            logger.info("Writing local versions file...");
             Writer writer = null;
             try{
                 writer = new FileWriter(new File("nailedVersions.json"));
-                prettyGson.toJson(local, writer);
+                LibraryListSerializer.serializer.toJson(local, writer);
             }catch(Exception e){
                 //NOOP
             }finally{
                 IOUtils.closeQuietly(writer);
             }
         }
-
-        monitor.close();
-
+        //monitor.close();
         return updated;
     }
 
-    private static boolean updateFile(JsonObject object, String name){
+    private static boolean updateFile(Library library){
         try{
-            logger.info("Downloading " + name);
-            File dest = resolve(object.get("destination").getAsString());
-            FileUtils.copyURLToFile(new URL(SERVER + object.get("location").getAsString()), dest, 20000, 20000);
+            logger.info("Downloading " + library.name);
+            File dest = resolve(library.destination);
+            FileUtils.copyURLToFile(new URL(SERVER + library.location), dest, 20000, 20000);
             File checksum = new File(dest.getAbsolutePath() + ".sha");
             FileWriter writer = new FileWriter(checksum);
             writer.write(getSHA1(dest));
             writer.close();
             return true;
         }catch(Exception e){
-            System.err.println("Error while updating file " + name);
-            e.printStackTrace();
+            logger.error("Error while updating file " + library.name, e);
         }
         return false;
     }
@@ -205,50 +151,40 @@ public class Updater {
         }else return in;
     }
 
-    private static JsonObject readRemoteVersionData(){
+    private static LibraryList readRemoteLibraryList(){
         Reader reader = null;
-        JsonObject ret = null;
+        LibraryList ret;
         try{
             URL url = new URL(VERSIONS_URL);
             reader = new InputStreamReader(url.openStream());
-            ret = parser.parse(reader).getAsJsonObject();
+            ret = LibraryListSerializer.serializer.fromJson(reader, LibraryList.class);
         }catch(Exception e){
-            System.err.println("Exception while reading remote version data");
-            e.printStackTrace();
-            ret = new JsonObject();
+            logger.error("Exception while reading remote version data", e);
+            ret = new LibraryList();
         }finally{
             IOUtils.closeQuietly(reader);
         }
         return ret;
     }
 
-    private static JsonObject readLocalVersionData(){
+    private static LibraryList readLocalLibraryList(){
         Reader reader = null;
-        JsonObject ret = null;
+        LibraryList ret;
         try{
             File file = new File("nailedVersions.json");
             if(file.exists()){
                 reader = new FileReader(file);
-                ret = parser.parse(reader).getAsJsonObject();
+                ret = LibraryListSerializer.serializer.fromJson(reader, LibraryList.class);
             }else{
-                ret = new JsonObject();
+                ret = new LibraryList();
             }
         }catch(Exception e){
-            System.err.println("Exception while reading local version data");
-            e.printStackTrace();
-            ret = new JsonObject();
+            logger.error("Exception while reading local version data", e);
+            ret = new LibraryList();
         }finally{
             IOUtils.closeQuietly(reader);
         }
         return ret;
-    }
-
-    private static  <K, V> Map<K, V> entrySetToMap(Set<Map.Entry<K, V>> entrySet){
-        Map<K, V> map = Maps.newHashMap();
-        for(Map.Entry<K, V> e : entrySet){
-            map.put(e.getKey(), e.getValue());
-        }
-        return map;
     }
 
     private static File getMinecraftFolder(){

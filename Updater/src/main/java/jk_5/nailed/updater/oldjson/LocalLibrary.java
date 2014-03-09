@@ -1,4 +1,4 @@
-package jk_5.nailed.updater.json;
+package jk_5.nailed.updater.oldjson;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

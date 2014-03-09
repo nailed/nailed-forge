@@ -2,7 +2,7 @@ package jk_5.nailed.updater;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import jk_5.nailed.updater.json.*;
+import jk_5.nailed.updater.oldjson.*;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;

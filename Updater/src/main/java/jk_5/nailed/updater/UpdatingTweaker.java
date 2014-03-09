@@ -1,5 +1,6 @@
 package jk_5.nailed.updater;
 
+import jk_5.nailed.updater.json.RestartLevel;
 import net.minecraft.launchwrapper.ITweaker;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 import org.apache.logging.log4j.LogManager;
@@ -30,13 +31,13 @@ public class UpdatingTweaker implements ITweaker {
         UpdatingTweaker.gameDir = gameDir;
         UpdatingTweaker.assetsDir = assetsDir;
         if(Updater.checkForUpdates()){
-            if(Updater.getRestartLevel() == 0){
+            if(Updater.getRestart() == RestartLevel.NOTHING){
                 logger.info("Updates are done. We don\'t have to restart");
-            }else if(Updater.getRestartLevel() == 1){
+            }else if(Updater.getRestart() == RestartLevel.GAME){
                 logger.info("Updates are done. We have to restart the game");
                 JOptionPane.showMessageDialog(null, "We updated some files and you have to restart your game. Just press \'Play\' again in the launcher", "Nailed-Updater", JOptionPane.INFORMATION_MESSAGE);
                 System.exit(0);
-            }else if(Updater.getRestartLevel() == 2){
+            }else if(Updater.getRestart() == RestartLevel.LAUNCHER){
                 logger.info("Updates are done. We have to restart the launcher");
                 JOptionPane.showMessageDialog(null, "We updated some files and you have to restart your launcher. After the game shuts down, close your launcher and restart it and hit the \'Play\' button again", "Nailed-Updater", JOptionPane.INFORMATION_MESSAGE);
                 System.exit(0);
