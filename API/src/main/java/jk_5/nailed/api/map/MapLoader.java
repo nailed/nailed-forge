@@ -1,5 +1,6 @@
 package jk_5.nailed.api.map;
 
+import jk_5.nailed.api.concurrent.Callback;
 import net.minecraft.world.World;
 
 import java.io.File;
@@ -18,7 +19,7 @@ public interface MapLoader {
     public Map getLobby();
     public List<Map> getMaps();
     public void registerMap(Map map);
-    public Map createMapServer(Mappack mappack);
+    public void createMapServer(Mappack mappack, Callback<Map> callback);
     public Map getMap(String name);
     public Map getMap(int id);
     public Map getMap(World world);

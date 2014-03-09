@@ -2,6 +2,7 @@ package jk_5.nailed.api.map.sign;
 
 import jk_5.nailed.api.ChatColor;
 import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.concurrent.Callback;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.Mappack;
 import jk_5.nailed.api.player.Player;
@@ -63,13 +64,17 @@ public class SignMappack extends Sign {
 
     @Override
     public void onPlayerInteract(EntityPlayer entityPlayer){
-        Player player = NailedAPI.getPlayerRegistry().getPlayer(entityPlayer);
+        final Player player = NailedAPI.getPlayerRegistry().getPlayer(entityPlayer);
         entityPlayer.swingItem();
         if(this.linkedMap == null){
-            Map map = NailedAPI.getMapLoader().createMapServer(this.linkedMappack);
-            this.linkedMap = map;
-            this.broadcastUpdate();
-            player.teleportToMap(map);
+            NailedAPI.getMapLoader().createMapServer(this.linkedMappack, new Callback<Map>() {
+                @Override
+                public void callback(Map obj){
+                    linkedMap = obj;
+                    broadcastUpdate();
+                    player.teleportToMap(obj);
+                }
+            });
         }else{
             player.teleportToMap(this.linkedMap);
         }
