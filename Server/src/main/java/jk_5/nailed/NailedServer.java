@@ -26,6 +26,7 @@ import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.permissions.NailedPermissionFactory;
 import jk_5.nailed.permissions.PermissionEventHandler;
 import jk_5.nailed.players.NailedPlayerRegistry;
+import jk_5.nailed.scheduler.NailedScheduler;
 import jk_5.nailed.server.command.*;
 import jk_5.nailed.teamspeak.TeamspeakClient;
 import jk_5.nailed.util.MotdManager;
@@ -62,13 +63,16 @@ public class NailedServer {
     @Getter private static JoinMessageSender joinMessageSender;
 
     public NailedServer(){
-        NailedAPI.setMapLoader(new NailedMapLoader());
-        NailedAPI.setMappackLoader(new NailedMappackLoader());
-        NailedAPI.setPlayerRegistry(new NailedPlayerRegistry());
-
         if(FMLLaunchHandler.side().isClient()){
             throw new RuntimeException("Nailed-Server is server-only, don\'t use it on the client!");
         }
+
+        NailedAPI.setMapLoader(new NailedMapLoader());
+        NailedAPI.setMappackLoader(new NailedMappackLoader());
+        NailedAPI.setPlayerRegistry(new NailedPlayerRegistry());
+        NailedAPI.setScheduler(new NailedScheduler());
+
+        FMLCommonHandler.instance().bus().register(NailedAPI.getScheduler());
     }
 
     @EventHandler

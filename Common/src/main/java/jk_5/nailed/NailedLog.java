@@ -41,6 +41,10 @@ public class NailedLog {
         log(Level.WARN, format, data);
     }
 
+    public static void warn(Throwable ex, String format, Object... data) {
+        log(Level.WARN, ex, format, data);
+    }
+
     public static void info(String format, Object... data) {
         log(Level.INFO, format, data);
     }
