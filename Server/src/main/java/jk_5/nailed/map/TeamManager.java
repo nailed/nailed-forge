@@ -10,6 +10,7 @@ import jk_5.nailed.api.player.Player;
 import jk_5.nailed.players.NailedTeam;
 import jk_5.nailed.players.TeamUndefined;
 import lombok.Getter;
+import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.List;
 
@@ -77,7 +78,10 @@ public class TeamManager implements jk_5.nailed.api.map.team.TeamManager {
     public void onPlayerLeftMap(Player player){
         if(!this.playerTeamMap.containsKey(player)){
             this.playerTeamMap.put(player, this.defaultTeam);
-            player.getEntity().refreshDisplayName();
+            EntityPlayer ent = player.getEntity();
+            if(ent != null){
+                ent.refreshDisplayName();
+            }
         }
     }
 

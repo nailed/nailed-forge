@@ -27,6 +27,13 @@ import net.minecraft.util.IChatComponent;
  */
 public class MinecraftPacketAdapter extends ChannelDuplexHandler {
 
+    /**
+     * Adapt inbound packets
+     *
+     * @param ctx ChannelHandlerContext
+     * @param msg The inbound packet
+     * @throws Exception
+     */
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception{
         if(msg instanceof C12PacketUpdateSign){
@@ -39,6 +46,14 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
         ctx.fireChannelRead(msg);
     }
 
+    /**
+     * Adapt outbound packets
+     *
+     * @param ctx ChannelHandlerContext
+     * @param msg The outbound packet
+     * @param promise The promise of the packet
+     * @throws Exception
+     */
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception{
         NetworkManager manager = (NetworkManager) ctx.pipeline().get("packet_handler");
@@ -52,7 +67,6 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
                 String key = translation.getKey();
                 if(key.startsWith("death.")){
                     String died = ChatColor.stripColor(((ChatComponentText) translation.getFormatArgs()[0]).getUnformattedTextForChat());
-                    if(died.startsWith("@")) died = died.substring(1);
                     Player ply = NailedAPI.getPlayerRegistry().getPlayerByUsername(died);
                     if(ply == null){
                         ply = NailedAPI.getPlayerRegistry().getPlayerByUsername(died.substring(1));
@@ -73,7 +87,7 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
                     ctx.write(msg, promise);
                     return;
                 }
-                ctx.write(sign.getUpdatePacket());
+                ctx.write(sign.getUpdatePacket(), promise);
                 return;
             }
         }

@@ -28,14 +28,13 @@ import jk_5.nailed.permissions.PermissionEventHandler;
 import jk_5.nailed.players.NailedPlayerRegistry;
 import jk_5.nailed.server.command.*;
 import jk_5.nailed.teamspeak.TeamspeakClient;
+import jk_5.nailed.util.MotdManager;
 import jk_5.nailed.util.couchdb.DatabaseManager;
 import jk_5.nailed.util.invsee.InvSeeTicker;
 import lombok.Getter;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.command.ICommand;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.permissions.api.PermissionsManager;
@@ -113,6 +112,7 @@ public class NailedServer {
         FMLCommonHandler.instance().bus().register(NailedAPI.getMapLoader());
         FMLCommonHandler.instance().bus().register(new InvSeeTicker());
         FMLCommonHandler.instance().bus().register(joinMessageSender);
+        FMLCommonHandler.instance().bus().register(new MotdManager());
 
         NailedLog.info("Registering blocks");
         NailedBlocks.init();
@@ -199,10 +199,6 @@ public class NailedServer {
         ch.registerCommand(new CommandTP());
         ch.registerCommand(new CommandToggleDownfall());
         ch.registerCommand(new CommandGamemode());
-
-        ChatComponentText component = new ChatComponentText("Nailed");
-        component.getChatStyle().setColor(EnumChatFormatting.GREEN);
-        MinecraftServer.getServer().func_147134_at().func_151315_a(component);
     }
 
     @EventHandler
