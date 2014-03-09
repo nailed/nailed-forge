@@ -8,6 +8,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.concurrent.Callback;
+import jk_5.nailed.api.concurrent.scheduler.NailedRunnable;
 import jk_5.nailed.api.events.MapCreatedEvent;
 import jk_5.nailed.api.events.MapRemovedEvent;
 import jk_5.nailed.api.events.PlayerChangedDimensionEvent;
@@ -71,19 +72,21 @@ public class NailedMapLoader implements MapLoader {
     @Override
     public void createMapServer(final Mappack pack, final Callback<Map> callback){
         final PotentialMap potentialMap = new PotentialMap(pack);
-        Thread thread = new Thread(){
+        NailedAPI.getScheduler().runTaskAsynchronously(new NailedRunnable() {
             @Override
             public void run(){
                 pack.prepareWorld(potentialMap.getSaveFolder());
-                Map map = pack.createMap(potentialMap);
-                map.initMapServer();
-                MinecraftForge.EVENT_BUS.post(new MapCreatedEvent(map));
-                callback.callback(map);
+                final Map map = pack.createMap(potentialMap);
+                NailedAPI.getScheduler().runTask(new NailedRunnable() {
+                    @Override
+                    public void run(){
+                        map.initMapServer();
+                        MinecraftForge.EVENT_BUS.post(new MapCreatedEvent(map));
+                        callback.callback(map);
+                    }
+                });
             }
-        };
-        thread.setDaemon(true);
-        thread.setName("MapLoader-" + potentialMap.getSaveFileName());
-        thread.start();
+        });
     }
 
     @Override
