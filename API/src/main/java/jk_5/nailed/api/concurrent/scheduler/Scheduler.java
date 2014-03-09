@@ -117,21 +117,19 @@ public interface Scheduler {
      * Returns a task that will run on the next server tick.
      *
      * @param task the task to be run
-     * @return a BukkitTask that contains the id number
-     * @throws IllegalArgumentException if plugin is null
+     * @return a Task that contains the id number
      * @throws IllegalArgumentException if task is null
      */
     public Task runTask(NailedRunnable task) throws IllegalArgumentException;
 
     /**
-     * <b>Asynchronous tasks should never access any API in Bukkit. Great care
+     * <b>Asynchronous tasks should never access any API in Minecraft. Great care
      * should be taken to assure the thread-safety of asynchronous tasks.</b>
      * <p>
      * Returns a task that will run asynchronously.
      *
      * @param task the task to be run
-     * @return a BukkitTask that contains the id number
-     * @throws IllegalArgumentException if plugin is null
+     * @return a Task that contains the id number
      * @throws IllegalArgumentException if task is null
      */
     public Task runTaskAsynchronously(NailedRunnable task) throws IllegalArgumentException;
@@ -142,14 +140,13 @@ public interface Scheduler {
      *
      * @param task the task to be run
      * @param delay the ticks to wait before running the task
-     * @return a BukkitTask that contains the id number
-     * @throws IllegalArgumentException if plugin is null
+     * @return a Task that contains the id number
      * @throws IllegalArgumentException if task is null
      */
     public Task runTaskLater(NailedRunnable task, long delay) throws IllegalArgumentException;
 
     /**
-     * <b>Asynchronous tasks should never access any API in Bukkit. Great care
+     * <b>Asynchronous tasks should never access any API in Minecraft. Great care
      * should be taken to assure the thread-safety of asynchronous tasks.</b>
      * <p>
      * Returns a task that will run asynchronously after the specified number
@@ -157,8 +154,7 @@ public interface Scheduler {
      *
      * @param task the task to be run
      * @param delay the ticks to wait before running the task
-     * @return a BukkitTask that contains the id number
-     * @throws IllegalArgumentException if plugin is null
+     * @return a Task that contains the id number
      * @throws IllegalArgumentException if task is null
      */
     public Task runTaskLaterAsynchronously(NailedRunnable task, long delay) throws IllegalArgumentException;
@@ -170,14 +166,13 @@ public interface Scheduler {
      * @param task the task to be run
      * @param delay the ticks to wait before running the task
      * @param period the ticks to wait between runs
-     * @return a BukkitTask that contains the id number
-     * @throws IllegalArgumentException if plugin is null
+     * @return a Task that contains the id number
      * @throws IllegalArgumentException if task is null
      */
     public Task runTaskTimer(NailedRunnable task, long delay, long period) throws IllegalArgumentException;
 
     /**
-     * <b>Asynchronous tasks should never access any API in Bukkit. Great care
+     * <b>Asynchronous tasks should never access any API in Minecraft. Great care
      * should be taken to assure the thread-safety of asynchronous tasks.</b>
      * <p>
      * Returns a task that will repeatedly run asynchronously until cancelled,
@@ -187,8 +182,7 @@ public interface Scheduler {
      * @param delay the ticks to wait before running the task for the first
      *     time
      * @param period the ticks to wait between runs
-     * @return a BukkitTask that contains the id number
-     * @throws IllegalArgumentException if plugin is null
+     * @return a Task that contains the id number
      * @throws IllegalArgumentException if task is null
      */
     public Task runTaskTimerAsynchronously(NailedRunnable task, long delay, long period) throws IllegalArgumentException;

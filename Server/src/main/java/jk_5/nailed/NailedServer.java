@@ -27,6 +27,7 @@ import jk_5.nailed.permissions.NailedPermissionFactory;
 import jk_5.nailed.permissions.PermissionEventHandler;
 import jk_5.nailed.players.NailedPlayerRegistry;
 import jk_5.nailed.scheduler.NailedScheduler;
+import jk_5.nailed.scheduler.SchedulerCrashCallable;
 import jk_5.nailed.server.command.*;
 import jk_5.nailed.teamspeak.TeamspeakClient;
 import jk_5.nailed.util.MotdManager;
@@ -117,6 +118,8 @@ public class NailedServer {
         FMLCommonHandler.instance().bus().register(new InvSeeTicker());
         FMLCommonHandler.instance().bus().register(joinMessageSender);
         FMLCommonHandler.instance().bus().register(new MotdManager());
+
+        FMLCommonHandler.instance().registerCrashCallable(new SchedulerCrashCallable());
 
         NailedLog.info("Registering blocks");
         NailedBlocks.init();

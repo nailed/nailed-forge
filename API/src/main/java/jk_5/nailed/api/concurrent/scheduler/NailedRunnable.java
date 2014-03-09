@@ -21,7 +21,7 @@ public abstract class NailedRunnable implements Runnable {
     }
 
     /**
-     * Schedules this in the Bukkit scheduler to run on next tick.
+     * Schedules this in the Nailed scheduler to run on next tick.
      *
      * @return a Task that contains the id number
      * @throws IllegalArgumentException if plugin is null
@@ -34,10 +34,10 @@ public abstract class NailedRunnable implements Runnable {
     }
 
     /**
-     * <b>Asynchronous tasks should never access any API in Bukkit. Great care
+     * <b>Asynchronous tasks should never access any API in Nailed. Great care
      * should be taken to assure the thread-safety of asynchronous tasks.</b>
      * <p>
-     * Schedules this in the Bukkit scheduler to run asynchronously.
+     * Schedules this in the Nailed scheduler to run asynchronously.
      *
      * @return a Task that contains the id number
      * @throws IllegalArgumentException if plugin is null
@@ -64,7 +64,7 @@ public abstract class NailedRunnable implements Runnable {
     }
 
     /**
-     * <b>Asynchronous tasks should never access any API in Bukkit. Great care
+     * <b>Asynchronous tasks should never access any API in Nailed. Great care
      * should be taken to assure the thread-safety of asynchronous tasks.</b>
      * <p>
      * Schedules this to run asynchronously after the specified number of
@@ -98,7 +98,7 @@ public abstract class NailedRunnable implements Runnable {
     }
 
     /**
-     * <b>Asynchronous tasks should never access any API in Bukkit. Great care
+     * <b>Asynchronous tasks should never access any API in Nailed. Great care
      * should be taken to assure the thread-safety of asynchronous tasks.</b>
      * <p>
      * Schedules this to repeatedly run asynchronously until cancelled,

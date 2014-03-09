@@ -21,5 +21,4 @@ public interface Worker {
      * @return The Thread object for the worker
      */
     public Thread getThread();
-
 }
