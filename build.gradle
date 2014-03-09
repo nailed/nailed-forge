@@ -138,13 +138,6 @@ subprojects {
         testCompile 'junit:junit:4.11'
     }
 
-    //TODO: Re-enable this when SpecialSource's reobfuscation is fixed
-    /*rootProject.tasks.reobf {
-        reobf(tasks.jar) { spec ->
-            spec.classpath = sourceSets.main.compileClasspath
-        }
-    }*/
-
     sourceSets.main.resources.getFiles().each { file ->
         if (file.getName().endsWith(".at") || file.getName().endsWith("_at.cfg")){
             ats += file.getName();

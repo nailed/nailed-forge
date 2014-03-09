@@ -20,6 +20,7 @@ import jk_5.nailed.client.util.config.ConfigFile;
 import jk_5.nailed.map.script.MachineRegistry;
 import lombok.Getter;
 import lombok.Setter;
+import net.minecraft.network.play.server.S2BPacketChangeGameState;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -88,6 +89,8 @@ public class NailedClient {
         DimensionManager.registerProviderType(-1, NailedWorldProvider.class, false);
         DimensionManager.registerProviderType(0, NailedWorldProvider.class, true);
         DimensionManager.registerProviderType(1, NailedWorldProvider.class, false);
+
+        S2BPacketChangeGameState.field_149142_a[3] = null; //Prevent annoying "Your gamemode has been updated" message. If we want it we'll send it ourselves
     }
 
     @Mod.EventHandler

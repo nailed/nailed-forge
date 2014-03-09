@@ -6,6 +6,8 @@ import com.google.gson.*;
 import lombok.Getter;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.math.BigInteger;
@@ -23,22 +25,22 @@ import java.util.Set;
  */
 public class Updater {
 
+    private static final Logger logger = LogManager.getLogger("Nailed-Updater");
     private static final String SERVER = "http://maven.reening.nl/";
     private static final String VERSIONS_URL = SERVER + "nailed/versions.json";
 
     private static final Gson prettyGson = new GsonBuilder().setPrettyPrinting().create();
     private static final JsonParser parser = new JsonParser();
 
-    @Getter
-    private static int restartLevel = 0; //0 = no restart, 1 = game, 2 = launcher
+    @Getter private static int restartLevel = 0; //0 = no restart, 1 = game, 2 = launcher
     private static boolean cleanModsFolder = true;
 
     public static void main(String args[]){
-        System.out.println("Updated: " + checkForUpdates());
+        logger.info("Updated: " + checkForUpdates());
     }
 
     public static boolean checkForUpdates(){
-        System.out.println("Checking for updates...");
+        logger.info("Checking for updates...");
 
         DownloadMonitor monitor = new DownloadMonitor();
         int progress = 0;
@@ -68,12 +70,12 @@ public class Updater {
         boolean updated = false;
 
         if(diff.entriesOnlyOnLeft().size() > 0){
-            System.out.println("Found files that could be removed locally:");
+            logger.info("Found files that could be removed locally:");
             monitor.setNote("Checking removable files");
             Set<Map.Entry<String, JsonObject>> entries = diff.entriesOnlyOnLeft().entrySet();
             for(Map.Entry<String, JsonObject> e : entries){
                 monitor.setNote("Removing " + e.getKey());
-                System.out.println("Removing " + e.getKey());
+                logger.info("Removing " + e.getKey());
                 File dest = resolve(e.getValue().get("destination").getAsString());
                 if(dest.isFile()) dest.delete();
                 File checksum = new File(dest.getAbsolutePath() + ".sha");
@@ -92,7 +94,7 @@ public class Updater {
             }
         }
         if(diff.entriesOnlyOnRight().size() > 0){
-            System.out.println("Found files that where added. Downloading them...");
+            logger.info("Found files that where added. Downloading them...");
             monitor.setNote("Checking added files");
             Set<Map.Entry<String, JsonObject>> entries = diff.entriesOnlyOnRight().entrySet();
             for(Map.Entry<String, JsonObject> e : entries){
@@ -114,19 +116,19 @@ public class Updater {
             }
         }
         if(diff.entriesDiffering().size() > 0){
-            System.out.println("Found files that are differing from remote. Checking them...");
+            logger.info("Found files that are differing from remote. Checking them...");
             monitor.setNote("Checking updates");
             Set<Map.Entry<String, MapDifference.ValueDifference<JsonObject>>> entries = diff.entriesDiffering().entrySet();
             for(Map.Entry<String, MapDifference.ValueDifference<JsonObject>> e : entries){
                 monitor.setNote("Checking " + e.getKey());
-                System.out.println("Checking " + e.getKey());
+                logger.info("Checking " + e.getKey());
                 int localRev = e.getValue().leftValue().get("rev").getAsInt();
                 int remoteRev = e.getValue().rightValue().get("rev").getAsInt();
-                System.out.println("  Local rev: " + localRev);
-                System.out.println("  Remote rev: " + remoteRev);
+                logger.info("  Local rev: " + localRev);
+                logger.info("  Remote rev: " + remoteRev);
                 if(remoteRev > localRev){
                     monitor.setNote("Downloading " + e.getKey());
-                    System.out.println("Remote has newer version than we have. Redownloading...");
+                    logger.info("Remote has newer version than we have. Redownloading...");
                     File dest = resolve(e.getValue().leftValue().get("destination").getAsString());
                     if(dest.isFile()) dest.delete();
                     File checksum = new File(dest.getAbsolutePath() + ".sha");
@@ -168,7 +170,7 @@ public class Updater {
 
     private static boolean updateFile(JsonObject object, String name){
         try{
-            System.out.println("Downloading " + name);
+            logger.info("Downloading " + name);
             File dest = resolve(object.get("destination").getAsString());
             FileUtils.copyURLToFile(new URL(SERVER + object.get("location").getAsString()), dest, 20000, 20000);
             File checksum = new File(dest.getAbsolutePath() + ".sha");

@@ -72,14 +72,17 @@ public class NailedMapLoader implements MapLoader {
     @Override
     public void createMapServer(final Mappack pack, final Callback<Map> callback){
         final PotentialMap potentialMap = new PotentialMap(pack);
+        NailedLog.info("Scheduling the load of " + potentialMap.getSaveFileName());
         NailedAPI.getScheduler().runTaskAsynchronously(new NailedRunnable() {
             @Override
             public void run(){
+                NailedLog.info("Preparing " + potentialMap.getSaveFileName());
                 pack.prepareWorld(potentialMap.getSaveFolder());
                 final Map map = pack.createMap(potentialMap);
                 NailedAPI.getScheduler().runTask(new NailedRunnable() {
                     @Override
                     public void run(){
+                        NailedLog.info("Loading " + potentialMap.getSaveFileName());
                         map.initMapServer();
                         MinecraftForge.EVENT_BUS.post(new MapCreatedEvent(map));
                         callback.callback(map);
