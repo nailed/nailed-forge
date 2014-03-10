@@ -16,6 +16,7 @@ import java.math.BigInteger;
 import java.net.URL;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Set;
 
@@ -73,10 +74,10 @@ public class Updater {
                 logger.info("New remote library " + library.name + " will be downloaded");
                 download.add(library); //Download it!
             }else{
-                logger.info("Library " + library.name + " is outdated");
-                logger.info("  Local rev: " + loc.rev);
-                logger.info("  Remote rev: " + library.rev);
                 if(library.rev > loc.rev){
+                    logger.info("Library " + library.name + " is outdated");
+                    logger.info("  Local rev: " + loc.rev);
+                    logger.info("  Remote rev: " + library.rev);
                     download.add(library); //Outdated. Redownload!
                 }
             }
@@ -85,10 +86,16 @@ public class Updater {
         boolean updated = false;
 
         for(Library library : download){
-            logger.info("Downloading " + library.name);
             boolean u = updateFile(library);
             updated |= u;
             if(u){
+                Iterator<Library> it = local.libraries.iterator();
+                while(it.hasNext()){
+                    Library lib = it.next();
+                    if(lib.name.equals(library.name)){
+                        it.remove();
+                    }
+                }
                 local.libraries.add(library);
                 if(library.restart == RestartLevel.GAME && restart == RestartLevel.NOTHING){
                     restart = RestartLevel.GAME;

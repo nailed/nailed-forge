@@ -1,4 +1,4 @@
-package jk_5.nailed.updater.oldjson;
+package jk_5.nailed.updater.json.serialization;
 
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;

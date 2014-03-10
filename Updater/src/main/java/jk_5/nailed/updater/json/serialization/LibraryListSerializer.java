@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class LibraryListSerializer implements JsonSerializer<LibraryList>, JsonDeserializer<LibraryList> {
 
-    public static Gson serializer = new GsonBuilder().registerTypeAdapter(LibraryList.class, new LibraryListSerializer()).setPrettyPrinting().create();
+    public static Gson serializer = new GsonBuilder().registerTypeAdapter(LibraryList.class, new LibraryListSerializer()).registerTypeAdapterFactory(new EnumAdapterFactory()).setPrettyPrinting().create();
 
     @Override
     public LibraryList deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException{

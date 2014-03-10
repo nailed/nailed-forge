@@ -3,6 +3,7 @@ package jk_5.nailed.updater.oldjson;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import jk_5.nailed.updater.Updater2;
+import jk_5.nailed.updater.json.serialization.EnumAdapterFactory;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
