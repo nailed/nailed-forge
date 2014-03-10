@@ -162,7 +162,7 @@ public class NailedPlayer implements Player {
 
     @Override
     public String getWinnerName(){
-        return this.getChatPrefix() + this.getUsername();
+        return this.getChatPrefix();
     }
 
     @Override
