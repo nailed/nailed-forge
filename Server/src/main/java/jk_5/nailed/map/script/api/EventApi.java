@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.luaj.vm2.LuaClosure;
 import org.luaj.vm2.LuaValue;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -87,8 +88,10 @@ public class EventApi implements ILuaAPI {
 
     public void onEvent(String eventName, Object... args){
         LuaValue[] eventArgs = this.env.getMachine().getLuaMachine().toValues(args, 0);
-        for(LuaClosure listener : this.eventListeners.get(eventName)){
-            listener.invoke(eventArgs);
+        Collection<LuaClosure> listeners = this.eventListeners.get(eventName);
+        LuaClosure[] list = listeners.toArray(new LuaClosure[listeners.size()]);
+        for(int i = 0; i < list.length; i++){
+            list[i].invoke(eventArgs);
         }
     }
 }

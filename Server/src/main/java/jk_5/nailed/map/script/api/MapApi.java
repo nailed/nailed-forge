@@ -90,7 +90,8 @@ public class MapApi implements ILuaAPI {
                 "recycle",
                 "hasMappack",
                 "onStarted",
-                "onStopped"
+                "onStopped",
+                "stopGame"
         };
     }
 
@@ -288,6 +289,9 @@ public class MapApi implements ILuaAPI {
                 }else{
                     throw new Exception("Expected 1 boolean argument");
                 }
+                break;
+            case 23: //stopGame
+                this.map.getGameManager().stopGame();
                 break;
         }
         return null;

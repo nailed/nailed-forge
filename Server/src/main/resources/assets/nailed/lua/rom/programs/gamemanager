@@ -77,7 +77,8 @@ end
 
 local function stopGame()
     gameRunning = false
-    coroutine.resume(gameRoutine, "timer", -1) --force the coroutine to check it's state by dispatching a fake timer event
+    --coroutine.resume(gameRoutine, "timer", -1) --force the coroutine to check it's state by dispatching a fake timer event
+    --coroutine.resume(gameRoutine)
     printError("Stopped the game!")
     map.onStopped(false)
     drawSidebar()

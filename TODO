@@ -6,10 +6,15 @@ Todo:
 - Skinsync
 - Native cypher
 
-- player.freeze
 - player.keepHealth / food
 - inventory management (give)
-- death events
+- respawn event
+- join event
+- leave event
+- minimum food level
+- minimum health level
+- map.getPlayers() doesn't return dead players
+- Teleport everyone to spawn after game (With mappack config)
 
 Bugs:
 - PULSE_OFF pulses on enable
