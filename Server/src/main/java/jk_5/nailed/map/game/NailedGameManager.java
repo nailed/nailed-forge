@@ -39,8 +39,10 @@ public class NailedGameManager implements GameManager {
     public void setWinner(PossibleWinner winner){
         if(!this.gameRunning || this.winner != null) return;
         this.winner = winner;
-        this.gameRunning = false;
-        this.stopGame();
+        if(this.winnerInterrupt){
+            this.gameRunning = false;
+            this.stopGame();
+        }
         StatTypeManager.instance().getStatType(StatTypeGameHasWinner.class).onWin(this.map);
         StatTypeManager.instance().getStatType(StatTypeIsWinner.class).onWinnerSet(this.map, winner);
         this.map.broadcastNotification("Winner is " + winner.getWinnerColoredName());
