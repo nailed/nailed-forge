@@ -11,5 +11,5 @@ public class Library {
     public int rev;
     public String destination;
     public String location;
-    public RestartLevel restart = RestartLevel.NOTHING;
+    public RestartLevel restart;
 }

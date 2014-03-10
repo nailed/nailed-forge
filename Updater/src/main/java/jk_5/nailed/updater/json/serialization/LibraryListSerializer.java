@@ -3,6 +3,7 @@ package jk_5.nailed.updater.json.serialization;
 import com.google.gson.*;
 import jk_5.nailed.updater.json.Library;
 import jk_5.nailed.updater.json.LibraryList;
+import jk_5.nailed.updater.json.RestartLevel;
 
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -23,6 +24,9 @@ public class LibraryListSerializer implements JsonSerializer<LibraryList>, JsonD
         for(Map.Entry<String, JsonElement> e : obj.entrySet()){
             Library lib = context.deserialize(e.getValue(), Library.class);
             lib.name = e.getKey();
+            if(lib.restart == null){
+                lib.restart = RestartLevel.NOTHING;
+            }
             libraryList.libraries.add(lib);
         }
         return libraryList;
