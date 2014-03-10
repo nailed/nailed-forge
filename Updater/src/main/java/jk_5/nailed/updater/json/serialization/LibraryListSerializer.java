@@ -25,7 +25,7 @@ public class LibraryListSerializer implements JsonSerializer<LibraryList>, JsonD
             lib.name = e.getKey();
             libraryList.libraries.add(lib);
         }
-        return null;
+        return libraryList;
     }
 
     @Override
