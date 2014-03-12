@@ -44,7 +44,7 @@ apply plugin: 'forge'
 version = '2.0-SNAPSHOT'
 
 nailed {
-    minecraftVersion = '1.7.2'         //minecraft.apiVersion
+    minecraftVersion = '1.7.2'         //minecraft.version
     forgeVersion = '10.12.0.1040'      //
 
     versionName = 'Nailed-1.7.2'
