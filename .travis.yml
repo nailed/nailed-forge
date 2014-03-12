@@ -1,9 +1,5 @@
 language: java
-jdk:
-  - oraclejdk7
-  - openjdk7
-  - openjdk6
 notifications:
-  irc: "irc.reening.nl#server"
-before_script: gradle setupCIEnvironment
-script: gradle check
+  webhooks:
+  - http://n.tkte.ch/h/2168/p4YwarspH9F_JhoNNBJWXkNe
+script: TERM=dumb gradle check

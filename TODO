@@ -5,6 +5,7 @@ Todo:
 - Login gui
 - Skinsync
 - Native cypher
+- Command signs crash connection when mappack names are >16
 
 - player.keepHealth / food
 - inventory management (give)

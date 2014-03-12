@@ -71,7 +71,7 @@ nailed {
 }
 
 minecraft{
-    version = '1.7.2-10.12.0.1039'
+    version = '1.7.2-10.12.0.1046'
     assetDir = 'runtime/client/assets'
 }
 
@@ -92,8 +92,6 @@ subprojects {
 
     sourceCompatibility = '1.6'
     targetCompatibility = '1.6'
-
-    ext.ats = []
 
     configurations{
         packed
@@ -139,8 +137,7 @@ subprojects {
     }
 
     sourceSets.main.resources.getFiles().each { file ->
-        if (file.getName().endsWith(".at") || file.getName().endsWith("_at.cfg")){
-            ats += file.getName();
+        if (file.getName().endsWith("_at.cfg")){
             rootProject.minecraft.at file.getPath()
         }
     }
