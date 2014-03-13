@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-        mavenLocal()
+        //mavenLocal()
         mavenCentral()
         maven {
             name = "reening"
@@ -17,7 +17,7 @@ buildscript {
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.1-SNAPSHOT'
-        classpath 'jk_5.nailed.gradle:nailed-gradle:1.2-SNAPSHOT'
+        classpath 'jk_5.nailed.gradle:nailed-gradle:1.1-SNAPSHOT'
     }
 }
 
