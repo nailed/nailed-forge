@@ -21,7 +21,7 @@ buildscript {
     }
 }
 
-apply from: 'signing.gradle'
+//apply from: 'signing.gradle'
 
 if(!project.hasProperty("keystoreLocation"))
     ext.keystoreLocation = "."
