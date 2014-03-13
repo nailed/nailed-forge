@@ -1,0 +1,20 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name = "reening"
+            url = "http://maven.reening.nl"
+        }
+    }
+    dependencies {
+        classpath 'jk_5.nailed.gradle:nailed-gradle:1.2-SNAPSHOT'
+    }
+}
+
+apply plugin: 'nailed-deploy'
+
+nailedDeploy {
+    type 'maven'
+    url 'http://files.minecraftforge.net/maven/'
+    artifact 'net.minecraftforge:forge:1.7.2-10.12.0.1046:userdev'
+}
