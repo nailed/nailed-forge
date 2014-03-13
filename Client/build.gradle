@@ -7,7 +7,6 @@ jar.manifest{
 
 dependencies {
     compile rootProject
-    packed 'jk_5.asyncirc:ASyncIRCClient:0.1-SNAPSHOT'
     compile project(":Common")
 }
 
