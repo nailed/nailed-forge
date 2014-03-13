@@ -16,12 +16,6 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.google.guava:guava:14.0'
-        classpath 'com.google.code.gson:gson:2.2.4'
-        classpath 'com.jcraft:jsch:0.1.50'
-        classpath 'io.netty:netty-all:4.0.10.Final'
-        classpath 'jk_5.asyncirc:ASyncIRCClient:0.1-SNAPSHOT'
-
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.1-SNAPSHOT'
         classpath 'jk_5.nailed.gradle:nailed-gradle:1.2-SNAPSHOT'
     }
@@ -65,9 +59,6 @@ nailed {
     deployHost = 'maven.reening.nl'
     deployUsername = 'maven'
     deployPassword = project.deploymaven.password
-
-    ircServer = 'irc.reening.nl'                        //
-    ircChannel = '#nailedupdates'                       //
 }
 
 minecraft{
@@ -77,14 +68,6 @@ minecraft{
 
 allprojects {
     group = 'jk_5.nailed'
-
-    repositories {
-        mavenLocal()
-        maven {
-            name = 'reening'
-            url = 'http://maven.reening.nl'
-        }
-    }
 }
 
 subprojects {
