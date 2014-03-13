@@ -58,7 +58,10 @@ nailed {
 
     deployHost = 'maven.reening.nl'
     deployUsername = 'maven'
-    deployPassword = project.deploymaven.password
+
+    if(project.hasProperty("deploymaven")){
+        deployPassword = project.deploymaven.password
+    }
 }
 
 minecraft{
