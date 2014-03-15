@@ -1,3 +1,6 @@
+apply plugin: 'nailed-deploy'
+//apply from: '../deploy/deployer.gradle'
+
 version = '0.1'
 
 jar.manifest{
@@ -14,4 +17,21 @@ rootProject.tasks.reobf {
     reobf(tasks.jar) { spec ->
         spec.classpath = sourceSets.main.compileClasspath
     }
+}
+
+nailedDeploy {
+    name = 'nailedClient'
+    type = 'maven'
+    url = 'http://maven.reening.nl/'
+    artifact = 'jk_5.nailed:Nailed-Client:0.1'
+    restart = jk_5.nailed.gradle.json.deploy.RestartLevel.NOTHING
+    updateProfile = false
+    versionUpdates = true
+}
+
+nailedCredentials {
+    deployServer = "maven.reening.nl"
+    deployUsername = project.deploymaven.username
+    deployPassword = project.deploymaven.password
+    versionFile = "nailed/versions-1.json"
 }

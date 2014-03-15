@@ -1,3 +1,5 @@
+import jk_5.nailed.gradle.json.deploy.RestartLevel
+
 buildscript {
     repositories {
         mavenLocal()
@@ -21,7 +23,11 @@ apply plugin: 'nailed-deploy'
 apply from: '../deployer.gradle'
 
 nailedDeploy {
-    type = 'remote'
+    type = 'ivy'
     url = 'https://s3.amazonaws.com/Minecraft.Download/versions/{VERSION}/{VERSION}.jar'
     version = '1.7.2'
+    artifact = 'net.minecraft:minecraft:{VERSION}'
+    restart = RestartLevel.GAME
+    updateProfile = true
+    versionUpdates = false
 }

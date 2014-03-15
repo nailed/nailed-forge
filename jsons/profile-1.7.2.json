@@ -1,0 +1,11 @@
+{
+    "id": "Nailed-1.7.2",
+    "mainClass": "net.minecraft.launchwrapper.Launch",
+    "minimumLauncherVersion": 9,
+    "type": "release",
+    "processArguments": "username_session_version",
+    "time": "2014-03-10T07:47:07+0100",
+    "releaseTime": "2014-03-10T07:47:07+0100",
+    "sync": false,
+    "minecraftArguments": "--username ${auth_player_name} --version ${version_name} --gameDir ${game_directory} --assetsDir ${game_assets} --uuid ${auth_uuid} --accessToken ${auth_access_token} --tweakClass jk_5.nailed.updater.UpdatingTweaker --tweakClass cpw.mods.fml.common.launcher.FMLTweaker
+}

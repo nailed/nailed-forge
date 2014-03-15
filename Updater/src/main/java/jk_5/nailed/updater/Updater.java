@@ -29,7 +29,7 @@ public class Updater {
 
     private static final Logger logger = LogManager.getLogger("Nailed-Updater");
     private static final String SERVER = "http://maven.reening.nl/";
-    private static final String VERSIONS_URL = SERVER + "nailed/versions.json";
+    private static final String VERSIONS_URL = SERVER + "nailed/versions-1.json";
 
     @Getter private static RestartLevel restart = RestartLevel.NOTHING;
     private static boolean cleanModsFolder = true;
@@ -126,7 +126,7 @@ public class Updater {
         try{
             logger.info("Downloading " + library.name);
             File dest = resolve(library.destination);
-            FileUtils.copyURLToFile(new URL(SERVER + library.location), dest, 20000, 20000);
+            FileUtils.copyURLToFile(new URL(library.location), dest, 20000, 20000);
             File checksum = new File(dest.getAbsolutePath() + ".sha");
             FileWriter writer = new FileWriter(checksum);
             writer.write(getSHA1(dest));

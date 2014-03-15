@@ -17,7 +17,7 @@ buildscript {
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.1-SNAPSHOT'
-        classpath 'jk_5.nailed.gradle:nailed-gradle:1.1-SNAPSHOT'
+        classpath 'jk_5.nailed.gradle:nailed-gradle:1.2-SNAPSHOT'
     }
 }
 
@@ -31,6 +31,7 @@ if(!project.hasProperty("keystorePassword"))
     ext.keystorePassword = ""
 
 apply plugin: 'nailed'
+apply plugin: 'maven'
 apply plugin: 'forge'
 
 version = '2.0-SNAPSHOT'
@@ -75,6 +76,7 @@ allprojects {
 
 subprojects {
     apply plugin: 'java'
+    apply plugin: 'maven'
 
     sourceCompatibility = '1.6'
     targetCompatibility = '1.6'
@@ -82,6 +84,7 @@ subprojects {
     configurations{
         packed
         compile.extendsFrom packed
+        deployer
     }
 
     jar {
@@ -120,6 +123,8 @@ subprojects {
         compile 'org.projectlombok:lombok:1.12.2'
 
         testCompile 'junit:junit:4.11'
+
+        deployer 'org.apache.maven.wagon:wagon-ssh:2.6'
     }
 
     sourceSets.main.resources.getFiles().each { file ->
@@ -139,4 +144,59 @@ subprojects {
             exclude 'version.properties'
         }
     }
+
+    afterEvaluate {
+        def task = project.tasks.findByName('setupMaven')
+        if(task != null){
+            task.dependsOn("uploadArchives")
+        }
+    }
+
+    uploadArchives {
+        if (project.hasProperty("deploymaven")) {
+            repositories.mavenDeployer {
+                configuration = configurations.deployer
+                repository(url: project.deploymaven.url) {
+                    authentication(userName: project.deploymaven.username, password: project.deploymaven.password)
+                }
+                pom {
+                    groupId = project.group
+                    version = project.version
+                    artifactId = "Nailed-" + project.archivesBaseName
+                    project {
+                        name = project.archivesBaseName
+                        packaging = 'jar'
+                        description = 'Forge mod for Nailed'
+                        url = 'https://github.com/nailed/nailed-forge'
+
+                        scm {
+                            url 'https://github.com/nailed/nailed-forge'
+                            connection 'scm:git:git://github.com/nailed/nailed-forge.git'
+                            developerConnection 'scm:git:git@github.com:nailed/nailed-forge.git'
+                        }
+
+                        issueManagement {
+                            system 'github'
+                            url 'https://github.com/nailed/nailed-forge/issues'
+                        }
+
+                        developers {
+                            developer {
+                                id = 'jk-5'
+                                name = 'jk-5'
+                                roles {
+                                    role 'developer'
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }else{
+            repositories{
+                mavenLocal()
+            }
+        }
+    }
+    uploadArchives.dependsOn('reobf')
 }

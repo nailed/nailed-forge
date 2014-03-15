@@ -1,3 +1,6 @@
+apply plugin: 'nailed-deploy'
+apply from: new File(rootProject.getRootDir(), 'deploy/deployer.gradle').getAbsolutePath()
+
 version = '0.1-SNAPSHOT'
 
 jar.manifest{
@@ -14,4 +17,14 @@ rootProject.tasks.reobf {
     reobf(tasks.jar) { spec ->
         spec.classpath = sourceSets.main.compileClasspath
     }
+}
+
+nailedDeploy {
+    name = 'nailedCrashReporter'
+    type = 'maven'
+    url = 'http://maven.reening.nl/'
+    artifact = 'jk_5.nailed:Nailed-CrashReporter:0.1-SNAPSHOT'
+    restart = jk_5.nailed.gradle.json.deploy.RestartLevel.NOTHING
+    updateProfile = false
+    versionUpdates = true
 }

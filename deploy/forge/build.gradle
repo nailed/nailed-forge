@@ -1,3 +1,5 @@
+import jk_5.nailed.gradle.json.deploy.RestartLevel
+
 buildscript {
     repositories {
         mavenLocal()
@@ -24,4 +26,7 @@ nailedDeploy {
     type = 'maven'
     url = 'http://files.minecraftforge.net/maven/'
     artifact = 'net.minecraftforge:forge:1.7.2-10.12.0.1046:universal'
+    restart = RestartLevel.GAME
+    updateProfile = true
+    versionUpdates = false
 }
