@@ -70,6 +70,10 @@ minecraft{
     assetDir = 'runtime/client/assets'
 }
 
+reobf {
+    dependsOn subprojects.tasks.getByName('build')
+}
+
 allprojects {
     group = 'jk_5.nailed'
 }
@@ -198,5 +202,5 @@ subprojects {
             }
         }
     }
-    uploadArchives.dependsOn('reobf')
+    uploadArchives.dependsOn('build')
 }

@@ -1,5 +1,5 @@
 apply plugin: 'nailed-deploy'
-//apply from: '../deploy/deployer.gradle'
+apply from: '../deploy/deployer.gradle'
 
 version = '0.1'
 
@@ -28,10 +28,4 @@ nailedDeploy {
     updateProfile = false
     versionUpdates = true
 }
-
-nailedCredentials {
-    deployServer = "maven.reening.nl"
-    deployUsername = project.deploymaven.username
-    deployPassword = project.deploymaven.password
-    versionFile = "nailed/versions-1.json"
-}
+project.tasks.getByName("update").dependsOn("uploadArchives")
