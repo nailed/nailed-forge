@@ -1,4 +1,4 @@
-package jk_5.nailed.client.util.config;
+package jk_5.nailed.util.config;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,6 +6,11 @@ import java.io.PrintWriter;
 import java.util.*;
 import java.util.Map.Entry;
 
+/**
+ * No description given
+ *
+ * @author jk-5
+ */
 public abstract class ConfigTagParent {
 
     public static class TagOrderComparator implements Comparator<ConfigTag> {

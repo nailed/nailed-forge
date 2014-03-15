@@ -6,9 +6,9 @@ import com.google.gson.JsonParser;
 import com.ning.http.client.*;
 import io.netty.handler.codec.http.HttpHeaders;
 import jk_5.nailed.NailedLog;
-import jk_5.nailed.api.config.ConfigTag;
 import jk_5.nailed.api.database.DataOwner;
 import jk_5.nailed.players.NailedPlayer;
+import jk_5.nailed.util.config.ConfigTag;
 import lombok.Getter;
 
 import java.io.IOException;

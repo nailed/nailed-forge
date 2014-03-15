@@ -1,6 +1,6 @@
 package jk_5.nailed.api.map.stat;
 
-import jk_5.nailed.api.config.ConfigTag;
+import jk_5.nailed.util.config.ConfigTag;
 
 /**
  * No description given

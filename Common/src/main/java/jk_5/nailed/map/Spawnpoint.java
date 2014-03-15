@@ -1,7 +1,8 @@
-package jk_5.nailed.api.map;
+package jk_5.nailed.map;
 
-import jk_5.nailed.api.config.ConfigTag;
-import jk_5.nailed.api.map.teleport.TeleportOptions;
+import cpw.mods.fml.common.network.ByteBufUtils;
+import io.netty.buffer.ByteBuf;
+import jk_5.nailed.util.config.ConfigTag;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ChunkCoordinates;
 
@@ -12,6 +13,7 @@ import net.minecraft.util.ChunkCoordinates;
  */
 public class Spawnpoint extends ChunkCoordinates {
 
+    public String name;
     public float yaw;
     public float pitch;
 
@@ -57,20 +59,45 @@ public class Spawnpoint extends ChunkCoordinates {
     }
 
     public static Spawnpoint readFromConfig(ConfigTag tag){
-        return new Spawnpoint(tag.getTag("x").getIntValue(), tag.getTag("y").getIntValue(64), tag.getTag("z").getIntValue(), tag.getTag("yaw").getIntValue(0), tag.getTag("pitch").getIntValue(0));
-    }
-
-    public TeleportOptions teleport(){
-        TeleportOptions options = new TeleportOptions();
-        options.setCoordinates(this);
-        return options;
+        Spawnpoint spawn = new Spawnpoint(tag.getTag("x").getIntValue(), tag.getTag("y").getIntValue(64), tag.getTag("z").getIntValue(), tag.getTag("yaw").getIntValue(0), tag.getTag("pitch").getIntValue(0));
+        spawn.name = tag.name;
+        return spawn;
     }
 
     public void writeToConfig(ConfigTag tag){
+        tag.name = this.name;
         tag.getTag("x").setIntValue(this.posX);
         tag.getTag("y").setIntValue(this.posY);
         tag.getTag("z").setIntValue(this.posZ);
         tag.getTag("yaw").setIntValue((int) this.yaw);
         tag.getTag("pitch").setIntValue((int) this.pitch);
+    }
+
+    @Override
+    public String toString(){
+        final StringBuffer sb = new StringBuffer("Spawnpoint{");
+        sb.append("x=").append(posX);
+        sb.append(", y=").append(posY);
+        sb.append(", z=").append(posZ);
+        sb.append(", pitch=").append(pitch);
+        sb.append(", yaw=").append(yaw);
+        sb.append(", name=").append(name);
+        sb.append('}');
+        return sb.toString();
+    }
+
+    public void write(ByteBuf buffer){
+        buffer.writeInt(this.posX);
+        buffer.writeInt(this.posY);
+        buffer.writeInt(this.posZ);
+        buffer.writeFloat(this.yaw);
+        buffer.writeFloat(this.pitch);
+        ByteBufUtils.writeUTF8String(buffer, this.name);
+    }
+
+    public static Spawnpoint read(ByteBuf buffer){
+        Spawnpoint point = new Spawnpoint(buffer.readInt(), buffer.readInt(), buffer.readInt(), buffer.readFloat(), buffer.readFloat());
+        point.name = ByteBufUtils.readUTF8String(buffer);
+        return point;
     }
 }

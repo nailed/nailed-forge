@@ -10,14 +10,15 @@ import jk_5.nailed.client.achievement.NailedAchievements;
 import jk_5.nailed.client.blocks.NailedBlocks;
 import jk_5.nailed.client.item.NailedItems;
 import jk_5.nailed.client.map.NailedWorldProvider;
+import jk_5.nailed.client.map.edit.MapEditManager;
 import jk_5.nailed.client.network.ClientNetworkHandler;
 import jk_5.nailed.client.render.FixedWidthFontRenderer;
 import jk_5.nailed.client.render.NotificationRenderer;
 import jk_5.nailed.client.render.RenderEventHandler;
 import jk_5.nailed.client.scripting.ClientMachine;
 import jk_5.nailed.client.skinsync.SkinSync;
-import jk_5.nailed.client.util.config.ConfigFile;
 import jk_5.nailed.map.script.MachineRegistry;
+import jk_5.nailed.util.config.ConfigFile;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.network.play.server.S2BPacketChangeGameState;
@@ -66,6 +67,7 @@ public class NailedClient {
         MinecraftForge.EVENT_BUS.register(new RenderEventHandler());
         MinecraftForge.EVENT_BUS.register(new NotificationRenderer());
         MinecraftForge.EVENT_BUS.register(SkinSync.getInstance());
+        MinecraftForge.EVENT_BUS.register(MapEditManager.instance());
         FMLCommonHandler.instance().bus().register(new TickHandlerClient(config));
 
         //NailedLog.info("Initializing UpdateNotifier");

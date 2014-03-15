@@ -1,7 +1,12 @@
-package jk_5.nailed.client.util.config;
+package jk_5.nailed.util.config;
 
 import java.io.PrintWriter;
 
+/**
+ * No description given
+ *
+ * @author jk-5
+ */
 public class ConfigTag extends ConfigTagParent {
 
     public ConfigTag(ConfigTagParent parent, String name) {
@@ -47,6 +52,10 @@ public class ConfigTag extends ConfigTagParent {
         setValue(Integer.toString(i));
     }
 
+    public void setDoubleValue(int i) {
+        setValue(Double.toString(i));
+    }
+
     public void setBooleanValue(boolean b) {
         setValue(Boolean.toString(b));
     }
@@ -77,6 +86,22 @@ public class ConfigTag extends ConfigTagParent {
         } catch (NumberFormatException nfe) {
             setIntValue(defaultvalue);
             return getIntValue();
+        }
+    }
+
+    public double getDoubleValue() {
+        return Double.parseDouble(getValue());
+    }
+
+    public double getDoubleValue(int defaultvalue) {
+        if (value == null) {
+            setDoubleValue(defaultvalue);
+        }
+        try {
+            return getDoubleValue();
+        } catch (NumberFormatException nfe) {
+            setDoubleValue(defaultvalue);
+            return getDoubleValue();
         }
     }
 

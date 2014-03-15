@@ -8,7 +8,6 @@ import cpw.mods.fml.relauncher.FMLLaunchHandler;
 import jk_5.nailed.achievement.AchievementEventListener;
 import jk_5.nailed.achievement.NailedAchievements;
 import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.config.ConfigFile;
 import jk_5.nailed.blocks.NailedBlocks;
 import jk_5.nailed.chat.joinmessage.JoinMessageSender;
 import jk_5.nailed.ipc.IpcManager;
@@ -31,6 +30,7 @@ import jk_5.nailed.scheduler.SchedulerCrashCallable;
 import jk_5.nailed.server.command.*;
 import jk_5.nailed.teamspeak.TeamspeakClient;
 import jk_5.nailed.util.MotdManager;
+import jk_5.nailed.util.config.ConfigFile;
 import jk_5.nailed.util.couchdb.DatabaseManager;
 import jk_5.nailed.util.invsee.InvSeeTicker;
 import lombok.Getter;
@@ -198,6 +198,7 @@ public class NailedServer {
         ch.registerCommand(new CommandReloadPermissions());
         ch.registerCommand(new CommandTerminal());
         ch.registerCommand(new CommandRandomSpawnpoint());
+        ch.registerCommand(new CommandEdit());
 
         ch.getCommands().remove("tp");
         ch.getCommands().remove("toggledownfall");

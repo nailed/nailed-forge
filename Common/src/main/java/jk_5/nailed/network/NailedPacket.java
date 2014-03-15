@@ -103,7 +103,7 @@ public abstract class NailedPacket {
             this.x = buffer.readInt();
             this.y = buffer.readInt();
             this.z = buffer.readInt();
-            this.data = buffer.copy();
+            this.data = buffer.slice();
         }
     }
 
@@ -127,7 +127,7 @@ public abstract class NailedPacket {
             this.x = buffer.readInt();
             this.y = buffer.readInt();
             this.z = buffer.readInt();
-            this.data = buffer.copy();
+            this.data = buffer.slice();
         }
     }
 
@@ -151,7 +151,7 @@ public abstract class NailedPacket {
             this.x = buffer.readInt();
             this.y = buffer.readInt();
             this.z = buffer.readInt();
-            this.data = buffer.copy();
+            this.data = buffer.slice();
         }
     }
 
@@ -316,6 +316,30 @@ public abstract class NailedPacket {
             this.instanceId = buffer.readInt();
             this.width = buffer.readInt();
             this.height = buffer.readInt();
+        }
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class EditMode extends NailedPacket {
+
+        public boolean enable;
+        public ByteBuf buffer;
+
+        @Override
+        public void encode(ByteBuf buffer){
+            buffer.writeBoolean(this.enable);
+            if(this.enable){
+                buffer.writeBytes(this.buffer);
+            }
+        }
+
+        @Override
+        public void decode(ByteBuf buffer){
+            this.enable = buffer.readBoolean();
+            if(this.enable){
+                this.buffer = buffer.slice();
+            }
         }
     }
 }

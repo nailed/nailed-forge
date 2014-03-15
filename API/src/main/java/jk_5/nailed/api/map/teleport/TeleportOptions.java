@@ -1,11 +1,12 @@
 package jk_5.nailed.api.map.teleport;
 
 import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.Spawnpoint;
+import jk_5.nailed.map.Spawnpoint;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Builder;
 
 /**
  * No description given
@@ -13,6 +14,7 @@ import lombok.NoArgsConstructor;
  * @author jk-5
  */
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 public class TeleportOptions {

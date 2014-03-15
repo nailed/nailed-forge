@@ -1,15 +1,17 @@
 package jk_5.nailed.players;
 
 import com.mojang.authlib.GameProfile;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import jk_5.nailed.api.ChatColor;
 import jk_5.nailed.api.Gamemode;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.database.DataObject;
 import jk_5.nailed.api.database.DataOwner;
 import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.Spawnpoint;
 import jk_5.nailed.api.map.team.Team;
 import jk_5.nailed.api.player.Player;
+import jk_5.nailed.map.Spawnpoint;
 import jk_5.nailed.map.teleport.TeleportHelper;
 import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.network.NailedPacket;
@@ -27,6 +29,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S2BPacketChangeGameState;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.WorldSettings;
@@ -50,6 +53,7 @@ public class NailedPlayer implements Player {
     @Getter @Setter private int pdaID = -1;
     @Getter private NetHandlerPlayServer netHandler;
     @Getter private DataObject data = new PlayerData();
+    @Getter private boolean editModeEnabled = false;
 
     public void sendNotification(String message){
         this.sendNotification(message, null);
@@ -185,6 +189,21 @@ public class NailedPlayer implements Player {
     @Override
     public void sendTimeUpdate(String msg){
         NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.TimeUpdate(true, msg), this.getEntity());
+    }
+
+    @Override
+    public void setEditModeEnabled(boolean editModeEnabled){
+        this.editModeEnabled = editModeEnabled;
+        IChatComponent component = new ChatComponentText("Edit mode is " + (this.editModeEnabled ? "enabled" : "disabled"));
+        component.getChatStyle().setColor(EnumChatFormatting.GREEN);
+        this.sendChat(component);
+        if(this.editModeEnabled){
+            ByteBuf buffer = Unpooled.buffer();
+            this.currentMap.getMappack().getMappackMetadata().writeEditModeData(buffer);
+            NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.EditMode(true, buffer), this.getEntity());
+        }else{
+            NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.EditMode(false, null), this.getEntity());
+        }
     }
 
     @Override

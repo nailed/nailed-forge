@@ -1,7 +1,9 @@
 package jk_5.nailed.api.map;
 
+import io.netty.buffer.ByteBuf;
 import jk_5.nailed.api.WeatherType;
 import jk_5.nailed.api.map.team.TeamBuilder;
+import jk_5.nailed.map.Spawnpoint;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.WorldSettings;
 
@@ -31,4 +33,5 @@ public interface MappackMetadata {
     List<Spawnpoint> getRandomSpawnpoints();
     String getStartWhen();
     EnumSet<WeatherType> getPermittedWeatherTypes();
+    void writeEditModeData(ByteBuf buffer);
 }

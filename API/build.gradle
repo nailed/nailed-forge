@@ -18,4 +18,5 @@ artifacts {
 
 dependencies {
     compile rootProject
+    compile project(":Common")
 }

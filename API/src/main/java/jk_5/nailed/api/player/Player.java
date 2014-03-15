@@ -5,8 +5,8 @@ import jk_5.nailed.api.Gamemode;
 import jk_5.nailed.api.database.DataOwner;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.PossibleWinner;
-import jk_5.nailed.api.map.Spawnpoint;
 import jk_5.nailed.api.map.team.Team;
+import jk_5.nailed.map.Spawnpoint;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.Packet;
@@ -55,4 +55,6 @@ public interface Player extends PossibleWinner, DataOwner {
     public NetHandlerPlayServer getNetHandler();
     public void sendTimeUpdate(String argument);
     public void onDataLoaded();
+    public boolean isEditModeEnabled();
+    public void setEditModeEnabled(boolean editModeEnabled);
 }
