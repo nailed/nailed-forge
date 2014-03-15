@@ -1,20 +1,27 @@
 buildscript {
     repositories {
+        mavenLocal()
         mavenCentral()
-        maven {
+        //TODO reenable this
+        /*maven {
             name = "reening"
             url = "http://maven.reening.nl"
-        }
+        }*/
     }
     dependencies {
         classpath 'jk_5.nailed.gradle:nailed-gradle:1.2-SNAPSHOT'
+        //TODO delete those. These are here because the mavenlocal deployer doesn't generate a POM
+        classpath 'com.google.guava:guava:14.0'
+        classpath 'com.google.code.gson:gson:2.2.4'
+        classpath 'com.jcraft:jsch:0.1.50'
     }
 }
 
 apply plugin: 'nailed-deploy'
+apply from: '../deployer.gradle'
 
 nailedDeploy {
-    type 'maven'
-    //url 'http://files.minecraftforge.net/maven/'
-    //artifact 'net.minecraftforge:forge:1.7.2-10.12.0.1046:universal'
+    type = 'maven'
+    url = 'http://files.minecraftforge.net/maven/'
+    artifact = 'net.minecraftforge:forge:1.7.2-10.12.0.1046:universal'
 }

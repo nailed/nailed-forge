@@ -1,0 +1,8 @@
+if(project.hasProperty("deploymaven")){
+    nailedCredentials {
+        deployServer = project.deploymaven.url
+        deployUsername = project.deploymaven.username
+        deployPassword = project.deploymaven.password
+        versionFile = "nailed/versions.json"
+    }
+}
