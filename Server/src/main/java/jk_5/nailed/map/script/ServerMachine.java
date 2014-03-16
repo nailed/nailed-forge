@@ -3,7 +3,6 @@ package jk_5.nailed.map.script;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import jk_5.nailed.NailedServer;
-import jk_5.nailed.api.scripting.ILuaAPI;
 import jk_5.nailed.api.scripting.IMount;
 import jk_5.nailed.api.scripting.IWritableMount;
 import jk_5.nailed.map.NailedMapLoader;
@@ -85,10 +84,6 @@ public class ServerMachine extends ServerTerminal implements IMachine {
 
     public void queueEvent(String event, Object... arguments){
         this.machine.queueEvent(event, arguments);
-    }
-
-    public void addAPI(ILuaAPI api){
-        this.machine.addAPI(api);
     }
 
     public double getTimeOfDay(){

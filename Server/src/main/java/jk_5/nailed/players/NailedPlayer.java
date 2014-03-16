@@ -1,6 +1,7 @@
 package jk_5.nailed.players;
 
 import com.mojang.authlib.GameProfile;
+import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import jk_5.nailed.api.ChatColor;
@@ -9,6 +10,8 @@ import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.database.DataObject;
 import jk_5.nailed.api.database.DataOwner;
 import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.Mappack;
+import jk_5.nailed.api.map.MappackMetadata;
 import jk_5.nailed.api.map.team.Team;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.map.Spawnpoint;
@@ -129,6 +132,9 @@ public class NailedPlayer implements Player {
     public void onLogin() {
         this.online = true;
         this.netHandler = this.getEntity().playerNetServerHandler;
+        if(this.editModeEnabled){
+            this.sendEditModePacket();
+        }
     }
 
     public void onLogout() {
@@ -204,8 +210,17 @@ public class NailedPlayer implements Player {
     public void sendEditModePacket(){
         if(this.editModeEnabled){
             ByteBuf buffer = Unpooled.buffer();
-            this.currentMap.getMappack().getMappackMetadata().writeEditModeData(buffer);
-            NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.EditMode(true, buffer), this.getEntity());
+            Mappack mappack = this.currentMap.getMappack();
+            if(mappack != null){
+                MappackMetadata meta = mappack.getMappackMetadata();
+                ByteBufUtils.writeUTF8String(buffer, meta.getName());
+                meta.getSpawnPoint().write(buffer);
+                buffer.writeInt(meta.getRandomSpawnpoints().size());
+                for(Spawnpoint spawnpoint : meta.getRandomSpawnpoints()){
+                    spawnpoint.write(buffer);
+                }
+                NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.EditMode(true, buffer), this.getEntity());
+            }
         }else{
             NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.EditMode(false, null), this.getEntity());
         }

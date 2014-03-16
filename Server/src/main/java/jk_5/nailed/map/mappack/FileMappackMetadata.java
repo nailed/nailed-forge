@@ -2,8 +2,6 @@ package jk_5.nailed.map.mappack;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import cpw.mods.fml.common.network.ByteBufUtils;
-import io.netty.buffer.ByteBuf;
 import jk_5.nailed.api.ChatColor;
 import jk_5.nailed.api.WeatherType;
 import jk_5.nailed.api.map.MappackMetadata;
@@ -90,16 +88,6 @@ public class FileMappackMetadata implements MappackMetadata {
             if(tag.getBooleanValue(true)){
                 this.permittedWeatherTypes.add(type);
             }
-        }
-    }
-
-    @Override
-    public void writeEditModeData(ByteBuf buffer){
-        ByteBufUtils.writeUTF8String(buffer, this.name);
-        this.spawnPoint.write(buffer);
-        buffer.writeInt(this.randomSpawnpoints.size());
-        for(Spawnpoint spawnpoint : this.randomSpawnpoints){
-            spawnpoint.write(buffer);
         }
     }
 }
