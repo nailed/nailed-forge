@@ -33,7 +33,7 @@ public class CommandTps extends NailedCommand {
             dim = CommandBase.parseInt(sender, args[1]);
             summary = false;
         }
-        if (summary){
+        if(summary){
             double meanTickTime = mean(server.tickTimeArray) * 1.0E-6D;
             double meanTPS = Math.min(1000.0/meanTickTime, 20);
             sender.addChatMessage(this.getComponent("Overall", meanTickTime, meanTPS));

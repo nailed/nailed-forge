@@ -1,11 +1,10 @@
 package jk_5.nailed.client.map.edit;
 
 import com.google.common.collect.Lists;
-import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import io.netty.buffer.ByteBuf;
+import jk_5.nailed.client.util.ChatColor;
 import jk_5.nailed.map.Spawnpoint;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +15,6 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChatComponentText;
@@ -25,7 +23,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
-import org.lwjgl.input.Keyboard;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
@@ -47,16 +45,9 @@ public class MapEditManager {
     @Getter private MapEditMetadata metadata = new MapEditMetadata();
 
     private Spawnpoint facingSpawnpoint;
-    private Spawnpoint prevFacingSpawnpoint;
-    private int selectedIndex = 0;
-    private String selectedLine = null;
     private int infoWidth = 0;
     private ScaledResolution resolution;
     private List<String> lineBuffer = Lists.newArrayList();
-
-    private final KeyBinding upKey = new KeyBinding("key.nailed.up", Keyboard.KEY_UP, "Nailed");
-    private final KeyBinding downKey = new KeyBinding("key.nailed.down", Keyboard.KEY_DOWN, "Nailed");
-    private final KeyBinding returnKey = new KeyBinding("key.nailed.return", Keyboard.KEY_RETURN, "Nailed");
 
     public void readData(ByteBuf buffer){
         this.metadata.readFrom(buffer);
@@ -65,14 +56,15 @@ public class MapEditManager {
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent event){
         if(this.enabled && event.phase == TickEvent.Phase.START && mc.theWorld != null && mc.thePlayer != null){
-            this.prevFacingSpawnpoint = this.facingSpawnpoint;
-            this.facingSpawnpoint = this.rayTraceSpawnpoints(mc.thePlayer, 50);
-            if(this.prevFacingSpawnpoint != this.facingSpawnpoint){
-                this.selectedIndex = 0;
-                this.selectedLine = null;
-            }
-            if(this.selectedLine == null && this.lineBuffer.size() >= this.selectedIndex + 1){
-                this.selectedLine = this.lineBuffer.get(this.selectedIndex);
+            this.facingSpawnpoint = this.rayTraceSpawnpoints(mc.thePlayer, 200);
+        }
+    }
+
+    @SubscribeEvent
+    public void onInteract(PlayerInteractEvent event){
+        if(this.enabled && (event.action == PlayerInteractEvent.Action.RIGHT_CLICK_AIR || event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK)){
+            if(this.facingSpawnpoint != null){
+                mc.thePlayer.addChatMessage(new ChatComponentText(this.facingSpawnpoint.toString()));
             }
         }
     }
@@ -85,14 +77,7 @@ public class MapEditManager {
         }
         this.lineBuffer.clear();
 
-        this.drawLine(this.facingSpawnpoint.name);
-        this.drawLine("X: " + this.facingSpawnpoint.posX);
-        this.drawLine("Y: " + this.facingSpawnpoint.posY);
-        this.drawLine("Z: " + this.facingSpawnpoint.posZ);
-        this.drawLine("Yaw: " + this.facingSpawnpoint.yaw);
-        this.drawLine("Pitch: " + this.facingSpawnpoint.pitch);
-        this.drawLine("[Delete]");
-        this.drawLine("[Rename]");
+        this.drawLine(ChatColor.GREEN + this.facingSpawnpoint.name);
 
         this.doRenderLines();
     }
@@ -115,15 +100,15 @@ public class MapEditManager {
         double rx = this.metadata.spawnPoint.posX - dx;
         double ry = this.metadata.spawnPoint.posY - dy;
         double rz = this.metadata.spawnPoint.posZ - dz;
-        this.drawBox(rx, ry, rz, this.facingSpawnpoint == this.metadata.spawnPoint ? 0xFF0000 : 0x00FF00);
-        this.renderLabel("World spawn", rx + 0.5, ry + 1.5, rz + 0.5);
+        this.drawBox(rx, ry - 1, rz, this.facingSpawnpoint == this.metadata.spawnPoint ? 0xFF0000 : 0x00FF00);
+        this.renderLabel("World spawn", rx + 0.5, ry + 0.5, rz + 0.5);
 
         for(Spawnpoint spawnpoint : this.metadata.randomSpawnpoints){
             rx = spawnpoint.posX - dx;
             ry = spawnpoint.posY - dy;
             rz = spawnpoint.posZ - dz;
-            this.drawBox(rx, ry, rz, this.facingSpawnpoint == spawnpoint ? 0xFF0000 : 0x00FFFF);
-            this.renderLabel(spawnpoint.name, rx + 0.5, ry + 1.5, rz + 0.5);
+            this.drawBox(rx, ry - 1, rz, this.facingSpawnpoint == spawnpoint ? 0xFF0000 : 0x00FFFF);
+            this.renderLabel(spawnpoint.name, rx + 0.5, ry + 0.5, rz + 0.5);
         }
 
         GL11.glDisable(GL11.GL_BLEND);
@@ -272,7 +257,7 @@ public class MapEditManager {
                 int startY = MathHelper.floor_double(startVec.yCoord);
                 int startZ = MathHelper.floor_double(startVec.zCoord);
 
-                Spawnpoint spawnpoint = this.metadata.getSpawnpoint(startX, startY, startZ);
+                Spawnpoint spawnpoint = this.metadata.getSpawnpoint(startX, startY + 1, startZ);
 
                 if(spawnpoint != null){
                     return spawnpoint;
@@ -395,19 +380,15 @@ public class MapEditManager {
                         ++vec32.zCoord;
                     }
 
-                    spawnpoint = this.metadata.getSpawnpoint(startX, startY, startZ);
+                    spawnpoint = this.metadata.getSpawnpoint(startX, startY + 1, startZ);
 
                     if(spawnpoint != null){
                         return spawnpoint;
                     }
                 }
-                return null;
-            }else{
-                return null;
             }
-        }else{
-            return null;
         }
+        return null;
     }
 
     public void drawLine(String text){
@@ -420,47 +401,12 @@ public class MapEditManager {
         int height = mc.fontRenderer.FONT_HEIGHT + 2;
         Gui.drawRect(resolution.getScaledWidth() - this.infoWidth - 2, 0, this.resolution.getScaledWidth(), height * this.lineBuffer.size() + 1, 0x88000000);
         for(String line : this.lineBuffer){
-            boolean selected = this.selectedLine != null && this.selectedLine.equals(line);
-            mc.fontRenderer.drawString(line, this.resolution.getScaledWidth() - this.infoWidth + 1, y + 2, selected ? 0x00FF00 : 0xFFFFFFFF);
+            mc.fontRenderer.drawString(line, this.resolution.getScaledWidth() - this.infoWidth + 1, y + 2, 0xFFFFFFFF);
             y += height;
         }
     }
 
-    @SubscribeEvent
-    public void onInput(InputEvent.KeyInputEvent event){
-        if(this.upKey.getIsKeyPressed()){
-            KeyBinding.setKeyBindState(this.upKey.getKeyCode(), false);
-            this.up();
-        }
-        if(this.downKey.getIsKeyPressed()){
-            KeyBinding.setKeyBindState(this.downKey.getKeyCode(), false);
-            this.down();
-        }
-        if(this.returnKey.getIsKeyPressed()){
-            KeyBinding.setKeyBindState(this.returnKey.getKeyCode(), false);
-            this.select();
-        }
-    }
-
-    private void up(){
-        this.selectedIndex = Math.min(this.lineBuffer.size() - 1, this.selectedIndex + 1);
-    }
-
-    private void down(){
-        this.selectedIndex = Math.max(0, this.selectedIndex - 1);
-    }
-
-    private void select(){
-        mc.thePlayer.addChatMessage(new ChatComponentText(this.selectedLine));
-    }
-
     public static MapEditManager instance(){
         return INSTANCE;
-    }
-
-    public void registerKeybindings(){
-        ClientRegistry.registerKeyBinding(this.upKey);
-        ClientRegistry.registerKeyBinding(this.downKey);
-        ClientRegistry.registerKeyBinding(this.returnKey);
     }
 }

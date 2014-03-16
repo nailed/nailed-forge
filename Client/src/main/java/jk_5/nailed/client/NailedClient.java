@@ -94,8 +94,6 @@ public class NailedClient {
         DimensionManager.registerProviderType(1, NailedWorldProvider.class, false);
 
         S2BPacketChangeGameState.field_149142_a[3] = null; //Prevent annoying "Your gamemode has been updated" message. If we want it we'll send it ourselves
-
-        MapEditManager.instance().registerKeybindings();
     }
 
     @Mod.EventHandler
