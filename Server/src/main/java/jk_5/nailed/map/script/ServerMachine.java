@@ -3,6 +3,7 @@ package jk_5.nailed.map.script;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import jk_5.nailed.NailedServer;
+import jk_5.nailed.api.scripting.ILuaAPI;
 import jk_5.nailed.api.scripting.IMount;
 import jk_5.nailed.api.scripting.IWritableMount;
 import jk_5.nailed.map.NailedMapLoader;

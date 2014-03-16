@@ -2,7 +2,6 @@ package jk_5.nailed.client.scripting;
 
 import io.netty.buffer.ByteBuf;
 import jk_5.nailed.client.network.ClientNetworkHandler;
-import jk_5.nailed.map.script.ILuaAPI;
 import jk_5.nailed.map.script.IMachine;
 import jk_5.nailed.map.script.ScriptPacket;
 import lombok.Getter;
@@ -61,11 +60,6 @@ public class ClientMachine extends ClientTerminal implements IMachine {
     @Override
     public World getWorld(){
         return Minecraft.getMinecraft().theWorld;
-    }
-
-    @Override
-    public void addAPI(ILuaAPI api){
-
     }
 
     @Override

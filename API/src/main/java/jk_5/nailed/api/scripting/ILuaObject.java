@@ -1,4 +1,4 @@
-package jk_5.nailed.map.script;
+package jk_5.nailed.api.scripting;
 
 /**
  * Return objects implementing this interface to expose objects with methods to lua.

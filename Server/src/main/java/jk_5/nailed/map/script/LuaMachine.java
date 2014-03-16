@@ -2,6 +2,9 @@ package jk_5.nailed.map.script;
 
 import com.google.common.collect.Maps;
 import jk_5.nailed.NailedLog;
+import jk_5.nailed.api.scripting.ILuaAPI;
+import jk_5.nailed.api.scripting.ILuaContext;
+import jk_5.nailed.api.scripting.ILuaObject;
 import jk_5.nailed.map.script.api.EventApi;
 import org.luaj.vm2.*;
 import org.luaj.vm2.lib.OneArgFunction;

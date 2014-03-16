@@ -17,7 +17,6 @@ public interface IMachine extends ITerminal {
     public void reboot();
     public void queueEvent(String event, Object... args);
     public World getWorld();
-    public void addAPI(ILuaAPI api);
     public double getTimeOfDay();
     public int getDay();
 }

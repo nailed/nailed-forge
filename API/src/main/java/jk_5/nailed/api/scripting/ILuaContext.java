@@ -1,4 +1,4 @@
-package jk_5.nailed.map.script;
+package jk_5.nailed.api.scripting;
 
 /**
  * An interface passed to machines and ILuaObjects' by machines, providing methods

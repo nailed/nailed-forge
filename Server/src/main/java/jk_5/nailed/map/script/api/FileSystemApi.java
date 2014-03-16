@@ -1,6 +1,9 @@
 package jk_5.nailed.map.script.api;
 
 import com.google.common.collect.Maps;
+import jk_5.nailed.api.scripting.ILuaAPI;
+import jk_5.nailed.api.scripting.ILuaContext;
+import jk_5.nailed.api.scripting.ILuaObject;
 import jk_5.nailed.map.script.*;
 
 import java.io.IOException;

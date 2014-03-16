@@ -1,8 +1,8 @@
 package jk_5.nailed.map.script.api;
 
+import jk_5.nailed.api.scripting.ILuaAPI;
+import jk_5.nailed.api.scripting.ILuaContext;
 import jk_5.nailed.map.script.IAPIEnvironment;
-import jk_5.nailed.map.script.ILuaAPI;
-import jk_5.nailed.map.script.ILuaContext;
 import jk_5.nailed.map.script.Terminal;
 
 /**
