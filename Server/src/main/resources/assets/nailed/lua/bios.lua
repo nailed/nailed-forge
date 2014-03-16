@@ -485,7 +485,7 @@ if http then
 	end
 end
 
-local function main()
+--local function main()
     -- Load APIs
     local tApis = fs.list("rom/apis")
     for n,sFile in ipairs(tApis) do
@@ -517,8 +517,8 @@ local function main()
         end)
     end
     os.shutdown()
-end
+--end
 
 -- JNLua converts the coroutine to a string immediately, so we can't get the
 -- traceback later. Because of that we have to do the error handling here.
-pcall(main)
+--pcall(main)

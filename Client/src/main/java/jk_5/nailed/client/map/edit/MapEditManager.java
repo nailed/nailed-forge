@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import io.netty.buffer.ByteBuf;
+import jk_5.nailed.client.gui.GuiEditSpawnpoint;
 import jk_5.nailed.client.util.ChatColor;
 import jk_5.nailed.map.Spawnpoint;
 import lombok.Getter;
@@ -17,7 +18,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
@@ -64,7 +64,7 @@ public class MapEditManager {
     public void onInteract(PlayerInteractEvent event){
         if(this.enabled && (event.action == PlayerInteractEvent.Action.RIGHT_CLICK_AIR || event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK)){
             if(this.facingSpawnpoint != null){
-                mc.thePlayer.addChatMessage(new ChatComponentText(this.facingSpawnpoint.toString()));
+                mc.displayGuiScreen(new GuiEditSpawnpoint(this.facingSpawnpoint));
             }
         }
     }
@@ -246,7 +246,7 @@ public class MapEditManager {
 
     public Spawnpoint rayTraceSpawnpoints(EntityPlayer player, double reach){
         Vec3 startVec = getCorrectedHeadVec(player);
-        Vec3 lookVec = player.getLook(1);
+        Vec3 lookVec = player.getLookVec();
         Vec3 endVec = startVec.addVector(lookVec.xCoord * reach, lookVec.yCoord * reach, lookVec.zCoord * reach);
         if(!Double.isNaN(startVec.xCoord) && !Double.isNaN(startVec.yCoord) && !Double.isNaN(startVec.zCoord)){
             if(!Double.isNaN(endVec.xCoord) && !Double.isNaN(endVec.yCoord) && !Double.isNaN(endVec.zCoord)){

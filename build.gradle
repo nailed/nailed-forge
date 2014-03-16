@@ -17,11 +17,9 @@ buildscript {
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.1-SNAPSHOT'
-        classpath 'jk_5.nailed.gradle:nailed-gradle:1.1-SNAPSHOT'
+        classpath 'jk_5.nailed.gradle:nailed-gradle:1.1.2-SNAPSHOT'
     }
 }
-
-//apply from: 'signing.gradle'
 
 if(!project.hasProperty("keystoreLocation"))
     ext.keystoreLocation = "."
