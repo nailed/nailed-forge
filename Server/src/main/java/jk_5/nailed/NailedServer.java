@@ -170,6 +170,18 @@ public class NailedServer {
 
     @EventHandler
     @SuppressWarnings("unused")
+    public void onMismatch(FMLMissingMappingsEvent event){
+        NailedLog.info("Missing mapping!");
+    }
+
+    @EventHandler
+    @SuppressWarnings("unused")
+    public void onMismatch(FMLModIdMappingEvent event){
+        NailedLog.info("Remap");
+    }
+
+    @EventHandler
+    @SuppressWarnings("unused")
     public void serverStarting(FMLServerStartingEvent event){
         ircBot.connect();
         teamspeakClient.connect();

@@ -27,4 +27,16 @@ public class MapEditMetadata {
             this.randomSpawnpoints.add(Spawnpoint.read(buffer));
         }
     }
+
+    public Spawnpoint getSpawnpoint(int x, int y, int z){
+        if(this.spawnPoint.posX == x && this.spawnPoint.posY == y && this.spawnPoint.posZ == z){
+            return this.spawnPoint;
+        }
+        for(Spawnpoint spawnpoint : this.randomSpawnpoints){
+            if(spawnpoint.posX == x && spawnpoint.posY == y && spawnpoint.posZ == z){
+                return spawnpoint;
+            }
+        }
+        return null;
+    }
 }
