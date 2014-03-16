@@ -244,5 +244,7 @@ public class NailedServer {
 
         NailedLog.info("Reading permission config");
         permissionFactory.readConfig();
+
+        ((NailedMappackLoader) NailedAPI.getMappackLoader()).loadASync = true;
     }
 }

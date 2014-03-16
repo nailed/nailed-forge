@@ -23,6 +23,8 @@ public class NailedMappackLoader implements MappackLoader {
     @Getter private final File mappackFolder = new File("mappacks");
     @Getter private final List<Mappack> mappacks = Lists.newArrayList();
 
+    public boolean loadASync = false;
+
     @Override
     public Mappack getMappack(String mappackID){
         for(Mappack pack : this.mappacks){
@@ -35,7 +37,7 @@ public class NailedMappackLoader implements MappackLoader {
 
     @Override
     public void loadMappacks(){
-        NailedAPI.getScheduler().runTaskAsynchronously(new NailedRunnable() {
+        NailedRunnable runnable = new NailedRunnable() {
             @Override
             public void run(){
                 NailedLog.info("Loading mappacks...");
@@ -63,7 +65,12 @@ public class NailedMappackLoader implements MappackLoader {
                 NailedMappackLoader.this.mappacks.addAll(newMappackList);
                 NailedLog.info("Successfully loaded %d mappacks!", newMappackList.size());
             }
-        });
+        };
+        if(this.loadASync){
+            NailedAPI.getScheduler().runTaskAsynchronously(runnable);
+        }else{
+            runnable.run();
+        }
     }
 
     @Override
