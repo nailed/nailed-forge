@@ -485,35 +485,40 @@ if http then
 	end
 end
 
--- Load APIs
-local tApis = fs.list("rom/apis")
-for n,sFile in ipairs(tApis) do
-	if string.sub(sFile, 1, 1) ~= "." then
-		local sPath = fs.combine("rom/apis", sFile)
-		if not fs.isDir(sPath) then
-			os.loadAPI(sPath)
-		end
-	end
+local function main()
+    -- Load APIs
+    local tApis = fs.list("rom/apis")
+    for n,sFile in ipairs(tApis) do
+        if string.sub(sFile, 1, 1) ~= "." then
+            local sPath = fs.combine("rom/apis", sFile)
+            if not fs.isDir(sPath) then
+                os.loadAPI(sPath)
+            end
+        end
+    end
+
+    -- Run the shell
+    local ok, err = pcall(function()
+        parallel.waitForAny(
+            function()
+                os.run({}, "rom/programs/multishell")
+                os.run({}, "rom/programs/shutdown")
+            end)
+    end)
+
+    -- If the shell errored, let the user read it.
+    term.redirect(term.native())
+    if not ok then
+        printError(err)
+        pcall(function()
+            term.setCursorBlink(false)
+            print("Press any key to continue")
+            os.pullEvent("key")
+        end)
+    end
+    os.shutdown()
 end
 
--- Run the shell
-local ok, err = pcall(function()
-	parallel.waitForAny(
-		function()
-			os.run({}, "rom/programs/multishell")
-			os.run({}, "rom/programs/shutdown")
-		end)
-end)
-
--- If the shell errored, let the user read it.
-term.redirect(term.native())
-if not ok then
-	printError(err)
-	pcall(function()
-		term.setCursorBlink(false)
-		print("Press any key to continue")
-		os.pullEvent("key") 
-	end)
-end
-
-os.shutdown()
+-- JNLua converts the coroutine to a string immediately, so we can't get the
+-- traceback later. Because of that we have to do the error handling here.
+pcall(main)
