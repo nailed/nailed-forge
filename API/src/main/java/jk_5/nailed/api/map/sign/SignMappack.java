@@ -7,6 +7,9 @@ import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.Mappack;
 import jk_5.nailed.api.player.Player;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 
 /**
  * No description given
@@ -67,6 +70,9 @@ public class SignMappack extends Sign {
         final Player player = NailedAPI.getPlayerRegistry().getPlayer(entityPlayer);
         entityPlayer.swingItem();
         if(this.linkedMap == null){
+            IChatComponent component = new ChatComponentText("Loading " + this.linkedMappack.getMappackMetadata().getName() + "...");
+            component.getChatStyle().setColor(EnumChatFormatting.GREEN);
+            player.sendChat(component);
             NailedAPI.getMapLoader().createMapServer(this.linkedMappack, new Callback<Map>() {
                 @Override
                 public void callback(Map obj){
