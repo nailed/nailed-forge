@@ -139,6 +139,7 @@ public class NailedPlayer implements Player {
 
     public void onChangedDimension() {
         NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.TimeUpdate(true, ""), this.getEntity());
+        this.sendEditModePacket();
     }
 
     public void onRespawn() {
@@ -197,6 +198,10 @@ public class NailedPlayer implements Player {
         IChatComponent component = new ChatComponentText("Edit mode is " + (this.editModeEnabled ? "enabled" : "disabled"));
         component.getChatStyle().setColor(EnumChatFormatting.GREEN);
         this.sendChat(component);
+        this.sendEditModePacket();
+    }
+
+    public void sendEditModePacket(){
         if(this.editModeEnabled){
             ByteBuf buffer = Unpooled.buffer();
             this.currentMap.getMappack().getMappackMetadata().writeEditModeData(buffer);

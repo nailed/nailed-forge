@@ -24,13 +24,11 @@ public class MapEditManager {
 
     private static final MapEditManager INSTANCE = new MapEditManager();
     private static final Minecraft mc = Minecraft.getMinecraft();
+
     private static final ResourceLocation noise = new ResourceLocation("nailed", "textures/effects/noise.png");
 
     @Setter private boolean enabled;
     @Getter private MapEditMetadata metadata = new MapEditMetadata();
-
-    private int pulseValue = 0;
-    private boolean increment = true;
 
     public void readData(ByteBuf buffer){
         this.metadata.readFrom(buffer);
