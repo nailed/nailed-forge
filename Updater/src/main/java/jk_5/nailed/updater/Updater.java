@@ -32,12 +32,8 @@ public class Updater {
     private static final String VERSIONS_URL = SERVER + "nailed/versions-1.json";
 
     @Getter private static RestartLevel restart = RestartLevel.NOTHING;
-    private static boolean cleanModsFolder = true;
 
-    public static void main(String args[]){
-        logger.info("Updated: " + checkForUpdates());
-    }
-
+    @SuppressWarnings("ConstantConditions")
     public static boolean checkForUpdates(){
         logger.info("Checking for updates...");
 
@@ -47,19 +43,20 @@ public class Updater {
         LibraryList remote = readRemoteLibraryList();
         LibraryList local = readLocalLibraryList();
 
-        if(cleanModsFolder){
-            //monitor.setNote("Cleaning up the mods folder...");
-            File modsFolder = resolve("{MC_GAME_DIR}/mods/");
-            if(!modsFolder.exists()) modsFolder.mkdir();
-            for(File file : modsFolder.listFiles()){
+        //monitor.setNote("Cleaning up the mods folder...");
+        File modsFolder = resolve("{MC_GAME_DIR}/mods/");
+        if(!modsFolder.exists()) modsFolder.mkdir();
+        for(File file : modsFolder.listFiles()){
+            if(file.getName().contains("Nailed") || file.getName().contains("nailed")){
+                logger.info("Found nailed related file " + file.getName() + " in mods folder. Removing it!");
                 file.delete();
             }
-            for(Library library : local.libraries){
-                if(library.destination.contains("{MC_GAME_DIR}/mods/")){
-                    library.rev = -1;
-                }
-            }
         }
+        /*for(Library library : local.libraries){
+            if(library.destination.contains("{MC_GAME_DIR}/mods/")){
+                library.rev = -1;
+            }
+        }*/
 
         Set<Library> download = Sets.newHashSet();
 
@@ -118,6 +115,22 @@ public class Updater {
                 IOUtils.closeQuietly(writer);
             }
         }
+
+        logger.info("Moving artifacts to the mod folder");
+        for(Library library : local.libraries){
+            if(library.mod){
+                try{
+                    logger.info("Moving " + library.name + " to the mods folder");
+                    File location = resolve(library.destination);
+                    File dest = resolve("{MC_GAME_DIR}/mods/" + location.getName());
+                    FileUtils.copyFile(location, dest);
+                    dest.deleteOnExit();
+                }catch(IOException e){
+                    logger.error("Error while moving file " + library.name, e);
+                }
+            }
+        }
+
         //monitor.close();
         return updated;
     }

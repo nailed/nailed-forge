@@ -12,4 +12,5 @@ public class Library {
     public String destination;
     public String location;
     public RestartLevel restart;
+    public boolean mod;
 }
