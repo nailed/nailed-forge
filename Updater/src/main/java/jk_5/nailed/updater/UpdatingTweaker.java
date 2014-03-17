@@ -47,7 +47,7 @@ public class UpdatingTweaker implements ITweaker {
 
     @Override
     public void injectIntoClassLoader(LaunchClassLoader classLoader){
-        //Updater2.addToClassLoader(classLoader);
+
     }
 
     @Override

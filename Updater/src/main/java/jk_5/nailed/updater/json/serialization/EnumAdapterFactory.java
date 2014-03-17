@@ -20,6 +20,7 @@ import java.util.Map;
  */
 public class EnumAdapterFactory implements TypeAdapterFactory {
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type){
         if(!type.getRawType().isEnum()) return null;

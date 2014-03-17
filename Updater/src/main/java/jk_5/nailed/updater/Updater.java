@@ -4,14 +4,16 @@ import com.google.common.collect.Sets;
 import jk_5.nailed.updater.json.Library;
 import jk_5.nailed.updater.json.LibraryList;
 import jk_5.nailed.updater.json.RestartLevel;
-import jk_5.nailed.updater.json.serialization.LibraryListSerializer;
 import lombok.Getter;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URL;
 import java.security.DigestInputStream;
@@ -30,6 +32,7 @@ public class Updater {
     private static final Logger logger = LogManager.getLogger("Nailed-Updater");
     private static final String SERVER = "http://maven.reening.nl/";
     private static final String VERSIONS_URL = SERVER + "nailed/versions-1.json";
+    private static final File VERSIONS_FILE = new File("nailedVersions.json");
 
     @Getter private static RestartLevel restart = RestartLevel.NOTHING;
 
@@ -40,8 +43,8 @@ public class Updater {
         //DownloadMonitor monitor = new DownloadMonitor();
         //int progress = 0;
 
-        LibraryList remote = readRemoteLibraryList();
-        LibraryList local = readLocalLibraryList();
+        LibraryList remote = LibraryList.readFromUrl(VERSIONS_URL);
+        LibraryList local = LibraryList.readFromFile(VERSIONS_FILE);
 
         //monitor.setNote("Cleaning up the mods folder...");
         File modsFolder = resolve("{MC_GAME_DIR}/mods/");
@@ -52,11 +55,6 @@ public class Updater {
                 file.delete();
             }
         }
-        /*for(Library library : local.libraries){
-            if(library.destination.contains("{MC_GAME_DIR}/mods/")){
-                library.rev = -1;
-            }
-        }*/
 
         Set<Library> download = Sets.newHashSet();
 
@@ -105,15 +103,7 @@ public class Updater {
 
         if(updated){
             logger.info("Writing local versions file...");
-            Writer writer = null;
-            try{
-                writer = new FileWriter(new File("nailedVersions.json"));
-                LibraryListSerializer.serializer.toJson(local, writer);
-            }catch(Exception e){
-                //NOOP
-            }finally{
-                IOUtils.closeQuietly(writer);
-            }
+            local.writeToFile(VERSIONS_FILE);
         }
 
         logger.info("Moving artifacts to the mod folder");
@@ -169,42 +159,6 @@ public class Updater {
         if(in.endsWith("/")){
             return in.substring(0, in.length() - 1);
         }else return in;
-    }
-
-    private static LibraryList readRemoteLibraryList(){
-        Reader reader = null;
-        LibraryList ret;
-        try{
-            URL url = new URL(VERSIONS_URL);
-            reader = new InputStreamReader(url.openStream());
-            ret = LibraryListSerializer.serializer.fromJson(reader, LibraryList.class);
-        }catch(Exception e){
-            logger.error("Exception while reading remote version data", e);
-            ret = new LibraryList();
-        }finally{
-            IOUtils.closeQuietly(reader);
-        }
-        return ret;
-    }
-
-    private static LibraryList readLocalLibraryList(){
-        Reader reader = null;
-        LibraryList ret;
-        try{
-            File file = new File("nailedVersions.json");
-            if(file.exists()){
-                reader = new FileReader(file);
-                ret = LibraryListSerializer.serializer.fromJson(reader, LibraryList.class);
-            }else{
-                ret = new LibraryList();
-            }
-        }catch(Exception e){
-            logger.error("Exception while reading local version data", e);
-            ret = new LibraryList();
-        }finally{
-            IOUtils.closeQuietly(reader);
-        }
-        return ret;
     }
 
     private static File getMinecraftFolder(){

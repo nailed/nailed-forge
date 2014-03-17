@@ -7,6 +7,7 @@ import javax.swing.*;
  *
  * @author jk-5
  */
+@SuppressWarnings("unused")
 public class DownloadMonitor {
 
     private final ProgressMonitor monitor;
@@ -22,7 +23,6 @@ public class DownloadMonitor {
     }
 
     public void setNote(String note){
-        System.out.println(note);
         monitor.setNote(note);
     }
 
