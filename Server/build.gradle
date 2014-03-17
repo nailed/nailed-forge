@@ -8,7 +8,9 @@ jar.manifest{
 dependencies {
     packed 'pircbot:pircbot:1.5.0'
     packed 'com.ning:async-http-client:1.8.3'
+
     compile rootProject
     compile project(":Common")
     compile project(":API")
+    runtime project(":CrashReporter")
 }
