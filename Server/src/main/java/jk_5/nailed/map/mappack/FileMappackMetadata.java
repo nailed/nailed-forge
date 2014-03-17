@@ -2,11 +2,11 @@ package jk_5.nailed.map.mappack;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import jk_5.nailed.api.ChatColor;
 import jk_5.nailed.api.WeatherType;
 import jk_5.nailed.api.map.MappackMetadata;
 import jk_5.nailed.api.map.team.TeamBuilder;
 import jk_5.nailed.map.Spawnpoint;
+import jk_5.nailed.util.ChatColor;
 import jk_5.nailed.util.config.ConfigFile;
 import jk_5.nailed.util.config.ConfigTag;
 import lombok.Getter;

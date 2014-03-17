@@ -1,6 +1,5 @@
 package jk_5.nailed.util;
 
-import jk_5.nailed.api.ChatColor;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;

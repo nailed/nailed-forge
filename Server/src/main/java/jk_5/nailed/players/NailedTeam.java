@@ -1,13 +1,13 @@
 package jk_5.nailed.players;
 
 import com.google.common.collect.Lists;
-import jk_5.nailed.api.ChatColor;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.scoreboard.ScoreboardTeam;
 import jk_5.nailed.api.map.team.Team;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.map.Spawnpoint;
+import jk_5.nailed.util.ChatColor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;

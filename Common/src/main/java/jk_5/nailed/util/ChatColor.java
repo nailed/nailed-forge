@@ -1,4 +1,4 @@
-package jk_5.nailed.api;
+package jk_5.nailed.util;
 
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.Validate;
@@ -6,7 +6,6 @@ import org.apache.commons.lang3.Validate;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-@Deprecated
 public enum ChatColor {
     BLACK('0', 0x00),
     DARK_BLUE('1', 0x1),

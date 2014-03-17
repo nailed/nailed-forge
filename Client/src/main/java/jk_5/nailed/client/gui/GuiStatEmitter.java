@@ -3,7 +3,7 @@ package jk_5.nailed.client.gui;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import jk_5.nailed.client.blocks.tileentity.IGuiTileEntity;
-import jk_5.nailed.client.util.StatMode;
+import jk_5.nailed.map.stat.StatMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;

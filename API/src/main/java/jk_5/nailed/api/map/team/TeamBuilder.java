@@ -1,7 +1,7 @@
 package jk_5.nailed.api.map.team;
 
-import jk_5.nailed.api.ChatColor;
 import jk_5.nailed.api.map.Map;
+import jk_5.nailed.util.ChatColor;
 
 /**
  * No description given

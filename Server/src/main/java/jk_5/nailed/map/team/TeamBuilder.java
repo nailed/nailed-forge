@@ -1,9 +1,9 @@
 package jk_5.nailed.map.team;
 
-import jk_5.nailed.api.ChatColor;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.team.Team;
 import jk_5.nailed.players.NailedTeam;
+import jk_5.nailed.util.ChatColor;
 import lombok.Getter;
 import lombok.Setter;
 
