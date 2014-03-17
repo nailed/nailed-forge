@@ -52,13 +52,15 @@ public class JsonTest {
         lib.name = "name";
         lib.location = "location";
         lib.destination = "dest";
+        lib.mod = true;
 
         Assert.assertEquals(
                 "{\n" +
                         "  \"rev\": 0,\n" +
                         "  \"destination\": \"dest\",\n" +
                         "  \"location\": \"location\",\n" +
-                        "  \"restart\": \"nothing\"\n" +
+                        "  \"restart\": \"nothing\",\n" +
+                        "  \"mod\": true\n" +
                         "}", this.gson.toJson(lib));
     }
 
@@ -68,7 +70,8 @@ public class JsonTest {
                 "  \"rev\": 0,\n" +
                 "  \"destination\": \"dest\",\n" +
                 "  \"location\": \"location\",\n" +
-                "  \"restart\": \"nothing\"\n" +
+                "  \"restart\": \"nothing\",\n" +
+                "  \"mod\": true\n" +
                 "}", Library.class);
 
         Assert.assertNotNull("Output should not be null", lib);
@@ -76,6 +79,7 @@ public class JsonTest {
         Assert.assertEquals("Destination should equal \"dest\"", "dest", lib.destination);
         Assert.assertEquals("Location should equal \"location\"", "location", lib.location);
         Assert.assertEquals("RestartLevel should equal RestartLevel.NOTHING", RestartLevel.NOTHING, lib.restart);
+        Assert.assertTrue("Mod should be true", lib.mod);
         Assert.assertNull("Name should not be touched", lib.name);
     }
 
@@ -88,6 +92,7 @@ public class JsonTest {
         lib.name = "name";
         lib.location = "location";
         lib.destination = "dest";
+        lib.mod = false;
 
         list.libraries.add(lib);
 
@@ -97,7 +102,8 @@ public class JsonTest {
                         "    \"rev\": 0,\n" +
                         "    \"destination\": \"dest\",\n" +
                         "    \"location\": \"location\",\n" +
-                        "    \"restart\": \"nothing\"\n" +
+                        "    \"restart\": \"nothing\",\n" +
+                        "    \"mod\": false\n" +
                         "  }\n" +
                         "}", this.gson.toJson(list));
     }
@@ -111,6 +117,7 @@ public class JsonTest {
         lib.name = "name";
         lib.location = "location";
         lib.destination = "dest";
+        lib.mod = true;
         list.libraries.add(lib);
 
         lib = new Library();
@@ -119,6 +126,7 @@ public class JsonTest {
         lib.name = "name2";
         lib.location = "location2";
         lib.destination = "dest2";
+        lib.mod = false;
         list.libraries.add(lib);
 
         Assert.assertEquals(
@@ -127,13 +135,15 @@ public class JsonTest {
                         "    \"rev\": 0,\n" +
                         "    \"destination\": \"dest\",\n" +
                         "    \"location\": \"location\",\n" +
-                        "    \"restart\": \"nothing\"\n" +
+                        "    \"restart\": \"nothing\",\n" +
+                        "    \"mod\": true\n" +
                         "  },\n" +
                         "  \"name2\": {\n" +
                         "    \"rev\": 1,\n" +
                         "    \"destination\": \"dest2\",\n" +
                         "    \"location\": \"location2\",\n" +
-                        "    \"restart\": \"game\"\n" +
+                        "    \"restart\": \"game\",\n" +
+                        "    \"mod\": false\n" +
                         "  }\n" +
                         "}", this.gson.toJson(list));
     }
@@ -145,7 +155,8 @@ public class JsonTest {
                 "    \"rev\": 0,\n" +
                 "    \"destination\": \"dest\",\n" +
                 "    \"location\": \"location\",\n" +
-                "    \"restart\": \"nothing\"\n" +
+                "    \"restart\": \"nothing\",\n" +
+                "    \"mod\": true\n" +
                 "  }\n" +
                 "}", LibraryList.class);
 
@@ -158,6 +169,7 @@ public class JsonTest {
         Assert.assertEquals("Location should equal \"location\"", "location", lib.location);
         Assert.assertEquals("RestartLevel should equal RestartLevel.NOTHING", RestartLevel.NOTHING, lib.restart);
         Assert.assertEquals("Name should equal \"name\"", "name", lib.name);
+        Assert.assertTrue("Mod should equal true", lib.mod);
     }
 
     @Test
@@ -167,13 +179,15 @@ public class JsonTest {
                 "    \"rev\": 0,\n" +
                 "    \"destination\": \"dest\",\n" +
                 "    \"location\": \"location\",\n" +
-                "    \"restart\": \"nothing\"\n" +
+                "    \"restart\": \"nothing\",\n" +
+                "    \"mod\": true\n" +
                 "  },\n" +
                 "  \"name2\": {\n" +
                 "    \"rev\": 1,\n" +
                 "    \"destination\": \"dest2\",\n" +
                 "    \"location\": \"location2\",\n" +
-                "    \"restart\": \"game\"\n" +
+                "    \"restart\": \"game\",\n" +
+                "    \"mod\": false\n" +
                 "  }\n" +
                 "}", LibraryList.class);
 
@@ -186,11 +200,13 @@ public class JsonTest {
         Assert.assertEquals("Location should equal \"location\"", "location", lib.location);
         Assert.assertEquals("RestartLevel should equal RestartLevel.NOTHING", RestartLevel.NOTHING, lib.restart);
         Assert.assertEquals("Name should equal \"name\"", "name", lib.name);
+        Assert.assertTrue("Mod should equal true", lib.mod);
         lib = list.libraries.get(1);
         Assert.assertEquals("Rev should equal 1", 1, lib.rev);
         Assert.assertEquals("Destination should equal \"dest2\"", "dest2", lib.destination);
         Assert.assertEquals("Location should equal \"location2\"", "location2", lib.location);
         Assert.assertEquals("RestartLevel should equal RestartLevel.GAME", RestartLevel.GAME, lib.restart);
         Assert.assertEquals("Name should equal \"name2\"", "name2", lib.name);
+        Assert.assertFalse("Mod should equal false", lib.mod);
     }
 }
