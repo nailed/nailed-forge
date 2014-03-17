@@ -117,7 +117,7 @@ public class Updater {
         }
 
         logger.info("Moving artifacts to the mod folder");
-        for(Library library : local.libraries){
+        for(Library library : remote.libraries){
             if(library.mod){
                 try{
                     logger.info("Moving " + library.name + " to the mods folder");
