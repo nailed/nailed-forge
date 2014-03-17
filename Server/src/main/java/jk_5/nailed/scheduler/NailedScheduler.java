@@ -1,5 +1,6 @@
 package jk_5.nailed.scheduler;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import jk_5.nailed.NailedLog;
@@ -65,7 +66,7 @@ public class NailedScheduler implements Scheduler {
      */
     private final ConcurrentHashMap<Integer, NailedTask> runners = new ConcurrentHashMap<Integer, NailedTask>();
     private volatile int currentTick = -1;
-    private final Executor executor = Executors.newCachedThreadPool();
+    private final Executor executor = Executors.newCachedThreadPool(new ThreadFactoryBuilder().setNameFormat("NailedSchedulerWorker-%d").build());
     private NailedASyncDebugger debugHead = new NailedASyncDebugger(-1, null) {@Override StringBuilder debugTo(StringBuilder string) {return string;}};
     private NailedASyncDebugger debugTail = debugHead;
     private static final int RECENT_TICKS;
