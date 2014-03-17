@@ -1,6 +1,5 @@
 package jk_5.nailed.blocks;
 
-import jk_5.nailed.blocks.tileentity.TileEntityElevator;
 import jk_5.nailed.blocks.tileentity.TileEntityStatEmitter;
 import jk_5.nailed.blocks.tileentity.TileEntityStatModifier;
 import net.minecraft.block.ITileEntityProvider;
@@ -44,8 +43,6 @@ public class BlockStat extends BlockMulti implements ITileEntityProvider {
             return new TileEntityStatEmitter();
         }else if(meta == 1){
             return new TileEntityStatModifier();
-        }else if(meta == 2){
-            return new TileEntityElevator();
         }
         return null;
     }
@@ -60,6 +57,7 @@ public class BlockStat extends BlockMulti implements ITileEntityProvider {
         return meta;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void getSubBlocks(Item item, CreativeTabs tab, List list){
         list.add(new ItemStack(item, 1, 0));

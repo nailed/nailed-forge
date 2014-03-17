@@ -1,7 +1,6 @@
 package jk_5.nailed.blocks;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import jk_5.nailed.blocks.tileentity.TileEntityElevator;
 import jk_5.nailed.blocks.tileentity.TileEntityPortalController;
 import jk_5.nailed.blocks.tileentity.TileEntityStatEmitter;
 import jk_5.nailed.blocks.tileentity.TileEntityStatModifier;
@@ -39,7 +38,6 @@ public class NailedBlocks {
         GameRegistry.registerTileEntity(TileEntityPortalController.class, "nailed.portalController");
         GameRegistry.registerTileEntity(TileEntityStatEmitter.class, "nailed.stat");
         GameRegistry.registerTileEntity(TileEntityStatModifier.class, "nailed.statmodifier");
-        GameRegistry.registerTileEntity(TileEntityElevator.class, "nailed.elevator");
 
         PermissionsManager.registerPermission(TileEntityStatEmitter.PERMNODE, RegisteredPermValue.OP);
     }
