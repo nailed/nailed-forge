@@ -14,3 +14,9 @@ dependencies {
     compile project(":API")
     runtime project(":CrashReporter")
 }
+
+rootProject.tasks.reobf {
+    reobf(tasks.jar) { spec ->
+        spec.classpath = sourceSets.main.compileClasspath
+    }
+}
