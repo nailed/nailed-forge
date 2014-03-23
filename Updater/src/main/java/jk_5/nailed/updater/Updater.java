@@ -18,7 +18,9 @@ import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * No description given
@@ -31,7 +33,17 @@ public class Updater {
     private static final String SERVER = "http://maven.reening.nl/";
     private static final String VERSIONS_URL = SERVER + "nailed/versions-2.json";
     private static final File VERSIONS_FILE = new File("nailedVersions.json");
-    private static final Executor downloadThreadPool = Executors.newCachedThreadPool();
+    private static final Executor downloadThreadPool = Executors.newCachedThreadPool(new ThreadFactory() {
+        private int id = 0;
+        @Override
+        @SuppressWarnings("NullableProblems")
+        public Thread newThread(Runnable r){
+            Thread t = new Thread(r);
+            t.setDaemon(true);
+            t.setName("DownloadThread-#" + id++);
+            return t;
+        }
+    });
 
     @Getter private static RestartLevel restart = RestartLevel.NOTHING;
 
@@ -39,24 +51,33 @@ public class Updater {
     public static boolean checkForUpdates(){
         logger.info("Checking for updates...");
 
-        //DownloadMonitor monitor = new DownloadMonitor();
-        //int progress = 0;
+        final DownloadMonitor monitor = new DownloadMonitor();
+        final AtomicInteger progress = new AtomicInteger(0);
 
+        monitor.setNote("Reading remote versions");
         LibraryList remote = LibraryList.readFromUrl(VERSIONS_URL);
+        monitor.setNote("Reading local versions");
         final LibraryList local = LibraryList.readFromFile(VERSIONS_FILE);
 
-        //monitor.setNote("Cleaning up the mods folder...");
+        monitor.setNote("Cleaning up the mods folder...");
         File modsFolder = resolve("{MC_GAME_DIR}/mods/");
         if(!modsFolder.exists()) modsFolder.mkdir();
+        monitor.setProgress(0);
+        monitor.setMaximum(modsFolder.listFiles().length);
         for(File file : modsFolder.listFiles()){
             if(file.getName().contains("Nailed") || file.getName().contains("nailed")){
                 logger.info("Found nailed related file " + file.getName() + " in mods folder. Removing it!");
                 file.delete();
             }
+            monitor.setProgress(progress.getAndIncrement());
         }
 
         Set<Library> download = Sets.newHashSet();
 
+        monitor.setNote("Scanning artifact versions");
+        monitor.setProgress(0);
+        monitor.setMaximum(remote.libraries.size());
+        progress.set(0);
         for(Library library : remote.libraries){
             Library loc = null;
             for(Library l : local.libraries){
@@ -75,11 +96,16 @@ public class Updater {
                     download.add(library); //Outdated. Redownload!
                 }
             }
+            monitor.setProgress(progress.getAndIncrement());
         }
 
         final AtomicBoolean updated = new AtomicBoolean(false);
         final CountDownLatch latch = new CountDownLatch(download.size());
 
+        monitor.setProgress(0);
+        monitor.setMaximum(download.size());
+        progress.set(0);
+        monitor.setNote("Downloading updates");
         for(final Library library : download){
             downloadThreadPool.execute(new Runnable() {
                 @Override
@@ -113,9 +139,9 @@ public class Updater {
                         }
                     }
                     logger.info("Finished updating " + library.name + " (Took " + (System.currentTimeMillis() - startTime) + "ms)");
+                    monitor.setProgress(progress.getAndIncrement());
                     latch.countDown();
                 }
-                //monitor.setProgress(progress++);
             });
         }
 
@@ -125,27 +151,36 @@ public class Updater {
             logger.error("Error while waiting for the updates to happen", e);
         }
 
+        monitor.setProgress(0);
+        monitor.setMaximum(0);
+        progress.set(0);
+        monitor.setNote("Writing local versions file");
+
         if(updated.get()){
             logger.info("Writing local versions file...");
             local.writeToFile(VERSIONS_FILE);
         }
 
-        logger.info("Moving artifacts to the mod folder");
-        for(Library library : remote.libraries){
-            if(library.mod){
-                try{
-                    logger.info("Moving " + library.name + " to the mods folder");
-                    File location = resolve(library.destination);
-                    File dest = resolve("{MC_GAME_DIR}/mods/" + location.getName());
-                    FileUtils.copyFile(location, dest);
-                    dest.deleteOnExit();
-                }catch(IOException e){
-                    logger.error("Error while moving file " + library.name, e);
+        if(restart == RestartLevel.NOTHING){
+            logger.info("Moving artifacts to the mod folder");
+            for(Library library : remote.libraries){
+                if(library.mod){
+                    try{
+                        monitor.setNote("Moving " + library.name + " to the mods folder");
+                        logger.info("  Moving " + library.name + " to the mods folder");
+                        File location = resolve(library.destination);
+                        File dest = resolve("{MC_GAME_DIR}/mods/" + location.getName());
+                        FileUtils.copyFile(location, dest);
+                        dest.deleteOnExit();
+                    }catch(IOException e){
+                        logger.error("Error while moving file " + library.name, e);
+                    }
+                    monitor.setProgress(progress.getAndIncrement());
                 }
             }
         }
 
-        //monitor.close();
+        monitor.close();
         return updated.get();
     }
 
