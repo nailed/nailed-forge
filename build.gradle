@@ -37,7 +37,7 @@ version = '2.0-SNAPSHOT'
 
 nailed {
     minecraftVersion = '1.7.2'         //minecraft.version
-    forgeVersion = '10.12.0.1040'      //
+    forgeVersion = '10.12.0.1047'      //
 
     versionName = 'Nailed-1.7.2'
     mainClass = 'net.minecraft.launchwrapper.Launch'//
@@ -87,8 +87,12 @@ subprojects {
         destinationDir = new File(rootProject.getBuildDir(), 'libs')
 
         manifest {
-            attributes 'version': project.version
-            attributes 'mcversion': rootProject.minecraft.version
+            attributes 'Specification-Title': 'Nailed PVP Mod for Minecraft'
+            attributes 'Specification-Version': project.version
+            attributes 'Specification-Vendor': 'jk-5'
+            attributes 'Implementation-Title': 'jk_5.nailed'
+            attributes 'Implementation-Version': project.version
+            attributes 'Implementation-Vendor': 'jk-5'
         }
 
         from {
