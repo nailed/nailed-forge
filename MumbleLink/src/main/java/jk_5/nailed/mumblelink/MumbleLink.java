@@ -6,6 +6,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.Vec3;
 
 /**
@@ -13,7 +14,7 @@ import net.minecraft.util.Vec3;
  *
  * @author jk-5
  */
-@Mod(modid = "Nailed|Mumble", name = "NailedMumble", version = "0.1", dependencies = "required-after:Nailed")
+@Mod(modid = "NailedMumble", name = "NailedMumble", version = "0.1", dependencies = "required-after:Nailed")
 public class MumbleLink {
 
     private static final long notificationDelay = 100;
@@ -44,7 +45,7 @@ public class MumbleLink {
                         }
                         if(start + notificationDelay < now){
                             this.messagePrinted = true;
-                            mc.thePlayer.sendChatMessage("Linked to mumble");
+                            mc.thePlayer.addChatMessage(new ChatComponentText("Linked to mumble"));
                         }
                     }
                 }else{
