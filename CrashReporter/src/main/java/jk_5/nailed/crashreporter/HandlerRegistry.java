@@ -1,8 +1,5 @@
 package jk_5.nailed.crashreporter;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-
 import java.util.*;
 
 /**
@@ -12,7 +9,7 @@ import java.util.*;
  */
 public class HandlerRegistry {
 
-    private static final Map<String, PasteProvider> pasteProviders = Maps.newLinkedHashMap();
+    private static final Map<String, PasteProvider> pasteProviders = new LinkedHashMap<String, PasteProvider>();
     private static final Map<String, NotificationHandler> notificationHandlers = new HashMap<String, NotificationHandler>();
 
     public static void registerPasteProvider(String id, PasteProvider provider){
@@ -48,7 +45,7 @@ public class HandlerRegistry {
     }
 
     public static List<NotificationHandler> getNotificationHandlers(){
-        List<NotificationHandler> handlers = Lists.newArrayListWithCapacity(notificationHandlers.size());
+        List<NotificationHandler> handlers = new ArrayList<NotificationHandler>(notificationHandlers.size());
         handlers.addAll(notificationHandlers.values());
         return handlers;
     }

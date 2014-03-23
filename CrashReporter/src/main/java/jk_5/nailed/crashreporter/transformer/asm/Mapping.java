@@ -1,8 +1,5 @@
 package jk_5.nailed.crashreporter.transformer.asm;
 
-import com.google.common.base.Objects;
-import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
-import net.minecraft.launchwrapper.LaunchClassLoader;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.commons.Remapper;
 import org.objectweb.asm.tree.FieldInsnNode;
@@ -10,7 +7,7 @@ import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * No description given
@@ -18,19 +15,6 @@ import java.io.IOException;
  * @author jk-5
  */
 public class Mapping {
-
-    public static Remapper runtimeMapper = FMLDeobfuscatingRemapper.INSTANCE;
-
-    public static final boolean obfuscated;
-
-    static{
-        boolean obf = true;
-        try{
-            obf = ((LaunchClassLoader) Mapping.class.getClassLoader()).getClassBytes("net.minecraft.world.World") == null;
-        }catch(IOException iox){
-        }
-        obfuscated = obf;
-    }
 
     public String owner;
     public String name;
@@ -132,7 +116,7 @@ public class Mapping {
 
     @Override
     public int hashCode(){
-        return Objects.hashCode(this.desc, this.name, this.owner);
+        return Arrays.hashCode(new Object[]{this.desc, this.name, this.owner});
     }
 
     @Override

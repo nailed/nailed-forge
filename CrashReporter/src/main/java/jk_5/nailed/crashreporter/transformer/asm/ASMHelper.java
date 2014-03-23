@@ -1,10 +1,14 @@
 package jk_5.nailed.crashreporter.transformer.asm;
 
+import jk_5.nailed.crashreporter.CrashReporter;
+import net.minecraft.launchwrapper.Launch;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
+
+import java.io.IOException;
 
 /**
  * No description given
@@ -12,6 +16,21 @@ import org.objectweb.asm.tree.MethodNode;
  * @author jk-5
  */
 public class ASMHelper {
+
+    public static final boolean obfuscated;
+
+    static{
+        byte[] b = null;
+        try{
+            b = Launch.classLoader.getClassBytes("net.minecraft.world.World");
+        }catch(IOException ignored){}
+        obfuscated = b == null;
+        if(obfuscated){
+            CrashReporter.getLogger().info("Obfuscated environment!");
+        }else{
+            CrashReporter.getLogger().info("Deobfuscated environment!");
+        }
+    }
 
     public static MethodNode findMethod(Mapping methodmap, ClassNode cnode){
         for(MethodNode mnode : cnode.methods){

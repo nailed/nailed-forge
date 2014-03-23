@@ -9,6 +9,8 @@ dependencies {
     compile rootProject
     packed 'jk_5.asyncirc:ASyncIRCClient:0.1-SNAPSHOT'
     compile project(":Common")
+    runtime project(":MumbleLink")
+    runtime project(":CrashReporter")
 }
 
 rootProject.tasks.reobf {

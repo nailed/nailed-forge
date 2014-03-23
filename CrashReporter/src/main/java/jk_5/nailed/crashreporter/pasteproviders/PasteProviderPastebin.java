@@ -1,10 +1,10 @@
 package jk_5.nailed.crashreporter.pasteproviders;
 
-import com.google.common.collect.Maps;
 import jk_5.nailed.crashreporter.HttpUtils;
 import jk_5.nailed.crashreporter.PasteProvider;
 
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -16,7 +16,7 @@ public class PasteProviderPastebin implements PasteProvider {
 
     @Override
     public String paste(String title, String text) throws PasteException{
-        Map<String, String> vars = Maps.newHashMap();
+        Map<String, String> vars = new HashMap<String, String>();
         vars.put("api_dev_key", "70550f0bde9c48dc70fb37153c042348");
         vars.put("api_option", "paste");
         vars.put("api_paste_code", text);

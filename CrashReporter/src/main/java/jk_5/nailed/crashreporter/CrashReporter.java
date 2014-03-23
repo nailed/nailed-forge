@@ -1,12 +1,13 @@
 package jk_5.nailed.crashreporter;
 
 import lombok.Getter;
-import net.minecraft.crash.CrashReport;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.management.ServerConfigurationManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * No description given
@@ -17,26 +18,28 @@ public class CrashReporter {
 
     @Getter
     private static final Logger logger = LogManager.getLogger("CrashReporter");
+    public static String username = "unknown";
 
-    public static void report(CrashReport report){
-        logger.info("Received report: " + report.getCrashCause().getMessage());
-        report(report.getDescription(), report.getCompleteReport());
-    }
-
-    public static void report(String title, String text){
-        try{
+    /**
+     * This method is called by an ASM hook we inject into CrashReport.saveToFile()
+     *
+     * @param cause The cause of the crash
+     * @param text The content of the crashreport
+     */
+    @SuppressWarnings("unused")
+    public static void report(Throwable cause, String text){
+        String message = cause.toString();
+        /*try{
             kickAllPlayers();
-        }catch(Exception e){
-
-        }
+        }catch(Exception ignored){}*/
 
         String link = null;
         for(PasteProvider provider : HandlerRegistry.getPasteProviders()){
             try{
-                link = provider.paste(title, text);
+                link = provider.paste(message, text);
                 break;
             }catch(Throwable e){
-                e.printStackTrace();
+                logger.error("Error while pasting to " + provider.getClass().getSimpleName(), e);
             }
         }
 
@@ -49,17 +52,55 @@ public class CrashReporter {
 
         for(NotificationHandler handler : HandlerRegistry.getNotificationHandlers()){
             try{
-                handler.notify(title, text, link);
+                handler.notify(message, text, link);
             }catch(Throwable e){
-                e.printStackTrace();
+                logger.error(handler.getClass().getSimpleName() + " has thrown an Exception while attempting to notify", e);
             }
         }
     }
 
     private static void kickAllPlayers(){
-        ServerConfigurationManager manager = MinecraftServer.getServer().getConfigurationManager();
+        /*ServerConfigurationManager manager = MinecraftServer.getServer().getConfigurationManager();
         while(!manager.playerEntityList.isEmpty()){
             ((EntityPlayerMP) manager.playerEntityList.get(0)).playerNetServerHandler.kickPlayerFromServer("Server Crashed!");
+        }*/
+    }
+
+    public static void report(Thread thread, Throwable cause){
+        StringBuilder builder = new StringBuilder();
+        builder.append("**** Nailed crashed while starting ****");
+        builder.append("\n\n");
+        builder.append("Time: ");
+        builder.append(new SimpleDateFormat().format(new Date()));
+        builder.append("\n");
+        builder.append("Username: ");
+        builder.append(username);
+        builder.append("\n");
+        builder.append("Crashed Thread: ");
+        builder.append(thread.getName());
+        builder.append("\n\n");
+        appendThrowable(builder, cause);
+        builder.append("\n");
+        report(cause, builder.toString());
+    }
+
+    public static void report(Throwable cause){
+        report(Thread.currentThread(), cause);
+    }
+
+    private static void appendThrowable(StringBuilder b, Throwable t){
+        StringWriter stringwriter = null;
+        PrintWriter printwriter = null;
+        try{
+            stringwriter = new StringWriter();
+            printwriter = new PrintWriter(stringwriter);
+            t.printStackTrace(printwriter);
+            b.append(stringwriter.toString());
+        }catch(Exception e){
+            b.append(t.toString());
+        }finally{
+            if(stringwriter != null) try{stringwriter.close();}catch(Exception ignored){}
+            if(printwriter != null) try{printwriter.close();}catch(Exception ignored){}
         }
     }
 }

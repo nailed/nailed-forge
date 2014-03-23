@@ -1,17 +1,7 @@
-version = '0.1-SNAPSHOT'
-
-jar.manifest{
-    attributes 'FMLCorePlugin': 'jk_5.nailed.crashreporter.Loader'
-}
+version = '1.2'
 
 dependencies{
-    compile rootProject
+    compile 'net.minecraft:launchwrapper:1.9'
 
-    packed 'jk_5.asyncirc:ASyncIRCClient:0.1-SNAPSHOT'
-}
-
-rootProject.tasks.reobf {
-    reobf(tasks.jar) { spec ->
-        spec.classpath = sourceSets.main.compileClasspath
-    }
+    packed 'jk_5.asyncirc:ASyncIRCClient:0.2-SNAPSHOT'
 }

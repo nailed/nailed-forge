@@ -1,13 +1,9 @@
 package jk_5.nailed.crashreporter;
 
-import net.minecraft.util.HttpUtil;
-
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +23,7 @@ public class HttpUtils {
 
             // fill POST headers
             if(postData != null){
-                data = postData instanceof Map ? HttpUtil.buildPostString((Map<String, String>) postData) : postData.toString();
+                data = postData instanceof Map ? buildPostString((Map<String, String>) postData) : postData.toString();
 
                 connection.setRequestMethod("POST");
                 connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
@@ -84,5 +80,29 @@ public class HttpUtils {
             this.url = url;
             this.headers = Collections.unmodifiableMap(headers);
         }
+    }
+
+    public static String buildPostString(Map<String, String> par0Map){
+        StringBuilder builder = new StringBuilder();
+        for(Entry<String, String> entry : par0Map.entrySet()){
+            if(builder.length() > 0){
+                builder.append('&');
+            }
+            try{
+                builder.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
+            }catch(UnsupportedEncodingException e){
+                e.printStackTrace();
+            }
+            if(entry.getValue() != null){
+                builder.append('=');
+
+                try{
+                    builder.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
+                }catch(UnsupportedEncodingException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        return builder.toString();
     }
 }

@@ -30,3 +30,9 @@ Command permission levels:  (See http://minecraft.gamepedia.com/Server.propertie
 
 Op permission level is configurable
 Command block permission level is 2
+
+LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+Configuration config = ctx.getConfiguration();
+LoggerConfig loggerConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
+loggerConfig.setLevel(Level.ALL);
+ctx.updateLoggers();

@@ -36,21 +36,22 @@ apply plugin: 'forge'
 version = '2.0-SNAPSHOT'
 
 nailed {
-    minecraftVersion = '1.7.2'         //minecraft.version
-    forgeVersion = '10.12.0.1047'      //
+    minecraftVersion = '1.7.2'
+    forgeVersion = '10.12.0.1047'
 
     versionName = 'Nailed-1.7.2'
-    mainClass = 'net.minecraft.launchwrapper.Launch'//
+    mainClass = 'net.minecraft.launchwrapper.Launch'
 
-    loadingMavenUrl = 'http://maven.reening.nl/'    //
+    loadingMavenUrl = 'http://maven.reening.nl/'
 
-    deployedMod = 'Client'                          //
-    deployedMod = 'CrashReporter'                   //
-    deployedMod = 'Common'                          //
-    deployed = 'Updater'                            //
+    deployedMod = 'Client'
+    deployedMod = 'Common'
+    deployed = 'CrashReporter' //TODO: don't do it with deployed!
+    deployed = 'Updater'
 
-    tweaker = 'jk_5.nailed.updater.UpdatingTweaker'     //
-    tweaker = 'cpw.mods.fml.common.launcher.FMLTweaker' //
+    tweaker = 'jk_5.nailed.updater.UpdatingTweaker'
+    tweaker = 'jk_5.nailed.crashreporter.CrashReporterTweaker'
+    tweaker = 'cpw.mods.fml.common.launcher.FMLTweaker'
 
     remoteProfileDir = 'nailed'
 
