@@ -6,21 +6,19 @@ import jk_5.nailed.updater.json.LibraryList;
 import jk_5.nailed.updater.json.RestartLevel;
 import lombok.Getter;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.net.URL;
-import java.security.DigestInputStream;
-import java.security.MessageDigest;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * No description given
@@ -31,8 +29,9 @@ public class Updater {
 
     private static final Logger logger = LogManager.getLogger("Nailed-Updater");
     private static final String SERVER = "http://maven.reening.nl/";
-    private static final String VERSIONS_URL = SERVER + "nailed/versions-1.json";
+    private static final String VERSIONS_URL = SERVER + "nailed/versions-2.json";
     private static final File VERSIONS_FILE = new File("nailedVersions.json");
+    private static final Executor downloadThreadPool = Executors.newCachedThreadPool();
 
     @Getter private static RestartLevel restart = RestartLevel.NOTHING;
 
@@ -44,7 +43,7 @@ public class Updater {
         //int progress = 0;
 
         LibraryList remote = LibraryList.readFromUrl(VERSIONS_URL);
-        LibraryList local = LibraryList.readFromFile(VERSIONS_FILE);
+        final LibraryList local = LibraryList.readFromFile(VERSIONS_FILE);
 
         //monitor.setNote("Cleaning up the mods folder...");
         File modsFolder = resolve("{MC_GAME_DIR}/mods/");
@@ -78,30 +77,55 @@ public class Updater {
             }
         }
 
-        boolean updated = false;
+        final AtomicBoolean updated = new AtomicBoolean(false);
+        final CountDownLatch latch = new CountDownLatch(download.size());
 
-        for(Library library : download){
-            boolean u = updateFile(library);
-            updated |= u;
-            if(u){
-                Iterator<Library> it = local.libraries.iterator();
-                while(it.hasNext()){
-                    Library lib = it.next();
-                    if(lib.name.equals(library.name)){
-                        it.remove();
+        for(final Library library : download){
+            downloadThreadPool.execute(new Runnable() {
+                @Override
+                public void run(){
+                    logger.info("Starting update for " + library.name);
+                    long startTime = System.currentTimeMillis();
+                    boolean u = false;
+                    try{
+                        File dest = resolve(library.destination);
+                        FileUtils.copyURLToFile(new URL(library.location), dest, 20000, 20000);
+                        u = true;
+                    }catch(Exception e){
+                        logger.error("Error while updating file " + library.name, e);
                     }
+                    if(u){
+                        updated.set(true);
+                        synchronized(local){
+                            Iterator<Library> it = local.libraries.iterator();
+                            while(it.hasNext()){
+                                Library lib = it.next();
+                                if(lib.name.equals(library.name)){
+                                    it.remove();
+                                }
+                            }
+                            local.libraries.add(library);
+                        }
+                        if(library.restart == RestartLevel.GAME && restart == RestartLevel.NOTHING){
+                            restart = RestartLevel.GAME;
+                        }else if(library.restart == RestartLevel.LAUNCHER && (restart == RestartLevel.NOTHING || restart == RestartLevel.GAME)){
+                            restart = RestartLevel.LAUNCHER;
+                        }
+                    }
+                    logger.info("Finished updating " + library.name + " (Took " + (System.currentTimeMillis() - startTime) + "ms)");
+                    latch.countDown();
                 }
-                local.libraries.add(library);
-                if(library.restart == RestartLevel.GAME && restart == RestartLevel.NOTHING){
-                    restart = RestartLevel.GAME;
-                }else if(library.restart == RestartLevel.LAUNCHER && (restart == RestartLevel.NOTHING || restart == RestartLevel.GAME)){
-                    restart = RestartLevel.LAUNCHER;
-                }
-            }
-            //monitor.setProgress(progress++);
+                //monitor.setProgress(progress++);
+            });
         }
 
-        if(updated){
+        try{
+            latch.await();
+        }catch(InterruptedException e){
+            logger.error("Error while waiting for the updates to happen", e);
+        }
+
+        if(updated.get()){
             logger.info("Writing local versions file...");
             local.writeToFile(VERSIONS_FILE);
         }
@@ -122,23 +146,7 @@ public class Updater {
         }
 
         //monitor.close();
-        return updated;
-    }
-
-    private static boolean updateFile(Library library){
-        try{
-            logger.info("Downloading " + library.name);
-            File dest = resolve(library.destination);
-            FileUtils.copyURLToFile(new URL(library.location), dest, 20000, 20000);
-            File checksum = new File(dest.getAbsolutePath() + ".sha");
-            FileWriter writer = new FileWriter(checksum);
-            writer.write(getSHA1(dest));
-            writer.close();
-            return true;
-        }catch(Exception e){
-            logger.error("Error while updating file " + library.name, e);
-        }
-        return false;
+        return updated.get();
     }
 
     private static File resolve(String input){
@@ -172,27 +180,5 @@ public class Updater {
         }else{
             return new File(userHomeDir, mcDir);
         }
-    }
-
-    public static String getSHA1(File file){
-        return getDigest(file, "SHA-1", 40);
-    }
-
-    public static String getDigest(File file, String algorithm, int hashLength){
-        DigestInputStream stream = null;
-        try{
-            stream = new DigestInputStream(new FileInputStream(file), MessageDigest.getInstance(algorithm));
-            int read;
-            byte[] buffer = new byte[65536];
-            do{
-                read = stream.read(buffer);
-            }while(read > 0);
-        }catch(Exception ignored){
-            return null;
-        }finally{
-            IOUtils.closeQuietly(stream);
-        }
-
-        return String.format("%1$0" + hashLength + "x", new BigInteger(1, stream.getMessageDigest().digest()));
     }
 }

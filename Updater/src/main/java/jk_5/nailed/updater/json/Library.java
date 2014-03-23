@@ -7,7 +7,7 @@ package jk_5.nailed.updater.json;
  */
 public class Library {
 
-    public transient String name;
+    public String name;
     public int rev;
     public String destination;
     public String location;
