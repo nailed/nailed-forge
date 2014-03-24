@@ -26,7 +26,6 @@ gcc -o src/main/resources/assets/nailedmumble/native/linux64/libMumbleLink.so -m
      -I${JAVAPATH}/ \
      -I${JAVAPATH}/linux \
      -lrt \
-     src/main/c/mumble/c \
-       -lstdc++ \
+     src/main/c/mumble.c \
        -m64 \
        -I/usr/include/c++/4.4/i686-linux-gnu
