@@ -62,10 +62,6 @@ public class ServerMachine extends ServerTerminal implements IMachine {
         return this.machine.isOn();
     }
 
-    public boolean isCursorDisplayed(){
-        return this.machine.isOn() && this.machine.isBlinking();
-    }
-
     public void turnOn(){
         this.machine.turnOn();
     }

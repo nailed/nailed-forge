@@ -1,6 +1,6 @@
 package jk_5.nailed.client.blocks;
 
-import jk_5.nailed.client.NailedClient;
+import jk_5.nailed.client.CreativeTabNailed$;
 import jk_5.nailed.client.blocks.tileentity.NailedTileEntity;
 import lombok.Getter;
 import net.minecraft.block.Block;
@@ -22,7 +22,7 @@ public class NailedBlock extends Block {
         super(material);
         this.registeredName = name;
         this.setBlockName("nailed." + name);
-        this.setCreativeTab(NailedClient.getCreativeTab());
+        this.setCreativeTab(CreativeTabNailed$.MODULE$);
     }
 
     @Override

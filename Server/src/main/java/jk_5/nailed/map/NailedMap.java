@@ -144,7 +144,7 @@ public class NailedMap implements Map {
 
     @Override
     public void onPlayerJoined(Player player){
-        NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.TimeUpdate(true, ""), player.getEntity());
+        NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.TimeUpdate(""), player.getEntity());
         this.scoreboardManager.onPlayerJoinedMap(player);
         this.teamManager.onPlayerJoinedMap(player);
         this.players.add(player);

@@ -23,10 +23,10 @@ public class TerminalGuiHandler extends SimpleChannelInboundHandler<NailedPacket
     }
 
     private ClientMachine getMachine(int id){
-        ClientMachine ret = NailedClient.getMachines().get(id);
+        ClientMachine ret = NailedClient.machines().get(id);
         if(ret == null){
             ret = new ClientMachine(id);
-            NailedClient.getMachines().add(id, ret);
+            NailedClient.machines().add(id, ret);
         }
         return ret;
     }

@@ -3,7 +3,6 @@ package jk_5.nailed.client.skinsync;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import lombok.Getter;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 
@@ -20,7 +19,7 @@ import java.util.concurrent.Executors;
  */
 public class SkinSync {
 
-    @Getter private static final SkinSync instance = new SkinSync();
+    private static final SkinSync instance = new SkinSync();
 
     private final Executor worker = Executors.newCachedThreadPool();
     private final Map<String, String> playerSkinNameMap = Maps.newHashMap();
@@ -65,5 +64,9 @@ public class SkinSync {
 
     public void cacheCapeData(String capeName, BufferedImage image){
         this.capeCache.put(capeName, image);
+    }
+
+    public static SkinSync getInstance(){
+        return instance;
     }
 }

@@ -16,7 +16,7 @@ public abstract class ScriptPacketHandler<T> extends SimpleChannelInboundHandler
 
         @Override
         protected void channelRead0(ChannelHandlerContext ctx, ScriptPacket.UpdateMachine msg) throws Exception{
-            ClientMachine machine = NailedClient.getMachines().get(msg.instanceId);
+            ClientMachine machine = NailedClient.machines().get(msg.instanceId);
             if(machine != null){
                 machine.readData(msg.data);
             }

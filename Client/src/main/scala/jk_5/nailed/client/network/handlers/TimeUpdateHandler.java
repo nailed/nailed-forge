@@ -2,7 +2,7 @@ package jk_5.nailed.client.network.handlers;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import jk_5.nailed.client.render.RenderEventHandler;
+import jk_5.nailed.client.render.TimeUpdateRenderer$;
 import jk_5.nailed.network.NailedPacket;
 
 /**
@@ -14,7 +14,6 @@ public class TimeUpdateHandler extends SimpleChannelInboundHandler<NailedPacket.
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, NailedPacket.TimeUpdate msg) throws Exception{
-        RenderEventHandler.doRender = msg.display;
-        RenderEventHandler.format = msg.data;
+        TimeUpdateRenderer$.MODULE$.format_$eq(msg.data);
     }
 }

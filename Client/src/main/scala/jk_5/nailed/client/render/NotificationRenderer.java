@@ -27,8 +27,8 @@ public class NotificationRenderer {
     private static final ResourceLocation particle = new ResourceLocation("nailed", "textures/misc/particles.png");
 
     public static List<Notification> notifications = Lists.newArrayList();
-    private static final int notificationDelay = NailedClient.getConfig().getTag("notification").getTag("delay").setComment("Delay before an notification will disappear").getIntValue(5000);
-    private static final int notificationMax = NailedClient.getConfig().getTag("notification").getTag("maxNotifications").setComment("Maximum number of notifications").getIntValue(15);
+    private static final int notificationDelay = NailedClient.config().getTag("notification").getTag("delay").setComment("Delay before an notification will disappear").getIntValue(5000);
+    private static final int notificationMax = NailedClient.config().getTag("notification").getTag("maxNotifications").setComment("Maximum number of notifications").getIntValue(15);
 
     public static void addNotification(String text){
         addNotification(text, null, 0xFFFFFF);
@@ -50,9 +50,9 @@ public class NotificationRenderer {
         List<Notification> ret = Lists.newArrayList();
         boolean first = true;
         for(Notification notification : notifications){
-            if(notification.expire >= time){
+            if(notification.expire() >= time){
                 if(first) ret.add(notification);
-                else ret.add(new Notification(notification.text, notification.image, time + notificationDelay, notification.created, notification.color));
+                else ret.add(new Notification(notification.text(), notification.image(), time + notificationDelay, notification.created(), notification.color()));
             }
             first = false;
         }
@@ -62,7 +62,6 @@ public class NotificationRenderer {
 
     @SubscribeEvent
     public void render(RenderGameOverlayEvent.Post event){
-        Minecraft mc = Minecraft.getMinecraft();
         long time = System.nanoTime() / 1000000L;
         if(event.type == RenderGameOverlayEvent.ElementType.ALL){
             if(getListAndUpdate(time).size() > 0){
@@ -98,14 +97,14 @@ public class NotificationRenderer {
         for (int entry = 0; entry < notifications.size() && entry < notificationMax; entry++) {
             Notification li = notifications.get(entry);
 
-            String text = li.text;
+            String text = li.text();
             int size = mc.fontRenderer.getStringWidth(text);
             int alpha = 255;
-            if(entry == notifications.size() - 1 && li.created > time){
-                alpha = 255 - (int)((float)(li.created - time) / (notificationDelay / 4) * 240.0F);
+            if(entry == notifications.size() - 1 && li.created() > time){
+                alpha = 255 - (int)((float)(li.created() - time) / (notificationDelay / 4) * 240.0F);
             }
-            if (li.expire < time + notificationDelay) {
-                alpha = (int)(255.0F - (float)(time + notificationDelay - li.expire) / notificationDelay * 240.0F);
+            if (li.expire() < time + notificationDelay) {
+                alpha = (int)(255.0F - (float)(time + notificationDelay - li.expire()) / notificationDelay * 240.0F);
                 shift = -8.0F * (alpha / 255.0F);
             }
             int color = (alpha / 2 << 24) + 0xff0000 + 0xff00 + 0xff;
@@ -114,19 +113,19 @@ public class NotificationRenderer {
             mc.fontRenderer.drawString(text, -4, -8, color);
             GL11.glPopMatrix();
 
-            if(li.image != null){
+            if(li.image() != null){
                 GL11.glPushMatrix();
                 GL11.glTranslatef(k - 9, l - entry * 8 + shift - 6.0F, 0.0F);
                 GL11.glScalef(0.03125F, 0.03125F, 0.03125F);
-                mc.getTextureManager().bindTexture(li.image);
-                Color c = new Color(li.color);
+                mc.getTextureManager().bindTexture(li.image());
+                Color c = new Color(li.color());
                 GL11.glColor4f(c.getRed() / 255.0F, c.getGreen() / 255.0F, c.getBlue() / 255.0F, alpha / 511.0F);
                 RenderUtils.drawTexturedQuad(0, 0, 0, 0, 256, 256, -90.0D);
                 GL11.glPopMatrix();
             }
 
-            if (entry == notifications.size() - 1 && li.created > time){
-                float scale = (float)(li.created - time) / (notificationDelay / 4);
+            if (entry == notifications.size() - 1 && li.created() > time){
+                float scale = (float)(li.created() - time) / (notificationDelay / 4);
                 alpha = 255 - (int)(scale * 240.0F);
                 GL11.glPushMatrix();
                 GL11.glTranslatef(k - 6 - 16.0F * scale - (1.0F - scale) * (1.0F - scale) * (1.0F - scale) * size * 3.0F, l - 2 - entry * 8 + shift - 2.0F - 16.0F * scale, 0.0F);

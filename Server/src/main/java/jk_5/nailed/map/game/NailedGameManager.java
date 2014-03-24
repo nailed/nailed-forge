@@ -32,7 +32,7 @@ public class NailedGameManager implements GameManager {
 
     @Override
     public void setCountdownMessage(String message){
-        NailedNetworkHandler.sendPacketToAllPlayersInDimension(new NailedPacket.TimeUpdate(true, message), this.map.getID());
+        NailedNetworkHandler.sendPacketToAllPlayersInDimension(new NailedPacket.TimeUpdate(message), this.map.getID());
     }
 
     @Override

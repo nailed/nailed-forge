@@ -5,6 +5,7 @@ import jk_5.nailed.api.scripting.ILuaAPI;
 import jk_5.nailed.api.scripting.ILuaContext;
 import jk_5.nailed.map.script.IAPIEnvironment;
 import jk_5.nailed.map.script.ScriptingMachine;
+import jk_5.nailed.map.script.ServerMachine;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -44,7 +45,7 @@ public class OSApi implements ILuaAPI {
         this.timers = Lists.newArrayList();
         this.alarms = Lists.newArrayList();
         this.clock = 0.0D;
-        this.time = this.machine.getMachine().getTimeOfDay();
+        this.time = ((ServerMachine) this.machine.getMachine()).getTimeOfDay();
     }
 
     public void advance(double _dt){

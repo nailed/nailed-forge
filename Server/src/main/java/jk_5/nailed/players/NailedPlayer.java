@@ -144,7 +144,7 @@ public class NailedPlayer implements Player {
     }
 
     public void onChangedDimension() {
-        NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.TimeUpdate(true, ""), this.getEntity());
+        NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.TimeUpdate(""), this.getEntity());
         this.sendEditModePacket();
     }
 
@@ -195,7 +195,7 @@ public class NailedPlayer implements Player {
 
     @Override
     public void sendTimeUpdate(String msg){
-        NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.TimeUpdate(true, msg), this.getEntity());
+        NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.TimeUpdate(msg), this.getEntity());
     }
 
     @Override

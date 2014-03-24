@@ -159,13 +159,10 @@ public abstract class NailedPacket {
     @AllArgsConstructor
     public static class TimeUpdate extends NailedPacket {
 
-        public boolean display;
         public String data;
 
         @Override
         public void encode(ByteBuf buffer){
-            buffer.writeBoolean(this.display);
-
             byte[] utf8Bytes = this.data.getBytes(Charsets.UTF_8);
             buffer.writeInt(utf8Bytes.length);
             buffer.writeBytes(utf8Bytes);
@@ -173,8 +170,6 @@ public abstract class NailedPacket {
 
         @Override
         public void decode(ByteBuf buffer){
-            this.display = buffer.readBoolean();
-
             int len = buffer.readInt();
             this.data = buffer.toString(buffer.readerIndex(), len, Charsets.UTF_8);
             buffer.readerIndex(buffer.readerIndex() + len);

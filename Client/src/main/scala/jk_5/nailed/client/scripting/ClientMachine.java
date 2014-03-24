@@ -37,10 +37,6 @@ public class ClientMachine extends ClientTerminal implements IMachine {
         return false;
     }
 
-    public boolean isCursorDisplayed(){
-        return this.on && this.blinking;
-    }
-
     public void turnOn(){
         ClientNetworkHandler.sendPacketToServer(new ScriptPacket.StateEvent(this.instanceId, 0));
     }
@@ -60,16 +56,6 @@ public class ClientMachine extends ClientTerminal implements IMachine {
     @Override
     public World getWorld(){
         return Minecraft.getMinecraft().theWorld;
-    }
-
-    @Override
-    public double getTimeOfDay(){
-        return 0;
-    }
-
-    @Override
-    public int getDay(){
-        return 0;
     }
 
     public void readData(ByteBuf buffer){

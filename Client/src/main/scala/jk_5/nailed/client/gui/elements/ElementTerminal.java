@@ -182,7 +182,7 @@ public class ElementTerminal extends Gui {
         Terminal terminal = this.machine != null ? this.machine.getTerminal() : null;
         if(terminal != null){
             synchronized(terminal){
-                FixedWidthFontRenderer fontRenderer = NailedClient.getFixedWidthFontRenderer();
+                FixedWidthFontRenderer fontRenderer = NailedClient.fixedWidthFontRenderer();
                 boolean tblink = (terminal.isCursorBlink()) && TickHandlerClient.blinkOn();
                 int tw = terminal.getWidth();
                 int th = terminal.getHeight();
