@@ -21,7 +21,7 @@ import org.lwjgl.opengl.GL11;
  */
 public class ElementTerminal extends Gui {
 
-    private static final ResourceLocation background = new ResourceLocation("nailed", "textures/gui/terminal-bg.png");
+    private static final ResourceLocation background = new ResourceLocation("nailed", "textures/terminal/terminal-bg.png");
     private static int MARGIN = 2;
 
     @Getter private int xPosition;

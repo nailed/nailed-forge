@@ -15,7 +15,7 @@ import org.lwjgl.opengl.GL11;
  */
 public class GuiTerminal extends GuiScreen {
 
-    private static final ResourceLocation background = new ResourceLocation("nailed", "textures/gui/terminal.png");
+    private static final ResourceLocation border = new ResourceLocation("nailed", "textures/terminal/terminal-border.png");
     private IMachine machine;
     private ElementTerminal terminalBox = null;
     private int terminalWidth;
@@ -88,7 +88,7 @@ public class GuiTerminal extends GuiScreen {
         this.terminalBox.draw(this.mc, startX, startY);
 
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.getTextureManager().bindTexture(background);
+        this.mc.getTextureManager().bindTexture(border);
 
         this.drawTexturedModalRect(startX - 12, startY - 12, 12, 28, 12, 12);
         this.drawTexturedModalRect(startX - 12, endY, 12, 40, 12, 16);

@@ -52,7 +52,7 @@ public class ConfigTag extends ConfigTagParent {
         setValue(Integer.toString(i));
     }
 
-    public void setDoubleValue(int i) {
+    public void setDoubleValue(double i) {
         setValue(Double.toString(i));
     }
 
@@ -93,7 +93,7 @@ public class ConfigTag extends ConfigTagParent {
         return Double.parseDouble(getValue());
     }
 
-    public double getDoubleValue(int defaultvalue) {
+    public double getDoubleValue(double defaultvalue) {
         if (value == null) {
             setDoubleValue(defaultvalue);
         }
