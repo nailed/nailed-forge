@@ -11,7 +11,7 @@ import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.blocks.NailedBlocks;
 import jk_5.nailed.chat.joinmessage.JoinMessageSender;
 import jk_5.nailed.ipc.IpcManager;
-import jk_5.nailed.irc.IrcBot;
+import jk_5.nailed.irc.IrcConnector;
 import jk_5.nailed.item.NailedItems;
 import jk_5.nailed.map.NailedMapLoader;
 import jk_5.nailed.map.gen.NailedWorldProvider;
@@ -57,7 +57,7 @@ public class NailedServer {
     @SuppressWarnings("unused") @Getter private static ConfigFile config;
     @Getter private static int providerID;
 
-    @Getter private static IrcBot ircBot;
+    @Getter private static IrcConnector ircConnector;
     @Getter private static TeamspeakClient teamspeakClient;
     @Getter private static NailedPermissionFactory permissionFactory;
     @Getter private static File configDir;
@@ -143,8 +143,10 @@ public class NailedServer {
         permissionFactory = new NailedPermissionFactory();
         PermissionsManager.setPermFactory(permissionFactory, NailedServer.modid);
 
-        ircBot = new IrcBot();
+        ircConnector = new IrcConnector();
         teamspeakClient = new TeamspeakClient();
+
+        ircConnector.readConfig(config.getTag("irc"));
     }
 
     @EventHandler
@@ -183,7 +185,7 @@ public class NailedServer {
     @EventHandler
     @SuppressWarnings("unused")
     public void serverStarting(FMLServerStartingEvent event){
-        ircBot.connect();
+        ircConnector.connect();
         teamspeakClient.connect();
 
         CommandHandler ch = (CommandHandler) event.getServer().getCommandManager();

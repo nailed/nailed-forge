@@ -1,5 +1,6 @@
 package jk_5.nailed.map;
 
+import com.google.common.base.Objects;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import jk_5.nailed.util.config.ConfigTag;
@@ -75,15 +76,11 @@ public class Spawnpoint extends ChunkCoordinates {
 
     @Override
     public String toString(){
-        final StringBuffer sb = new StringBuffer("Spawnpoint{");
-        sb.append("x=").append(posX);
-        sb.append(", y=").append(posY);
-        sb.append(", z=").append(posZ);
-        sb.append(", pitch=").append(pitch);
-        sb.append(", yaw=").append(yaw);
-        sb.append(", name=").append(name);
-        sb.append('}');
-        return sb.toString();
+        return Objects.toStringHelper(this)
+                .add("name", name)
+                .add("yaw", yaw)
+                .add("pitch", pitch)
+                .toString();
     }
 
     public void write(ByteBuf buffer){
