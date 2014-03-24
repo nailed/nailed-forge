@@ -1,6 +1,6 @@
 #!/bin/bash
 
-JAVAPATH=/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.51/include
+JAVAPATH=/usr/lib/jvm/java-7-oracle/include
 
 # 32 bit
 rm -R src/main/resources/assets/nailedmumble/native/linux32
