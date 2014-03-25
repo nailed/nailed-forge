@@ -19,6 +19,8 @@ public class NailedAchievements {
     private static Map<String, Achievement> achievements = Maps.newHashMap();
     private static AchievementPage page;
 
+    private static Achievement hotloaded;
+
     public static void addAchievements(){
         registerAchievement("nailed.firstJoin", 0, 0, new ItemStack(Items.golden_apple, 1), null);
     }
@@ -33,5 +35,15 @@ public class NailedAchievements {
         Achievement[] a = achievements.values().toArray(new Achievement[achievements.size()]);
         page = new AchievementPage(StatCollector.translateToLocal("nailed.achievementPage.name"), a);
         AchievementPage.registerAchievementPage(page);
+
+        hotloaded = new Achievement("nailed.testAchievement", "nailed.testAchievement", 5, 0, new ItemStack(Items.bowl, 1), null);
+    }
+
+    public static void register(boolean enable){
+        if(enable){
+            page.getAchievements().add(hotloaded);
+        }else{
+            page.getAchievements().remove(hotloaded);
+        }
     }
 }

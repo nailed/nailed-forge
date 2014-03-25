@@ -28,6 +28,7 @@ public class NailedPacketCodec extends FMLIndexedMessageToMessageCodec<NailedPac
         this.addDiscriminator(10, NailedPacket.FPSSummary.class);
         this.addDiscriminator(11, NailedPacket.OpenTerminalGui.class);
         this.addDiscriminator(12, NailedPacket.EditMode.class);
+        this.addDiscriminator(13, NailedPacket.RegisterAchievement.class);
 
         this.addDiscriminator(20, ScriptPacket.QueueEvent.class);
         this.addDiscriminator(21, ScriptPacket.StateEvent.class);

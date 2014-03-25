@@ -35,6 +35,7 @@ public class ClientNetworkHandler {
         pipeline.addAfter(targetName, "ParticleHandler", new ParticleHandler());
         pipeline.addAfter(targetName, "TerminalGuiHandler", new TerminalGuiHandler());
         pipeline.addAfter(targetName, "MapEditHandler", new MapEditHandler());
+        pipeline.addAfter(targetName, "RegisterAchievementHandler", new RegisterAchievementHandler());
 
         pipeline.addAfter(targetName, "Script-MachineUpdateHandler", new ScriptPacketHandler.MachineUpdateHandler());
     }

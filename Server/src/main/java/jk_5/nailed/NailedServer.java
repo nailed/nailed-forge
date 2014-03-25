@@ -213,6 +213,7 @@ public class NailedServer {
         ch.registerCommand(new CommandTerminal());
         ch.registerCommand(new CommandRandomSpawnpoint());
         ch.registerCommand(new CommandEdit());
+        ch.registerCommand(new CommandRegisterAchievement());
 
         ch.getCommands().remove("tp");
         ch.getCommands().remove("toggledownfall");
