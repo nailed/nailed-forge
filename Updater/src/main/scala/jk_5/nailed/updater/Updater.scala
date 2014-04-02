@@ -36,58 +36,57 @@ object Updater {
   def checkForUpdates(): Boolean = {
     logger.info("Checking for updates...")
 
-    val monitor = new DownloadMonitor
     val progress = new AtomicInteger(0)
 
-    monitor.setNote("Reading remote versions")
+    DownloadMonitor.setNote("Reading remote versions")
     val remote = LibraryList.readFromUrl(this.versionsUrl)
-    monitor.setNote("Reading local versions")
+    DownloadMonitor.setNote("Reading local versions")
     val local = LibraryList.readFromFile(this.versionsFile)
 
-    monitor.setNote("Cleaning up the mods folder...")
+    DownloadMonitor.setNote("Cleaning up the mods folder...")
     val modsFolder = this.resolve("{MC_GAME_DIR}/mods/")
     if(!modsFolder.exists) modsFolder.mkdir
-    monitor.setProgress(0)
-    monitor.setMaximum(modsFolder.listFiles.length)
+    DownloadMonitor.setProgress(0)
+    DownloadMonitor.setMaximum(modsFolder.listFiles.length)
     modsFolder.listFiles.filter(f => f.getName.contains("Nailed") || f.getName.contains("nailed")).foreach(f => {
-      logger.info("Found nailed related file " + f.getName + " in mods folder. Removing it!")
+      logger.info(s"Found nailed related file ${f.getName} in mods folder. Removing it!")
       f.delete
-      monitor.setProgress(progress.getAndIncrement)
+      DownloadMonitor.setProgress(progress.getAndIncrement)
     })
 
     val download = new util.HashSet[Library]()
 
-    monitor.setNote("Scanning artifact versions")
-    monitor.setProgress(0)
-    monitor.setMaximum(remote.libraries.size)
+    DownloadMonitor.setNote("Scanning artifact versions")
+    DownloadMonitor.setProgress(0)
+    DownloadMonitor.setMaximum(remote.libraries.size)
     progress.set(0)
     remote.libraries.foreach(library => {
       val loc = local.libraries.find(_.name == library.name)
       if(loc.isEmpty){
-        logger.info("New remote library " + library.name + " will be downloaded")
+        logger.info(s"New remote library ${library.name} will be downloaded")
         download.add(library)
       }else{
         if(library.rev > loc.get.rev) {
-          logger.info("Library " + library.name + " is outdated")
-          logger.info("  Local rev: " + loc.get.rev)
-          logger.info("  Remote rev: " + library.rev)
+          logger.info(s"Library ${library.name} is outdated")
+          logger.info(s"  Local rev: ${loc.get.rev}")
+          logger.info(s"  Remote rev: ${library.rev}")
           download.add(library)
         }
       }
-      monitor.setProgress(progress.getAndIncrement)
+      DownloadMonitor.setProgress(progress.getAndIncrement)
     })
 
     val updated = new AtomicBoolean(false)
     val latch = new CountDownLatch(download.size)
 
-    monitor.setProgress(0)
-    monitor.setMaximum(download.size)
+    DownloadMonitor.setProgress(0)
+    DownloadMonitor.setMaximum(download.size)
     progress.set(0)
-    monitor.setNote("Downloading updates")
+    DownloadMonitor.setNote("Downloading updates")
     download.foreach(library => {
       downloadThreadPool.execute(new Runnable {
         def run(){
-          logger.info("Starting update for " + library.name)
+          logger.info(s"Starting update for ${library.name}")
           val startTime = System.currentTimeMillis
           var u = false
           try{
@@ -95,7 +94,7 @@ object Updater {
             FileUtils.copyURLToFile(new URL(library.location), dest, 20000, 20000)
             u = true
           }catch{
-            case e: Exception => logger.error("Error while updating file " + library.name, e)
+            case e: Exception => logger.error(s"Error while updating file ${library.name}", e)
           }
           if(u){
             updated.set(true)
@@ -113,8 +112,8 @@ object Updater {
               restart = RestartLevel.LAUNCHER
             }
           }
-          logger.info("Finished updating " + library.name + " (Took " + (System.currentTimeMillis - startTime) + "ms)")
-          monitor.setProgress(progress.getAndIncrement)
+          logger.info(s"Finished updating ${library.name} (Took ${System.currentTimeMillis() - startTime}ms)")
+          DownloadMonitor.setProgress(progress.getAndIncrement)
           latch.countDown()
         }
       })
@@ -122,10 +121,10 @@ object Updater {
 
     latch.await()
 
-    monitor.setProgress(0)
-    monitor.setMaximum(0)
+    DownloadMonitor.setProgress(0)
+    DownloadMonitor.setMaximum(0)
     progress.set(0)
-    monitor.setNote("Writing local versions file")
+    DownloadMonitor.setNote("Writing local versions file")
 
     if(updated.get) {
       logger.info("Writing local versions file...")
@@ -137,8 +136,8 @@ object Updater {
       remote.libraries.foreach(library => {
         if(library.mod) {
           try{
-            monitor.setNote("Moving " + library.name + " to the mods folder")
-            logger.info("  Moving " + library.name + " to the mods folder")
+            DownloadMonitor.setNote(s"Moving ${library.name} to the mods folder")
+            logger.info(s"  Moving ${library.name} to the mods folder")
             val location = resolve(library.destination)
             val dest = resolve("{MC_GAME_DIR}/mods/" + location.getName)
             FileUtils.copyFile(location, dest)
@@ -146,11 +145,11 @@ object Updater {
           }catch{
             case e: IOException => logger.error("Error while moving file " + library.name, e)
           }
-          monitor.setProgress(progress.getAndIncrement)
+          DownloadMonitor.setProgress(progress.getAndIncrement)
         }
       })
     }
-    monitor.close()
+    DownloadMonitor.close()
     updated.get
   }
 
