@@ -1,7 +1,8 @@
 package jk_5.nailed.ipc.packet;
 
-import com.google.gson.JsonObject;
+import io.netty.buffer.ByteBuf;
 import jk_5.nailed.api.player.Player;
+import jk_5.nailed.ipc.PacketUtils;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
@@ -18,14 +19,14 @@ public class PacketPlayerDeath extends IpcPacket {
     private String cause;
 
     @Override
-    public void read(JsonObject json) {
-
+    public void encode(ByteBuf buffer){
+        PacketUtils.writeString(this.player.getUsername(), buffer);
+        PacketUtils.writeString(this.cause, buffer);
     }
 
     @Override
-    public void write(JsonObject json) {
-        json.addProperty("username", this.player.getUsername());
-        json.addProperty("cause", this.cause);
+    public void decode(ByteBuf buffer){
+
     }
 
     @Override

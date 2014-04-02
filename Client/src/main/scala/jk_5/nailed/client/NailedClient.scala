@@ -57,8 +57,8 @@ object NailedClient {
     MinecraftForge.EVENT_BUS.register(new NotificationRenderer())
     MinecraftForge.EVENT_BUS.register(SkinSync.getInstance())
     MinecraftForge.EVENT_BUS.register(MapEditManager.instance())
-    MinecraftForge.EVENT_BUS.register(handler)
-    FMLCommonHandler.instance().bus().register(handler)
+    //MinecraftForge.EVENT_BUS.register(handler)
+    //FMLCommonHandler.instance().bus().register(handler)
     FMLCommonHandler.instance().bus().register(MapEditManager.instance())
     FMLCommonHandler.instance().bus().register(new TickHandlerClient(config))
 

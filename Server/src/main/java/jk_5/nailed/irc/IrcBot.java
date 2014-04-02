@@ -1,11 +1,14 @@
 package jk_5.nailed.irc;
 
+import com.google.common.collect.Lists;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.nio.NioEventLoopGroup;
 import jk_5.asyncirc.IrcConnection;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.util.config.ConfigTag;
+
+import java.util.List;
 
 /**
  * No description given
@@ -26,6 +29,7 @@ public class IrcBot {
     private boolean ssl;
     private String serverPassword;
     private String nickservPassword;
+    private final List<IrcChannel> channels = Lists.newArrayList();
 
     public IrcBot(ConfigTag config){
         this.name = config.name;
@@ -41,8 +45,7 @@ public class IrcBot {
         ConfigTag channelTag = config.getTag("channels").useBraces();
         for(ConfigTag tag : channelTag.getSortedTagList()){
             tag.useBraces();
-            tag.getTag("password").getValue("");
-            tag.getTag("autojoin").getBooleanValue(true);
+            this.channels.add(IrcChannel.read(tag));
         }
     }
 
@@ -60,9 +63,17 @@ public class IrcBot {
                         NailedLog.info("Connected to server " + name);
                     }
                 });
+        this.joinChannels();
     }
 
     private void joinChannels(){
-        connection.joinChannel("#server").awaitUninterruptibly().conversation().sendMessage("HEY FAGGOTS!");
+        for(IrcChannel channel : this.channels){
+            channel.setConversation(this.connection.joinChannel(channel.getName()).conversation());
+            channel.getConversation().addListener(new IrcListener(channel));
+        }
+    }
+
+    public void close(){
+        this.connection.close();
     }
 }

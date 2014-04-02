@@ -13,6 +13,7 @@ import java.util.List;
 public interface PlayerRegistry {
 
     public List<Player> getPlayers();
+    public List<Player> getOnlinePlayers();
     public Player getPlayer(EntityPlayer player);
     public Player getPlayerById(String id);
     public Player getPlayerByUsername(String username);

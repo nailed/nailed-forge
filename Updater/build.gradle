@@ -1,8 +1,10 @@
+apply plugin: 'scala'
+
 version = '0.1'
 
 dependencies {
     compile 'net.minecraft:launchwrapper:1.9'
-    compile 'com.google.guava:guava:15.0'
+    compile 'com.google.guava:guava:15.0' //TODO: remove
     compile 'commons-io:commons-io:2.4'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'org.apache.logging.log4j:log4j-api:2.0-beta9'

@@ -10,6 +10,7 @@ import jk_5.nailed.achievement.NailedAchievements;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.blocks.NailedBlocks;
 import jk_5.nailed.chat.joinmessage.JoinMessageSender;
+import jk_5.nailed.ipc.IpcEventListener;
 import jk_5.nailed.ipc.IpcManager;
 import jk_5.nailed.irc.IrcConnector;
 import jk_5.nailed.item.NailedItems;
@@ -113,6 +114,7 @@ public class NailedServer {
         MinecraftForge.EVENT_BUS.register(new TeleportEventListenerForge());
         MinecraftForge.EVENT_BUS.register(new TeleportEventListenerEffect());
         MinecraftForge.EVENT_BUS.register(new PermissionEventHandler());
+        MinecraftForge.EVENT_BUS.register(new IpcEventListener());
         FMLCommonHandler.instance().bus().register(NailedAPI.getPlayerRegistry());
         FMLCommonHandler.instance().bus().register(NailedAPI.getMapLoader());
         FMLCommonHandler.instance().bus().register(new InvSeeTicker());
@@ -168,6 +170,8 @@ public class NailedServer {
     public void postInit(FMLPostInitializationEvent event){
         NailedLog.info("Loading the mappacks");
         NailedAPI.getMappackLoader().loadMappacks();
+
+        ircConnector.connect();
     }
 
     @EventHandler
@@ -185,7 +189,7 @@ public class NailedServer {
     @EventHandler
     @SuppressWarnings("unused")
     public void serverStarting(FMLServerStartingEvent event){
-        ircConnector.connect();
+        //ircConnector.connect();
         teamspeakClient.connect();
 
         CommandHandler ch = (CommandHandler) event.getServer().getCommandManager();
@@ -214,6 +218,7 @@ public class NailedServer {
         ch.registerCommand(new CommandRandomSpawnpoint());
         ch.registerCommand(new CommandEdit());
         ch.registerCommand(new CommandRegisterAchievement());
+        ch.registerCommand(new CommandReconnectIpc());
 
         ch.getCommands().remove("tp");
         ch.getCommands().remove("toggledownfall");

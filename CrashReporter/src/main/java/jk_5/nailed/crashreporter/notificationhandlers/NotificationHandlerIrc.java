@@ -15,7 +15,7 @@ public class NotificationHandlerIrc implements NotificationHandler {
     @Override
     public void notify(String title, String text, String url) throws NotifyException{
         IrcConnection connection = new IrcConnection("irc.reening.nl");
-        Conversation conversation = connection.setName("Reporter").connect().syncUninterruptibly().joinChannel("#crashes").syncUninterruptibly().conversation();
+        Conversation conversation = connection.setName("Reporter").connect().syncUninterruptibly().joinChannel("#mc-crashes").syncUninterruptibly().conversation();
         conversation.sendMessage(CrashReporter.username + " - " + url);
         connection.close();
     }

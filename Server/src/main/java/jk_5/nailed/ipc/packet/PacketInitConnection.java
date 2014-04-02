@@ -1,14 +1,12 @@
 package jk_5.nailed.ipc.packet;
 
-import com.google.common.base.Charsets;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
-import io.netty.handler.codec.base64.Base64;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Mappack;
 import jk_5.nailed.api.player.Player;
+import jk_5.nailed.ipc.PacketUtils;
+
+import java.util.List;
 
 /**
  * No description given
@@ -18,31 +16,30 @@ import jk_5.nailed.api.player.Player;
 public class PacketInitConnection extends IpcPacket {
 
     @Override
-    public void read(JsonObject json) {
-
+    public void encode(ByteBuf buffer){
+        List<Player> players = NailedAPI.getPlayerRegistry().getOnlinePlayers();
+        PacketUtils.writeString("minecraft.kogint.tk:25566", buffer);
+        PacketUtils.writeVarInt(players.size(), buffer);
+        for(Player player : players){
+            PacketUtils.writeString(player.getId(), buffer);
+            PacketUtils.writeString(player.getUsername(), buffer);
+        }
+        List<Mappack> mappacks = NailedAPI.getMappackLoader().getMappacks();
+        PacketUtils.writeVarInt(mappacks.size(), buffer);
+        for(Mappack mappack : mappacks){
+            PacketUtils.writeString(mappack.getMappackID(), buffer);
+            PacketUtils.writeString(mappack.getMappackMetadata().getName(), buffer);
+            buffer.writeBoolean(mappack.getMappackID().equals("lobby"));
+            buffer.writeBoolean(false);
+            ByteBuf icon = mappack.getMappackIcon();
+            PacketUtils.writeVarInt(icon.readableBytes(), buffer);
+            buffer.writeBytes(icon);
+        }
     }
 
     @Override
-    public void write(JsonObject json) {
-        JsonArray onlinePlayers = new JsonArray();
-        for(Player player : NailedAPI.getPlayerRegistry().getPlayers()){
-            if(player.isOnline()){
-                onlinePlayers.add(new JsonPrimitive(player.getUsername()));
-            }
-        }
-        json.add("players", onlinePlayers);
-        JsonArray mappacks = new JsonArray();
-        for(Mappack mappack : NailedAPI.getMappackLoader().getMappacks()){
-            JsonObject obj = new JsonObject();
-            ByteBuf icon = Base64.encode(mappack.getMappackIcon());
-            obj.addProperty("id", mappack.getMappackID());
-            obj.addProperty("name", mappack.getMappackMetadata().getName());
-            obj.addProperty("icon", "data:image/png;base64," + icon.toString(Charsets.UTF_8));
-            obj.addProperty("isLobby", mappack.getMappackID().equals("lobby"));
-            obj.addProperty("hidden", false);
-            mappacks.add(obj);
-        }
-        json.add("mappacks", mappacks);
+    public void decode(ByteBuf buffer){
+
     }
 
     @Override

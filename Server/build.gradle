@@ -7,7 +7,7 @@ jar.manifest{
 
 dependencies {
     packed 'pircbot:pircbot:1.5.0'
-    packed 'jk_5.asyncirc:ASyncIRCClient:0.2-SNAPSHOT'
+    packed 'jk_5.asyncirc:ASyncIRCClient:0.3.1-SNAPSHOT'
     packed 'com.ning:async-http-client:1.8.3'
 
     compile rootProject

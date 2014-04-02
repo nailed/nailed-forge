@@ -141,4 +141,15 @@ public class NailedPlayerRegistry implements PlayerRegistry {
         NailedLog.info("Player " + p.getUsername() + " respawned");
         p.onRespawn();
     }
+
+    @Override
+    public List<Player> getOnlinePlayers(){
+        List<Player> ret = Lists.newArrayList();
+        for(Player player : this.players){
+            if(player.isOnline()){
+                ret.add(player);
+            }
+        }
+        return ret;
+    }
 }

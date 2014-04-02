@@ -1,0 +1,360 @@
+Starting Build
+Settings evaluated using settings file '/Users/jeffreykog/Development/Modding/Nailed/nailed-forge/settings.gradle'.
+Projects loaded. Root project using build file '/Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build.gradle'.
+Included projects: [root project 'Nailed', project ':API', project ':Client', project ':Common', project ':CrashReporter', project ':Native', project ':QuakeCraft', project ':Server', project ':Updater']
+Evaluating root project 'Nailed' using build file '/Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build.gradle'.
+Resolving: jsons/{MC_VERSION}.json
+Resolved:  jsons/1.7.2.json
+Resolving: jsons/{MC_VERSION}.json
+Resolved:  jsons/1.7.2.json
+Resolved net.minecraftforge:minecraftforge:10.12.0.1033
+Adding jk_5.asyncirc:ASyncIRCClient:0.1-SNAPSHOT
+Resolved jk_5.nailed:Nailed-CrashReporter:0.1-SNAPSHOT
+Resolved net.minecraft:minecraft:1.7.2
+****************************
+ Powered By MCP:            
+ http://mcp.ocean-labs.de/  
+ Searge, ProfMobius, Fesh0r,
+ R4wk, ZeuX, IngisKahn      
+Resolving:  MCP Data version : {MCP_VERSION}
+Resolved:   MCP Data version : unknown
+ MCP Data version : unknown
+****************************
+Resolving: {BUILD_DIR}/unpacked/dev.json
+Resolved:  /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/unpacked/dev.json
+Resolving: {BUILD_DIR}/unpacked/dev.json
+Resolved:  /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/unpacked/dev.json
+ADDING NATIVE: /Users/jeffreykog/.gradle/caches/modules-2/files-2.1/org.lwjgl.lwjgl/lwjgl-platform/2.9.1-nightly-20131017/54241f3f8dac9617ca1ff335ffd3939f849c5017/lwjgl-platform-2.9.1-nightly-20131017-natives-osx.jar
+ADDING NATIVE: /Users/jeffreykog/.gradle/caches/modules-2/files-2.1/net.java.jinput/jinput-platform/2.0.5/53f9c919f34d2ca9de8c51fc4e1e8282029a9232/jinput-platform-2.0.5-natives-osx.jar
+Failed to get resource: GET. [HTTP HTTP/1.1 403 Forbidden: https://libraries.minecraft.net/net/minecraftforge/forge/1.7.2-10.12.0.1033/forge-1.7.2-10.12.0.1033.pom]
+Failed to get resource: GET. [HTTP HTTP/1.1 403 Forbidden: https://libraries.minecraft.net/net/minecraftforge/forge/1.7.2-10.12.0.1033/forge-1.7.2-10.12.0.1033.pom]
+Resolving: {BUILD_DIR}/dirtyArtifacts/forge-{API_VERSION}-decomp.jar
+Resolved:  /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/dirtyArtifacts/forge-1.7.2-10.12.0.1033-decomp.jar
+Resolving: {BUILD_DIR}/dirtyArtifacts/forge-{API_VERSION}-fmlinjected.jar
+Resolved:  /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/dirtyArtifacts/forge-1.7.2-10.12.0.1033-fmlinjected.jar
+Resolving: {BUILD_DIR}/tmp/recompCls
+Resolved:  /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/tmp/recompCls
+Resolving: {BUILD_DIR}/dirtyArtifacts/forgeSrc-{API_VERSION}.jar
+Resolved:  /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/dirtyArtifacts/forgeSrc-1.7.2-10.12.0.1033.jar
+Resolving: {BUILD_DIR}/dirtyArtifacts
+Resolved:  /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/dirtyArtifacts
+Adding repo to : >> /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/dirtyArtifacts
+Adding repo to :API >> /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/dirtyArtifacts
+Adding repo to :Client >> /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/dirtyArtifacts
+Adding repo to :Common >> /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/dirtyArtifacts
+Adding repo to :CrashReporter >> /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/dirtyArtifacts
+Adding repo to :Native >> /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/dirtyArtifacts
+Adding repo to :QuakeCraft >> /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/dirtyArtifacts
+Adding repo to :Server >> /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/dirtyArtifacts
+Adding repo to :Updater >> /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/dirtyArtifacts
+Resolving: {BUILD_DIR}/sources/java
+Resolved:  /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/sources/java
+Resolving: {CACHE_DIR}/minecraft/assets/indexes/legacy.json
+Resolved:  /Users/jeffreykog/.gradle/caches/minecraft/assets/indexes/legacy.json
+Resolving: {CACHE_DIR}/minecraft/assets/indexes/{ASSET_INDEX}.json
+Resolved:  /Users/jeffreykog/.gradle/caches/minecraft/assets/indexes/legacy.json
+Evaluating project ':API' using build file '/Users/jeffreykog/Development/Modding/Nailed/nailed-forge/API/build.gradle'.
+Evaluating project ':Client' using build file '/Users/jeffreykog/Development/Modding/Nailed/nailed-forge/Client/build.gradle'.
+Evaluating project ':Common' using build file '/Users/jeffreykog/Development/Modding/Nailed/nailed-forge/Common/build.gradle'.
+Evaluating project ':CrashReporter' using build file '/Users/jeffreykog/Development/Modding/Nailed/nailed-forge/CrashReporter/build.gradle'.
+Evaluating project ':Native' using build file '/Users/jeffreykog/Development/Modding/Nailed/nailed-forge/Native/build.gradle'.
+Evaluating project ':QuakeCraft' using build file '/Users/jeffreykog/Development/Modding/Nailed/nailed-forge/QuakeCraft/build.gradle'.
+Evaluating project ':Server' using build file '/Users/jeffreykog/Development/Modding/Nailed/nailed-forge/Server/build.gradle'.
+Evaluating project ':Updater' using build file '/Users/jeffreykog/Development/Modding/Nailed/nailed-forge/Updater/build.gradle'.
+All projects evaluated.
+Resolving: {BUILD_DIR}/unpacked/conf/mcp-srg.srg
+Resolved:  /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/unpacked/conf/mcp-srg.srg
+Resolving: {BUILD_DIR}/unpacked/conf/packaged.srg
+Resolved:  /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/unpacked/conf/packaged.srg
+Resolving: {BUILD_DIR}/unpacked/conf/methods.csv
+Resolved:  /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/unpacked/conf/methods.csv
+Resolving: {BUILD_DIR}/unpacked/conf/fields.csv
+Resolved:  /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/unpacked/conf/fields.csv
+Resolving: /Users/jeffreykog/.gradle/caches/modules-2/files-2.1/net.minecraftforge/forge/1.7.2-10.12.0.1033/3f4c9a5cdf76f05e71e1c26eaf50ff35914c8663/forge-1.7.2-10.12.0.1033-userdev.jar
+Resolved:  /Users/jeffreykog/.gradle/caches/modules-2/files-2.1/net.minecraftforge/forge/1.7.2-10.12.0.1033/3f4c9a5cdf76f05e71e1c26eaf50ff35914c8663/forge-1.7.2-10.12.0.1033-userdev.jar
+Failed to get resource: GET. [HTTP HTTP/1.1 403 Forbidden: https://libraries.minecraft.net/jk_5/asyncirc/ASyncIRCClient/0.1-SNAPSHOT/maven-metadata.xml]
+Failed to get resource: GET. [HTTP HTTP/1.1 403 Forbidden: https://libraries.minecraft.net/jk_5/asyncirc/ASyncIRCClient/0.1-SNAPSHOT/maven-metadata.xml]
+Selected primary task 'deployCommon'
+Tasks to be executed: [task ':compileApiJava', task ':processApiResources', task ':apiClasses', task ':sourceMainJava', task ':compileJava', task ':processResources', task ':classes', task ':jar', task ':extractUserDev', task ':genSrgs', task ':API:compileJava', task ':API:processResources', task ':API:classes', task ':API:jar', task ':Common:compileJava', task ':Common:processResources', task ':Common:classes', task ':Common:jar', task ':Client:compileJava', task ':Client:processResources', task ':Client:classes', task ':Client:jar', task ':CrashReporter:compileJava', task ':CrashReporter:processResources', task ':CrashReporter:classes', task ':CrashReporter:jar', task ':Native:compileJava', task ':Native:processResources', task ':Native:classes', task ':Native:jar', task ':QuakeCraft:compileJava', task ':QuakeCraft:processResources', task ':QuakeCraft:classes', task ':QuakeCraft:jar', task ':Server:compileJava', task ':Server:processResources', task ':Server:classes', task ':Server:jar', task ':Updater:compileJava', task ':Updater:processResources', task ':Updater:classes', task ':Updater:jar', task ':reobf', task ':assemble', task ':compileTestJava', task ':processTestResources', task ':testClasses', task ':test', task ':check', task ':build', task ':deployCommon']
+:compileApiJava (Thread[main,5,main]) started.
+:compileApiJava
+Skipping task ':compileApiJava' as it has no source files.
+:compileApiJava UP-TO-DATE
+:compileApiJava (Thread[main,5,main]) completed. Took 0.004 secs.
+:processApiResources (Thread[main,5,main]) started.
+:processApiResources
+Skipping task ':processApiResources' as it has no source files.
+:processApiResources UP-TO-DATE
+:processApiResources (Thread[main,5,main]) completed. Took 0.001 secs.
+:apiClasses (Thread[main,5,main]) started.
+:apiClasses
+Skipping task ':apiClasses' as it has no actions.
+:apiClasses UP-TO-DATE
+:apiClasses (Thread[main,5,main]) completed. Took 0.001 secs.
+:sourceMainJava (Thread[main,5,main]) started.
+:sourceMainJava
+Skipping task ':sourceMainJava' as it is up-to-date (took 0.117 secs).
+:sourceMainJava UP-TO-DATE
+:sourceMainJava (Thread[main,5,main]) completed. Took 0.12 secs.
+:compileJava (Thread[main,5,main]) started.
+:compileJava
+Skipping task ':compileJava' as it has no source files.
+:compileJava UP-TO-DATE
+:compileJava (Thread[main,5,main]) completed. Took 0.008 secs.
+:processResources (Thread[main,5,main]) started.
+:processResources
+Skipping task ':processResources' as it has no source files.
+:processResources UP-TO-DATE
+:processResources (Thread[main,5,main]) completed. Took 0.002 secs.
+:classes (Thread[main,5,main]) started.
+:classes
+Skipping task ':classes' as it has no actions.
+:classes UP-TO-DATE
+:classes (Thread[main,5,main]) completed. Took 0.001 secs.
+:jar (Thread[main,5,main]) started.
+:jar
+Executing task ':jar' (up-to-date check took 0.059 secs) due to:
+  Output file /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/libs/Nailed-2.0-SNAPSHOT.jar has changed.
+:jar (Thread[main,5,main]) completed. Took 0.17 secs.
+:extractUserDev (Thread[main,5,main]) started.
+:extractUserDev
+Executing task ':extractUserDev' (up-to-date check took 0.001 secs) due to:
+  Task has not declared any outputs.
+Resolving: {BUILD_DIR}/unpacked
+Resolved:  /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/unpacked
+Resolving: {BUILD_DIR}/unpacked/dev.json
+Resolved:  /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/unpacked/dev.json
+:extractUserDev (Thread[main,5,main]) completed. Took 0.838 secs.
+:genSrgs (Thread[main,5,main]) started.
+:genSrgs
+Resolving: {BUILD_DIR}/unpacked/conf/methods.csv
+Resolved:  /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/unpacked/conf/methods.csv
+Resolving: {BUILD_DIR}/unpacked/conf/fields.csv
+Resolved:  /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/unpacked/conf/fields.csv
+Resolving: {BUILD_DIR}/unpacked/conf/notch-mcp.srg
+Resolved:  /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/unpacked/conf/notch-mcp.srg
+Resolving: {BUILD_DIR}/unpacked/conf/mcp-srg.srg
+Resolved:  /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/unpacked/conf/mcp-srg.srg
+Resolving: {BUILD_DIR}/unpacked/conf/mcp-notch.srg
+Resolved:  /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/unpacked/conf/mcp-notch.srg
+Resolving: {BUILD_DIR}/unpacked/conf/methods.csv
+Resolved:  /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/unpacked/conf/methods.csv
+Resolving: {BUILD_DIR}/unpacked/conf/fields.csv
+Resolved:  /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/unpacked/conf/fields.csv
+Skipping task ':genSrgs' as it is up-to-date (took 0.125 secs).
+:genSrgs UP-TO-DATE
+:genSrgs (Thread[main,5,main]) completed. Took 0.129 secs.
+:API:compileJava (Thread[main,5,main]) started.
+:API:compileJava
+Failed to get resource: GET. [HTTP HTTP/1.1 403 Forbidden: https://libraries.minecraft.net//forgeSrc/1.7.2-10.12.0.1033/forgeSrc-1.7.2-10.12.0.1033.pom]
+Failed to get resource: GET. [HTTP HTTP/1.1 403 Forbidden: https://libraries.minecraft.net/jk_5/asyncirc/ASyncIRCClient/0.1-SNAPSHOT/maven-metadata.xml]
+Executing task ':API:compileJava' (up-to-date check took 1.014 secs) due to:
+  Input file /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/libs/Nailed-2.0-SNAPSHOT.jar has changed.
+Compiling with JDK Java compiler API.
+:API:compileJava (Thread[main,5,main]) completed. Took 7.756 secs.
+:API:processResources (Thread[main,5,main]) started.
+:API:processResources
+Skipping task ':API:processResources' as it has no source files.
+:API:processResources UP-TO-DATE
+:API:processResources (Thread[main,5,main]) completed. Took 0.003 secs.
+:API:classes (Thread[main,5,main]) started.
+:API:classes
+Skipping task ':API:classes' as it has no actions.
+:API:classes (Thread[main,5,main]) completed. Took 0.001 secs.
+:API:jar (Thread[main,5,main]) started.
+:API:jar
+Executing task ':API:jar' (up-to-date check took 0.036 secs) due to:
+  Output file /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/libs/Nailed-API-0.1-SNAPSHOT.jar has changed.
+:API:jar (Thread[main,5,main]) completed. Took 0.364 secs.
+:Common:compileJava (Thread[main,5,main]) started.
+:Common:compileJava
+Failed to get resource: GET. [HTTP HTTP/1.1 403 Forbidden: https://libraries.minecraft.net//forgeSrc/1.7.2-10.12.0.1033/forgeSrc-1.7.2-10.12.0.1033.pom]
+Failed to get resource: GET. [HTTP HTTP/1.1 403 Forbidden: https://libraries.minecraft.net/jk_5/asyncirc/ASyncIRCClient/0.1-SNAPSHOT/maven-metadata.xml]
+Executing task ':Common:compileJava' (up-to-date check took 0.434 secs) due to:
+  Input file /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/libs/Nailed-2.0-SNAPSHOT.jar has changed.
+Compiling with JDK Java compiler API.
+:Common:compileJava (Thread[main,5,main]) completed. Took 2.37 secs.
+:Common:processResources (Thread[main,5,main]) started.
+:Common:processResources
+Skipping task ':Common:processResources' as it has no source files.
+:Common:processResources UP-TO-DATE
+:Common:processResources (Thread[main,5,main]) completed. Took 0.001 secs.
+:Common:classes (Thread[main,5,main]) started.
+:Common:classes
+Skipping task ':Common:classes' as it has no actions.
+:Common:classes (Thread[main,5,main]) completed. Took 0.001 secs.
+:Common:jar (Thread[main,5,main]) started.
+:Common:jar
+Executing task ':Common:jar' (up-to-date check took 0.017 secs) due to:
+  Output file /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/libs/Nailed-Common-0.1-SNAPSHOT.jar has changed.
+:Common:jar (Thread[main,5,main]) completed. Took 0.169 secs.
+:Client:compileJava (Thread[main,5,main]) started.
+:Client:compileJava
+Failed to get resource: GET. [HTTP HTTP/1.1 403 Forbidden: https://libraries.minecraft.net/jk_5/asyncirc/ASyncIRCClient/0.1-SNAPSHOT/maven-metadata.xml]
+Failed to get resource: GET. [HTTP HTTP/1.1 403 Forbidden: https://libraries.minecraft.net//forgeSrc/1.7.2-10.12.0.1033/forgeSrc-1.7.2-10.12.0.1033.pom]
+Executing task ':Client:compileJava' (up-to-date check took 0.334 secs) due to:
+  Input file /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/libs/Nailed-2.0-SNAPSHOT.jar has changed.
+  Input file /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/libs/Nailed-Common-0.1-SNAPSHOT.jar has changed.
+Compiling with JDK Java compiler API.
+:Client:compileJava (Thread[main,5,main]) completed. Took 10.368 secs.
+:Client:processResources (Thread[main,5,main]) started.
+:Client:processResources
+Skipping task ':Client:processResources' as it is up-to-date (took 0.078 secs).
+:Client:processResources UP-TO-DATE
+:Client:processResources (Thread[main,5,main]) completed. Took 0.084 secs.
+:Client:classes (Thread[main,5,main]) started.
+:Client:classes
+Skipping task ':Client:classes' as it has no actions.
+:Client:classes (Thread[main,5,main]) completed. Took 0.001 secs.
+:Client:jar (Thread[main,5,main]) started.
+:Client:jar
+Executing task ':Client:jar' (up-to-date check took 0.173 secs) due to:
+  Output file /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/libs/Nailed-Client-0.1.jar has changed.
+:Client:jar (Thread[main,5,main]) completed. Took 0.674 secs.
+:CrashReporter:compileJava (Thread[main,5,main]) started.
+:CrashReporter:compileJava
+Failed to get resource: GET. [HTTP HTTP/1.1 403 Forbidden: https://libraries.minecraft.net/jk_5/asyncirc/ASyncIRCClient/0.1-SNAPSHOT/maven-metadata.xml]
+Failed to get resource: GET. [HTTP HTTP/1.1 403 Forbidden: https://libraries.minecraft.net//forgeSrc/1.7.2-10.12.0.1033/forgeSrc-1.7.2-10.12.0.1033.pom]
+Executing task ':CrashReporter:compileJava' (up-to-date check took 0.325 secs) due to:
+  Input file /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/libs/Nailed-2.0-SNAPSHOT.jar has changed.
+Compiling with JDK Java compiler API.
+:CrashReporter:compileJava (Thread[main,5,main]) completed. Took 2.12 secs.
+:CrashReporter:processResources (Thread[main,5,main]) started.
+:CrashReporter:processResources
+Skipping task ':CrashReporter:processResources' as it has no source files.
+:CrashReporter:processResources UP-TO-DATE
+:CrashReporter:processResources (Thread[main,5,main]) completed. Took 0.085 secs.
+:CrashReporter:classes (Thread[main,5,main]) started.
+:CrashReporter:classes
+Skipping task ':CrashReporter:classes' as it has no actions.
+:CrashReporter:classes (Thread[main,5,main]) completed. Took 0.001 secs.
+:CrashReporter:jar (Thread[main,5,main]) started.
+:CrashReporter:jar
+Executing task ':CrashReporter:jar' (up-to-date check took 0.077 secs) due to:
+  Output file /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/libs/Nailed-CrashReporter-0.1-SNAPSHOT.jar has changed.
+:CrashReporter:jar (Thread[main,5,main]) completed. Took 0.283 secs.
+:Native:compileJava (Thread[main,5,main]) started.
+:Native:compileJava
+Failed to get resource: GET. [HTTP HTTP/1.1 403 Forbidden: https://libraries.minecraft.net//forgeSrc/1.7.2-10.12.0.1033/forgeSrc-1.7.2-10.12.0.1033.pom]
+Failed to get resource: GET. [HTTP HTTP/1.1 403 Forbidden: https://libraries.minecraft.net/jk_5/asyncirc/ASyncIRCClient/0.1-SNAPSHOT/maven-metadata.xml]
+Executing task ':Native:compileJava' (up-to-date check took 0.215 secs) due to:
+  Input file /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/libs/Nailed-2.0-SNAPSHOT.jar has changed.
+Compiling with JDK Java compiler API.
+:Native:compileJava (Thread[main,5,main]) completed. Took 0.641 secs.
+:Native:processResources (Thread[main,5,main]) started.
+:Native:processResources
+Skipping task ':Native:processResources' as it has no source files.
+:Native:processResources UP-TO-DATE
+:Native:processResources (Thread[main,5,main]) completed. Took 0.001 secs.
+:Native:classes (Thread[main,5,main]) started.
+:Native:classes
+Skipping task ':Native:classes' as it has no actions.
+:Native:classes (Thread[main,5,main]) completed. Took 0.02 secs.
+:Native:jar (Thread[main,5,main]) started.
+:Native:jar
+Executing task ':Native:jar' (up-to-date check took 0.011 secs) due to:
+  Output file /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/libs/Nailed-Native-0.1-SNAPSHOT.jar has changed.
+:Native:jar (Thread[main,5,main]) completed. Took 0.038 secs.
+:QuakeCraft:compileJava (Thread[main,5,main]) started.
+:QuakeCraft:compileJava
+Failed to get resource: GET. [HTTP HTTP/1.1 403 Forbidden: https://libraries.minecraft.net//forgeSrc/1.7.2-10.12.0.1033/forgeSrc-1.7.2-10.12.0.1033.pom]
+Failed to get resource: GET. [HTTP HTTP/1.1 403 Forbidden: https://libraries.minecraft.net/jk_5/asyncirc/ASyncIRCClient/0.1-SNAPSHOT/maven-metadata.xml]
+Executing task ':QuakeCraft:compileJava' (up-to-date check took 0.189 secs) due to:
+  Input file /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/libs/Nailed-API-0.1-SNAPSHOT.jar has changed.
+  Input file /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/libs/Nailed-2.0-SNAPSHOT.jar has changed.
+Compiling with JDK Java compiler API.
+:QuakeCraft:compileJava (Thread[main,5,main]) completed. Took 1.51 secs.
+:QuakeCraft:processResources (Thread[main,5,main]) started.
+:QuakeCraft:processResources
+Skipping task ':QuakeCraft:processResources' as it is up-to-date (took 0.03 secs).
+:QuakeCraft:processResources UP-TO-DATE
+:QuakeCraft:processResources (Thread[main,5,main]) completed. Took 0.034 secs.
+:QuakeCraft:classes (Thread[main,5,main]) started.
+:QuakeCraft:classes
+Skipping task ':QuakeCraft:classes' as it has no actions.
+:QuakeCraft:classes (Thread[main,5,main]) completed. Took 0.001 secs.
+:QuakeCraft:jar (Thread[main,5,main]) started.
+:QuakeCraft:jar
+Executing task ':QuakeCraft:jar' (up-to-date check took 0.02 secs) due to:
+  Output file /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/libs/Nailed-QuakeCraft-0.1-SNAPSHOT.jar has changed.
+:QuakeCraft:jar (Thread[main,5,main]) completed. Took 0.099 secs.
+:Server:compileJava (Thread[main,5,main]) started.
+:Server:compileJava
+Failed to get resource: GET. [HTTP HTTP/1.1 403 Forbidden: https://libraries.minecraft.net//forgeSrc/1.7.2-10.12.0.1033/forgeSrc-1.7.2-10.12.0.1033.pom]
+Failed to get resource: GET. [HTTP HTTP/1.1 403 Forbidden: https://libraries.minecraft.net/jk_5/asyncirc/ASyncIRCClient/0.1-SNAPSHOT/maven-metadata.xml]
+Executing task ':Server:compileJava' (up-to-date check took 0.349 secs) due to:
+  Input file /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/libs/Nailed-API-0.1-SNAPSHOT.jar has changed.
+  Input file /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/libs/Nailed-2.0-SNAPSHOT.jar has changed.
+  Input file /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/libs/Nailed-Common-0.1-SNAPSHOT.jar has changed.
+Compiling with JDK Java compiler API.
+:Server:compileJava (Thread[main,5,main]) completed. Took 22.971 secs.
+:Server:processResources (Thread[main,5,main]) started.
+:Server:processResources
+Skipping task ':Server:processResources' as it is up-to-date (took 0.185 secs).
+:Server:processResources UP-TO-DATE
+:Server:processResources (Thread[main,5,main]) completed. Took 0.187 secs.
+:Server:classes (Thread[main,5,main]) started.
+:Server:classes
+Skipping task ':Server:classes' as it has no actions.
+:Server:classes (Thread[main,5,main]) completed. Took 0.0 secs.
+:Server:jar (Thread[main,5,main]) started.
+:Server:jar
+Executing task ':Server:jar' (up-to-date check took 0.151 secs) due to:
+  Output file /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/libs/Nailed-Server-0.1-SNAPSHOT.jar has changed.
+:Server:jar (Thread[main,5,main]) completed. Took 0.866 secs.
+:Updater:compileJava (Thread[main,5,main]) started.
+:Updater:compileJava
+Failed to get resource: GET. [HTTP HTTP/1.1 403 Forbidden: https://libraries.minecraft.net//forgeSrc/1.7.2-10.12.0.1033/forgeSrc-1.7.2-10.12.0.1033.pom]
+Failed to get resource: GET. [HTTP HTTP/1.1 403 Forbidden: https://libraries.minecraft.net/jk_5/asyncirc/ASyncIRCClient/0.1-SNAPSHOT/maven-metadata.xml]
+Executing task ':Updater:compileJava' (up-to-date check took 0.542 secs) due to:
+  Input file /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/libs/Nailed-2.0-SNAPSHOT.jar has changed.
+Compiling with JDK Java compiler API.
+:Updater:compileJava (Thread[main,5,main]) completed. Took 2.732 secs.
+:Updater:processResources (Thread[main,5,main]) started.
+:Updater:processResources
+Skipping task ':Updater:processResources' as it has no source files.
+:Updater:processResources UP-TO-DATE
+:Updater:processResources (Thread[main,5,main]) completed. Took 0.001 secs.
+:Updater:classes (Thread[main,5,main]) started.
+:Updater:classes
+Skipping task ':Updater:classes' as it has no actions.
+:Updater:classes (Thread[main,5,main]) completed. Took 0.0 secs.
+:Updater:jar (Thread[main,5,main]) started.
+:Updater:jar
+Executing task ':Updater:jar' (up-to-date check took 0.066 secs) due to:
+  Output file /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/libs/Nailed-Updater-0.1.jar has changed.
+:Updater:jar (Thread[main,5,main]) completed. Took 0.111 secs.
+:reobf (Thread[main,5,main]) started.
+:reobf
+Executing task ':reobf' (up-to-date check took 0.015 secs) due to:
+  Output file /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/libs/Nailed-QuakeCraft-0.1-SNAPSHOT.jar has changed.
+  Output file /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/libs/Nailed-Updater-0.1.jar has changed.
+  Output file /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/libs/Nailed-Server-0.1-SNAPSHOT.jar has changed.
+Resolving: {BUILD_DIR}/dirtyArtifacts/forge-{API_VERSION}-srg.jar
+Resolved:  /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/dirtyArtifacts/forge-1.7.2-10.12.0.1033-srg.jar
+Resolving: {BUILD_DIR}/unpacked/conf/packaged.exc
+Resolved:  /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/build/unpacked/conf/packaged.exc
+Failed to get resource: GET. [HTTP HTTP/1.1 403 Forbidden: https://libraries.minecraft.net//forgeSrc/1.7.2-10.12.0.1033/forgeSrc-1.7.2-10.12.0.1033.pom]
+Failed to get resource: GET. [HTTP HTTP/1.1 403 Forbidden: https://libraries.minecraft.net//forgeSrc/1.7.2-10.12.0.1033/forgeSrc-1.7.2-10.12.0.1033.pom]
+Failed to get resource: GET. [HTTP HTTP/1.1 403 Forbidden: https://libraries.minecraft.net/jk_5/asyncirc/ASyncIRCClient/0.1-SNAPSHOT/maven-metadata.xml]
+Failed to get resource: GET. [HTTP HTTP/1.1 403 Forbidden: https://libraries.minecraft.net/jk_5/asyncirc/ASyncIRCClient/0.1-SNAPSHOT/maven-metadata.xml]
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGSEGV (0xb) at pc=0x00007fff88c46898, pid=69943, tid=2075
+#
+# JRE version: Java(TM) SE Runtime Environment (7.0_51-b13) (build 1.7.0_51-b13)
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (24.51-b03 mixed mode bsd-amd64 compressed oops)
+# Problematic frame:
+# C  [libsystem_platform.dylib+0x4898]  _platform_memmove$VARIANT$Merom+0x638
+#
+# Failed to write core dump. Core dumps have been disabled. To enable core dumping, try "ulimit -c unlimited" before starting Java again
+#
+# An error report file with more information is saved as:
+# /Users/jeffreykog/Development/Modding/Nailed/nailed-forge/hs_err_pid69943.log
+#
+# If you would like to submit a bug report, please visit:
+#   http://bugreport.sun.com/bugreport/crash.jsp
+# The crash happened outside the Java Virtual Machine in native code.
+# See problematic frame for where to report the bug.
+#

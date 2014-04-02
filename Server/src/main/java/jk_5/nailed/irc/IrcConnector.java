@@ -24,6 +24,7 @@ public class IrcConnector {
         ConfigTag bots = tag.getTag("bots").useBraces();
         for(ConfigTag t : bots.getSortedTagList()){
             IrcBot bot = new IrcBot(t.useBraces());
+            this.bots.add(bot);
         }
     }
 
@@ -34,7 +35,9 @@ public class IrcConnector {
     }
 
     public void close(){
-        //TODO: close all bots
+        for(IrcBot bot : this.bots){
+            bot.close();
+        }
         this.loop.shutdownGracefully();
     }
 }
