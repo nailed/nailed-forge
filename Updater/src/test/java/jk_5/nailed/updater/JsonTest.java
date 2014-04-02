@@ -1,20 +1,11 @@
 package jk_5.nailed.updater;
 
-import com.google.gson.Gson;
-import jk_5.nailed.updater.json.Library;
-import jk_5.nailed.updater.json.LibraryList;
-import jk_5.nailed.updater.json.RestartLevel;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-
 /**
  * No description given
  *
  * @author jk-5
  */
-public class JsonTest {
+/*public class JsonTest {
 
     private Gson gson;
 
@@ -215,4 +206,4 @@ public class JsonTest {
         Assert.assertEquals("Name should equal \"name2\"", "name2", lib.name);
         Assert.assertFalse("Mod should equal false", lib.mod);
     }
-}
+}*/
