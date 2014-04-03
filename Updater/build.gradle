@@ -3,6 +3,7 @@ apply plugin: 'scala'
 version = '0.1'
 
 dependencies {
+    compile 'org.scala-lang:scala-library:2.10.4'
     compile 'net.minecraft:launchwrapper:1.9'
     compile 'commons-io:commons-io:2.4'
     compile 'com.google.code.gson:gson:2.2.4'

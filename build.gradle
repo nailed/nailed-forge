@@ -16,7 +16,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.1-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
         classpath 'jk_5.nailed.gradle:nailed-gradle:1.1.3-SNAPSHOT'
     }
 }
@@ -37,7 +37,7 @@ version = '2.0-SNAPSHOT'
 
 nailed {
     minecraftVersion = '1.7.2'
-    forgeVersion = '10.12.0.1047'
+    forgeVersion = '10.12.0.1052'
 
     versionName = 'Nailed-1.7.2'
     mainClass = 'net.minecraft.launchwrapper.Launch'
@@ -46,7 +46,7 @@ nailed {
 
     deployedMod = 'Client'
     deployedMod = 'Common'
-    deployed = 'CrashReporter' //TODO: don't do it with deployed!
+    deployed = 'CrashReporter' //TODO: don't do it with deployed! I don't want this in the launcherprofile
     deployed = 'Updater'
 
     tweaker = 'jk_5.nailed.updater.UpdatingTweaker'
@@ -64,7 +64,7 @@ nailed {
 }
 
 minecraft{
-    version = '1.7.2-10.12.0.1046'
+    version = '1.7.2-10.12.0.1052'
     assetDir = 'runtime/client/assets'
 }
 
@@ -108,7 +108,7 @@ subprojects {
 
     if(rootProject.keystoreLocation != "."){
         rootProject.tasks.reobf.doLast {
-            project.getLogger().lifecycle("Signing jar " + jar.baseName)
+            project.getLogger().lifecycle(":" + project.name + ":sign")
             ant.signjar(
                     destDir: jar.destinationDir,
                     jar: jar.getArchivePath(),
