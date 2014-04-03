@@ -63,10 +63,11 @@ nailed {
     }
 }
 
-createLauncherProfile{
+createLauncherProfile {
     addDependency "net.minecraftforge:forge:{MC_VERSION}-{FORGE_VERSION}"
     addDependency "net.minecraft:minecraft:{MC_VERSION}"
-    addDependency "jk_5.nailed:Nailed-Updater:0.1"
+    addDependency "jk_5.nailed:Nailed-Updater:0.1", "http://maven.reening.nl/"
+    addDependency "jk_5.nailed:Nailed-CrashReporter:1.2", "http://maven.reening.nl/" //TODO: Remove this. let it be class-loaded
 }
 
 minecraft {
