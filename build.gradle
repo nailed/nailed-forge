@@ -17,7 +17,7 @@ buildscript {
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
-        classpath 'jk_5.nailed.gradle:nailed-gradle:1.1.4-SNAPSHOT'
+        classpath 'jk_5.nailed.gradle:nailed-gradle:1.1.5'
     }
 }
 
@@ -46,7 +46,7 @@ nailed {
 
     deployedMod = 'Client'
     deployedMod = 'Common'
-    deployed = 'CrashReporter' //TODO: don't do it with deployed! I don't want this in the launcherprofile
+    deployed = 'CrashReporter'
     deployed = 'Updater'
 
     launcherTweaker = 'jk_5.nailed.updater.UpdatingTweaker'
@@ -61,6 +61,12 @@ nailed {
     if(project.hasProperty("deploymaven")){
         deployPassword = project.deploymaven.password
     }
+}
+
+createLauncherProfile{
+    addDependency "net.minecraftforge:forge:{MC_VERSION}-{FORGE_VERSION}"
+    addDependency "net.minecraft:minecraft:{MC_VERSION}"
+    addDependency "jk_5.nailed:Nailed-Updater:0.1"
 }
 
 minecraft {
