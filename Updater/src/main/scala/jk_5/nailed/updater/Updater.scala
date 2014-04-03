@@ -10,6 +10,7 @@ import java.net.URL
 import scala.collection.JavaConversions._
 import scala.util.Properties
 import java.util
+import net.minecraft.launchwrapper.Launch
 
 /**
  * No description given
@@ -148,6 +149,10 @@ object Updater {
           DownloadMonitor.setProgress(progress.getAndIncrement)
         }
       })
+
+      logger.info("Adding cascaded tweakers")
+      val tweakList = Launch.blackboard.get("TweakClasses").asInstanceOf[util.List[String]]
+      tweakList.addAll(remote.tweakers)
     }
     DownloadMonitor.close()
     updated.get

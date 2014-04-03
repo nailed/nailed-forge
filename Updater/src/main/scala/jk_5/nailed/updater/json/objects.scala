@@ -72,6 +72,7 @@ class LibraryList {
 
   var versionName: String = null
   var libraries = new util.ArrayList[Library]()
+  var tweakers = new util.ArrayList[String]()
 
   def writeToFile(file: File){
     var writer: Writer = null
