@@ -1,9 +1,9 @@
+apply plugin: 'scala'
+
 version = '0.1'
 
 dependencies{
     compile rootProject
-
-    packed 'net.java.dev.jna:jna:4.0.0'
 }
 
 rootProject.tasks.reobf {
