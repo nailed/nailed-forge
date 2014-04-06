@@ -6,11 +6,12 @@ import java.util.concurrent.{CountDownLatch, ThreadFactory, Executors}
 import jk_5.nailed.updater.json.{Library, LibraryList, RestartLevel}
 import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger}
 import org.apache.commons.io.FileUtils
-import java.net.URL
+import java.net.{URLClassLoader, URL}
 import scala.collection.JavaConversions._
 import scala.util.Properties
 import java.util
 import net.minecraft.launchwrapper.Launch
+import java.lang.reflect.Method
 
 /**
  * No description given
@@ -25,6 +26,7 @@ object Updater {
   val versionsUrl = this.server + "nailed/versions-2.json"
   val versionsFile = new File("nailedVersions.json")
   val classLoader = Launch.classLoader
+  var addUrl: Method = _
   val downloadThreadPool = Executors.newCachedThreadPool(new ThreadFactory {
     var id = 0
     override def newThread(r: Runnable): Thread = {
@@ -156,7 +158,7 @@ object Updater {
       tweakList.addAll(remote.tweakers)
 
       logger.info("Injecting artifacts into classLoader")
-      remote.libraries.filter(_.load).foreach(l => this.classLoader.addURL(this.resolve(l.destination).toURI.toURL))
+      remote.libraries.filter(_.load).foreach(l => this.injectIntoClassLoader(this.resolve(l.destination)))
     }
     DownloadMonitor.close()
     updated.get
@@ -186,5 +188,15 @@ object Updater {
     }else {
       new File(userHome, ".minecraft")
     }
+  }
+
+  private def injectIntoClassLoader(file: File){
+    val url = file.toURI.toURL
+    if(this.addUrl == null){
+      this.addUrl = classOf[URLClassLoader].getDeclaredMethod("addURL", classOf[URL])
+      this.addUrl.setAccessible(true)
+    }
+    this.addUrl.invoke(this.classLoader.getClass.getClassLoader, url)
+    this.classLoader.addURL(url)
   }
 }
