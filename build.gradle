@@ -17,18 +17,13 @@ buildscript {
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
-        classpath 'jk_5.nailed.gradle:nailed-gradle:1.1.5'
+        classpath 'jk_5.nailed.gradle:nailed-gradle:1.1.10'
     }
 }
 
-if(!project.hasProperty("keystoreLocation"))
-    ext.keystoreLocation = "."
-
-if(!project.hasProperty("keystoreAlias"))
-    ext.keystoreAlias = ""
-
-if(!project.hasProperty("keystorePassword"))
-    ext.keystorePassword = ""
+if(!project.hasProperty("keystoreLocation")) ext.keystoreLocation = "."
+if(!project.hasProperty("keystoreAlias")) ext.keystoreAlias = ""
+if(!project.hasProperty("keystorePassword")) ext.keystorePassword = ""
 
 apply plugin: 'nailed'
 apply plugin: 'forge'
@@ -44,10 +39,10 @@ nailed {
 
     loadingMavenUrl = 'http://maven.reening.nl/'
 
-    deployedMod = 'Client'
-    deployedMod = 'Common'
-    deployed = 'CrashReporter'
-    deployed = 'Updater'
+    deploy project: 'Client', mod: true
+    deploy project: 'Common', mod: true
+    deploy project: 'CrashReporter', load: true
+    deploy project: 'Updater'
 
     launcherTweaker = 'jk_5.nailed.updater.UpdatingTweaker'
     tweaker = 'jk_5.nailed.crashreporter.CrashReporterTweaker'
@@ -67,7 +62,7 @@ createLauncherProfile {
     addDependency "net.minecraftforge:forge:{MC_VERSION}-{FORGE_VERSION}"
     addDependency "net.minecraft:minecraft:{MC_VERSION}"
     addDependency "jk_5.nailed:Nailed-Updater:0.1", "http://maven.reening.nl/"
-    addDependency "jk_5.nailed:Nailed-CrashReporter:1.2", "http://maven.reening.nl/" //TODO: Remove this. let it be class-loaded
+    //addDependency "jk_5.nailed:Nailed-CrashReporter:1.2", "http://maven.reening.nl/" //TODO: Remove this. let it be class-loaded
 }
 
 minecraft {

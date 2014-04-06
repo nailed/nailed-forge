@@ -21,6 +21,7 @@ Lua:
 Bugs:
 - PULSE_OFF pulses on enable
 - Teamwon stat type doesn't work
+- NailedPlayer.netHandler is null sometimes
 
 Command permission levels:  (See http://minecraft.gamepedia.com/Server.properties#Minecraft_server_properties)
 0. Everybody

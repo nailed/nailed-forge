@@ -24,6 +24,7 @@ object Updater {
   val server = "http://maven.reening.nl/"
   val versionsUrl = this.server + "nailed/versions-2.json"
   val versionsFile = new File("nailedVersions.json")
+  val classLoader = Launch.classLoader
   val downloadThreadPool = Executors.newCachedThreadPool(new ThreadFactory {
     var id = 0
     override def newThread(r: Runnable): Thread = {
@@ -153,6 +154,9 @@ object Updater {
       logger.info("Adding cascaded tweakers")
       val tweakList = Launch.blackboard.get("TweakClasses").asInstanceOf[util.List[String]]
       tweakList.addAll(remote.tweakers)
+
+      logger.info("Injecting artifacts into classLoader")
+      remote.libraries.filter(_.load).foreach(l => this.classLoader.addURL(this.resolve(l.destination).toURI.toURL))
     }
     DownloadMonitor.close()
     updated.get
