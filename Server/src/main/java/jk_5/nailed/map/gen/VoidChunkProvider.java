@@ -26,9 +26,9 @@ public class VoidChunkProvider extends ChunkProviderFlat {
     }
 
     @Override
-    public Chunk provideChunk(int par1, int par2){
-        Chunk ret = new Chunk(this.world, new Block[32768], par1, par2);
-        this.world.getWorldChunkManager().loadBlockGeneratorData(null, par1 * 16, par2 * 16, 16, 16);
+    public Chunk provideChunk(int x, int y){
+        Chunk ret = new Chunk(this.world, new Block[32768], x, y);
+        this.world.getWorldChunkManager().loadBlockGeneratorData(null, x * 16, y * 16, 16, 16);
         ret.generateSkylightMap();
         return ret;
     }
