@@ -14,20 +14,17 @@ import javax.swing.JOptionPane
  */
 object UpdatingTweaker {
   var name = "NailedTest"
-  var mainClass = "net.minecraft.client.main.Main"
   var gameDir = new File(".")
-  var assetsDir = new File("assets")
   val logger = LogManager.getLogger("Nailed-Updater")
 }
 class UpdatingTweaker extends ITweaker {
   override def getLaunchArguments = new Array[String](0)
-  override def getLaunchTarget = UpdatingTweaker.mainClass
+  override def getLaunchTarget = Updater.mainClass
   override def injectIntoClassLoader(classLoader: LaunchClassLoader){}
   override def acceptOptions(args: util.List[String], gameDir: File, assetsDir: File, profile: String){
     UpdatingTweaker.logger.info("Started nailed updater")
     UpdatingTweaker.name = profile
     UpdatingTweaker.gameDir = gameDir
-    UpdatingTweaker.assetsDir = assetsDir
     if(Updater.checkForUpdates()){
       if(Updater.restart == RestartLevel.NOTHING){
         UpdatingTweaker.logger.info("Updates are done. We don\'t have to restart")

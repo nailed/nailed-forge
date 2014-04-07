@@ -27,12 +27,13 @@ object Updater {
   val versionsFile = new File("nailedVersions.json")
   val classLoader = Launch.classLoader
   var addUrl: Method = _
+  var mainClass = "net.minecraft.client.main.Main"
   val downloadThreadPool = Executors.newCachedThreadPool(new ThreadFactory {
-    var id = 0
+    var id = new AtomicInteger()
     override def newThread(r: Runnable): Thread = {
       val t = new Thread(r)
       t.setDaemon(true)
-      t.setName("DownloadThread-#" + (id += 1))
+      t.setName(s"DownloadThread-#${id.getAndIncrement}")
       t
     }
   })
@@ -94,7 +95,7 @@ object Updater {
           val startTime = System.currentTimeMillis
           var u = false
           try{
-            val dest: File = resolve(library.destination)
+            val dest = resolve(library.destination)
             FileUtils.copyURLToFile(new URL(library.location), dest, 20000, 20000)
             u = true
           }catch{
@@ -143,11 +144,11 @@ object Updater {
             DownloadMonitor.setNote(s"Moving ${library.name} to the mods folder")
             logger.info(s"  Moving ${library.name} to the mods folder")
             val location = resolve(library.destination)
-            val dest = resolve("{MC_GAME_DIR}/mods/" + location.getName)
+            val dest = resolve(s"{MC_GAME_DIR}/mods/${location.getName}")
             FileUtils.copyFile(location, dest)
             dest.deleteOnExit()
           }catch{
-            case e: IOException => logger.error("Error while moving file " + library.name, e)
+            case e: IOException => logger.error(s"Error while moving file ${library.name}", e)
           }
           DownloadMonitor.setProgress(progress.getAndIncrement)
         }
@@ -162,6 +163,9 @@ object Updater {
 
       logger.info("Injecting coremods")
       Properties.setProp("fml.coreMods.load", remote.libraries.filter(_.coremod != null).map(_.coremod).mkString(","))
+
+      logger.info("Retrieving main class")
+      this.mainClass = Option(remote.mainClass).getOrElse(this.mainClass)
     }
     DownloadMonitor.close()
     updated.get
@@ -171,9 +175,6 @@ object Updater {
     var dir = getMinecraftFolder.getAbsolutePath + "/" + input
     if(input.startsWith("{MC_GAME_DIR}")) {
       dir = input.replace("{MC_GAME_DIR}", stripTrailing(UpdatingTweaker.gameDir.getAbsolutePath))
-    }
-    if(input.startsWith("{MC_ASSET_DIR}")) {
-      dir = input.replace("{MC_ASSET_DIR}", stripTrailing(UpdatingTweaker.assetsDir.getAbsolutePath))
     }
     dir = dir.replace("{MC_LIB_DIR}", "libraries")
     dir = dir.replace("{MC_VERSION_DIR}", "versions/" + UpdatingTweaker.name)

@@ -56,8 +56,7 @@ object LibraryList {
     var reader: Reader = null
     var ret: LibraryList = null
     try{
-      val u: URL = new URL(url)
-      reader = new InputStreamReader(u.openStream)
+      reader = new InputStreamReader(new URL(url).openStream)
       ret = serializer.fromJson(reader, classOf[LibraryList])
     }catch{
       case e: Exception =>
@@ -73,6 +72,7 @@ object LibraryList {
 class LibraryList {
 
   var versionName: String = null
+  var mainClass: String = null
   var libraries = new util.ArrayList[Library]()
   var tweakers = new util.ArrayList[String]()
 

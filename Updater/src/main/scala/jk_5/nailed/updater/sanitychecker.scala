@@ -56,9 +56,7 @@ object CertificateHelper {
 
   private def hexify(chksum: Array[Byte]): String ={
     val hex = new StringBuilder(2 * chksum.length)
-    for(b <- chksum){
-      hex.append(hexes.charAt((b & 0xF0) >> 4)).append(hexes.charAt(b & 0x0F))
-    }
+    chksum.foreach(b => hex.append(hexes.charAt((b & 0xF0) >> 4)).append(hexes.charAt(b & 0x0F)))
     hex.toString()
   }
 }
