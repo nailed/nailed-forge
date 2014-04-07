@@ -6,10 +6,13 @@ import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.concurrent.scheduler.NailedRunnable;
 import jk_5.nailed.api.map.Mappack;
 import jk_5.nailed.api.map.MappackLoader;
+import jk_5.nailed.api.map.MappackReloadListener;
 import jk_5.nailed.map.DiscardedMappackInitializationException;
 import jk_5.nailed.map.MappackInitializationException;
 import lombok.Getter;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.List;
 
@@ -20,13 +23,15 @@ import java.util.List;
  */
 public class NailedMappackLoader implements MappackLoader {
 
-    @Getter private final File mappackFolder = new File("mappacks");
-    @Getter private final List<Mappack> mappacks = Lists.newArrayList();
+    private final File mappackFolder = new File("mappacks");
+    private final List<Mappack> mappacks = Lists.newArrayList();
+    @Getter private final List<MappackReloadListener> listeners = Lists.newArrayList();
 
     public boolean loadASync = false;
 
     @Override
-    public Mappack getMappack(String mappackID){
+    @Nullable
+    public Mappack getMappack(@Nonnull String mappackID){
         for(Mappack pack : this.mappacks){
             if(pack.getMappackID().equals(mappackID)){
                 return pack;
@@ -63,6 +68,9 @@ public class NailedMappackLoader implements MappackLoader {
                 }
                 NailedMappackLoader.this.mappacks.clear();
                 NailedMappackLoader.this.mappacks.addAll(newMappackList);
+                for(MappackReloadListener listener : NailedMappackLoader.this.listeners){
+                    listener.onReload(NailedMappackLoader.this);
+                }
                 NailedLog.info("Successfully loaded %d mappacks!", newMappackList.size());
             }
         };
@@ -74,7 +82,24 @@ public class NailedMappackLoader implements MappackLoader {
     }
 
     @Override
-    public void registerMappack(Mappack mappack){
+    public void registerMappack(@Nonnull Mappack mappack){
         this.mappacks.add(mappack);
+    }
+
+    @Override
+    public void registerReloadListener(@Nonnull MappackReloadListener listener){
+        this.listeners.add(listener);
+    }
+
+    @Override
+    @Nonnull
+    public File getMappackFolder(){
+        return mappackFolder;
+    }
+
+    @Override
+    @Nonnull
+    public List<Mappack> getMappacks(){
+        return mappacks;
     }
 }
