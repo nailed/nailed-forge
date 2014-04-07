@@ -2,6 +2,7 @@ package jk_5.nailed.api.map.scoreboard;
 
 import jk_5.nailed.api.player.Player;
 
+import javax.annotation.Nonnull;
 import java.util.Set;
 
 /**
@@ -11,20 +12,20 @@ import java.util.Set;
  */
 public interface ScoreboardTeam {
 
-    public String getId();
-    public String getDisplayName();
-    public void setDisplayName(String displayName);
-    public String getPrefix();
-    public void setPrefix(String prefix);
-    public String getSuffix();
-    public void setSuffix(String suffix);
+    @Nonnull public String getId();
+    @Nonnull public String getDisplayName();
+    public void setDisplayName(@Nonnull String displayName);
+    @Nonnull public String getPrefix();
+    public void setPrefix(@Nonnull String prefix);
+    @Nonnull public String getSuffix();
+    public void setSuffix(@Nonnull String suffix);
     public boolean isFriendlyFire();
     public void setFriendlyFire(boolean friendlyFire);
     public boolean isFriendlyInvisiblesVisible();
     public void setFriendlyInvisiblesVisible(boolean friendlyInvisiblesVisible);
 
-    public boolean addPlayer(Player player);
-    public boolean removePlayer(Player player);
-    public Set<Player> getPlayers();
-    public Set<String> getPlayerNames();
+    public boolean addPlayer(@Nonnull Player player);
+    public boolean removePlayer(@Nonnull Player player);
+    @Nonnull public Set<Player> getPlayers();
+    @Nonnull public Set<String> getPlayerNames();
 }

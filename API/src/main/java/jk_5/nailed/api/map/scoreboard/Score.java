@@ -1,5 +1,7 @@
 package jk_5.nailed.api.map.scoreboard;
 
+import javax.annotation.Nonnull;
+
 /**
  * No description given
  *
@@ -7,7 +9,7 @@ package jk_5.nailed.api.map.scoreboard;
  */
 public interface Score {
 
-    public String getName();
+    @Nonnull public String getName();
     public int getValue();
     public void setValue(int value);
     public void addValue(int value);

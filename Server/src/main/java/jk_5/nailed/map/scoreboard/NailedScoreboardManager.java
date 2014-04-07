@@ -1,5 +1,6 @@
 package jk_5.nailed.map.scoreboard;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -14,6 +15,8 @@ import net.minecraft.network.play.server.S3BPacketScoreboardObjective;
 import net.minecraft.network.play.server.S3DPacketDisplayScoreboard;
 import net.minecraft.network.play.server.S3EPacketTeams;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.EnumMap;
 import java.util.Set;
 
@@ -32,12 +35,16 @@ public class NailedScoreboardManager implements ScoreboardManager {
     private final EnumMap<DisplayType, Objective> displayLocations = Maps.newEnumMap(DisplayType.class);
 
     @Override
-    public Objective getOrCreateObjective(String name){
-        Objective obj = this.getObjective(name);
+    @Nonnull
+    public Objective getOrCreateObjective(@Nonnull String id){
+        Preconditions.checkNotNull(id, "id");
+        Preconditions.checkArgument(id.length() <= 16, "id may not be longer than 16");
+
+        Objective obj = this.getObjective(id);
         if(obj != null){
             return obj;
         }
-        obj = new ObjectiveImpl(this.map, name);
+        obj = new ObjectiveImpl(this.map, id);
         this.objectives.add(obj);
 
         S3BPacketScoreboardObjective packet = new S3BPacketScoreboardObjective();
@@ -50,7 +57,9 @@ public class NailedScoreboardManager implements ScoreboardManager {
     }
 
     @Override
-    public Objective getObjective(String name){
+    @Nullable
+    public Objective getObjective(@Nonnull String name){
+        Preconditions.checkNotNull(name, "name");
         for(Objective objective : this.objectives){
             if(objective.getId().equals(name)){
                 return objective;
@@ -60,7 +69,8 @@ public class NailedScoreboardManager implements ScoreboardManager {
     }
 
     @Override
-    public void onPlayerJoinedMap(Player player){
+    public void onPlayerJoinedMap(@Nonnull Player player){
+        Preconditions.checkNotNull(player, "player");
         for(Objective objective : this.objectives){
             S3BPacketScoreboardObjective packet = new S3BPacketScoreboardObjective();
             packet.field_149343_a = objective.getId();
@@ -96,7 +106,8 @@ public class NailedScoreboardManager implements ScoreboardManager {
     }
 
     @Override
-    public void onPlayerLeftMap(Player player){
+    public void onPlayerLeftMap(@Nonnull Player player){
+        Preconditions.checkNotNull(player, "player");
         if(player.isOnline()){
             for(Objective objective : this.objectives){
                 S3BPacketScoreboardObjective packet = new S3BPacketScoreboardObjective();
@@ -116,7 +127,8 @@ public class NailedScoreboardManager implements ScoreboardManager {
     }
 
     @Override
-    public void setDisplay(DisplayType type, Objective objective){
+    public void setDisplay(@Nonnull DisplayType type, @Nullable Objective objective){
+        Preconditions.checkNotNull(type, "type");
         //if(this.displayLocations.get(type) == objective){
         //    return;
         //}
@@ -133,7 +145,9 @@ public class NailedScoreboardManager implements ScoreboardManager {
     }
 
     @Override
-    public ScoreboardTeam getOrCreateTeam(String id){
+    @Nonnull
+    public ScoreboardTeam getOrCreateTeam(@Nonnull String id){
+        Preconditions.checkNotNull(id, "id");
         ScoreboardTeam team = this.getTeam(id);
         if(team != null){
             return team;
@@ -159,7 +173,9 @@ public class NailedScoreboardManager implements ScoreboardManager {
     }
 
     @Override
-    public ScoreboardTeam getTeam(String id){
+    @Nullable
+    public ScoreboardTeam getTeam(@Nonnull String id){
+        Preconditions.checkNotNull(id, "id");
         for(ScoreboardTeam team : this.teams){
             if(team.getId().equals(id)){
                 return team;

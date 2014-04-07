@@ -1,5 +1,6 @@
 package jk_5.nailed.map.scoreboard;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.scoreboard.ScoreboardTeam;
@@ -7,6 +8,7 @@ import jk_5.nailed.api.player.Player;
 import lombok.Getter;
 import net.minecraft.network.play.server.S3EPacketTeams;
 
+import javax.annotation.Nonnull;
 import java.util.Set;
 
 /**
@@ -17,13 +19,13 @@ import java.util.Set;
 public class TeamImpl implements ScoreboardTeam {
 
     private final Map map;
-    @Getter private final String id;
-    @Getter private String displayName;
-    @Getter private String prefix = "";
-    @Getter private String suffix = "";
+    private final String id;
+    private String displayName;
+    private String prefix = "";
+    private String suffix = "";
     @Getter private boolean friendlyFire = true;
     @Getter private boolean friendlyInvisiblesVisible = false;
-    @Getter private final Set<Player> players = Sets.newHashSet();
+    private final Set<Player> players = Sets.newHashSet();
 
     public TeamImpl(String id, Map map){
         this.id = id;
@@ -32,19 +34,22 @@ public class TeamImpl implements ScoreboardTeam {
     }
 
     @Override
-    public void setDisplayName(String displayName){
+    public void setDisplayName(@Nonnull String displayName){
+        Preconditions.checkNotNull(displayName, "displayName");
         this.displayName = displayName;
         this.sendUpdates();
     }
 
     @Override
-    public void setPrefix(String prefix){
+    public void setPrefix(@Nonnull String prefix){
+        Preconditions.checkNotNull(prefix, "prefix");
         this.prefix = prefix;
         this.sendUpdates();
     }
 
     @Override
-    public void setSuffix(String suffix){
+    public void setSuffix(@Nonnull String suffix){
+        Preconditions.checkNotNull(suffix, "suffix");
         this.suffix = suffix;
         this.sendUpdates();
     }
@@ -78,7 +83,8 @@ public class TeamImpl implements ScoreboardTeam {
     }
 
     @Override
-    public boolean addPlayer(Player player){
+    public boolean addPlayer(@Nonnull Player player){
+        Preconditions.checkNotNull(player, "player");
         if(this.players.add(player)){
             S3EPacketTeams packet = new S3EPacketTeams();
             packet.field_149320_a = this.getId();
@@ -91,7 +97,8 @@ public class TeamImpl implements ScoreboardTeam {
     }
 
     @Override
-    public boolean removePlayer(Player player){
+    public boolean removePlayer(@Nonnull Player player){
+        Preconditions.checkNotNull(player, "player");
         if(this.players.remove(player)){
             S3EPacketTeams packet = new S3EPacketTeams();
             packet.field_149320_a = this.getId();
@@ -104,11 +111,42 @@ public class TeamImpl implements ScoreboardTeam {
     }
 
     @Override
+    @Nonnull
     public Set<String> getPlayerNames(){
         Set<String> names = Sets.newHashSet();
         for(Player p : this.players){
             names.add(p.getUsername());
         }
         return names;
+    }
+
+    @Override
+    @Nonnull
+    public String getId(){
+        return id;
+    }
+
+    @Override
+    @Nonnull
+    public String getDisplayName(){
+        return displayName;
+    }
+
+    @Override
+    @Nonnull
+    public String getPrefix(){
+        return prefix;
+    }
+
+    @Override
+    @Nonnull
+    public String getSuffix(){
+        return suffix;
+    }
+
+    @Override
+    @Nonnull
+    public Set<Player> getPlayers(){
+        return players;
     }
 }

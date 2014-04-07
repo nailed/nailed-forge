@@ -1,21 +1,5 @@
 version = '0.1-SNAPSHOT'
 
-task javadocJar(type:Jar, dependsOn:javadoc){
-    classifier = 'javadoc'
-    from 'build/docs/javadoc'
-}
-
-task sourcesJar(type:Jar){
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-artifacts {
-    archives jar
-    archives javadocJar
-    archives sourcesJar
-}
-
 dependencies {
     compile rootProject
     compile project(":Common")
