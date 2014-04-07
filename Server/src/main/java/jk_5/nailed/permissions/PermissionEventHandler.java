@@ -13,6 +13,7 @@ import net.minecraft.util.IChatComponent;
 import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.permissions.api.PermissionsManager;
+import net.minecraftforge.permissions.api.RegisteredPermValue;
 
 /**
  * No description given
@@ -23,6 +24,10 @@ import net.minecraftforge.permissions.api.PermissionsManager;
 public class PermissionEventHandler {
 
     public static final String CHATNODE = "minecraft.chat";
+
+    public PermissionEventHandler(){
+        PermissionsManager.registerPermission(CHATNODE, RegisteredPermValue.TRUE);
+    }
 
     @SubscribeEvent
     public void onCommand(CommandEvent event){
