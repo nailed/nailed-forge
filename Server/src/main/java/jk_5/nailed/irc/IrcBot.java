@@ -60,7 +60,7 @@ public class IrcBot {
                 .addListener(new ChannelFutureListener() {
                     @Override
                     public void operationComplete(ChannelFuture future) throws Exception{
-                        NailedLog.info("Connected to server " + name);
+                        NailedLog.info("Connected to server {}", name);
                     }
                 });
         this.joinChannels();

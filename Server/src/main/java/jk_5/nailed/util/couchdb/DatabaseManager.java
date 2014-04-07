@@ -49,6 +49,7 @@ public class DatabaseManager {
         if(!this.enabled){
             return;
         }
+        //TODO
     }
 
     private String getUrl(){
@@ -60,9 +61,9 @@ public class DatabaseManager {
             RequestBuilder builder = new RequestBuilder("GET");
             builder.setUrl(this.getUrl() + id);
             Request request = builder.build();
-            return this.httpClient.executeRequest(request);
+            return httpClient.executeRequest(request);
         }catch(IOException e){
-            NailedLog.error(e, "Error while executing http request");
+            NailedLog.error("Error while executing http request", e);
         }
         return null;
     }
@@ -74,9 +75,9 @@ public class DatabaseManager {
             builder.setHeader(HttpHeaders.Names.CONTENT_TYPE, "application/json");
             builder.setBody(gson.toJson(data));
             Request request = builder.build();
-            return this.httpClient.executeRequest(request);
+            return httpClient.executeRequest(request);
         }catch(IOException e){
-            NailedLog.error(e, "Error while executing http request");
+            NailedLog.error("Error while executing http request", e);
         }
         return null;
     }

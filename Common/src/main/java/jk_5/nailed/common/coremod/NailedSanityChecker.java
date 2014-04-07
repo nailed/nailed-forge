@@ -34,9 +34,9 @@ public class NailedSanityChecker implements IFMLCallHook {
             for(Certificate cert : certs){
                 String fingerprint = CertificateHelper.getFingerprint(cert);
                 if(fingerprint.equals(FINGERPRINT)){
-                    NailedLog.info("Found valid fingerprint for NailedCommon. Certificate fingerprint " + fingerprint);
+                    NailedLog.info("Found valid fingerprint for NailedCommon. Certificate fingerprint {}", fingerprint);
                 }else{
-                    NailedLog.fatal("Found invalid fingerprint for NailedCommon. Certificate fingerprint " + fingerprint);
+                    NailedLog.fatal("Found invalid fingerprint for NailedCommon. Certificate fingerprint {}", fingerprint);
                     throw new RuntimeException("NailedCommon is not signed! Please get a new one, or contact jk-5");
                 }
             }

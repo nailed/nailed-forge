@@ -75,7 +75,7 @@ public class ScriptThread {
                                             try{
                                                 task.execute();
                                             }catch(Throwable e){
-                                                NailedLog.error(e, "Error running task");
+                                                NailedLog.error("Error running task", e);
                                             }
                                         }
                                     };

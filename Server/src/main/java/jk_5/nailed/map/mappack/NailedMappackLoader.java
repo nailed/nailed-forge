@@ -54,16 +54,17 @@ public class NailedMappackLoader implements MappackLoader {
                     try{
                         if(file.isFile() && (file.getName().endsWith(".zip") || file.getName().endsWith(".mappack"))){
                             newMappackList.add(ZipMappack.create(file));
-                            NailedLog.info("Successfully loaded mappack " + file.getName());
+                            NailedLog.info("Successfully loaded mappack {}", file.getName());
                         }else if(file.isDirectory()){
                             newMappackList.add(DirectoryMappack.create(file));
-                            NailedLog.info("Successfully loaded mappack " + file.getName());
+                            NailedLog.info("Successfully loaded mappack {}", file.getName());
                         }
                     }catch (DiscardedMappackInitializationException e){
                         //Discard!
-                        NailedLog.warn("An error was thrown while loading mappack " + file.getName() + ", skipping it!");
+                        NailedLog.warn("An error was thrown while loading mappack {}, skipping it!", file.getName());
                     }catch (MappackInitializationException e){
-                        NailedLog.error(e, "Error while loading mappack " + file.getName() + ", skipping it!");
+                        NailedLog.error("Error while loading mappack {}, skipping it!", file.getName());
+                        NailedLog.error("Exception: ", e);
                     }
                 }
                 NailedMappackLoader.this.mappacks.clear();
@@ -71,7 +72,7 @@ public class NailedMappackLoader implements MappackLoader {
                 for(MappackReloadListener listener : NailedMappackLoader.this.listeners){
                     listener.onReload(NailedMappackLoader.this);
                 }
-                NailedLog.info("Successfully loaded %d mappacks!", newMappackList.size());
+                NailedLog.info("Successfully loaded {} mappacks!", newMappackList.size());
             }
         };
         if(this.loadASync){

@@ -310,7 +310,8 @@ public class NailedScheduler implements Scheduler {
                 try {
                     task.run();
                 } catch (final Throwable throwable) {
-                    NailedLog.warn(throwable, "Task #%s generated an exception", task.getTaskId());
+                    NailedLog.warn("Task {} generated an exception", task.getTaskId());
+                    NailedLog.warn("Exception: ", throwable);
                 }
                 parsePending();
             } else {

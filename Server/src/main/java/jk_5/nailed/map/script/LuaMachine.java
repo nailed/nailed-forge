@@ -173,7 +173,7 @@ public class LuaMachine {
                 this.luaMainRoutine = null;
             }
         }catch(LuaError e){
-            NailedLog.error(e, "Lua error:");
+            NailedLog.error("Lua error:", e);
             ((LuaThread) this.luaMainRoutine).abandon();
             this.luaMainRoutine = null;
         }finally{
@@ -308,7 +308,7 @@ public class LuaMachine {
         }else if(object instanceof ILuaObject){
             return wrapLuaObject((ILuaObject) object);
         }
-        NailedLog.info("Could not convert object of type " + object.getClass().getName() + " to LuaValue");
+        NailedLog.info("Could not convert object of type {} to LuaValue", object.getClass().getName());
         return LuaValue.NIL;
     }
 

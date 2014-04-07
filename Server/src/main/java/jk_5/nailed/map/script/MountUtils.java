@@ -65,7 +65,8 @@ public class MountUtils {
 
             return null;
         }catch(IOException e){
-            NailedLog.error(e, "Error while mounting assets/" + domain + "/" + subPath);
+            NailedLog.error("Error while mounting assets/{}/{}", domain, subPath);
+            NailedLog.error("Error: ", e);
         }
         return null;
     }

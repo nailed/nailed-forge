@@ -85,7 +85,7 @@ public class NailedMap implements Map {
 
     public void initMapServer(){
         if(this.isLoaded) return;
-        NailedLog.info("Initializing %s", this.getSaveFileName());
+        NailedLog.info("Initializing {}", this.getSaveFileName());
 
         DimensionManager.registerDimension(this.getID(), NailedServer.getProviderID());
         DimensionManager.initDimension(this.getID());
@@ -121,7 +121,7 @@ public class NailedMap implements Map {
         ServerMachine.REGISTRY.add(this.machine.getId(), this.machine);
         this.machine.turnOn();
 
-        NailedLog.info("Registered map " + this.getSaveFileName());
+        NailedLog.info("Registered map {}", this.getSaveFileName());
     }
 
     @Override
@@ -171,7 +171,7 @@ public class NailedMap implements Map {
                             try{
                                 this.machine.getApiEnvironment().getFileSystem().mount("mappack", "mappack", this.mappackMount);
                             }catch(FileSystemException e){
-                                NailedLog.error(e, "Error while mounting mappack folder to machine\'s filesystem");
+                                NailedLog.error("Error while mounting mappack folder to machine\'s filesystem", e);
                             }
                         }
                         this.mounted = true;

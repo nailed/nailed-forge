@@ -65,7 +65,8 @@ public class ZipMappack implements Mappack {
                 entry = zipStream.getNextEntry();
             }
         }catch(FileNotFoundException e){
-            NailedLog.error(e, "Discovered mappack file " + file.getPath() + " is gone now? This is impossible");
+            NailedLog.error("Discovered mappack file {} is gone now? This is impossible", file.getPath());
+            NailedLog.error("Exception: ", e);
             throw new DiscardedMappackInitializationException("Mappack file " + file.getPath() + " disappeared!", e);
         }catch(IOException e){
             throw new MappackInitializationException("Mappack file " + file.getPath() + " could not be read", e);
@@ -147,13 +148,12 @@ public class ZipMappack implements Mappack {
                 }
             }
             if(worldDir == null){
-                System.err.println("Invalid or corrupt mappack file");
-                System.exit(1);
+                throw new RuntimeException("Invalid or corrupt mappack file");
             }
             worldDir.renameTo(destDir);
             return destDir;
         }catch(IOException ioe){
-            NailedLog.error(ioe, "Error while unpacking file");
+            NailedLog.error("Error while unpacking file", ioe);
         }
         return null;
     }

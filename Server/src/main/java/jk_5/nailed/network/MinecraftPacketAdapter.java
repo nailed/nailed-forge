@@ -73,7 +73,7 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
                     }
                     EntityPlayerMP diedPlayer = ply.getEntity();
                     if(player.dimension == diedPlayer.dimension){
-                        NailedLog.info("Send death message for " + diedPlayer.getDisplayName().replace("%", "%%") + " to " + player.getDisplayName().replace("%", "%%"));
+                        NailedLog.info("Sent death message for {} to {}", diedPlayer.getDisplayName().replace("%", "%%"), player.getDisplayName().replace("%", "%%"));
                     }else return;
                 }
             }

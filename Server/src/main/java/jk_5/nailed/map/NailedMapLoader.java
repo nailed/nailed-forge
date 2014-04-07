@@ -12,7 +12,10 @@ import jk_5.nailed.api.concurrent.scheduler.NailedRunnable;
 import jk_5.nailed.api.events.MapCreatedEvent;
 import jk_5.nailed.api.events.MapRemovedEvent;
 import jk_5.nailed.api.events.PlayerChangedDimensionEvent;
-import jk_5.nailed.api.map.*;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.MapLoader;
+import jk_5.nailed.api.map.Mappack;
+import jk_5.nailed.api.map.PvpIgnoringDamageSource;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.map.gen.NailedWorldProvider;
 import jk_5.nailed.map.script.api.MapApi;
@@ -66,23 +69,23 @@ public class NailedMapLoader implements MapLoader {
     public void registerMap(Map map){
         if(map.getID() == 0) this.lobby = map;
         this.maps.add(map);
-        NailedLog.info("Registered " + map.getSaveFileName());
+        NailedLog.info("Registered {}", map.getSaveFileName());
     }
 
     @Override
     public void createMapServer(final Mappack pack, final Callback<Map> callback){
         final PotentialMap potentialMap = new PotentialMap(pack);
-        NailedLog.info("Scheduling the load of " + potentialMap.getSaveFileName());
+        NailedLog.info("Scheduling the load of {}", potentialMap.getSaveFileName());
         NailedAPI.getScheduler().runTaskAsynchronously(new NailedRunnable() {
             @Override
             public void run(){
-                NailedLog.info("Preparing " + potentialMap.getSaveFileName());
+                NailedLog.info("Preparing {}", potentialMap.getSaveFileName());
                 pack.prepareWorld(potentialMap.getSaveFolder());
                 final Map map = pack.createMap(potentialMap);
                 NailedAPI.getScheduler().runTask(new NailedRunnable() {
                     @Override
                     public void run(){
-                        NailedLog.info("Loading " + potentialMap.getSaveFileName());
+                        NailedLog.info("Loading {}", potentialMap.getSaveFileName());
                         map.initMapServer();
                         MinecraftForge.EVENT_BUS.post(new MapCreatedEvent(map));
                         callback.callback(map);
@@ -315,7 +318,7 @@ public class NailedMapLoader implements MapLoader {
         DimensionManager.unloadWorld(map.getID());
         this.maps.remove(map);
         MinecraftForge.EVENT_BUS.post(new MapRemovedEvent(map));
-        NailedLog.info("Unloaded map " + map.getSaveFileName());
+        NailedLog.info("Unloaded map {}", map.getSaveFileName());
     }
 
     public void checkShouldStart(Map map){

@@ -37,9 +37,9 @@ class NailedSanityChecker extends IFMLCallHook {
       certs.foreach(cert => {
         val fingerprint = CertificateHelper.getFingerprint(cert)
         if(fingerprint == this.fingerprint){
-          NailedLog.info("Found valid fingerprint for Nailed. Certificate fingerprint " + fingerprint)
+          NailedLog.info("Found valid fingerprint for Nailed. Certificate fingerprint {}", fingerprint)
         }else{
-          NailedLog.fatal("Found invalid fingerprint for Nailed. Certificate fingerprint " + fingerprint)
+          NailedLog.fatal("Found invalid fingerprint for Nailed. Certificate fingerprint {}", fingerprint)
           throw new RuntimeException("Nailed is not signed! Please get a new copy, or contact jk-5")
         }
       })

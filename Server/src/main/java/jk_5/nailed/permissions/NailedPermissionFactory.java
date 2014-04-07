@@ -205,7 +205,7 @@ public class NailedPermissionFactory implements PermBuilderFactory<NailedPermiss
         }catch(ConfigParseException e){
             NailedLog.error(e.getMessage());
         }catch(Exception e){
-            NailedLog.error(e, "Error while parsing groups.cfg file");
+            NailedLog.error("Error while parsing groups.cfg file", e);
         }finally{
             IOUtils.closeQuietly(reader);
         }
@@ -275,7 +275,7 @@ public class NailedPermissionFactory implements PermBuilderFactory<NailedPermiss
         }catch(ConfigParseException e){
             NailedLog.error(e.getMessage());
         }catch(Exception e){
-            NailedLog.error(e, "Error while parsing groups.cfg file");
+            NailedLog.error("Error while parsing groups.cfg file", e);
         }finally{
             IOUtils.closeQuietly(reader);
         }

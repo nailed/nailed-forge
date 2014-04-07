@@ -35,7 +35,7 @@ public class VoidWorldChunkManager extends WorldChunkManager {
             }else{
                 spawn = new ChunkCoordinates(0, 65, 0);
             }
-            NailedLog.info("Building spawn platform at: %d, %d, %d", spawn.posX, spawn.posY - 1, spawn.posZ);
+            NailedLog.info("Building spawn platform at {}, {}, {}", spawn.posX, spawn.posY - 1, spawn.posZ);
             if(world.isAirBlock(spawn.posX, spawn.posY - 1, spawn.posZ)){
                 world.setBlock(spawn.posX, spawn.posY - 1, spawn.posZ, Blocks.bedrock);
             }

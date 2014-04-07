@@ -20,7 +20,7 @@ public class StoreSkinHandler extends SimpleChannelInboundHandler<NailedPacket.S
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, NailedPacket.StoreSkin msg) throws Exception{
-        NailedLog.info("Incoming " + (msg.isCape ? "cape" : "skin") + " data for " + msg.skinName);
+        NailedLog.info("Incoming {} data for {}", msg.isCape ? "cape" : "skin", msg.skinName);
         File dest = new File("skincache", (msg.isCape ? "cape_" : "skin_") + msg.skinName + ".png");
         dest.getParentFile().mkdirs();
         BufferedImage image = ImageIO.read(new ByteBufInputStream(msg.data));
@@ -31,6 +31,6 @@ public class StoreSkinHandler extends SimpleChannelInboundHandler<NailedPacket.S
         }else{
             SkinSync.getInstance().cacheSkinData(msg.skinName, image);
         }
-        NailedLog.info("Stored " + (msg.isCape ? "cape" : "skin") + " data for " + msg.skinName);
+        NailedLog.info("Stored {} data for {}", msg.isCape ? "cape" : "skin", msg.skinName);
     }
 }

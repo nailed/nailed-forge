@@ -53,6 +53,6 @@ public class NailedFMLPlugin implements IFMLLoadingPlugin {
     @Override
     public void injectData(Map<String, Object> data) {
         obfuscated = (Boolean) data.get("runtimeDeobfuscationEnabled");
-        NailedLog.info("Obfuscated: " + obfuscated);
+        NailedLog.info("Obfuscated: {}", obfuscated);
     }
 }

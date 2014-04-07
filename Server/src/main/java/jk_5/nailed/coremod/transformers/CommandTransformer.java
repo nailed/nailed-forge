@@ -33,7 +33,7 @@ public class CommandTransformer implements IClassTransformer {
                 return bytes;
             }
 
-            NailedLog.info("Adding permission info to " + name + " by " + mod);
+            NailedLog.info("Adding permission info to {} by {}", name, mod);
 
             cnode.interfaces.add("jk_5/nailed/server/command/PermissionCommand");
 

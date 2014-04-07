@@ -100,7 +100,7 @@ public class NailedPlayerRegistry implements PlayerRegistry {
     @SuppressWarnings("unused")
     public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event){
         Player player = this.getOrCreatePlayer(event.player);
-        NailedLog.info("Player " + player.getUsername() + " logged in in world " + player.getCurrentMap().getSaveFileName());
+        NailedLog.info("Player {} logged in in world {}", player.getUsername(), player.getCurrentMap().getSaveFileName());
         player.onLogin();
         MinecraftForge.EVENT_BUS.post(new PlayerJoinEvent(player));
         for(Player p : this.players){
@@ -127,9 +127,9 @@ public class NailedPlayerRegistry implements PlayerRegistry {
         Player p = this.getPlayer(event.player);
         Map oldMap = p.getCurrentMap();
         Map newMap = NailedAPI.getMapLoader().getMap(event.player.worldObj);
-        NailedLog.info("Player " + p.getUsername() + " changed dimension");
-        NailedLog.info("   From: " + oldMap.getSaveFileName());
-        NailedLog.info("   To:   " + newMap.getSaveFileName());
+        NailedLog.info("Player {} changed dimension", p.getUsername());
+        NailedLog.info("   From: {}", oldMap.getSaveFileName());
+        NailedLog.info("   To:   {}", newMap.getSaveFileName());
         p.onChangedDimension();
         MinecraftForge.EVENT_BUS.post(new PlayerChangedDimensionEvent(p, oldMap, newMap));
     }
@@ -138,7 +138,7 @@ public class NailedPlayerRegistry implements PlayerRegistry {
     @SuppressWarnings("unused")
     public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event){
         Player p = this.getPlayer(event.player);
-        NailedLog.info("Player " + p.getUsername() + " respawned");
+        NailedLog.info("Player {} respawned", p.getUsername());
         p.onRespawn();
     }
 

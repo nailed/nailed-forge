@@ -30,7 +30,7 @@ public class StatConfig implements jk_5.nailed.api.map.stat.StatConfig {
             if(typeTag != null){
                 IStatType type = StatTypeManager.instance().getStatType(typeTag.getValue());
                 if(type == null){
-                    NailedLog.warn("Unknown stat type " + typeTag.getValue());
+                    NailedLog.warn("Unknown stat type {}", typeTag.getValue());
                     continue;
                 }
                 stat.setType(type);
