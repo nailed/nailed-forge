@@ -4,4 +4,4 @@ notifications:
   - http://n.tkte.ch/h/2168/p4YwarspH9F_JhoNNBJWXkNe
   email: false
 install: TERM=dumb ./gradlew setupCIWorkspace
-script: TERM=dumb ./gradlew check
+script: TERM=dumb ./gradlew check -S
