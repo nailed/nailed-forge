@@ -5,8 +5,7 @@ import gnu.trove.map.hash.TObjectByteHashMap;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageCodec;
-import jk_5.nailed.ipc.packet.IpcPacket;
-import jk_5.nailed.ipc.packet.PacketInitConnection;
+import jk_5.nailed.ipc.packet.*;
 
 import java.util.List;
 
@@ -21,7 +20,12 @@ public class PacketCodec extends ByteToMessageCodec<IpcPacket> {
     private final TObjectByteHashMap<Class<? extends IpcPacket>> classToId = new TObjectByteHashMap<Class<? extends IpcPacket>>();
 
     public PacketCodec(){
+        this.registerPacket(0, PacketIdentify.class);
         this.registerPacket(1, PacketInitConnection.class);
+        this.registerPacket(2, PacketPlayerJoin.class);
+        this.registerPacket(3, PacketPlayerLeave.class);
+        this.registerPacket(4, PacketPlayerDeath.class);
+        this.registerPacket(5, PacketKill.class);
     }
 
     private PacketCodec registerPacket(int id, Class<? extends IpcPacket> packet){

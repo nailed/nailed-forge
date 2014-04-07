@@ -19,6 +19,7 @@ public class PacketPlayerJoin extends IpcPacket {
 
     @Override
     public void encode(ByteBuf buffer){
+        PacketUtils.writeString(this.player.getGameProfile().getId(), buffer);
         PacketUtils.writeString(this.player.getUsername(), buffer);
     }
 

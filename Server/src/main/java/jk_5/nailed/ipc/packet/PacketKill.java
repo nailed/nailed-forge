@@ -20,8 +20,8 @@ public class PacketKill extends IpcPacket {
 
     @Override
     public void encode(ByteBuf buffer){
-        PacketUtils.writeString(killer.getUsername(), buffer);
-        PacketUtils.writeString(victim.getUsername(), buffer);
+        PacketUtils.writeString(killer.getGameProfile().getId(), buffer);
+        PacketUtils.writeString(victim.getGameProfile().getId(), buffer);
     }
 
     @Override

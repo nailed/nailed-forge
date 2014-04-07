@@ -20,7 +20,7 @@ public class PacketPlayerDeath extends IpcPacket {
 
     @Override
     public void encode(ByteBuf buffer){
-        PacketUtils.writeString(this.player.getUsername(), buffer);
+        PacketUtils.writeString(this.player.getGameProfile().getId(), buffer);
         PacketUtils.writeString(this.cause, buffer);
     }
 

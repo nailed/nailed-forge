@@ -20,7 +20,6 @@ object UpdatingTweaker {
   val logger = LogManager.getLogger("Nailed-Updater")
 }
 class UpdatingTweaker extends ITweaker {
-
   override def getLaunchArguments = new Array[String](0)
   override def getLaunchTarget = UpdatingTweaker.mainClass
   override def injectIntoClassLoader(classLoader: LaunchClassLoader){}

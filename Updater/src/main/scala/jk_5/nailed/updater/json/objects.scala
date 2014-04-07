@@ -20,6 +20,7 @@ class Library {
   var restart: RestartLevel = null
   var mod = false
   var load = false
+  var coremod: String = null
 }
 
 /**

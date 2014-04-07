@@ -159,6 +159,9 @@ object Updater {
 
       logger.info("Injecting artifacts into classLoader")
       remote.libraries.filter(_.load).foreach(l => this.injectIntoClassLoader(this.resolve(l.destination)))
+
+      logger.info("Injecting coremods")
+      Properties.setProp("fml.coreMods.load", remote.libraries.filter(_.coremod != null).map(_.coremod).mkString(","))
     }
     DownloadMonitor.close()
     updated.get

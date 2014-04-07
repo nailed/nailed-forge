@@ -21,7 +21,7 @@ public class PacketInitConnection extends IpcPacket {
         PacketUtils.writeString("minecraft.kogint.tk:25566", buffer);
         PacketUtils.writeVarInt(players.size(), buffer);
         for(Player player : players){
-            PacketUtils.writeString(player.getId(), buffer);
+            PacketUtils.writeString(player.getGameProfile().getId(), buffer);
             PacketUtils.writeString(player.getUsername(), buffer);
         }
         List<Mappack> mappacks = NailedAPI.getMappackLoader().getMappacks();
