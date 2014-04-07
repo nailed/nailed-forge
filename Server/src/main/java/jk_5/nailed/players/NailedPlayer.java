@@ -14,7 +14,6 @@ import jk_5.nailed.api.map.MappackMetadata;
 import jk_5.nailed.api.map.team.Team;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.map.Spawnpoint;
-import jk_5.nailed.map.teleport.TeleportHelper;
 import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.network.NailedPacket;
 import jk_5.nailed.permissions.Group;
@@ -153,7 +152,7 @@ public class NailedPlayer implements Player {
     }
 
     public void teleportToMap(Map map){
-        TeleportHelper.travelEntity(this.getEntity(), map.getSpawnTeleport());
+        NailedAPI.getTeleporter().teleportEntity(this.getEntity(), map.getSpawnTeleport());
     }
 
     public Spawnpoint getLocation(){

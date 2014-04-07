@@ -1,9 +1,11 @@
 package jk_5.nailed.map.teleport;
 
-import jk_5.nailed.NailedLog;
+import com.google.common.base.Preconditions;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.teleport.TeleportEvent;
 import jk_5.nailed.api.map.teleport.TeleportOptions;
+import jk_5.nailed.api.map.teleport.Teleporter;
 import jk_5.nailed.map.Spawnpoint;
 import jk_5.nailed.map.gen.NailedWorldProvider;
 import net.minecraft.block.Block;
@@ -16,49 +18,55 @@ import net.minecraft.network.play.server.S07PacketRespawn;
 import net.minecraft.network.play.server.S1DPacketEntityEffect;
 import net.minecraft.network.play.server.S1FPacketSetExperience;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.MinecraftForge;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TeleportHelper {
-    private static MinecraftServer mcServer = null;
+/**
+ * {@inheritDoc}
+ */
+public class NailedTeleporter implements Teleporter {
 
-    public static boolean travelEntity(Entity entity, TeleportOptions options){
-        Map currentMap = NailedAPI.getMapLoader().getMap(entity.worldObj);
-        Map destMap = options.getDestination();
-        if(destMap == null){
-            destMap = currentMap;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean teleportEntity(@Nonnull Entity entity, @Nonnull TeleportOptions options){
+        Preconditions.checkNotNull(entity, "entity");
+        Preconditions.checkNotNull(options, "options");
+
+        Map current = NailedAPI.getMapLoader().getMap(entity.worldObj);
+        Map destination = options.getDestination();
+        if(destination == null){
+            destination = current;
         }
-        World destWorld = destMap.getWorld();
+        World destWorld = destination.getWorld();
         if(destWorld.isRemote) return false;
-        if(options == null) return false;
-        options = options.clone();
-        int dimension = destMap.getID();
+        options = options.clone(); //We don't want to accidently modify the options object passed in, so we clone it.
         Spawnpoint spawn = options.getCoordinates();
-        if(!TeleportEventFactory.isLinkPermitted(currentMap, destMap, entity, options)) return false;
-        if(mcServer == null) mcServer = MinecraftServer.getServer();
-        if(mcServer == null) return false;
-        WorldServer newworld = mcServer.worldServerForDimension(dimension);
-        if(newworld == null){
-            NailedLog.error("Cannot Link Entity to Dimension: Could not get World for Dimension " + dimension);
+        if(!TeleportEventFactory.isLinkPermitted(current, destination, entity, options)){
             return false;
         }
         if(spawn == null){
-            spawn = new Spawnpoint(newworld.getSpawnPoint());
+            spawn = new Spawnpoint(destWorld.getSpawnPoint());
             options.setCoordinates(spawn);
         }
-        TeleportEvent.TeleportEventAlter event = new TeleportEvent.TeleportEventAlter(currentMap, destMap, entity, options.clone());
+        TeleportEvent.TeleportEventAlter event = new TeleportEvent.TeleportEventAlter(current, destination, entity, options.clone());
         MinecraftForge.EVENT_BUS.post(event);
-        if(event.spawn != null) spawn = event.spawn;
-        teleportEntity(currentMap, destMap, entity, spawn, options);
+        if(event.spawn != null){
+            spawn = event.spawn;
+        }
+        teleportEntity(current, destination, entity, spawn, options);
         return true;
     }
+
+    //TODO: Rewrite all code below
 
     private static Entity teleportEntity(Map currentMap, Map destMap, Entity entity, Spawnpoint spawn, TeleportOptions options){
         int dimension = destMap.getID();

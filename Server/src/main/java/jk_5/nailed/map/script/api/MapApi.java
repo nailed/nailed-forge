@@ -11,6 +11,7 @@ import jk_5.nailed.api.map.stat.IStatType;
 import jk_5.nailed.api.map.stat.Stat;
 import jk_5.nailed.api.map.team.Team;
 import jk_5.nailed.api.map.teleport.TeleportOptions;
+import jk_5.nailed.api.map.teleport.Teleporter;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.api.scripting.ILuaAPI;
 import jk_5.nailed.api.scripting.ILuaContext;
@@ -20,7 +21,6 @@ import jk_5.nailed.map.script.IAPIEnvironment;
 import jk_5.nailed.map.script.LuaMachine;
 import jk_5.nailed.map.stat.DefaultStat;
 import jk_5.nailed.map.stat.types.StatTypeModifiable;
-import jk_5.nailed.map.teleport.TeleportHelper;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.PlayerCapabilities;
@@ -274,8 +274,9 @@ public class MapApi implements ILuaAPI {
                 break;
             case 17: //tpAllToLobby
                 TeleportOptions options = NailedAPI.getMapLoader().getLobby().getSpawnTeleport();
+                Teleporter teleporter = NailedAPI.getTeleporter();
                 for(Player player : this.map.getPlayers()){
-                    TeleportHelper.travelEntity(player.getEntity(), options);
+                    teleporter.teleportEntity(player.getEntity(), options);
                 }
                 break;
             case 18: //remove

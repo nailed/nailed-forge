@@ -7,7 +7,6 @@ import jk_5.nailed.api.map.Mappack;
 import jk_5.nailed.api.map.teleport.TeleportOptions;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.map.Spawnpoint;
-import jk_5.nailed.map.teleport.TeleportHelper;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -100,7 +99,7 @@ public class CommandTP extends NailedCommand {
                 }
             }
             for(Pair<Entity, TeleportOptions> p : options){
-                TeleportHelper.travelEntity(p.getKey(), p.getValue());
+                NailedAPI.getTeleporter().teleportEntity(p.getKey(), p.getValue());
             }
         }catch(CommandException e){
             sender.addChatMessage(new ChatComponentTranslation(e.getMessage()));

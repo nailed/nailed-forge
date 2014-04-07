@@ -2,6 +2,7 @@ package jk_5.nailed.map.teleport;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import jk_5.nailed.api.map.teleport.TeleportEvent;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**

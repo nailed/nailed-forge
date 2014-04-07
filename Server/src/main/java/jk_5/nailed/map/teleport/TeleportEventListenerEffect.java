@@ -1,6 +1,7 @@
 package jk_5.nailed.map.teleport;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import jk_5.nailed.api.map.teleport.TeleportEvent;
 import jk_5.nailed.api.map.teleport.TeleportOptions;
 import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.network.NailedPacket;

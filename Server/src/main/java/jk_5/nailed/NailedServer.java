@@ -20,6 +20,7 @@ import jk_5.nailed.map.mappack.NailedMappackLoader;
 import jk_5.nailed.map.stat.RegisterStatTypeEvent;
 import jk_5.nailed.map.stat.StatEventHandler;
 import jk_5.nailed.map.stat.StatTypeManager;
+import jk_5.nailed.map.teleport.NailedTeleporter;
 import jk_5.nailed.map.teleport.TeleportEventListenerEffect;
 import jk_5.nailed.map.teleport.TeleportEventListenerForge;
 import jk_5.nailed.network.NailedNetworkHandler;
@@ -73,6 +74,7 @@ public class NailedServer {
         NailedAPI.setMappackLoader(new NailedMappackLoader());
         NailedAPI.setPlayerRegistry(new NailedPlayerRegistry());
         NailedAPI.setScheduler(new NailedScheduler());
+        NailedAPI.setTeleporter(new NailedTeleporter());
 
         FMLCommonHandler.instance().bus().register(NailedAPI.getScheduler());
     }

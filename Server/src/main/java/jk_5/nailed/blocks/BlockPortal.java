@@ -3,9 +3,9 @@ package jk_5.nailed.blocks;
 import com.google.common.collect.Lists;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.teleport.TeleportOptions;
 import jk_5.nailed.blocks.tileentity.TileEntityPortalController;
-import jk_5.nailed.map.teleport.TeleportHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -152,7 +152,7 @@ public class BlockPortal extends NailedBlock {
         TeleportOptions options = container.getDestination().clone();
         options.setMaintainMomentum(true);
         options.setSound("nailed:teleport.portal");
-        TeleportHelper.travelEntity(entity, options);
+        NailedAPI.getTeleporter().teleportEntity(entity, options);
     }
 
     @Override

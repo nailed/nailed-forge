@@ -1,9 +1,9 @@
 package jk_5.nailed.server.command;
 
+import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.teleport.TeleportOptions;
 import jk_5.nailed.api.player.Player;
-import jk_5.nailed.map.teleport.TeleportHelper;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -24,7 +24,7 @@ public class CommandRandomSpawnpoint extends NailedCommand {
         if(args.length == 0){
             TeleportOptions options = new TeleportOptions();
             options.setCoordinates(map.getRandomSpawnpoint());
-            TeleportHelper.travelEntity(sender.getEntity(), options);
+            NailedAPI.getTeleporter().teleportEntity(sender.getEntity(), options);
         }else{
             this.processCommandWithMap(sender.getEntity(), map, args);
         }
@@ -37,7 +37,7 @@ public class CommandRandomSpawnpoint extends NailedCommand {
             for(EntityPlayerMP player : players){
                 TeleportOptions options = new TeleportOptions();
                 options.setCoordinates(map.getRandomSpawnpoint());
-                TeleportHelper.travelEntity(player, options);
+                NailedAPI.getTeleporter().teleportEntity(player, options);
             }
         }else throw new WrongUsageException(this.getCommandUsage(sender));
     }

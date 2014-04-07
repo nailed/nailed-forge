@@ -1,15 +1,14 @@
-package jk_5.nailed.map.teleport;
+package jk_5.nailed.api.map.teleport;
 
 import cpw.mods.fml.common.eventhandler.Cancelable;
 import cpw.mods.fml.common.eventhandler.Event;
 import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.teleport.TeleportOptions;
 import jk_5.nailed.map.Spawnpoint;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.entity.Entity;
 
 @RequiredArgsConstructor
-public abstract class TeleportEvent extends Event {
+public class TeleportEvent extends Event {
 
     public final Map oldMap;
     public final Map newMap;
