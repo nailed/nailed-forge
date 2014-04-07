@@ -266,7 +266,7 @@ public class ScriptingMachine {
                     //noinspection SynchronizeOnNonFinalField
                     synchronized(ScriptingMachine.this.luaMachine){
                         //noinspection NullArgumentToVariableArgMethod
-                        ScriptingMachine.this.luaMachine.handleEvent(null, null);
+                        ScriptingMachine.this.luaMachine.handleEvent(null);
                     }
                     ScriptingMachine.this.state = MachineState.RUNNING;
                 }
