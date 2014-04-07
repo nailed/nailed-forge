@@ -1,7 +1,7 @@
-package jk_5.nailed.api.map;
+package jk_5.nailed.map;
 
 import com.google.common.base.Preconditions;
-import jk_5.nailed.api.util.MathUtil;
+import jk_5.nailed.util.MathUtil;
 
 import javax.annotation.Nonnull;
 

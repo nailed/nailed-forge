@@ -1,4 +1,4 @@
-package jk_5.nailed.api.util;
+package jk_5.nailed.util;
 
 /**
  * No description given

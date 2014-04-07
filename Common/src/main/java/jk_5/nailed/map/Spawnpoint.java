@@ -11,7 +11,9 @@ import net.minecraft.util.ChunkCoordinates;
  * No description given
  *
  * @author jk-5
+ * @deprecated Use {@link Location}
  */
+@Deprecated
 public class Spawnpoint extends ChunkCoordinates {
 
     public String name;
