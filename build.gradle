@@ -32,7 +32,7 @@ version = '2.0-SNAPSHOT'
 
 nailed {
     minecraftVersion = '1.7.2'
-    forgeVersion = '10.12.0.1052'
+    forgeVersion = '10.12.0.1057'
 
     versionName = 'Nailed-1.7.2'
     mainClass = 'net.minecraft.launchwrapper.Launch'
@@ -43,7 +43,7 @@ nailed {
     deploy artifact: 'nailedCommon', project: 'Common', load: true, reobf: true, coremod: 'jk_5.nailed.common.coremod.NailedCommonFMLPlugin'
     deploy artifact: 'nailedCrashReporter', project: 'CrashReporter', load: true
     deploy artifact: 'nailedUpdater', project: 'Updater', restart: 'game'
-    deploy artifact: 'forge', maven: 'net.minecraftforge:forge:1.7.2-10.12.0.1052:universal', load: true, server: 'http://files.minecraftforge.net/maven/'
+    deploy artifact: 'forge', maven: 'net.minecraftforge:forge:1.7.2-10.12.0.1057:universal', load: true, server: 'http://files.minecraftforge.net/maven/'
     deploy artifact: 'minecraft', maven: 'versions::1.7.2', localmaven: 'net.minecraft:minecraft:1.7.2', load: true, server: 'https://s3.amazonaws.com/Minecraft.Download/'
 
     launcherTweaker = 'jk_5.nailed.updater.UpdatingTweaker'
@@ -65,7 +65,7 @@ createLauncherProfile {
 }
 
 minecraft {
-    version = '1.7.2-10.12.0.1052'
+    version = '1.7.2-10.12.0.1057'
     assetDir = 'runtime/client/assets'
 }
 

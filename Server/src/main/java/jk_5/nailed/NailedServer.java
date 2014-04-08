@@ -13,6 +13,7 @@ import jk_5.nailed.chat.joinmessage.JoinMessageSender;
 import jk_5.nailed.ipc.IpcEventListener;
 import jk_5.nailed.ipc.IpcManager;
 import jk_5.nailed.irc.IrcConnector;
+import jk_5.nailed.irc.OldIrcBot;
 import jk_5.nailed.item.NailedItems;
 import jk_5.nailed.map.NailedMapLoader;
 import jk_5.nailed.map.gen.NailedWorldProvider;
@@ -60,6 +61,7 @@ public class NailedServer {
     @Getter private static int providerID;
 
     @Getter private static IrcConnector ircConnector;
+    @Getter @Deprecated private static OldIrcBot ircBot;
     @Getter private static TeamspeakClient teamspeakClient;
     @Getter private static NailedPermissionFactory permissionFactory;
     @Getter private static File configDir;
@@ -148,6 +150,7 @@ public class NailedServer {
         PermissionsManager.setPermFactory(permissionFactory, NailedServer.modid);
 
         ircConnector = new IrcConnector();
+        ircBot = new OldIrcBot();
         teamspeakClient = new TeamspeakClient();
 
         ircConnector.readConfig(config.getTag("irc"));
@@ -173,7 +176,8 @@ public class NailedServer {
         NailedLog.info("Loading the mappacks");
         NailedAPI.getMappackLoader().loadMappacks();
 
-        ircConnector.connect();
+        //ircConnector.connect();
+        ircBot.connect();
     }
 
     @EventHandler

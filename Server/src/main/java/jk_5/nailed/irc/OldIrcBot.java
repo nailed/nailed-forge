@@ -59,7 +59,7 @@ public class OldIrcBot extends PircBot {
             .put(Colors.YELLOW, EnumChatFormatting.YELLOW).build();
 
     public OldIrcBot(){
-        ConfigTag tag = NailedServer.getConfig().getTag("irc").useBraces();
+        ConfigTag tag = NailedServer.getConfig().getTag("oldirc").useBraces();
         this.enabled = tag.getTag("enabled").getBooleanValue(false);
         this.host = tag.getTag("host").getValue("");
         this.port = tag.getTag("port").getIntValue(6667);
