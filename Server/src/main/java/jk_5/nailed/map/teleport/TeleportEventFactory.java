@@ -11,10 +11,7 @@ public class TeleportEventFactory {
 
     public static boolean isLinkPermitted(Map orgin, Map destination, Entity entity, TeleportOptions options){
         Event event = new TeleportEvent.TeleportEventAllow(orgin, destination, entity, options.clone());
-        if(MinecraftForge.EVENT_BUS.post(event)){
-            return false;
-        }
-        return true;
+        return !MinecraftForge.EVENT_BUS.post(event);
     }
 
     public static void onLinkStart(Map orgin, Map destination, Entity entity, TeleportOptions options){

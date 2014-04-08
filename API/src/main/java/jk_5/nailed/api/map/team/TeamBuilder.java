@@ -3,6 +3,8 @@ package jk_5.nailed.api.map.team;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.util.ChatColor;
 
+import javax.annotation.Nonnull;
+
 /**
  * No description given
  *
@@ -16,11 +18,11 @@ public interface TeamBuilder {
     public boolean isFriendlyFire();
     public boolean isSeeFriendlyInvisibles();
 
-    public void setName(String name);
-    public void setInternalName(String internalName);
-    public void setColor(ChatColor color);
-    public void setFriendlyFire(boolean isFriendlyFire);
-    public void setSeeFriendlyInvisibles(boolean isSeeFriendlyInvisibles);
+    public TeamBuilder setName(@Nonnull String name);
+    public TeamBuilder setInternalName(@Nonnull String internalName);
+    public TeamBuilder setColor(@Nonnull ChatColor color);
+    public TeamBuilder setFriendlyFire(boolean isFriendlyFire);
+    public TeamBuilder setSeeFriendlyInvisibles(boolean isSeeFriendlyInvisibles);
 
-    public Team build(Map map);
+    @Nonnull public Team build(Map map);
 }
