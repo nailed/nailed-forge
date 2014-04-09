@@ -111,7 +111,7 @@ public class NailedWorldProvider extends WorldProvider implements MappackContain
 
     @Override
     public String getSaveFolder(){
-        return null;
+        return "../" + this.map.getSaveFileName();
     }
 
     @Override
