@@ -39,19 +39,11 @@ public class ClassHeirachyTransformer implements IClassTransformer {
     public static HashMap<String, SuperCache> superclasses = new HashMap<String, SuperCache>();
     private static LaunchClassLoader cl = (LaunchClassLoader) ClassHeirachyTransformer.class.getClassLoader();
 
-    static{
-        cl.addTransformerExclusion("codechicken.lib.asm");
-    }
-
     public static String toKey(String name){
-        //if(Mapping.obfuscated)
-        //    name = FMLDeobfuscatingRemapper.INSTANCE.map(name.replace('.', '/')).replace('/', '.');
         return name.replace('/', '.');
     }
 
     public static String unKey(String name){
-        //if(Mapping.obfuscated)
-        //    name = FMLDeobfuscatingRemapper.INSTANCE.unmap(name.replace('.', '/')).replace('/', '.');
         return name.replace('/', '.');
     }
 
@@ -60,18 +52,20 @@ public class ClassHeirachyTransformer implements IClassTransformer {
      *
      * @param name       The class in question
      * @param superclass The class being extended
-     * @return
+     * @return true if the given class extends the other class. Else false
      */
     public static boolean classExtends(String name, String superclass){
         name = toKey(name);
         superclass = toKey(superclass);
 
-        if(name.equals(superclass))
+        if(name.equals(superclass)){
             return true;
+        }
 
         SuperCache cache = declareClass(name);
-        if(cache == null)//just can't handle this
+        if(cache == null){
             return false;
+        }
 
         cache.flatten();
         return cache.parents.contains(superclass);
@@ -86,9 +80,10 @@ public class ClassHeirachyTransformer implements IClassTransformer {
 
         try{
             byte[] bytes = cl.getClassBytes(unKey(name));
-            if(bytes != null)
+            if(bytes != null){
                 cache = declareASM(bytes);
-        }catch(Exception e){
+            }
+        }catch(Exception ignored){
         }
 
         if(cache != null)
@@ -97,7 +92,7 @@ public class ClassHeirachyTransformer implements IClassTransformer {
 
         try{
             cache = declareReflection(name);
-        }catch(ClassNotFoundException e){
+        }catch(ClassNotFoundException ignored){
         }
 
         return cache;
@@ -128,19 +123,22 @@ public class ClassHeirachyTransformer implements IClassTransformer {
         SuperCache cache = getOrCreateCache(name);
         cache.superclass = toKey(node.superName.replace('/', '.'));
         cache.add(cache.superclass);
-        for(String iclass : node.interfaces)
+        for(String iclass : node.interfaces){
             cache.add(toKey(iclass.replace('/', '.')));
+        }
 
         return cache;
     }
 
     @Override
     public byte[] transform(String name, String tname, byte[] bytes){
-        if(bytes == null)
+        if(bytes == null){
             return null;
+        }
 
-        if(!superclasses.containsKey(tname))
+        if(!superclasses.containsKey(tname)){
             declareASM(bytes);
+        }
 
         return bytes;
     }
@@ -155,8 +153,9 @@ public class ClassHeirachyTransformer implements IClassTransformer {
     public static String getSuperClass(String name, boolean runtime){
         name = toKey(name);
         SuperCache cache = declareClass(name);
-        if(cache == null)
+        if(cache == null){
             return "java.lang.Object";
+        }
 
         cache.flatten();
         String s = cache.superclass;

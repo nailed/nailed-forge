@@ -32,6 +32,8 @@ public class MinecraftServerTransformer implements IClassTransformer {
 
     public byte[] transformMinecraftServer(byte[] bytes, Map<String, String> data) {
         ClassNode cnode = ASMHelper.createClassNode(bytes, 0);
+
+        //Find the constructor
         MethodNode mnode = ASMHelper.findMethod(new Mapping(data.get("className").replace('.', '/'), "<init>", data.get("constructorSig")), cnode);
 
         int offset = 0;
@@ -43,6 +45,10 @@ public class MinecraftServerTransformer implements IClassTransformer {
         }
         while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKESPECIAL) offset ++;
 
+        /*
+         *  Inject:
+         *   File localFile = new File(par1File, "maps");
+         */
         InsnList list = new InsnList();
         list.add(new VarInsnNode(Opcodes.ALOAD, 0));
         list.add(new TypeInsnNode(Opcodes.NEW, "java/io/File"));
@@ -54,6 +60,9 @@ public class MinecraftServerTransformer implements IClassTransformer {
 
         mnode.instructions.insertBefore(mnode.instructions.get(offset - 4), list);
 
+        /*
+         *  Hack the this.anvilConverterForAnvilFile = new AnvilSaveConverter(par1File); to use the file we created above
+         */
         while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKESPECIAL) offset ++;
         while(mnode.instructions.get(offset).getOpcode() != Opcodes.ALOAD) offset ++;
         offset ++;
@@ -61,6 +70,7 @@ public class MinecraftServerTransformer implements IClassTransformer {
         VarInsnNode varNode = (VarInsnNode) mnode.instructions.get(offset);
         varNode.var = 5;
 
+        //Find loadAllWorlds
         mnode = ASMHelper.findMethod(new Mapping(data.get("className").replace('.', '/'), data.get("targetMethod1"), data.get("targetMethod1Sig")), cnode);
         offset = 0;
         list.clear();
@@ -68,6 +78,7 @@ public class MinecraftServerTransformer implements IClassTransformer {
         while(mnode.instructions.get(offset).getOpcode() != Opcodes.LDC) offset ++;
         while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKEVIRTUAL) offset ++;
 
+        //Inject: LobbyMap localLobbyMap = new LobbyMap();
         list.add(new TypeInsnNode(Opcodes.NEW, MAP_CLASS));
         list.add(new InsnNode(Opcodes.DUP));
         list.add(new MethodInsnNode(Opcodes.INVOKESPECIAL, MAP_CLASS, "<init>", "()V"));
@@ -75,6 +86,8 @@ public class MinecraftServerTransformer implements IClassTransformer {
 
         mnode.instructions.insert(mnode.instructions.get(offset), list);
 
+        //Modify ISaveHandler isavehandler = this.anvilConverterForAnvilFile.getSaveLoader(par2Str, true);
+        //Let it use localLobbyMap.getSaveFileName() instead of par2Str
         while(mnode.instructions.get(offset).getOpcode() != Opcodes.GETFIELD) offset ++;
         while(mnode.instructions.get(offset).getOpcode() != Opcodes.ALOAD) offset ++;
         mnode.instructions.remove(mnode.instructions.get(offset));
@@ -87,6 +100,7 @@ public class MinecraftServerTransformer implements IClassTransformer {
 
         list.clear();
 
+        //Change every reference to ALOAD2 (par2Str) to use localLobbyMap.getSaveFileName()
         while(!(mnode.instructions.get(offset).getOpcode() == Opcodes.INVOKESTATIC && ((MethodInsnNode) mnode.instructions.get(offset)).name.equals("getStaticDimensionIDs"))){
             AbstractInsnNode node = mnode.instructions.get(offset);
             if(node.getOpcode() == Opcodes.ALOAD){
@@ -107,6 +121,7 @@ public class MinecraftServerTransformer implements IClassTransformer {
         offset ++;
         while(mnode.instructions.get(offset).getOpcode() != Opcodes.ILOAD) offset ++;
 
+        //Modify the end and nether world names from DIM_-1 and DIM_1 to their nailed names (map_-1 and map_1)
         list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "jk_5/nailed/map/NailedMapLoader", "instance", "()Ljk_5/nailed/map/NailedMapLoader;"));
         list.add(new VarInsnNode(Opcodes.ILOAD, 14));
         list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "jk_5/nailed/map/NailedMapLoader", "getMap", "(I)Ljk_5/nailed/api/map/Map;"));
@@ -123,6 +138,8 @@ public class MinecraftServerTransformer implements IClassTransformer {
         while(mnode.instructions.get(offset).getOpcode() != Opcodes.ALOAD) offset ++;
         offset ++;
 
+        //Force nether and end to use WorldServer instead of using WorldServerMulti
+        //TODO: this is bad! Remove this?
         list.add(new VarInsnNode(Opcodes.ALOAD, 0));
         list.add(new FieldInsnNode(Opcodes.GETFIELD, data.get("className").replace('.', '/'), data.get("saveFormatField"), data.get("saveFormatFieldSig")));
         list.add(new VarInsnNode(Opcodes.ALOAD, 17));
