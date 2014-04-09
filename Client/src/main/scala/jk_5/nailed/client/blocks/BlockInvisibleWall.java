@@ -44,6 +44,8 @@ public class BlockInvisibleWall extends BlockMulti {
             return "invisibleBlock";
         }else if(stack.getItemDamage() == 2){
             return "invisibleLight";
+        }else if(stack.getItemDamage() == 3){
+            return "invisibleRedstone";
         }
         return "";
     }
@@ -65,7 +67,8 @@ public class BlockInvisibleWall extends BlockMulti {
 
     @Override
     public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z){
-        if(world.getBlockMetadata(x, y, z) == 1) return null;
+        int meta = world.getBlockMetadata(x, y, z);
+        if(meta == 1 || meta == 3) return null;
         return super.getCollisionBoundingBoxFromPool(world, x, y, z);
     }
 
@@ -95,5 +98,6 @@ public class BlockInvisibleWall extends BlockMulti {
         list.add(new ItemStack(item, 1, 0));
         list.add(new ItemStack(item, 1, 1));
         list.add(new ItemStack(item, 1, 2));
+        list.add(new ItemStack(item, 1, 3));
     }
 }

@@ -42,6 +42,8 @@ public class BlockInvisibleWall extends BlockMulti {
             return "invisibleBlock";
         }else if(stack.getItemDamage() == 2){
             return "invisibleLight";
+        }else if(stack.getItemDamage() == 3){
+            return "invisibleRedstone";
         }
         return "";
     }
@@ -58,7 +60,8 @@ public class BlockInvisibleWall extends BlockMulti {
 
     @Override
     public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z){
-        if(world.getBlockMetadata(x, y, z) == 1) return null;
+        int meta = world.getBlockMetadata(x, y, z);
+        if(meta == 1 || meta == 3) return null;
         return super.getCollisionBoundingBoxFromPool(world, x, y, z);
     }
 
@@ -83,10 +86,16 @@ public class BlockInvisibleWall extends BlockMulti {
     }
 
     @Override
+    public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int p_149709_5_){
+        return world.getBlockMetadata(x, y, z) == 3 ? 15 : 0;
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public void getSubBlocks(Item item, CreativeTabs tab, List list){
         list.add(new ItemStack(item, 1, 0));
         list.add(new ItemStack(item, 1, 1));
         list.add(new ItemStack(item, 1, 2));
+        list.add(new ItemStack(item, 1, 3));
     }
 }

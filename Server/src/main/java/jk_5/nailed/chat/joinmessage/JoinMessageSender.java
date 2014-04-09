@@ -50,7 +50,7 @@ public class JoinMessageSender {
                     }
                 }
             }catch(Exception e){
-                NailedLog.error(e, "Error while reading join message config file");
+                NailedLog.error("Error while reading join message config file", e);
             }finally{
                 IOUtils.closeQuietly(reader);
             }
@@ -72,7 +72,7 @@ public class JoinMessageSender {
                 writer.println("&6Welcome &3${playername}&6 to Nailed");
                 writer.println("&6Uptime: &7${uptime}");
             }catch(Exception e){
-                NailedLog.error(e, "Error while writing default join message config file");
+                NailedLog.error("Error while writing default join message config file", e);
             }finally{
                 IOUtils.closeQuietly(writer);
             }
