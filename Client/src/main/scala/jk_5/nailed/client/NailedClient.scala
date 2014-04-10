@@ -19,6 +19,7 @@ import jk_5.nailed.client.map.NailedWorldProvider
 import net.minecraft.network.play.server.S2BPacketChangeGameState
 import jk_5.nailed.client.scripting.ClientMachine
 import jk_5.nailed.map.script.MachineRegistry
+import jk_5.nailed.client.updater.UpdaterApi
 
 /**
  * No description given
@@ -83,6 +84,8 @@ object NailedClient {
     //DimensionManager.registerProviderType(1, classOf[NailedWorldProvider], false)
 
     S2BPacketChangeGameState.field_149142_a(3) = null //Prevent annoying "Your gamemode has been updated" message. If we want it we'll send it ourselves
+
+    NailedLog.info("Updater installed: {}", UpdaterApi.updaterInstalled)
   }
 
   @Mod.EventHandler def init(event: FMLInitializationEvent){

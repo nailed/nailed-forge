@@ -354,4 +354,19 @@ public abstract class NailedPacket {
             this.enable = buffer.readBoolean();
         }
     }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class CheckClientUpdates extends NailedPacket {
+
+        @Override
+        public void encode(ByteBuf buffer){
+
+        }
+
+        @Override
+        public void decode(ByteBuf buffer){
+
+        }
+    }
 }
