@@ -38,32 +38,23 @@ object Updater {
     }
   })
 
-  def checkForUpdates(): Boolean = {
+  private[updater] def downloadUpdates(monitor: Boolean = false): (Boolean, LibraryList) = {
     logger.info("Checking for updates...")
 
     val progress = new AtomicInteger(0)
 
-    DownloadMonitor.setNote("Reading remote versions")
+    if(monitor) DownloadMonitor.setNote("Reading remote versions")
     val remote = LibraryList.readFromUrl(this.versionsUrl)
-    DownloadMonitor.setNote("Reading local versions")
+    if(monitor) DownloadMonitor.setNote("Reading local versions")
     val local = LibraryList.readFromFile(this.versionsFile)
-
-    DownloadMonitor.setNote("Cleaning up the mods folder...")
-    val modsFolder = this.resolve("{MC_GAME_DIR}/mods/")
-    if(!modsFolder.exists) modsFolder.mkdir
-    DownloadMonitor.setProgress(0)
-    DownloadMonitor.setMaximum(modsFolder.listFiles.length)
-    modsFolder.listFiles.filter(f => f.getName.contains("Nailed") || f.getName.contains("nailed")).foreach(f => {
-      logger.info(s"Found nailed related file ${f.getName} in mods folder. Removing it!")
-      f.delete
-      DownloadMonitor.setProgress(progress.getAndIncrement)
-    })
 
     val download = new util.HashSet[Library]()
 
-    DownloadMonitor.setNote("Scanning artifact versions")
-    DownloadMonitor.setProgress(0)
-    DownloadMonitor.setMaximum(remote.libraries.size)
+    if(monitor){
+      DownloadMonitor.setNote("Scanning artifact versions")
+      DownloadMonitor.setProgress(0)
+      DownloadMonitor.setMaximum(remote.libraries.size)
+    }
     progress.set(0)
     remote.libraries.foreach(library => {
       val loc = local.libraries.find(_.name == library.name)
@@ -78,16 +69,18 @@ object Updater {
           download.add(library)
         }
       }
-      DownloadMonitor.setProgress(progress.getAndIncrement)
+      if(monitor) DownloadMonitor.setProgress(progress.getAndIncrement)
     })
 
     val updated = new AtomicBoolean(false)
     val latch = new CountDownLatch(download.size)
 
-    DownloadMonitor.setProgress(0)
-    DownloadMonitor.setMaximum(download.size)
-    progress.set(0)
-    DownloadMonitor.setNote("Downloading updates")
+    if(monitor){
+      DownloadMonitor.setProgress(0)
+      DownloadMonitor.setMaximum(download.size)
+      progress.set(0)
+      DownloadMonitor.setNote("Downloading updates")
+    }
     download.foreach(library => {
       downloadThreadPool.execute(new Runnable {
         def run(){
@@ -118,7 +111,7 @@ object Updater {
             }
           }
           logger.info(s"Finished updating ${library.name} (Took ${System.currentTimeMillis() - startTime}ms)")
-          DownloadMonitor.setProgress(progress.getAndIncrement)
+          if(monitor) DownloadMonitor.setProgress(progress.getAndIncrement)
           latch.countDown()
         }
       })
@@ -126,15 +119,36 @@ object Updater {
 
     latch.await()
 
-    DownloadMonitor.setProgress(0)
-    DownloadMonitor.setMaximum(0)
-    progress.set(0)
-    DownloadMonitor.setNote("Writing local versions file")
+    if(monitor){
+      DownloadMonitor.setProgress(0)
+      DownloadMonitor.setMaximum(0)
+      progress.set(0)
+      DownloadMonitor.setNote("Writing local versions file")
+    }
 
     if(updated.get) {
       logger.info("Writing local versions file...")
       local.writeToFile(this.versionsFile)
     }
+
+    (updated.get(), remote)
+  }
+
+  def checkForUpdates(): Boolean = {
+    val progress = new AtomicInteger(0)
+
+    DownloadMonitor.setNote("Cleaning up the mods folder...")
+    val modsFolder = this.resolve("{MC_GAME_DIR}/mods/")
+    if(!modsFolder.exists) modsFolder.mkdir
+    DownloadMonitor.setProgress(0)
+    DownloadMonitor.setMaximum(modsFolder.listFiles.length)
+    modsFolder.listFiles.filter(f => f.getName.contains("Nailed") || f.getName.contains("nailed")).foreach(f => {
+      logger.info(s"Found nailed related file ${f.getName} in mods folder. Removing it!")
+      f.delete
+      DownloadMonitor.setProgress(progress.getAndIncrement)
+    })
+
+    val (updated, remote) = this.downloadUpdates(monitor = true)
 
     if(restart == RestartLevel.NOTHING) {
       logger.info("Moving artifacts to the mod folder")
@@ -168,7 +182,7 @@ object Updater {
       this.mainClass = Option(remote.mainClass).getOrElse(this.mainClass)
     }
     DownloadMonitor.close()
-    updated.get
+    updated
   }
 
   private def resolve(input: String): File = {
