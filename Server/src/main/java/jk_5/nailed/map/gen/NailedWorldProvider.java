@@ -129,6 +129,7 @@ public class NailedWorldProvider extends WorldProvider implements MappackContain
         if(this.hasMappack()){
             return new Spawnpoint(this.map.getMappack().getMappackMetadata().getSpawnPoint());
         }else{
+            //FIXME: this line causes infinite recursion and a stack overflow
             return super.getRandomizedSpawnPoint();
         }
     }
@@ -155,20 +156,5 @@ public class NailedWorldProvider extends WorldProvider implements MappackContain
 
     public void sendMapData(EntityPlayer player){
         NailedNetworkHandler.sendPacketToPlayer(this.getMapDataPacket(), player);
-    }
-
-    @Override
-    public void setWorldTime(long time){
-        super.setWorldTime(time);
-    }
-
-    @Override
-    public long getWorldTime(){
-        return super.getWorldTime();
-    }
-
-    @Override
-    public long getSeed(){
-        return 0; //TODO: seed?
     }
 }

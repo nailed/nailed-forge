@@ -249,4 +249,14 @@ public class NailedMap implements Map {
     public int getAmountOfPlayers(){
         return this.players.size();
     }
+
+    @Override
+    public String toString(){
+        return "NailedMap{" +
+                "ID=" + ID +
+                ", name=" + this.getSaveFileName() +
+                ", mappack=" + mappack +
+                ", isLoaded=" + isLoaded +
+                '}';
+    }
 }

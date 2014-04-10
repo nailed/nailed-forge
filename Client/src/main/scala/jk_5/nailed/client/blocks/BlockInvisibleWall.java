@@ -48,6 +48,8 @@ public class BlockInvisibleWall extends BlockMulti {
             return "invisibleLight";
         }else if(stack.getItemDamage() == 3){
             return "invisibleRedstone";
+        }else if(stack.getItemDamage() == 4){
+            return "sky";
         }
         return "";
     }
@@ -101,6 +103,7 @@ public class BlockInvisibleWall extends BlockMulti {
         list.add(new ItemStack(item, 1, 1));
         list.add(new ItemStack(item, 1, 2));
         list.add(new ItemStack(item, 1, 3));
+        list.add(new ItemStack(item, 1, 4));
     }
 
     @Override
