@@ -57,6 +57,7 @@ object NailedClient {
     MinecraftForge.EVENT_BUS.register(new NotificationRenderer())
     MinecraftForge.EVENT_BUS.register(SkinSync.getInstance())
     MinecraftForge.EVENT_BUS.register(MapEditManager.instance())
+    MinecraftForge.EVENT_BUS.register(StencilSkyRenderer)
     //MinecraftForge.EVENT_BUS.register(handler)
     //FMLCommonHandler.instance().bus().register(handler)
     FMLCommonHandler.instance().bus().register(MapEditManager.instance())

@@ -1,10 +1,13 @@
 package jk_5.nailed.client.blocks;
 
+import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import jk_5.nailed.client.blocks.tileentity.TileEntityPortalController;
+import jk_5.nailed.client.blocks.tileentity.TileEntitySky;
 import jk_5.nailed.client.blocks.tileentity.TileEntityStatEmitter;
 import jk_5.nailed.client.blocks.tileentity.TileEntityStatModifier;
 import jk_5.nailed.client.item.ItemBlockMulti;
+import jk_5.nailed.client.render.tileentity.TileEntitySkyRenderer$;
 import net.minecraft.item.ItemBlock;
 
 /**
@@ -36,6 +39,9 @@ public class NailedBlocks {
         GameRegistry.registerTileEntity(TileEntityPortalController.class, "nailed.portalController");
         GameRegistry.registerTileEntity(TileEntityStatEmitter.class, "nailed.stat");
         GameRegistry.registerTileEntity(TileEntityStatModifier.class, "nailed.statmodifier");
+        GameRegistry.registerTileEntity(TileEntitySky.class, "nailed.sky");
+
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySky.class, TileEntitySkyRenderer$.MODULE$);
     }
 
     private static void registerBlock(NailedBlock block){

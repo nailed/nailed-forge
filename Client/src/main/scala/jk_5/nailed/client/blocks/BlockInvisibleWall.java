@@ -1,10 +1,12 @@
 package jk_5.nailed.client.blocks;
 
+import jk_5.nailed.client.blocks.tileentity.TileEntitySky;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
@@ -99,5 +101,15 @@ public class BlockInvisibleWall extends BlockMulti {
         list.add(new ItemStack(item, 1, 1));
         list.add(new ItemStack(item, 1, 2));
         list.add(new ItemStack(item, 1, 3));
+    }
+
+    @Override
+    public boolean hasTileEntity(int metadata){
+        return metadata == 4;
+    }
+
+    @Override
+    public TileEntity createTileEntity(World world, int metadata){
+        return metadata == 4 ? new TileEntitySky() : null;
     }
 }
