@@ -156,4 +156,19 @@ public class NailedWorldProvider extends WorldProvider implements MappackContain
     public void sendMapData(EntityPlayer player){
         NailedNetworkHandler.sendPacketToPlayer(this.getMapDataPacket(), player);
     }
+
+    @Override
+    public void setWorldTime(long time){
+        super.setWorldTime(time);
+    }
+
+    @Override
+    public long getWorldTime(){
+        return super.getWorldTime();
+    }
+
+    @Override
+    public long getSeed(){
+        return 0; //TODO: seed?
+    }
 }

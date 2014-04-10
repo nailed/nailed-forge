@@ -28,7 +28,8 @@ public class NailedFMLPlugin implements IFMLLoadingPlugin {
             return new String[]{
                     "jk_5.nailed.coremod.transformers.ClassHeirachyTransformer",
                     "jk_5.nailed.coremod.transformers.CommandTransformer",
-                    "jk_5.nailed.coremod.transformers.MinecraftServerTransformer"
+                    "jk_5.nailed.coremod.transformers.MinecraftServerTransformer",
+                    "jk_5.nailed.coremod.transformers.WorldServerMultiTransformer"
             };
         }
         return new String[0];
