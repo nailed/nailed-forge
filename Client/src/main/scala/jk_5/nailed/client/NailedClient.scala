@@ -8,7 +8,6 @@ import cpw.mods.fml.common.event.{FMLInitializationEvent, FMLPreInitializationEv
 import jk_5.nailed.NailedLog
 import jk_5.nailed.client.achievement.NailedAchievements
 import jk_5.nailed.client.network.ClientNetworkHandler
-import jk_5.nailed.client.serverlist.ServerListHandler
 import net.minecraftforge.common.{DimensionManager, MinecraftForge}
 import jk_5.nailed.client.render._
 import jk_5.nailed.client.skinsync.SkinSync
@@ -53,7 +52,7 @@ object NailedClient {
     ClientNetworkHandler.registerChannel()
 
     NailedLog.info("Registering event handlers")
-    val handler = new ServerListHandler
+    //val handler = new ServerListHandler
     MinecraftForge.EVENT_BUS.register(TimeUpdateRenderer)
     MinecraftForge.EVENT_BUS.register(new NotificationRenderer())
     MinecraftForge.EVENT_BUS.register(SkinSync.getInstance())
@@ -85,7 +84,7 @@ object NailedClient {
 
     S2BPacketChangeGameState.field_149142_a(3) = null //Prevent annoying "Your gamemode has been updated" message. If we want it we'll send it ourselves
 
-    NailedLog.info("Updater installed: {}", UpdaterApi.updaterInstalled)
+    NailedLog.info("Updater installed: {}", UpdaterApi.updaterInstalled: java.lang.Boolean)
   }
 
   @Mod.EventHandler def init(event: FMLInitializationEvent){

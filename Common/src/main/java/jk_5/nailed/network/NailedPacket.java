@@ -356,7 +356,6 @@ public abstract class NailedPacket {
     }
 
     @NoArgsConstructor
-    @AllArgsConstructor
     public static class CheckClientUpdates extends NailedPacket {
 
         @Override
