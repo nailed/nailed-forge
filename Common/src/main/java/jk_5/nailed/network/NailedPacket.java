@@ -368,4 +368,18 @@ public abstract class NailedPacket {
 
         }
     }
+
+    @NoArgsConstructor
+    public static class DisplayLogin extends NailedPacket {
+
+        @Override
+        public void encode(ByteBuf buffer){
+
+        }
+
+        @Override
+        public void decode(ByteBuf buffer){
+
+        }
+    }
 }

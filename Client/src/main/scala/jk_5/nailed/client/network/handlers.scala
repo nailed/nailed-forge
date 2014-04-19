@@ -19,7 +19,7 @@ import jk_5.nailed.NailedLog
 import java.io.File
 import javax.imageio.ImageIO
 import io.netty.buffer.ByteBufInputStream
-import jk_5.nailed.client.gui.GuiTerminal
+import jk_5.nailed.client.gui.{GuiLogin, GuiTerminal}
 import jk_5.nailed.client.scripting.ClientMachine
 import jk_5.nailed.client.NailedClient
 
@@ -150,5 +150,11 @@ object TileEntityDataHandler extends SimpleChannelInboundHandler[NailedPacket.Ti
 object TimeUpdateHandler extends SimpleChannelInboundHandler[NailedPacket.TimeUpdate] {
   override def channelRead0(ctx: ChannelHandlerContext, msg: TimeUpdate){
     TimeUpdateRenderer.format = msg.data
+  }
+}
+
+object DisplayLoginHandler extends SimpleChannelInboundHandler[NailedPacket.TimeUpdate] {
+  override def channelRead0(ctx: ChannelHandlerContext, msg: TimeUpdate){
+    mc.displayGuiScreen(new GuiLogin)
   }
 }
