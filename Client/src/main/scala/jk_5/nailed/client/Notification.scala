@@ -7,4 +7,10 @@ import net.minecraft.util.ResourceLocation
  *
  * @author jk-5
  */
-case class Notification(var text: String, var image: ResourceLocation, var expire: Long, var created: Long, var color: Int)
+case class Notification(
+  var text: String,
+  var image: ResourceLocation,
+  var expire: Long,
+  var created: Long,
+  var color: Int
+)
