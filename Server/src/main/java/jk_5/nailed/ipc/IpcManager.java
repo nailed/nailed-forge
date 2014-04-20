@@ -91,4 +91,8 @@ public class IpcManager {
         }
         return null;
     }
+
+    public boolean isConnected(){
+        return this.enabled && this.channel.isOpen();
+    }
 }

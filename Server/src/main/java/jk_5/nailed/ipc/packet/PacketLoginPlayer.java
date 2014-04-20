@@ -13,13 +13,17 @@ import lombok.NoArgsConstructor;
  */
 @NoArgsConstructor
 @AllArgsConstructor
-public class PacketPlayerLeave extends IpcPacket {
+public class PacketLoginPlayer extends IpcPacket {
 
-    private Player player;
+    public Player player;
+    public String username;
+    public String password;
 
     @Override
     public void encode(ByteBuf buffer){
-        PacketUtils.writeString(this.player.getGameProfile().getId(), buffer);
+        PacketUtils.writeString(player.getId(), buffer);
+        PacketUtils.writeString(this.username, buffer);
+        PacketUtils.writeString(this.password, buffer);
     }
 
     @Override
@@ -28,7 +32,7 @@ public class PacketPlayerLeave extends IpcPacket {
     }
 
     @Override
-    public void processPacket() {
+    public void processPacket(){
 
     }
 }

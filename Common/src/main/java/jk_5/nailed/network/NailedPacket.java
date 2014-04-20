@@ -382,4 +382,90 @@ public abstract class NailedPacket {
 
         }
     }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Login extends NailedPacket {
+
+        public String username;
+        public String password;
+
+        @Override
+        public void encode(ByteBuf buffer){
+            ByteBufUtils.writeUTF8String(buffer, this.username);
+            ByteBufUtils.writeUTF8String(buffer, this.password);
+        }
+
+        @Override
+        public void decode(ByteBuf buffer){
+            this.username = ByteBufUtils.readUTF8String(buffer);
+            this.password = ByteBufUtils.readUTF8String(buffer);
+        }
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class LoginResponse extends NailedPacket {
+
+        public int state;
+
+        @Override
+        public void encode(ByteBuf buffer){
+            buffer.writeByte(state);
+        }
+
+        @Override
+        public void decode(ByteBuf buffer){
+            this.state = buffer.readByte();
+        }
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class FieldStatus extends NailedPacket {
+
+        public int field;
+        public String content;
+        public int status;
+
+        @Override
+        public void encode(ByteBuf buffer){
+            buffer.writeByte(this.field);
+            ByteBufUtils.writeUTF8String(buffer, this.content);
+            buffer.writeByte(this.status);
+        }
+
+        @Override
+        public void decode(ByteBuf buffer){
+            this.field = buffer.readByte();
+            this.content = ByteBufUtils.readUTF8String(buffer);
+            this.status = buffer.readByte();
+        }
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class CreateAccount extends NailedPacket {
+
+        public String username;
+        public String email;
+        public String name;
+        public String password;
+
+        @Override
+        public void encode(ByteBuf buffer){
+            ByteBufUtils.writeUTF8String(buffer, this.username);
+            ByteBufUtils.writeUTF8String(buffer, this.email);
+            ByteBufUtils.writeUTF8String(buffer, this.name);
+            ByteBufUtils.writeUTF8String(buffer, this.password);
+        }
+
+        @Override
+        public void decode(ByteBuf buffer){
+            this.username = ByteBufUtils.readUTF8String(buffer);
+            this.email = ByteBufUtils.readUTF8String(buffer);
+            this.name = ByteBufUtils.readUTF8String(buffer);
+            this.password = ByteBufUtils.readUTF8String(buffer);
+        }
+    }
 }

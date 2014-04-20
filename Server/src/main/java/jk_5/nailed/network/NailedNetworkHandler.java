@@ -7,10 +7,7 @@ import cpw.mods.fml.relauncher.Side;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
 import jk_5.nailed.map.script.ScriptPacketHandler;
-import jk_5.nailed.network.handlers.FMLHandshakeHandler;
-import jk_5.nailed.network.handlers.FPSSummaryHandler;
-import jk_5.nailed.network.handlers.GuiReturnDataHandler;
-import jk_5.nailed.network.handlers.MovementEventHandler;
+import jk_5.nailed.network.handlers.*;
 import lombok.Getter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -37,6 +34,9 @@ public class NailedNetworkHandler {
         pipeline.addAfter(targetName, "MovementEventHandler", new MovementEventHandler());
         pipeline.addAfter(targetName, "GuiReturnDataHandler", new GuiReturnDataHandler());
         pipeline.addAfter(targetName, "FPSSummaryHandler", new FPSSummaryHandler());
+        pipeline.addAfter(targetName, "LoginHandler", new LoginHandler());
+        pipeline.addAfter(targetName, "FieldStatusHandler", new FieldStatusHandler());
+        pipeline.addAfter(targetName, "RegisterHandler", new RegisterHandler());
 
         pipeline.addAfter(targetName, "Script-QueueEventHandler", new ScriptPacketHandler.QueueEventHandler());
         pipeline.addAfter(targetName, "Script-StateEventHandler", new ScriptPacketHandler.StateEventHandler());

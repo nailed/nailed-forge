@@ -5,15 +5,12 @@ import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.events.PlayerJoinEvent;
 import jk_5.nailed.api.events.PlayerLeaveEvent;
 import jk_5.nailed.api.player.Player;
-import jk_5.nailed.ipc.packet.PacketKill;
-import jk_5.nailed.ipc.packet.PacketPlayerDeath;
-import jk_5.nailed.ipc.packet.PacketPlayerJoin;
-import jk_5.nailed.ipc.packet.PacketPlayerLeave;
-import jk_5.nailed.network.NailedNetworkHandler;
-import jk_5.nailed.network.NailedPacket;
+import jk_5.nailed.ipc.packet.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+
+import java.net.InetSocketAddress;
 
 /**
  * No description given
@@ -25,8 +22,7 @@ public class IpcEventListener {
 
     @SubscribeEvent
     public void onPlayerJoin(PlayerJoinEvent event){
-        IpcManager.instance().sendPacket(new PacketPlayerJoin(event.player));
-        NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.DisplayLogin(), event.player.getEntity());
+        IpcManager.instance().sendPacket(new PacketPlayerJoin(event.player, ((InetSocketAddress) event.player.getNetHandler().netManager.channel().remoteAddress()).getAddress().getHostAddress()));
     }
 
     @SubscribeEvent
@@ -49,6 +45,13 @@ public class IpcEventListener {
                 }
             }
             IpcManager.instance().sendPacket(new PacketPlayerDeath(victim, event.source.damageType));
+        }
+    }
+
+    public static void loginPlayer(EntityPlayer player, String username, String password){
+        Player p = NailedAPI.getPlayerRegistry().getPlayer(player);
+        if(IpcManager.instance().isConnected()){
+            IpcManager.instance().sendPacket(new PacketLoginPlayer(p, username, password));
         }
     }
 }

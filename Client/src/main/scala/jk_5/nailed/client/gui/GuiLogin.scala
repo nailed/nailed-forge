@@ -1,8 +1,12 @@
 package jk_5.nailed.client.gui
 
-import net.minecraft.client.gui.{GuiButton, GuiTextField, GuiScreen}
+import net.minecraft.client.gui.{GuiMainMenu, GuiButton, GuiTextField, GuiScreen}
 import org.lwjgl.input.Keyboard
 import java.util
+import jk_5.nailed.client.network.ClientNetworkHandler
+import jk_5.nailed.network.NailedPacket
+import net.minecraft.client.multiplayer.WorldClient
+import jk_5.nailed.network.NailedPacket.LoginResponse
 
 /**
  * No description given
@@ -45,9 +49,14 @@ class GuiLogin extends GuiScreen {
   override def actionPerformed(button: GuiButton){
     if(button.enabled){
       button.id match {
-        case 0 => //Login
-        case 1 => //Register
-        case 2 => //Cancel
+        case 0 =>
+          button.enabled = false
+          ClientNetworkHandler.sendPacketToServer(new NailedPacket.Login(this.usernameField.getText, this.passwordField.getText))
+        case 1 => mc.displayGuiScreen(new GuiCreateAccount(this))
+        case 2 =>
+          mc.theWorld.sendQuittingDisconnectingPacket()
+          mc.loadWorld(null.asInstanceOf[WorldClient])
+          mc.displayGuiScreen(new GuiMainMenu)
       }
     }
   }
@@ -75,6 +84,16 @@ class GuiLogin extends GuiScreen {
     super.updateScreen()
     this.usernameField.updateCursorCounter()
     this.passwordField.updateCursorCounter()
+  }
+
+  def onResponse(response: LoginResponse){
+    this.loginButton.enabled = true
+    response.state match {
+      case 0 => mc.displayGuiScreen(null)
+      case 1 => //Wrong Username
+      case 2 => //Wrong Password
+      case 3 => //Unknown User
+    }
   }
 
   override def onGuiClosed() = Keyboard.enableRepeatEvents(false)

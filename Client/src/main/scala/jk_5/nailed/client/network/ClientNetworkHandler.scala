@@ -17,7 +17,7 @@ object ClientNetworkHandler {
     this.channel = NetworkRegistry.INSTANCE.newChannel("nailed", new NailedPacketCodec).get(Side.CLIENT)
 
     val pipeline = channel.pipeline
-    val targetName: String = channel.findChannelHandlerNameForType(classOf[NailedPacketCodec])
+    val targetName = channel.findChannelHandlerNameForType(classOf[NailedPacketCodec])
     pipeline.addAfter(targetName, "NotificationHandler", NotificationHandler)
     pipeline.addAfter(targetName, "OpenGuiHandler", OpenGuiHandler)
     pipeline.addAfter(targetName, "TileEntityDataHandler", TileEntityDataHandler)
@@ -31,6 +31,8 @@ object ClientNetworkHandler {
     pipeline.addAfter(targetName, "RegisterAchievementHandler", RegisterAchievementHandler)
     pipeline.addAfter(targetName, "ClientUpdateHandler", ClientUpdateHandler)
     pipeline.addAfter(targetName, "DisplayLoginHandler", DisplayLoginHandler)
+    pipeline.addAfter(targetName, "LoginResponseHandler", LoginResponseHandler)
+    pipeline.addAfter(targetName, "FieldStatusHandler", FieldStatusHandler)
 
     pipeline.addAfter(targetName, "Script-MachineUpdateHandler", new ScriptPacketHandler.MachineUpdateHandler)
   }

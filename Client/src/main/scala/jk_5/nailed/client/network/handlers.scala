@@ -2,7 +2,7 @@ package jk_5.nailed.client.network
 
 import io.netty.channel.{ChannelHandlerContext, SimpleChannelInboundHandler}
 import jk_5.nailed.network.NailedPacket
-import jk_5.nailed.network.NailedPacket.{TimeUpdate, CheckClientUpdates}
+import jk_5.nailed.network.NailedPacket._
 import jk_5.nailed.client.updater.UpdaterApi
 import com.google.common.util.concurrent.ThreadFactoryBuilder
 import net.minecraft.client.Minecraft.{getMinecraft => mc}
@@ -19,7 +19,7 @@ import jk_5.nailed.NailedLog
 import java.io.File
 import javax.imageio.ImageIO
 import io.netty.buffer.ByteBufInputStream
-import jk_5.nailed.client.gui.{GuiLogin, GuiTerminal}
+import jk_5.nailed.client.gui.{GuiCreateAccount, GuiLogin, GuiTerminal}
 import jk_5.nailed.client.scripting.ClientMachine
 import jk_5.nailed.client.NailedClient
 
@@ -138,8 +138,8 @@ object TerminalGuiHandler extends SimpleChannelInboundHandler[NailedPacket.OpenT
   }
 }
 
-object TileEntityDataHandler extends SimpleChannelInboundHandler[NailedPacket.TileEntityData] {
-  override def channelRead0(ctx: ChannelHandlerContext, msg: NailedPacket.TileEntityData){
+object TileEntityDataHandler extends SimpleChannelInboundHandler[TileEntityData] {
+  override def channelRead0(ctx: ChannelHandlerContext, msg: TileEntityData){
     val tile = mc.theWorld.getTileEntity(msg.x, msg.y, msg.z)
     if(tile != null && tile.isInstanceOf[NailedTileEntity]){
       tile.asInstanceOf[NailedTileEntity].readData(msg.data)
@@ -147,14 +147,35 @@ object TileEntityDataHandler extends SimpleChannelInboundHandler[NailedPacket.Ti
   }
 }
 
-object TimeUpdateHandler extends SimpleChannelInboundHandler[NailedPacket.TimeUpdate] {
+object TimeUpdateHandler extends SimpleChannelInboundHandler[TimeUpdate] {
   override def channelRead0(ctx: ChannelHandlerContext, msg: TimeUpdate){
     TimeUpdateRenderer.format = msg.data
   }
 }
 
-object DisplayLoginHandler extends SimpleChannelInboundHandler[NailedPacket.TimeUpdate] {
-  override def channelRead0(ctx: ChannelHandlerContext, msg: TimeUpdate){
+object DisplayLoginHandler extends SimpleChannelInboundHandler[DisplayLogin] {
+  override def channelRead0(ctx: ChannelHandlerContext, msg: DisplayLogin){
     mc.displayGuiScreen(new GuiLogin)
+  }
+}
+
+object LoginResponseHandler extends SimpleChannelInboundHandler[LoginResponse] {
+  override def channelRead0(ctx: ChannelHandlerContext, msg: LoginResponse){
+    val gui = mc.currentScreen
+    gui match {
+      case l: GuiLogin => l.onResponse(msg)
+      case l: GuiCreateAccount => l.onResponse(msg)
+      case _ =>
+    }
+  }
+}
+
+object FieldStatusHandler extends SimpleChannelInboundHandler[FieldStatus] {
+  override def channelRead0(ctx: ChannelHandlerContext, msg: FieldStatus){
+    val gui = mc.currentScreen
+    gui match {
+      case l: GuiCreateAccount => l.onFieldStatus(msg)
+      case _ =>
+    }
   }
 }
