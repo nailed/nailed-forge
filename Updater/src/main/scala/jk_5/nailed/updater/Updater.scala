@@ -199,7 +199,7 @@ object Updater {
   private def stripTrailing(in: String) = if(in.endsWith("/")) in.substring(0, in.length - 1) else in
   private def getMinecraftFolder: File = {
     val userHome = Properties.propOrElse("user.home", ".")
-    if(Properties.isWin && Properties.propIsSet("APPDATA")){
+    if(Properties.isWin && System.getenv("APPDATA") != null){
       new File(System.getenv("APPDATA"), ".minecraft")
     }else if(Properties.isMac){
       new File(new File(new File(userHome, "Library"), "Application Support"), "minecraft")
