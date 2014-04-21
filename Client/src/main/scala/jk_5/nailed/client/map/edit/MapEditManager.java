@@ -8,7 +8,6 @@ import jk_5.nailed.client.gui.GuiEditSpawnpoint;
 import jk_5.nailed.map.Spawnpoint;
 import jk_5.nailed.util.ChatColor;
 import lombok.Getter;
-import lombok.Setter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -41,7 +40,7 @@ public class MapEditManager {
 
     private static final ResourceLocation noise = new ResourceLocation("nailed", "textures/effects/noise.png");
 
-    @Setter private boolean enabled;
+    private boolean enabled;
     @Getter private MapEditMetadata metadata = new MapEditMetadata();
 
     private Spawnpoint facingSpawnpoint;
@@ -404,6 +403,10 @@ public class MapEditManager {
             mc.fontRenderer.drawString(line, this.resolution.getScaledWidth() - this.infoWidth + 1, y + 2, 0xFFFFFFFF);
             y += height;
         }
+    }
+
+    public void setEnabled(boolean enabled){
+        this.enabled = enabled;
     }
 
     public static MapEditManager instance(){
