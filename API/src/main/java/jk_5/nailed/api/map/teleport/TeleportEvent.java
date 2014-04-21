@@ -3,7 +3,7 @@ package jk_5.nailed.api.map.teleport;
 import cpw.mods.fml.common.eventhandler.Cancelable;
 import cpw.mods.fml.common.eventhandler.Event;
 import jk_5.nailed.api.map.Map;
-import jk_5.nailed.map.Spawnpoint;
+import jk_5.nailed.map.Location;
 import lombok.RequiredArgsConstructor;
 import net.minecraft.entity.Entity;
 
@@ -30,7 +30,7 @@ public class TeleportEvent extends Event {
      */
     public static class TeleportEventAlter extends TeleportEvent {
         /** Set this to alter the teleport destination (null until set) */
-        public Spawnpoint spawn;
+        public Location location;
 
         public TeleportEventAlter(Map oldMap, Map newMap, Entity entity, TeleportOptions info) {
             super(oldMap, newMap, entity, info);

@@ -17,13 +17,17 @@ public class TeleportEventListenerEffect {
 
     @SubscribeEvent
     public void onTeleportStart(TeleportEvent.TeleportEventStart event){
-        NailedNetworkHandler.sendPacketToAllPlayersInDimension(new NailedPacket.Particle(event.entity.posX, event.entity.posY, event.entity.posZ, "teleport"), event.entity.dimension);
+        if(event.options.isSpawnParticles()){
+            NailedNetworkHandler.sendPacketToAllPlayersInDimension(new NailedPacket.Particle(event.entity.posX, event.entity.posY, event.entity.posZ, "teleport"), event.entity.dimension);
+        }
         playSound(event.entity, event.options);
     }
 
     @SubscribeEvent
     public void onTeleportEnd(TeleportEvent.TeleportEventEnd event){
-        NailedNetworkHandler.sendPacketToAllPlayersInDimension(new NailedPacket.Particle(event.entity.posX, event.entity.posY, event.entity.posZ, "teleport"), event.entity.dimension);
+        if(event.options.isSpawnParticles()){
+            NailedNetworkHandler.sendPacketToAllPlayersInDimension(new NailedPacket.Particle(event.entity.posX, event.entity.posY, event.entity.posZ, "teleport"), event.entity.dimension);
+        }
         playSound(event.entity, event.options);
     }
 
@@ -32,8 +36,6 @@ public class TeleportEventListenerEffect {
             entity.worldObj.playSoundAtEntity(entity, "nailed:teleport.pop", 0.8F, entity.worldObj.rand.nextFloat() * 0.2F + 0.9F);
         }else if(options.getSound() != null && !options.getSound().isEmpty()){
             entity.worldObj.playSoundAtEntity(entity, options.getSound(), 0.8F, entity.worldObj.rand.nextFloat() * 0.2F + 0.9F);
-        }else{
-            entity.worldObj.playSoundAtEntity(entity, "nailed:teleport", 0.8F, entity.worldObj.rand.nextFloat() * 0.2F + 0.9F);
         }
     }
 }

@@ -4,7 +4,7 @@ import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.PossibleWinner;
 import jk_5.nailed.api.map.scoreboard.ScoreboardTeam;
 import jk_5.nailed.api.player.Player;
-import jk_5.nailed.map.Spawnpoint;
+import jk_5.nailed.map.Location;
 import jk_5.nailed.util.ChatColor;
 
 import java.util.List;
@@ -33,8 +33,8 @@ public interface Team extends PossibleWinner {
     public void setSeeFriendlyInvisibles(boolean enabled);
     public ScoreboardTeam getScoreboardTeam();
     public void setScoreboardTeam(ScoreboardTeam team);
-    public Spawnpoint getSpawnpoint();
-    public void setSpawnpoint(Spawnpoint spawnpoint);
+    public Location getSpawnpoint();
+    public void setSpawnpoint(Location spawnpoint);
     public String getColoredName();
 
     public void onAddPlayer(Player player);

@@ -23,7 +23,7 @@ public class CommandRandomSpawnpoint extends NailedCommand {
     public void processCommandPlayer(Player sender, Map map, String[] args){
         if(args.length == 0){
             TeleportOptions options = new TeleportOptions();
-            options.setCoordinates(map.getRandomSpawnpoint());
+            options.setLocation(map.getRandomSpawnpoint());
             NailedAPI.getTeleporter().teleportEntity(sender.getEntity(), options);
         }else{
             this.processCommandWithMap(sender.getEntity(), map, args);
@@ -36,7 +36,7 @@ public class CommandRandomSpawnpoint extends NailedCommand {
             EntityPlayerMP[] players = getPlayersList(sender, args[0]);
             for(EntityPlayerMP player : players){
                 TeleportOptions options = new TeleportOptions();
-                options.setCoordinates(map.getRandomSpawnpoint());
+                options.setLocation(map.getRandomSpawnpoint());
                 NailedAPI.getTeleporter().teleportEntity(player, options);
             }
         }else throw new WrongUsageException(this.getCommandUsage(sender));

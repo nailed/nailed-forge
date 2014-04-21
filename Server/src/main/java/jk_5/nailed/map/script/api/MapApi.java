@@ -16,6 +16,7 @@ import jk_5.nailed.api.player.Player;
 import jk_5.nailed.api.scripting.ILuaAPI;
 import jk_5.nailed.api.scripting.ILuaContext;
 import jk_5.nailed.api.scripting.ILuaObject;
+import jk_5.nailed.map.Location;
 import jk_5.nailed.map.Spawnpoint;
 import jk_5.nailed.map.script.IAPIEnvironment;
 import jk_5.nailed.map.script.LuaMachine;
@@ -265,11 +266,11 @@ public class MapApi implements ILuaAPI {
                 break;
             case 16: //spreadPlayers
                 for(Player player : this.map.getPlayers()){
-                    Spawnpoint spawn = this.map.getRandomSpawnpoint();
+                    Location spawn = this.map.getRandomSpawnpoint();
                     if(spawn == null){
                         throw new Exception("No random spawnpoints were found");
                     }
-                    player.getEntity().setLocationAndAngles(spawn.posX + 0.5, spawn.posY, spawn.posZ + 0.5, spawn.yaw, spawn.pitch);
+                    player.getEntity().setLocationAndAngles(spawn.getX(), spawn.getY(), spawn.getZ(), spawn.getYaw(), spawn.getPitch());
                 }
                 break;
             case 17: //tpAllToLobby
@@ -513,10 +514,10 @@ public class MapApi implements ILuaAPI {
                         break;
                     case 3: //setSpawn
                         if(arguments.length == 3 && arguments[0] instanceof Double && arguments[1] instanceof Double && arguments[2] instanceof Double){
-                            Spawnpoint spawn = new Spawnpoint(((Double) arguments[0]).intValue(), ((Double) arguments[1]).intValue(), ((Double) arguments[2]).intValue());
+                            Location spawn = new Location((Double) arguments[0], (Double) arguments[1], (Double) arguments[2]);
                             team.setSpawnpoint(spawn);
                         }else if(arguments.length == 5 && arguments[0] instanceof Double && arguments[1] instanceof Double && arguments[2] instanceof Double && arguments[3] instanceof Double && arguments[4] instanceof Double){
-                            Spawnpoint spawn = new Spawnpoint(((Double) arguments[0]).intValue(), ((Double) arguments[1]).intValue(), ((Double) arguments[2]).intValue(), ((Double) arguments[3]).floatValue(), ((Double) arguments[4]).floatValue());
+                            Location spawn = new Location((Double) arguments[0], (Double) arguments[1], (Double) arguments[2], ((Double) arguments[3]).floatValue(), ((Double) arguments[4]).floatValue());
                             team.setSpawnpoint(spawn);
                         }else{
                             throw new Exception("Expected 3 int arguments, and 2 optional float arguments");

@@ -2,7 +2,7 @@ package jk_5.nailed.api.map;
 
 import jk_5.nailed.api.WeatherType;
 import jk_5.nailed.api.map.team.TeamBuilder;
-import jk_5.nailed.map.Spawnpoint;
+import jk_5.nailed.map.Location;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.WorldSettings;
 
@@ -18,7 +18,7 @@ import java.util.Map;
 public interface MappackMetadata {
 
     String getName();
-    Spawnpoint getSpawnPoint();
+    Location getSpawnPoint();
     List<TeamBuilder> getDefaultTeams();
     boolean isSpawnHostileMobs();
     boolean isSpawnFriendlyMobs();
@@ -29,7 +29,7 @@ public interface MappackMetadata {
     boolean isPvpEnabled();
     WorldSettings.GameType getGamemode();
     boolean isChoosingRandomSpawnpointAtRespawn();
-    List<Spawnpoint> getRandomSpawnpoints();
+    List<Location> getRandomSpawnpoints();
     String getStartWhen();
     EnumSet<WeatherType> getPermittedWeatherTypes();
 }

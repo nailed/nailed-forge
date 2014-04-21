@@ -33,7 +33,7 @@ public class CommandCB extends NailedCommand {
         }else if(args[0].equalsIgnoreCase("tpToRandomSpawn")){
             EntityPlayerMP[] players = getPlayersList(sender, args[1]);
             for(EntityPlayerMP player : players){
-                NailedAPI.getTeleporter().teleportEntity(player, TeleportOptions.builder().coordinates(map.getRandomSpawnpoint()).build());
+                NailedAPI.getTeleporter().teleportEntity(player, TeleportOptions.builder().location(map.getRandomSpawnpoint()).build());
             }
         }
     }

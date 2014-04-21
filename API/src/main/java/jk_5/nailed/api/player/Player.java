@@ -6,6 +6,7 @@ import jk_5.nailed.api.database.DataOwner;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.PossibleWinner;
 import jk_5.nailed.api.map.team.Team;
+import jk_5.nailed.map.Location;
 import jk_5.nailed.map.Spawnpoint;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
@@ -44,7 +45,7 @@ public interface Player extends PossibleWinner, DataOwner {
     public void onChangedDimension();
     public void onRespawn();
     public void teleportToMap(Map map);
-    public Spawnpoint getLocation();
+    public Location getLocation();
     public Gamemode getGameMode();
     public void setGameMode(Gamemode mode);
     public boolean hasPermission(String node);

@@ -6,7 +6,7 @@ import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.Mappack;
 import jk_5.nailed.api.map.teleport.TeleportOptions;
 import jk_5.nailed.api.player.Player;
-import jk_5.nailed.map.Spawnpoint;
+import jk_5.nailed.map.Location;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -60,7 +60,7 @@ public class CommandTP extends NailedCommand {
                     throw new CommandException("commands.nailed.tp.fail.notarget");
                 }
                 TeleportOptions option = new TeleportOptions();
-                option.setCoordinates(target.getLocation());
+                option.setLocation(target.getLocation());
                 option.setDestination(target.getCurrentMap());
                 options.add(new ImmutablePair<Entity, TeleportOptions>(teleporting, option));
             }else if(args.length == 2){
@@ -78,22 +78,41 @@ public class CommandTP extends NailedCommand {
                 }else{
                     throw new CommandException("commands.nailed.tp.fail.notarget");
                 }
-                int x = (int) Math.floor(handleRelativeNumber(sender, teleporting.posX, args[0]));
-                int y = (int) Math.floor(handleRelativeNumber(sender, teleporting.posY, args[1], 0, 0));
-                int z = (int) Math.floor(handleRelativeNumber(sender, teleporting.posZ, args[2]));
+                double x = handleRelativeNumber(sender, teleporting.posX, args[0]);
+                double y = handleRelativeNumber(sender, teleporting.posY, args[1], 0, 0);
+                double z = handleRelativeNumber(sender, teleporting.posZ, args[2]);
                 TeleportOptions option = new TeleportOptions();
-                option.setCoordinates(new Spawnpoint(x, y, z, teleporting.rotationYaw, teleporting.rotationPitch));
+                option.setLocation(new Location(x, y, z, teleporting.rotationYaw, teleporting.rotationPitch));
                 option.setDestination(NailedAPI.getMapLoader().getMap(teleporting.worldObj));
                 options.add(new ImmutablePair<Entity, TeleportOptions>(teleporting, option));
             }else if(args.length == 4){
                 //  /tp teleportingPlayer x y z
                 EntityPlayerMP[] players = getPlayersList(sender, args[0]);
                 for(EntityPlayerMP player : players){
-                    int x = (int) Math.floor(handleRelativeNumber(sender, player.posX, args[1]));
-                    int y = (int) Math.floor(handleRelativeNumber(sender, player.posY, args[2], 0, 0));
-                    int z = (int) Math.floor(handleRelativeNumber(sender, player.posZ, args[3]));
+                    double x = handleRelativeNumber(sender, player.posX, args[1]);
+                    double y = handleRelativeNumber(sender, player.posY, args[2], 0, 0);
+                    double z = handleRelativeNumber(sender, player.posZ, args[3]);
                     TeleportOptions option = new TeleportOptions();
-                    option.setCoordinates(new Spawnpoint(x, y, z, player.rotationYaw, player.rotationPitch));
+                    option.setLocation(new Location(x, y, z, player.rotationYaw, player.rotationPitch));
+                    option.setDestination(NailedAPI.getMapLoader().getMap(player.worldObj));
+                    options.add(new ImmutablePair<Entity, TeleportOptions>(player, option));
+                }
+            }else if(args.length == 5){
+                //  /tp teleportingPlayer x y z options
+                String opt = args[4];
+                boolean particles = !opt.contains("noparticle");
+                boolean sound = !opt.contains("nosound");
+                boolean momentum = opt.contains("momentum");
+                EntityPlayerMP[] players = getPlayersList(sender, args[0]);
+                for(EntityPlayerMP player : players){
+                    double x = handleRelativeNumber(sender, player.posX, args[1]);
+                    double y = handleRelativeNumber(sender, player.posY, args[2], 0, 0);
+                    double z = handleRelativeNumber(sender, player.posZ, args[3]);
+                    TeleportOptions option = new TeleportOptions();
+                    option.setSound(sound ? option.getSound() : null);
+                    option.setSpawnParticles(particles);
+                    option.setMaintainMomentum(momentum);
+                    option.setLocation(new Location(x, y, z, player.rotationYaw, player.rotationPitch));
                     option.setDestination(NailedAPI.getMapLoader().getMap(player.worldObj));
                     options.add(new ImmutablePair<Entity, TeleportOptions>(player, option));
                 }
@@ -111,14 +130,14 @@ public class CommandTP extends NailedCommand {
         TeleportOptions dest = new TeleportOptions();
         Player p = NailedAPI.getPlayerRegistry().getPlayerByUsername(data);
         if(p != null){
-            dest.setCoordinates(p.getLocation());
+            dest.setLocation(p.getLocation());
             dest.setDestination(p.getCurrentMap());
         }else{
             Map map = NailedAPI.getMapLoader().getMap(data);
             if(map != null){
                 Mappack mappack = map.getMappack();
                 if(mappack != null){
-                    dest.setCoordinates(mappack.getMappackMetadata().getSpawnPoint());
+                    dest.setLocation(mappack.getMappackMetadata().getSpawnPoint());
                 }
                 dest.setDestination(map);
             }else{
@@ -126,7 +145,7 @@ public class CommandTP extends NailedCommand {
                 if(map != null){
                     Mappack mappack = map.getMappack();
                     if(mappack != null){
-                        dest.setCoordinates(mappack.getMappackMetadata().getSpawnPoint());
+                        dest.setLocation(mappack.getMappackMetadata().getSpawnPoint());
                     }
                     dest.setDestination(map);
                 }else{

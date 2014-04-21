@@ -7,7 +7,7 @@ import jk_5.nailed.api.map.stat.StatManager;
 import jk_5.nailed.api.map.team.TeamManager;
 import jk_5.nailed.api.map.teleport.TeleportOptions;
 import jk_5.nailed.api.player.Player;
-import jk_5.nailed.map.Spawnpoint;
+import jk_5.nailed.map.Location;
 import net.minecraft.network.Packet;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
@@ -39,7 +39,7 @@ public interface Map {
     public void broadcastNotification(String message);
     public void broadcastChatMessage(String message);
     public void broadcastChatMessage(IChatComponent component);
-    public Spawnpoint getRandomSpawnpoint();
+    public Location getRandomSpawnpoint();
     public void unloadAndRemove();
     public void reloadFromMappack();
     public void onPlayerJoined(Player player);

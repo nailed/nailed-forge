@@ -7,7 +7,6 @@ import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.Mappack;
 import jk_5.nailed.map.MappackContainingWorldProvider;
 import jk_5.nailed.map.NailedMap;
-import jk_5.nailed.map.Spawnpoint;
 import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.network.NailedPacket;
 import net.minecraft.entity.player.EntityPlayer;
@@ -127,7 +126,7 @@ public class NailedWorldProvider extends WorldProvider implements MappackContain
     @Override
     public ChunkCoordinates getRandomizedSpawnPoint(){
         if(this.hasMappack()){
-            return new Spawnpoint(this.map.getMappack().getMappackMetadata().getSpawnPoint());
+            return this.map.getMappack().getMappackMetadata().getSpawnPoint().toChunkCoordinates();
         }else{
             //FIXME: this line causes infinite recursion and a stack overflow
             return super.getRandomizedSpawnPoint();

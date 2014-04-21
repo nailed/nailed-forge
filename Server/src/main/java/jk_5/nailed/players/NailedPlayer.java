@@ -13,6 +13,7 @@ import jk_5.nailed.api.map.Mappack;
 import jk_5.nailed.api.map.MappackMetadata;
 import jk_5.nailed.api.map.team.Team;
 import jk_5.nailed.api.player.Player;
+import jk_5.nailed.map.Location;
 import jk_5.nailed.map.Spawnpoint;
 import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.network.NailedPacket;
@@ -155,9 +156,9 @@ public class NailedPlayer implements Player {
         NailedAPI.getTeleporter().teleportEntity(this.getEntity(), map.getSpawnTeleport());
     }
 
-    public Spawnpoint getLocation(){
+    public Location getLocation(){
         EntityPlayer player = this.getEntity();
-        return new Spawnpoint((int) player.posX, (int) player.posY, (int) player.posZ, player.rotationYaw, player.rotationPitch);
+        return new Location(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
     }
 
     public Gamemode getGameMode(){
@@ -213,11 +214,12 @@ public class NailedPlayer implements Player {
             if(mappack != null){
                 MappackMetadata meta = mappack.getMappackMetadata();
                 ByteBufUtils.writeUTF8String(buffer, meta.getName());
-                meta.getSpawnPoint().write(buffer);
+                //TODO: fix sending of Locations and location names
+                /*meta.getSpawnPoint().write(buffer);
                 buffer.writeInt(meta.getRandomSpawnpoints().size());
                 for(Spawnpoint spawnpoint : meta.getRandomSpawnpoints()){
                     spawnpoint.write(buffer);
-                }
+                }*/
                 NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.EditMode(true, buffer), this.getEntity());
             }
         }else{

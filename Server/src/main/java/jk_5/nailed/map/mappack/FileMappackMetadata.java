@@ -5,7 +5,7 @@ import com.google.common.collect.Maps;
 import jk_5.nailed.api.WeatherType;
 import jk_5.nailed.api.map.MappackMetadata;
 import jk_5.nailed.api.map.team.TeamBuilder;
-import jk_5.nailed.map.Spawnpoint;
+import jk_5.nailed.map.Location;
 import jk_5.nailed.util.ChatColor;
 import jk_5.nailed.util.config.ConfigFile;
 import jk_5.nailed.util.config.ConfigTag;
@@ -27,7 +27,7 @@ public class FileMappackMetadata implements MappackMetadata {
 
     private final ConfigFile config;
     public String name;
-    public Spawnpoint spawnPoint;
+    public Location spawnPoint;
     private List<TeamBuilder> defaultTeams;
     public boolean spawnFriendlyMobs;
     public boolean spawnHostileMobs;
@@ -38,13 +38,13 @@ public class FileMappackMetadata implements MappackMetadata {
     public boolean pvpEnabled;
     public WorldSettings.GameType gamemode;
     public boolean choosingRandomSpawnpointAtRespawn;
-    public List<Spawnpoint> randomSpawnpoints;
+    public List<Location> randomSpawnpoints;
     public String startWhen;
     public EnumSet<WeatherType> permittedWeatherTypes;
 
     public FileMappackMetadata(ConfigFile config){
         this.config = config;
-        this.spawnPoint = Spawnpoint.readFromConfig(config.getTag("spawnpoint"));
+        this.spawnPoint = Location.readFrom(config.getTag("spawnpoint"));
         this.name = config.getTag("map").getTag("name").getValue("");
         this.pvpEnabled = config.getTag("map").getTag("pvp").getBooleanValue(true);
         this.gamemode = WorldSettings.GameType.getByID(config.getTag("map").getTag("gamemode").getIntValue(2));
@@ -77,7 +77,7 @@ public class FileMappackMetadata implements MappackMetadata {
         this.randomSpawnpoints = Lists.newArrayList();
         ConfigTag spawnpointsTag = this.config.getTag("randomSpawnpoints");
         for(ConfigTag tag : spawnpointsTag.getSortedTagList()){
-            this.randomSpawnpoints.add(Spawnpoint.readFromConfig(tag));
+            this.randomSpawnpoints.add(Location.readFrom(tag));
         }
 
         this.permittedWeatherTypes = EnumSet.noneOf(WeatherType.class);

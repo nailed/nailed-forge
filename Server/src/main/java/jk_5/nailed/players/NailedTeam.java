@@ -6,7 +6,7 @@ import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.scoreboard.ScoreboardTeam;
 import jk_5.nailed.api.map.team.Team;
 import jk_5.nailed.api.player.Player;
-import jk_5.nailed.map.Spawnpoint;
+import jk_5.nailed.map.Location;
 import jk_5.nailed.util.ChatColor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +34,7 @@ public class NailedTeam implements Team {
     @Getter @Setter private boolean friendlyFireEnabled = false;
     @Setter private boolean seeFriendlyInvisibles = false;
     @Getter @Setter private ScoreboardTeam scoreboardTeam;
-    @Getter @Setter private Spawnpoint spawnpoint;
+    @Getter @Setter private Location spawnpoint;
     @Getter @Setter private int teamSpeakChannelID = -1;
 
     public void onWorldSet(){

@@ -6,7 +6,7 @@ import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.teleport.TeleportEvent;
 import jk_5.nailed.api.map.teleport.TeleportOptions;
 import jk_5.nailed.api.map.teleport.Teleporter;
-import jk_5.nailed.map.Spawnpoint;
+import jk_5.nailed.map.Location;
 import jk_5.nailed.map.gen.NailedWorldProvider;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -49,26 +49,26 @@ public class NailedTeleporter implements Teleporter {
         World destWorld = destination.getWorld();
         if(destWorld.isRemote) return false;
         options = options.clone(); //We don't want to accidently modify the options object passed in, so we clone it.
-        Spawnpoint spawn = options.getCoordinates();
+        Location location = options.getLocation();
         if(!TeleportEventFactory.isLinkPermitted(current, destination, entity, options)){
             return false;
         }
-        if(spawn == null){
-            spawn = new Spawnpoint(destWorld.getSpawnPoint());
-            options.setCoordinates(spawn);
+        if(location == null){
+            location = new Location(destWorld.getSpawnPoint());
+            options.setLocation(location);
         }
         TeleportEvent.TeleportEventAlter event = new TeleportEvent.TeleportEventAlter(current, destination, entity, options.clone());
         MinecraftForge.EVENT_BUS.post(event);
-        if(event.spawn != null){
-            spawn = event.spawn;
+        if(event.location != null){
+            location = event.location;
         }
-        teleportEntity(current, destination, entity, spawn, options);
+        teleportEntity(current, destination, entity, location, options);
         return true;
     }
 
     //TODO: Rewrite all code below
 
-    private static Entity teleportEntity(Map currentMap, Map destMap, Entity entity, Spawnpoint spawn, TeleportOptions options){
+    private static Entity teleportEntity(Map currentMap, Map destMap, Entity entity, Location location, TeleportOptions options){
         int dimension = destMap.getID();
         World destWorld = destMap.getWorld();
         if(!TeleportEventFactory.isLinkPermitted(currentMap, destMap, entity, options)){
@@ -77,8 +77,11 @@ public class NailedTeleporter implements Teleporter {
         Entity mount = entity.ridingEntity;
         if(entity.ridingEntity != null){
             entity.mountEntity(null);
-            mount = teleportEntity(currentMap, destMap, mount, spawn, options);
+            mount = teleportEntity(currentMap, destMap, mount, location, options);
         }
+        double mX = entity.motionX;
+        double mY = entity.motionY;
+        double mZ = entity.motionZ;
         boolean changingworlds = entity.worldObj != destWorld;
         TeleportEventFactory.onLinkStart(currentMap, destMap, entity, options);
         entity.worldObj.updateEntityWithOptionalForce(entity, false);
@@ -99,12 +102,14 @@ public class NailedTeleporter implements Teleporter {
         }
         TeleportEventFactory.onExitWorld(currentMap, destMap, entity, options);
 
-        entity.setLocationAndAngles(spawn.posX + 0.5D, spawn.posY, spawn.posZ + 0.5D, spawn.yaw, spawn.pitch);
-        ((WorldServer) destWorld).theChunkProviderServer.loadChunk(spawn.posX >> 4, spawn.posZ >> 4);
+        entity.setLocationAndAngles(location.getX(), location.getX(), location.getZ(), location.getYaw(), location.getPitch());
+        ((WorldServer) destWorld).theChunkProviderServer.loadChunk(location.getBlockX() >> 4, location.getBlockZ() >> 4);
+        //TODO: ditch this?
         while(getCollidingWorldGeometry(destWorld, entity.boundingBox, entity).size() != 0){
-            spawn.posY += 1;
-            entity.setPosition(spawn.posX + 0.5D, spawn.posY, spawn.posZ + 0.5D);
+            location.setY(location.getY() + 1);
+            entity.setPosition(location.getX(), location.getY(), location.getZ());
         }
+        ////
         if(changingworlds){
             if(!(entity instanceof EntityPlayer)){
                 NBTTagCompound entityNBT = new NBTTagCompound();
@@ -118,14 +123,14 @@ public class NailedTeleporter implements Teleporter {
             destWorld.spawnEntityInWorld(entity);
             entity.setWorld(destWorld);
         }
-        entity.setLocationAndAngles(spawn.posX + 0.5D, spawn.posY, spawn.posZ + 0.5D, spawn.yaw, spawn.pitch);
+        entity.setLocationAndAngles(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
         TeleportEventFactory.onEnterWorld(currentMap, destMap, entity, options);
         destWorld.updateEntityWithOptionalForce(entity, false);
-        entity.setLocationAndAngles(spawn.posX + 0.5D, spawn.posY, spawn.posZ + 0.5D, spawn.yaw, spawn.pitch);
+        entity.setLocationAndAngles(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
         if((entity instanceof EntityPlayerMP)){
             EntityPlayerMP player = (EntityPlayerMP) entity;
             if(changingworlds) player.mcServer.getConfigurationManager().func_72375_a(player, (WorldServer) destWorld);
-            player.playerNetServerHandler.setPlayerLocation(spawn.posX + 0.5D, spawn.posY, spawn.posZ + 0.5D, player.rotationYaw, player.rotationPitch);
+            player.playerNetServerHandler.setPlayerLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
         }
         destWorld.updateEntityWithOptionalForce(entity, false);
         if(((entity instanceof EntityPlayerMP)) && (changingworlds)){
@@ -139,8 +144,13 @@ public class NailedTeleporter implements Teleporter {
             }
             player.playerNetServerHandler.sendPacket(new S1FPacketSetExperience(player.experience, player.experienceTotal, player.experienceLevel));
         }
-        entity.setLocationAndAngles(spawn.posX + 0.5D, spawn.posY, spawn.posZ + 0.5D, spawn.yaw, spawn.pitch);
+        entity.setLocationAndAngles(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
         TeleportEventFactory.onLinkEnd(currentMap, destMap, entity, options);
+        if(options.isMaintainMomentum()){
+            entity.motionX = mX;
+            entity.motionY = mY;
+            entity.motionZ = mZ;
+        }
         if(mount != null){
             if((entity instanceof EntityPlayerMP)){
                 destWorld.updateEntityWithOptionalForce(entity, true);

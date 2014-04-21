@@ -24,6 +24,7 @@ import jk_5.nailed.map.stat.StatTypeManager;
 import jk_5.nailed.map.teleport.NailedTeleporter;
 import jk_5.nailed.map.teleport.TeleportEventListenerEffect;
 import jk_5.nailed.map.teleport.TeleportEventListenerForge;
+import jk_5.nailed.map.teleport.TeleportEventListenerMotion;
 import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.permissions.NailedPermissionFactory;
 import jk_5.nailed.permissions.PermissionEventHandler;
@@ -117,6 +118,7 @@ public class NailedServer {
         MinecraftForge.EVENT_BUS.register(new StatEventHandler());
         MinecraftForge.EVENT_BUS.register(new TeleportEventListenerForge());
         MinecraftForge.EVENT_BUS.register(new TeleportEventListenerEffect());
+        MinecraftForge.EVENT_BUS.register(new TeleportEventListenerMotion());
         MinecraftForge.EVENT_BUS.register(new PermissionEventHandler());
         MinecraftForge.EVENT_BUS.register(new IpcEventListener());
         FMLCommonHandler.instance().bus().register(NailedAPI.getPlayerRegistry());

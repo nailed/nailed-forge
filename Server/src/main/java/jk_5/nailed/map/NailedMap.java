@@ -191,11 +191,11 @@ public class NailedMap implements Map {
 
     public TeleportOptions getSpawnTeleport(){
         if(this.mappack == null){
-            return new TeleportOptions(this, new Spawnpoint(this.world.getSpawnPoint()), 0, 0);
+            return new TeleportOptions(this, new Location(this.world.getSpawnPoint()));
         }
         MappackMetadata meta = this.mappack.getMappackMetadata();
-        Spawnpoint spawnpoint = new Spawnpoint(meta.getSpawnPoint());
-        return new TeleportOptions(this, spawnpoint, spawnpoint.yaw, spawnpoint.pitch);
+        Location spawnpoint = new Location(meta.getSpawnPoint());
+        return new TeleportOptions(this, spawnpoint);
     }
 
     public void broadcastChatMessage(IChatComponent message){
@@ -221,8 +221,8 @@ public class NailedMap implements Map {
     }
 
     @Override
-    public Spawnpoint getRandomSpawnpoint(){
-        List<Spawnpoint> spawnpoints = mappack.getMappackMetadata().getRandomSpawnpoints();
+    public Location getRandomSpawnpoint(){
+        List<Location> spawnpoints = mappack.getMappackMetadata().getRandomSpawnpoints();
         if(spawnpoints.size() == 0) return null;
         return spawnpoints.get(NailedMapLoader.instance().getRandomSpawnpointSelector().nextInt(spawnpoints.size()));
     }

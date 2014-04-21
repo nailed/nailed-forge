@@ -180,9 +180,9 @@ public class NailedMapLoader implements MapLoader {
             Mappack mappack = map.getMappack();
             EntityPlayer player = (EntityPlayer) event.entity;
             ChunkCoordinates worldSpawn = event.world.getSpawnPoint();
-            Spawnpoint spawn = mappack.getMappackMetadata().getSpawnPoint();
+            Location spawn = mappack.getMappackMetadata().getSpawnPoint();
             if(Math.floor(player.posX) == worldSpawn.posX && Math.floor(player.posZ) == worldSpawn.posZ){
-                event.entity.setLocationAndAngles(spawn.posX + 0.5, spawn.posY, spawn.posZ + 0.5, spawn.yaw, spawn.pitch);
+                event.entity.setLocationAndAngles(spawn.getX(), spawn.getY(), spawn.getZ(), spawn.getYaw(), spawn.getPitch());
                 player.setGameType(mappack.getMappackMetadata().getGamemode());
             }
         }
@@ -249,14 +249,14 @@ public class NailedMapLoader implements MapLoader {
         }else if(player.getTeam() instanceof TeamUndefined){
             Mappack mappack = map.getMappack();
             if(mappack != null && mappack.getMappackMetadata().isChoosingRandomSpawnpointAtRespawn()){
-                List<Spawnpoint> spawnpoints = mappack.getMappackMetadata().getRandomSpawnpoints();
-                Spawnpoint chosen = spawnpoints.get(this.randomSpawnpointSelector.nextInt(spawnpoints.size()));
-                player.getEntity().setSpawnChunk(chosen, true);
+                List<Location> spawnpoints = mappack.getMappackMetadata().getRandomSpawnpoints();
+                Location chosen = spawnpoints.get(this.randomSpawnpointSelector.nextInt(spawnpoints.size()));
+                player.getEntity().setSpawnChunk(chosen.toChunkCoordinates(), true); //FIXME
             }
         }else{
             if(player.getTeam().shouldOverrideDefaultSpawnpoint()){
-                Spawnpoint coords = player.getTeam().getSpawnpoint();
-                player.getEntity().setSpawnChunk(coords, true);
+                Location coords = player.getTeam().getSpawnpoint();
+                player.getEntity().setSpawnChunk(coords.toChunkCoordinates(), true); //FIXME
             }
         }
     }

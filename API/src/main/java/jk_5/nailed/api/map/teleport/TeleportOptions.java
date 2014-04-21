@@ -1,7 +1,7 @@
 package jk_5.nailed.api.map.teleport;
 
 import jk_5.nailed.api.map.Map;
-import jk_5.nailed.map.Spawnpoint;
+import jk_5.nailed.map.Location;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,24 +19,21 @@ import lombok.experimental.Builder;
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 public class TeleportOptions {
 
-    private Spawnpoint coordinates;
-    private float yaw;
-    private float pitch;
+    private Location location;
     private Map destination;
     private boolean maintainMomentum = false;
-    private String sound = "";
+    private boolean spawnParticles = true;
+    private String sound = "nailed:teleport";
 
-    public TeleportOptions(Map destination, Spawnpoint coords, float yaw, float pitch){
+    public TeleportOptions(Map destination, Location location){
         this.destination = destination;
-        this.coordinates = new Spawnpoint(coords);
-        this.yaw = yaw;
-        this.pitch = pitch;
+        this.location = new Location(location);
     }
 
     @Override
     @SuppressWarnings("CloneDoesntDeclareCloneNotSupportedException")
     public TeleportOptions clone(){
-        return new TeleportOptions(this.coordinates, this.yaw, this.pitch, this.destination, this.maintainMomentum, this.sound);
+        return new TeleportOptions(this.location, this.destination, this.maintainMomentum, this.spawnParticles, this.sound);
     }
 
     public int getDestinationID(){

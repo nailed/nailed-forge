@@ -2,6 +2,8 @@ package jk_5.nailed.map;
 
 import com.google.common.base.Preconditions;
 import jk_5.nailed.util.MathUtil;
+import jk_5.nailed.util.config.ConfigTag;
+import net.minecraft.util.ChunkCoordinates;
 
 import javax.annotation.Nonnull;
 
@@ -44,6 +46,45 @@ public class Location implements Cloneable {
         this.z = z;
         this.pitch = pitch;
         this.yaw = yaw;
+    }
+
+    /**
+     * Constructs a new Location from an already existing Location
+     *
+     * @param location The location to get all the properties from
+     */
+    public Location(final Location location){
+        this.x = location.x;
+        this.y = location.y;
+        this.z = location.z;
+        this.pitch = location.pitch;
+        this.yaw = location.yaw;
+    }
+
+    /**
+     * Constructs a new Location from {@link ChunkCoordinates}
+     *
+     * @param coords The {@link ChunkCoordinates} to copy
+     */
+    public Location(final ChunkCoordinates coords){
+        this.x = coords.posX;
+        this.y = coords.posY;
+        this.z = coords.posZ;
+    }
+
+    /**
+     * Constructs a new Location from {@link ChunkCoordinates}
+     *
+     * @param coords The {@link ChunkCoordinates} to copy
+     * @param yaw The absolute rotation on the x-plane, in degrees
+     * @param pitch The absolute rotation on the y-plane, in degrees
+     */
+    public Location(final ChunkCoordinates coords, final float yaw, final float pitch){
+        this.x = coords.posX;
+        this.y = coords.posY;
+        this.z = coords.posZ;
+        this.yaw = yaw;
+        this.pitch = pitch;
     }
 
     /**
@@ -317,6 +358,10 @@ public class Location implements Cloneable {
         return this;
     }
 
+    public ChunkCoordinates toChunkCoordinates(){
+        return new ChunkCoordinates(this.getBlockX(), this.getBlockY(), this.getBlockZ());
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -380,5 +425,9 @@ public class Location implements Cloneable {
      */
     public static int locToBlock(double loc) {
         return MathUtil.floor(loc);
+    }
+
+    public static Location readFrom(ConfigTag tag){
+        return new Location(tag.getTag("x").getDoubleValue(), tag.getTag("y").getDoubleValue(64), tag.getTag("z").getDoubleValue(), (float) tag.getTag("yaw").getDoubleValue(0), (float) tag.getTag("pitch").getDoubleValue(0));
     }
 }
