@@ -6,6 +6,8 @@ Todo:
 - Skinsync
 - Native cypher
 - Command signs crash connection when mappack names are >16
+- /heal for people not ingame
+- Rewrite /gamerule
 
 Lua:
 - player.keepHealth / food

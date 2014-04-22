@@ -31,7 +31,9 @@ import jk_5.nailed.permissions.PermissionEventHandler;
 import jk_5.nailed.players.NailedPlayerRegistry;
 import jk_5.nailed.scheduler.NailedScheduler;
 import jk_5.nailed.scheduler.SchedulerCrashCallable;
-import jk_5.nailed.server.command.*;
+import jk_5.nailed.server.command.LoggingCommandListener;
+import jk_5.nailed.server.command.NailedCommandManager;
+import jk_5.nailed.server.command.PermissionCommand;
 import jk_5.nailed.teamspeak.TeamspeakClient;
 import jk_5.nailed.util.MotdManager;
 import jk_5.nailed.util.config.ConfigFile;
@@ -44,6 +46,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.permissions.api.PermissionsManager;
+import net.minecraftforge.permissions.api.RegisteredPermValue;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -68,6 +71,8 @@ public class NailedServer {
     @Getter private static File configDir;
     @Getter private static JoinMessageSender joinMessageSender;
 
+    public static final String COMMANDBLOCK_PERMISSION = "minecraft.commandBlock.edit";
+
     public NailedServer(){
         if(FMLLaunchHandler.side().isClient()){
             throw new RuntimeException("Nailed-Server is server-only, don\'t use it on the client!");
@@ -80,6 +85,8 @@ public class NailedServer {
         NailedAPI.setTeleporter(new NailedTeleporter());
 
         FMLCommonHandler.instance().bus().register(NailedAPI.getScheduler());
+
+        MinecraftServer.getServer().commandManager = new NailedCommandManager();
     }
 
     @EventHandler
@@ -121,6 +128,7 @@ public class NailedServer {
         MinecraftForge.EVENT_BUS.register(new TeleportEventListenerMotion());
         MinecraftForge.EVENT_BUS.register(new PermissionEventHandler());
         MinecraftForge.EVENT_BUS.register(new IpcEventListener());
+        MinecraftForge.EVENT_BUS.register(new LoggingCommandListener());
         FMLCommonHandler.instance().bus().register(NailedAPI.getPlayerRegistry());
         FMLCommonHandler.instance().bus().register(NailedAPI.getMapLoader());
         FMLCommonHandler.instance().bus().register(new InvSeeTicker());
@@ -168,6 +176,7 @@ public class NailedServer {
 
         NailedLog.info("Registering permissions");
         joinMessageSender.registerPermissions();
+        PermissionsManager.registerPermission(COMMANDBLOCK_PERMISSION, RegisteredPermValue.OP);
 
         DatabaseManager.getInstance().init();
     }
@@ -198,43 +207,7 @@ public class NailedServer {
     @SuppressWarnings("unused")
     public void serverStarting(FMLServerStartingEvent event){
         //ircConnector.connect();
-        teamspeakClient.connect();
-
-        CommandHandler ch = (CommandHandler) event.getServer().getCommandManager();
-
-        ch.registerCommand(new CommandGoto());
-        ch.registerCommand(new CommandTeam());
-        ch.registerCommand(new CommandStartGame());
-        ch.registerCommand(new CommandIrc());
-        ch.registerCommand(new CommandMap());
-        ch.registerCommand(new CommandSetWinner());
-        ch.registerCommand(new CommandReloadMappacks());
-        ch.registerCommand(new CommandTime());
-        ch.registerCommand(new CommandSudo());
-        ch.registerCommand(new CommandInvsee());
-        ch.registerCommand(new CommandFirework());
-        ch.registerCommand(new CommandLobby());
-        ch.registerCommand(new CommandReloadMap());
-        ch.registerCommand(new CommandKickall());
-        ch.registerCommand(new CommandSaveMappack());
-        ch.registerCommand(new CommandSafehouse());
-        ch.registerCommand(new CommandTps());
-        ch.registerCommand(new CommandFps());
-        ch.registerCommand(new CommandCB());
-        ch.registerCommand(new CommandReloadPermissions());
-        ch.registerCommand(new CommandTerminal());
-        ch.registerCommand(new CommandRandomSpawnpoint());
-        ch.registerCommand(new CommandEdit());
-        ch.registerCommand(new CommandRegisterAchievement());
-        ch.registerCommand(new CommandReconnectIpc());
-
-        ch.getCommands().remove("tp");
-        ch.getCommands().remove("toggledownfall");
-        ch.getCommands().remove("gamemode");
-
-        ch.registerCommand(new CommandTP());
-        ch.registerCommand(new CommandToggleDownfall());
-        ch.registerCommand(new CommandGamemode());
+        //teamspeakClient.connect();
     }
 
     @EventHandler
