@@ -19,9 +19,10 @@ object StencilSkyRenderer {
   var renderMask: Int = -1
   var setupFogFailed = false
   val setupFogMethod: Option[Method] = try{
-    Some(ReflectionHelper.findMethod(classOf[EntityRenderer], null, Array[String]("setupFog", "func_78468_a"), classOf[Integer], classOf[java.lang.Float]))
+    Some(ReflectionHelper.findMethod(classOf[EntityRenderer], null, Array[String]("setupFog", "func_78468_a"), java.lang.Integer.TYPE, java.lang.Float.TYPE))
   }catch{
     case e: Throwable =>
+      e.printStackTrace()
       setupFogFailed = true
       None
   }

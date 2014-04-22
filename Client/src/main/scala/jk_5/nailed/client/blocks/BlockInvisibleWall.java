@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -114,5 +115,10 @@ public class BlockInvisibleWall extends BlockMulti {
     @Override
     public TileEntity createTileEntity(World world, int metadata){
         return metadata == 4 ? new TileEntitySky() : null;
+    }
+
+    @Override
+    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z){
+        return new ItemStack(Item.getItemFromBlock(this), 1, world.getBlockMetadata(x, y, z));
     }
 }

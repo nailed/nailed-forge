@@ -5,6 +5,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -100,5 +101,10 @@ public class BlockInvisibleWall extends BlockMulti {
         list.add(new ItemStack(item, 1, 2));
         list.add(new ItemStack(item, 1, 3));
         list.add(new ItemStack(item, 1, 4));
+    }
+
+    @Override
+    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z){
+        return new ItemStack(Item.getItemFromBlock(this), 1, world.getBlockMetadata(x, y, z));
     }
 }

@@ -51,7 +51,7 @@ object TileEntitySkyRenderer extends TileEntitySpecialRenderer {
       GL11.glEndList()
 
       StencilSkyRenderer.renderMask = mask
-    }
+    }else this.disableStencil = true
   }
 
   def renderCube(){
@@ -112,9 +112,9 @@ object TileEntitySkyRenderer extends TileEntitySpecialRenderer {
   def fogColor(){
     try{
       val re = mc.entityRenderer
-      val red = ReflectionHelper.getPrivateValue(classOf[EntityRenderer], re, "fogColorRed", "field_78518_n")
-      val green = ReflectionHelper.getPrivateValue(classOf[EntityRenderer], re, "fogColorGreen", "field_78519_o")
-      val blue = ReflectionHelper.getPrivateValue(classOf[EntityRenderer], re, "fogColorBlue", "field_78533_p")
+      val red = ReflectionHelper.getPrivateValue(classOf[EntityRenderer], re, "fogColorRed", "field_78518_n"): java.lang.Float
+      val green = ReflectionHelper.getPrivateValue(classOf[EntityRenderer], re, "fogColorGreen", "field_78519_o"): java.lang.Float
+      val blue = ReflectionHelper.getPrivateValue(classOf[EntityRenderer], re, "fogColorBlue", "field_78533_p"): java.lang.Float
       GL11.glColor3f(red, green, blue)
     }catch{
       case t: Throwable => GL11.glColor3f(1, 1, 1)
