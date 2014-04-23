@@ -21,8 +21,8 @@ public class NailedPacketCodec extends FMLIndexedMessageToMessageCodec<NailedPac
         this.addDiscriminator(3, NailedPacket.GuiOpen.class);
         this.addDiscriminator(4, NailedPacket.TileEntityData.class);
         this.addDiscriminator(5, NailedPacket.TimeUpdate.class);
-        this.addDiscriminator(6, NailedPacket.PlayerSkin.class);
-        this.addDiscriminator(7, NailedPacket.StoreSkin.class);
+        //6
+        //7
         this.addDiscriminator(8, NailedPacket.MapData.class);
         this.addDiscriminator(9, NailedPacket.Particle.class);
         this.addDiscriminator(10, NailedPacket.FPSSummary.class);

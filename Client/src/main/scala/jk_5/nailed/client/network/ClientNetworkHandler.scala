@@ -22,8 +22,6 @@ object ClientNetworkHandler {
     pipeline.addAfter(targetName, "OpenGuiHandler", OpenGuiHandler)
     pipeline.addAfter(targetName, "TileEntityDataHandler", TileEntityDataHandler)
     pipeline.addAfter(targetName, "TimeUpdateHandler", TimeUpdateHandler)
-    pipeline.addAfter(targetName, "SkinDataHandler", SkinDataHandler)
-    pipeline.addAfter(targetName, "StoreSkinHandler", StoreSkinHandler)
     pipeline.addAfter(targetName, "MapDataHandler", MapDataHandler)
     pipeline.addAfter(targetName, "ParticleHandler", ParticleHandler)
     pipeline.addAfter(targetName, "TerminalGuiHandler", TerminalGuiHandler)

@@ -10,7 +10,6 @@ import jk_5.nailed.client.achievement.NailedAchievements
 import jk_5.nailed.client.network.ClientNetworkHandler
 import net.minecraftforge.common.{DimensionManager, MinecraftForge}
 import jk_5.nailed.client.render._
-import jk_5.nailed.client.skinsync.SkinSync
 import jk_5.nailed.client.map.edit.MapEditManager
 import jk_5.nailed.client.blocks.NailedBlocks
 import jk_5.nailed.client.item.NailedItems
@@ -58,13 +57,12 @@ object NailedClient {
     //val handler = new ServerListHandler
     MinecraftForge.EVENT_BUS.register(TimeUpdateRenderer)
     MinecraftForge.EVENT_BUS.register(new NotificationRenderer())
-    MinecraftForge.EVENT_BUS.register(SkinSync.getInstance())
     MinecraftForge.EVENT_BUS.register(MapEditManager.instance())
     MinecraftForge.EVENT_BUS.register(StencilSkyRenderer)
     //MinecraftForge.EVENT_BUS.register(handler)
     //FMLCommonHandler.instance().bus().register(handler)
     FMLCommonHandler.instance().bus().register(MapEditManager.instance())
-    FMLCommonHandler.instance().bus().register(new TickHandlerClient(config))
+    FMLCommonHandler.instance().bus().register(TickHandlerClient)
     FMLCommonHandler.instance().bus().register(this)
 
     NailedLog.info("Adding creativetab")

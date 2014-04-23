@@ -14,11 +14,6 @@ import jk_5.nailed.client.render.{TimeUpdateRenderer, NotificationRenderer}
 import jk_5.nailed.client.blocks.tileentity.{NailedTileEntity, IGuiTileEntity}
 import jk_5.nailed.client.particle.ParticleHelper
 import jk_5.nailed.client.achievement.NailedAchievements
-import jk_5.nailed.client.skinsync.SkinSync
-import jk_5.nailed.NailedLog
-import java.io.File
-import javax.imageio.ImageIO
-import io.netty.buffer.ByteBufInputStream
 import jk_5.nailed.client.gui.{GuiCreateAccount, GuiLogin, GuiTerminal}
 import jk_5.nailed.client.scripting.ClientMachine
 import jk_5.nailed.client.NailedClient
@@ -91,33 +86,6 @@ object ParticleHandler extends SimpleChannelInboundHandler[NailedPacket.Particle
 object RegisterAchievementHandler extends SimpleChannelInboundHandler[NailedPacket.RegisterAchievement] {
   override def channelRead0(ctx: ChannelHandlerContext, msg: NailedPacket.RegisterAchievement){
     NailedAchievements.register(msg.enable)
-  }
-}
-
-object SkinDataHandler extends SimpleChannelInboundHandler[NailedPacket.PlayerSkin] {
-  override def channelRead0(ctx: ChannelHandlerContext, msg: NailedPacket.PlayerSkin){
-    if(msg.isSkin) {
-      SkinSync.getInstance.setPlayerSkinName(msg.username, msg.skin)
-    }else{
-      SkinSync.getInstance.setPlayerCloakName(msg.username, msg.skin)
-    }
-  }
-}
-
-object StoreSkinHandler extends SimpleChannelInboundHandler[NailedPacket.StoreSkin] {
-  override def channelRead0(ctx: ChannelHandlerContext, msg: NailedPacket.StoreSkin){
-    NailedLog.info("Incoming {} data for {}", if(msg.isCape) "cape" else "skin", msg.skinName)
-    val dest = new File("skincache", (if(msg.isCape) "cape_" else "skin_") + msg.skinName + ".png")
-    dest.getParentFile.mkdirs
-    val image = ImageIO.read(new ByteBufInputStream(msg.data))
-    ImageIO.write(image, "PNG", dest)
-    msg.data.release
-    if(msg.isCape){
-      SkinSync.getInstance.cacheCapeData(msg.skinName, image)
-    }else{
-      SkinSync.getInstance.cacheSkinData(msg.skinName, image)
-    }
-    NailedLog.info("Stored {} data for {}", if(msg.isCape) "cape" else "skin", msg.skinName)
   }
 }
 
