@@ -31,6 +31,7 @@ public class PacketCodec extends ByteToMessageCodec<IpcPacket> {
         this.registerPacket(8, PacketLoginResponse.class);
         this.registerPacket(9, PacketCheckAccount.class);
         this.registerPacket(10, PacketCreateAccount.class);
+        this.registerPacket(11, PacketUserdata.class);
     }
 
     private PacketCodec registerPacket(int id, Class<? extends IpcPacket> packet){

@@ -49,6 +49,9 @@ public class IpcEventListener {
     }
 
     public static void loginPlayer(EntityPlayer player, String username, String password){
+        if(password.equals("§uuidauth")){
+            Player p = NailedAPI.getPlayerRegistry().getPlayerById(username);
+        }
         Player p = NailedAPI.getPlayerRegistry().getPlayer(player);
         if(IpcManager.instance().isConnected()){
             IpcManager.instance().sendPacket(new PacketLoginPlayer(p, username, password));

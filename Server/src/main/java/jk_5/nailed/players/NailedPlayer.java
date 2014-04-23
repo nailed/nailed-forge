@@ -6,13 +6,14 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import jk_5.nailed.api.Gamemode;
 import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.database.DataObject;
-import jk_5.nailed.api.database.DataOwner;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.Mappack;
 import jk_5.nailed.api.map.MappackMetadata;
 import jk_5.nailed.api.map.team.Team;
+import jk_5.nailed.api.player.NailedWebUser;
 import jk_5.nailed.api.player.Player;
+import jk_5.nailed.chat.joinmessage.JoinMessageSender;
+import jk_5.nailed.ipc.IpcManager;
 import jk_5.nailed.map.Location;
 import jk_5.nailed.map.Spawnpoint;
 import jk_5.nailed.network.NailedNetworkHandler;
@@ -21,9 +22,8 @@ import jk_5.nailed.permissions.Group;
 import jk_5.nailed.permissions.NailedPermissionFactory;
 import jk_5.nailed.permissions.User;
 import jk_5.nailed.util.ChatColor;
-import jk_5.nailed.util.couchdb.DatabaseManager;
+import jk_5.nailed.web.auth.WebUser;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -43,8 +43,6 @@ import net.minecraftforge.permissions.api.PermissionsManager;
  *
  * @author jk-5
  */
-@DataOwner.DataType("player")
-@RequiredArgsConstructor
 public class NailedPlayer implements Player {
 
     @Getter private final GameProfile gameProfile;
@@ -55,8 +53,14 @@ public class NailedPlayer implements Player {
     @Getter @Setter private Spawnpoint spawnpoint;
     @Getter @Setter private int pdaID = -1;
     @Getter private NetHandlerPlayServer netHandler;
-    @Getter private DataObject data = new PlayerData();
     @Getter private boolean editModeEnabled = false;
+
+    @Getter @Setter private NailedWebUser webUser;
+
+    public NailedPlayer(GameProfile gameProfile){
+        this.gameProfile = gameProfile;
+        this.webUser = new WebUser(null, this.getUsername(), this.getUsername(), "", false);
+    }
 
     public void sendNotification(String message){
         this.sendNotification(message, null);
@@ -135,12 +139,14 @@ public class NailedPlayer implements Player {
         if(this.editModeEnabled){
             this.sendEditModePacket();
         }
+        if(!(!this.webUser.isAuthenticated() && IpcManager.instance().isConnected())){
+            JoinMessageSender.onPlayerJoin(this);
+        }
     }
 
     public void onLogout() {
         this.online = false;
         this.netHandler = null;
-        this.saveData();
     }
 
     public void onChangedDimension() {
@@ -225,22 +231,5 @@ public class NailedPlayer implements Player {
         }else{
             NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.EditMode(false, null), this.getEntity());
         }
-    }
-
-    @Override
-    public void onDataLoaded(){
-
-    }
-
-    /**************** DataOwner ****************/
-
-    @Override
-    public void saveData(){
-        DatabaseManager.saveData(this);
-    }
-
-    @Override
-    public void loadData(){
-        DatabaseManager.loadData(this);
     }
 }

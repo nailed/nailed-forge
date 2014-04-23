@@ -2,11 +2,9 @@ package jk_5.nailed.chat.joinmessage;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent;
 import jk_5.nailed.NailedLog;
+import jk_5.nailed.api.player.Player;
 import jk_5.nailed.util.Utils;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
@@ -29,15 +27,15 @@ import java.util.Map;
  */
 public class JoinMessageSender {
     
-    private final List<String> message = Lists.newArrayList();
-    private final Map<String, IReplacement> replacements = Maps.newHashMap();
+    private static final List<String> message = Lists.newArrayList();
+    private static final Map<String, IReplacement> replacements = Maps.newHashMap();
 
-    public void readConfig(File configDir){
-        this.replacements.clear();
-        this.replacements.put("playername", new IReplacement.PlayerName());
-        this.replacements.put("uptime", new IReplacement.Uptime());
+    public static void readConfig(File configDir){
+        replacements.clear();
+        replacements.put("playername", new IReplacement.PlayerName());
+        replacements.put("uptime", new IReplacement.Uptime());
 
-        this.message.clear();
+        message.clear();
         File configFile = new File(configDir, "joinmessage.cfg");
         if(configFile.exists()){
             BufferedReader reader = null;
@@ -46,7 +44,7 @@ public class JoinMessageSender {
                 while(reader.ready()){
                     String line = reader.readLine().trim();
                     if(!line.startsWith("#") && !line.isEmpty()){
-                        this.message.add(line);
+                        message.add(line);
                     }
                 }
             }catch(Exception e){
@@ -76,24 +74,23 @@ public class JoinMessageSender {
             }finally{
                 IOUtils.closeQuietly(writer);
             }
-            this.readConfig(configDir);
+            readConfig(configDir);
         }
     }
     
-    @SubscribeEvent
-    public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event){
-        if(PermissionsManager.checkPerm(event.player, "nailed.joinmessage")){
-            for(String line : this.message){
-                event.player.addChatComponentMessage(this.format(line, event.player));
+    public static void onPlayerJoin(Player player){
+        if(player.hasPermission("nailed.joinMessage")){
+            for(String line : message){
+                player.sendChat(format(line, player));
             }
         }
     }
 
-    public void registerPermissions(){
+    public static void registerPermissions(){
         PermissionsManager.registerPermission("nailed.joinmessage", RegisteredPermValue.TRUE);
     }
 
-    private IChatComponent format(String line, EntityPlayer player){
+    private static IChatComponent format(String line, Player player){
         IChatComponent component = new ChatComponentText("");
         line = Utils.formatColors(line);
         ChatStyle parentStyle = component.getChatStyle();
@@ -115,7 +112,7 @@ public class JoinMessageSender {
                     continue;
                 }
                 String key = line.substring(i + 2, endIndex);
-                IReplacement replacement = this.replacements.get(key);
+                IReplacement replacement = replacements.get(key);
                 IChatComponent comp = replacement.getComponent(player);
                 comp.getChatStyle().setColor(color);
                 comp.getChatStyle().setBold(bold);

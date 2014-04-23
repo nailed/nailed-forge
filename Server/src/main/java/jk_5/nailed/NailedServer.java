@@ -37,7 +37,6 @@ import jk_5.nailed.server.command.PermissionCommand;
 import jk_5.nailed.teamspeak.TeamspeakClient;
 import jk_5.nailed.util.MotdManager;
 import jk_5.nailed.util.config.ConfigFile;
-import jk_5.nailed.util.couchdb.DatabaseManager;
 import jk_5.nailed.util.invsee.InvSeeTicker;
 import lombok.Getter;
 import net.minecraft.command.CommandHandler;
@@ -69,7 +68,6 @@ public class NailedServer {
     @Getter private static TeamspeakClient teamspeakClient;
     @Getter private static NailedPermissionFactory permissionFactory;
     @Getter private static File configDir;
-    @Getter private static JoinMessageSender joinMessageSender;
 
     public static final String COMMANDBLOCK_PERMISSION = "minecraft.commandBlock.edit";
 
@@ -105,11 +103,8 @@ public class NailedServer {
             NailedAPI.getMapLoader().getMapsFolder().renameTo(dest);
         }
 
-        DatabaseManager.getInstance().readConfig(config.getTag("database"));
-        
         NailedLog.info("Loading join message");
-        joinMessageSender = new JoinMessageSender();
-        joinMessageSender.readConfig(configDir);
+        JoinMessageSender.readConfig(configDir);
         
         NailedLog.info("Loading achievements");
         NailedAchievements.addAchievements();
@@ -132,7 +127,6 @@ public class NailedServer {
         FMLCommonHandler.instance().bus().register(NailedAPI.getPlayerRegistry());
         FMLCommonHandler.instance().bus().register(NailedAPI.getMapLoader());
         FMLCommonHandler.instance().bus().register(new InvSeeTicker());
-        FMLCommonHandler.instance().bus().register(joinMessageSender);
         FMLCommonHandler.instance().bus().register(new MotdManager());
 
         FMLCommonHandler.instance().registerCrashCallable(new SchedulerCrashCallable());
@@ -175,10 +169,8 @@ public class NailedServer {
         NailedAchievements.init();
 
         NailedLog.info("Registering permissions");
-        joinMessageSender.registerPermissions();
+        JoinMessageSender.registerPermissions();
         PermissionsManager.registerPermission(COMMANDBLOCK_PERMISSION, RegisteredPermValue.OP);
-
-        DatabaseManager.getInstance().init();
     }
 
     @EventHandler

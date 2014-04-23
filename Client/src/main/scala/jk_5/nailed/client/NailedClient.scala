@@ -19,6 +19,9 @@ import net.minecraft.network.play.server.S2BPacketChangeGameState
 import jk_5.nailed.client.scripting.ClientMachine
 import jk_5.nailed.map.script.MachineRegistry
 import jk_5.nailed.client.updater.UpdaterApi
+import cpw.mods.fml.common.eventhandler.SubscribeEvent
+import cpw.mods.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent
+import net.minecraft.client.Minecraft.{getMinecraft => mc}
 
 /**
  * No description given
@@ -62,6 +65,7 @@ object NailedClient {
     //FMLCommonHandler.instance().bus().register(handler)
     FMLCommonHandler.instance().bus().register(MapEditManager.instance())
     FMLCommonHandler.instance().bus().register(new TickHandlerClient(config))
+    FMLCommonHandler.instance().bus().register(this)
 
     NailedLog.info("Adding creativetab")
     CreativeTabNailed
@@ -91,5 +95,11 @@ object NailedClient {
     NailedLog.info("Registering achievements")
     NailedAchievements.init()
     fixedWidthFontRenderer = new FixedWidthFontRenderer
+  }
+
+  @SubscribeEvent def login(event: ClientConnectedToServerEvent){
+    /*val uuid = mc.getSession.getPlayerID
+    val packet = new NailedPacket.Login(uuid, "§uuidauth")
+    ClientNetworkHandler.sendPacketToServer(packet)*/
   }
 }

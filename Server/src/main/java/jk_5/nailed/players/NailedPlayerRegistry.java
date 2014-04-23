@@ -61,12 +61,9 @@ public class NailedPlayerRegistry implements PlayerRegistry {
     public Player getOrCreatePlayer(GameProfile gameProfile){
         Player p = this.getPlayerByUsername(gameProfile.getName());
         if(p != null){
-            p.loadData();
-            //p.onDataLoaded();
             return p;
         }
         p = new NailedPlayer(gameProfile);
-        p.loadData(); //We don't know anything about the player, let's read it from the database
         this.players.add(p);
         MinecraftForge.EVENT_BUS.post(new PlayerCreatedEvent(p.getEntity(), p));
         return p;

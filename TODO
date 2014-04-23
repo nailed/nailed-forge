@@ -42,3 +42,6 @@ loggerConfig.setLevel(Level.ALL);
 ctx.updateLoggers();
 
 http://stackoverflow.com/questions/2937406/how-to-bundle-a-native-library-and-a-jni-library-inside-a-jar
+
+
+field_147334_j is always ""
