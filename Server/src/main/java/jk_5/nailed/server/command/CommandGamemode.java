@@ -8,6 +8,7 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 
 import java.util.Arrays;
@@ -37,6 +38,7 @@ public class CommandGamemode extends NailedCommand {
     @Override
     public void processCommandWithMap(ICommandSender sender, Map map, String[] args){
         if(args.length == 0){
+            // /gm
             if(sender instanceof EntityPlayer){
                 Player target = NailedAPI.getPlayerRegistry().getPlayer((EntityPlayer) sender);
                 Gamemode gamemode = this.getToggledGamemode(target);
@@ -44,15 +46,20 @@ public class CommandGamemode extends NailedCommand {
                 target.setGameMode(gamemode);
             }else throw new CommandException("You are not a player");
         }else if(args.length == 1){
+            // /gm 1
             if(sender instanceof EntityPlayer){
                 Gamemode gamemode = this.getGameModeFromCommand(args[0]);
                 Player target = NailedAPI.getPlayerRegistry().getPlayer((EntityPlayer) sender);
                 target.setGameMode(gamemode);
-            }else{
-                Player target = NailedAPI.getPlayerRegistry().getPlayerByUsername(args[0]);
-                if(target == null) throw new CommandException("Player " + args[0] + " was not found");
-                Gamemode gamemode = this.getToggledGamemode(target);
-                target.setGameMode(gamemode);
+            }else throw new CommandException("You are not a player");
+        }else if(args.length == 2){
+            // /gm 1 username
+            EntityPlayerMP[] matches = getPlayersList(sender, args[1]);
+            Gamemode newmode = this.getGameModeFromCommand(args[0]);
+            for(EntityPlayerMP match : matches){
+                Player target = NailedAPI.getPlayerRegistry().getPlayer(match);
+                if(target == null) continue;
+                target.setGameMode(newmode);
             }
         }
     }
