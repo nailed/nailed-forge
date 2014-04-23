@@ -7,8 +7,12 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.permissions.api.PermissionsManager;
 import net.minecraftforge.permissions.api.RegisteredPermValue;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
@@ -20,6 +24,7 @@ import java.util.List;
 public class NailedCommandManager extends CommandHandler implements IAdminCommand {
 
     private static final String commandWarningsPerm = "minecraft.commandWarnings";
+    private static final Logger logger = LogManager.getLogger();
 
     public NailedCommandManager(){
         PermissionsManager.registerPermission(commandWarningsPerm, RegisteredPermValue.OP);
@@ -126,6 +131,92 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
 
         if((normalSender & 1) != 1){
             sender.addChatMessage(new ChatComponentTranslation(key, args));
+        }
+    }
+
+    @Override
+    public int executeCommand(ICommandSender sender, String input){
+        input = input.trim();
+
+        if(input.startsWith("/")){
+            input = input.substring(1);
+        }
+
+        String[] args = input.split(" ");
+        String commandName = args[0];
+        args = dropFirstString(args);
+        ICommand icommand = (ICommand) getCommands().get(commandName);
+        int usernameIndex = this.getUsernameIndex(icommand, args);
+        int timesExecuted = 0;
+        ChatComponentTranslation chatcomponenttranslation;
+
+        try{
+            if(icommand == null){
+                throw new CommandNotFoundException();
+            }
+
+            CommandEvent event = new CommandEvent(icommand, sender, args);
+            if (MinecraftForge.EVENT_BUS.post(event)){
+                if (event.exception != null){
+                    throw event.exception;
+                }
+                return 1;
+            }
+
+            if (usernameIndex > -1){
+                EntityPlayerMP[] matched = PlayerSelector.matchPlayers(sender, args[usernameIndex]);
+                String username = args[usernameIndex];
+
+                for(EntityPlayerMP entityplayermp : matched){
+                    args[usernameIndex] = entityplayermp.getCommandSenderName();
+                    try{
+                        icommand.processCommand(sender, args);
+                        ++timesExecuted;
+                    }catch(CommandException commandexception){
+                        ChatComponentTranslation chatcomponenttranslation1 = new ChatComponentTranslation(commandexception.getMessage(), commandexception.getErrorOjbects());
+                        chatcomponenttranslation1.getChatStyle().setColor(EnumChatFormatting.RED);
+                        sender.addChatMessage(chatcomponenttranslation1);
+                    }
+                }
+
+                args[usernameIndex] = username;
+            }else{
+                icommand.processCommand(sender, args);
+                timesExecuted ++;
+            }
+        }catch (WrongUsageException e){
+            chatcomponenttranslation = new ChatComponentTranslation("commands.generic.usage", new ChatComponentTranslation(e.getMessage(), e.getErrorOjbects()));
+            chatcomponenttranslation.getChatStyle().setColor(EnumChatFormatting.RED);
+            sender.addChatMessage(chatcomponenttranslation);
+        }catch(CommandException e){
+            chatcomponenttranslation = new ChatComponentTranslation(e.getMessage(), e.getErrorOjbects());
+            chatcomponenttranslation.getChatStyle().setColor(EnumChatFormatting.RED);
+            sender.addChatMessage(chatcomponenttranslation);
+        }catch (Throwable throwable){
+            chatcomponenttranslation = new ChatComponentTranslation("commands.generic.exception");
+            chatcomponenttranslation.getChatStyle().setColor(EnumChatFormatting.RED);
+            sender.addChatMessage(chatcomponenttranslation);
+            logger.error("Couldn\'t process command", throwable);
+        }
+        return timesExecuted;
+    }
+
+    private static String[] dropFirstString(String[] args){
+        String[] ret = new String[args.length - 1];
+        System.arraycopy(args, 1, ret, 0, args.length - 1);
+        return ret;
+    }
+
+    private int getUsernameIndex(ICommand command, String[] args){
+        if(command == null){
+            return -1;
+        }else{
+            for (int i = 0; i < args.length; ++i){
+                if (command.isUsernameIndex(args, i) && PlayerSelector.matchesMultiplePlayers(args[i])){
+                    return i;
+                }
+            }
+            return -1;
         }
     }
 }
