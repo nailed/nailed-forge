@@ -33,14 +33,11 @@ import jk_5.nailed.scheduler.NailedScheduler;
 import jk_5.nailed.scheduler.SchedulerCrashCallable;
 import jk_5.nailed.server.command.LoggingCommandListener;
 import jk_5.nailed.server.command.NailedCommandManager;
-import jk_5.nailed.server.command.PermissionCommand;
 import jk_5.nailed.teamspeak.TeamspeakClient;
 import jk_5.nailed.util.MotdManager;
 import jk_5.nailed.util.config.ConfigFile;
 import jk_5.nailed.util.invsee.InvSeeTicker;
 import lombok.Getter;
-import net.minecraft.command.CommandHandler;
-import net.minecraft.command.ICommand;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
@@ -211,16 +208,6 @@ public class NailedServer {
     @EventHandler
     @SuppressWarnings("unused")
     public void serverStarted(FMLServerStartedEvent event){
-        NailedLog.info("Registering all command permissions");
-        CommandHandler ch = (CommandHandler) MinecraftServer.getServer().getCommandManager();
-
-        for(Object obj : ch.getCommands().values()){
-            ICommand command = (ICommand) obj;
-            if(command instanceof PermissionCommand){
-                PermissionsManager.registerPermission(((PermissionCommand) command).getPermissionNode());
-            }
-        }
-
         PermissionsManager.addPermissionsToFactory();
 
         NailedLog.info("Reading permission config");
