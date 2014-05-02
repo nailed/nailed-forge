@@ -7,6 +7,7 @@ import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.network.NailedPacket;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayerMP;
 
 /**
  * No description given
@@ -29,6 +30,14 @@ public class TeleportEventListenerEffect {
             NailedNetworkHandler.sendPacketToAllPlayersInDimension(new NailedPacket.Particle(event.entity.posX, event.entity.posY, event.entity.posZ, "teleport"), event.entity.dimension);
         }
         playSound(event.entity, event.options);
+        if(event.options.isClearInventory() && event.entity instanceof EntityPlayerMP){
+            EntityPlayerMP player = (EntityPlayerMP) event.entity;
+            player.inventory.clearInventory(null, -1);
+            player.inventoryContainer.detectAndSendChanges();
+            if(!player.capabilities.isCreativeMode){
+                player.updateHeldItem();
+            }
+        }
     }
 
     private static void playSound(Entity entity, TeleportOptions options){

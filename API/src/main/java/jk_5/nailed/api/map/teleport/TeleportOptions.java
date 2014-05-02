@@ -23,6 +23,7 @@ public class TeleportOptions {
     private Map destination;
     private boolean maintainMomentum = false;
     private boolean spawnParticles = true;
+    private boolean clearInventory = true;
     private String sound = "nailed:teleport";
 
     public TeleportOptions(Map destination, Location location){
@@ -33,7 +34,7 @@ public class TeleportOptions {
     @Override
     @SuppressWarnings("CloneDoesntDeclareCloneNotSupportedException")
     public TeleportOptions clone(){
-        return new TeleportOptions(this.location, this.destination, this.maintainMomentum, this.spawnParticles, this.sound);
+        return new TeleportOptions(this.location, this.destination, this.maintainMomentum, this.spawnParticles, this.clearInventory, this.sound);
     }
 
     public int getDestinationID(){
