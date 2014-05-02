@@ -191,6 +191,7 @@ object Updater {
       dir = input.replace("{MC_GAME_DIR}", stripTrailing(UpdatingTweaker.gameDir.getAbsolutePath))
     }
     dir = dir.replace("{MC_LIB_DIR}", "libraries")
+    dir = dir.replace("{NAILED_LIB_DIR}", "Nailed/libs")
     dir = dir.replace("{MC_VERSION_DIR}", "versions/" + UpdatingTweaker.name)
     dir = dir.replace("{MC_VERSION_NAME}", UpdatingTweaker.name)
     new File(dir)
@@ -214,7 +215,11 @@ object Updater {
       this.addUrl = classOf[URLClassLoader].getDeclaredMethod("addURL", classOf[URL])
       this.addUrl.setAccessible(true)
     }
-    this.addUrl.invoke(this.classLoader.getClass.getClassLoader, url)
-    this.classLoader.addURL(url)
+    try{
+      this.addUrl.invoke(this.classLoader.getClass.getClassLoader, url)
+      this.classLoader.addURL(url)
+    }catch{
+      case e: Throwable => logger.error(s"Error while injecting ${file.getAbsolutePath} into classloader", e)
+    }
   }
 }
