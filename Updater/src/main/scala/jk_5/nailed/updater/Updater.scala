@@ -20,6 +20,16 @@ import java.lang.reflect.Method
  */
 object Updater {
 
+  lazy val minecraftFolder = {
+    val userHome = Properties.propOrElse("user.home", ".")
+    if(Properties.isWin && System.getenv("APPDATA") != null){
+      new File(System.getenv("APPDATA"), ".minecraft")
+    }else if(Properties.isMac){
+      new File(new File(new File(userHome, "Library"), "Application Support"), "minecraft")
+    }else {
+      new File(userHome, ".minecraft")
+    }
+  }
   var restart = RestartLevel.NOTHING
   val logger = LogManager.getLogger("Nailed-Updater")
   val server = "http://maven.reening.nl/"
@@ -186,7 +196,7 @@ object Updater {
   }
 
   private def resolve(input: String): File = {
-    var dir = getMinecraftFolder.getAbsolutePath + "/" + input
+    var dir = minecraftFolder.getAbsolutePath + "/" + input
     if(input.startsWith("{MC_GAME_DIR}")) {
       dir = input.replace("{MC_GAME_DIR}", stripTrailing(UpdatingTweaker.gameDir.getAbsolutePath))
     }
@@ -198,16 +208,6 @@ object Updater {
   }
 
   private def stripTrailing(in: String) = if(in.endsWith("/")) in.substring(0, in.length - 1) else in
-  private def getMinecraftFolder: File = {
-    val userHome = Properties.propOrElse("user.home", ".")
-    if(Properties.isWin && System.getenv("APPDATA") != null){
-      new File(System.getenv("APPDATA"), ".minecraft")
-    }else if(Properties.isMac){
-      new File(new File(new File(userHome, "Library"), "Application Support"), "minecraft")
-    }else {
-      new File(userHome, ".minecraft")
-    }
-  }
 
   private def injectIntoClassLoader(file: File){
     val url = file.toURI.toURL

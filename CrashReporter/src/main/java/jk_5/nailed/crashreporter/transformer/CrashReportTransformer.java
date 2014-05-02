@@ -1,5 +1,6 @@
 package jk_5.nailed.crashreporter.transformer;
 
+import jk_5.nailed.crashreporter.CrashReporter;
 import jk_5.nailed.crashreporter.transformer.asm.ASMHelper;
 import jk_5.nailed.crashreporter.transformer.asm.Mapping;
 import net.minecraft.launchwrapper.IClassTransformer;
@@ -58,6 +59,8 @@ public class CrashReportTransformer implements IClassTransformer {
         while(mnode.instructions.get(off).getOpcode() != Opcodes.ALOAD) off++;
 
         mnode.instructions.insertBefore(mnode.instructions.get(off), insn);
+
+        CrashReporter.getLogger().info("Inserted CrashReporter hook into " + cnode.name);
 
         return ASMHelper.createBytes(cnode, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
     }

@@ -1,5 +1,6 @@
 package jk_5.nailed.server.command;
 
+import com.google.common.collect.Maps;
 import net.minecraft.command.*;
 import net.minecraft.command.CommandToggleDownfall;
 import net.minecraft.command.server.*;
@@ -15,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * No description given
@@ -25,10 +27,14 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
 
     private static final String commandWarningsPerm = "minecraft.commandWarnings";
     private static final Logger logger = LogManager.getLogger();
+    private static final Map<ICommand, String> commandOwners = Maps.newHashMap();
+
+    private String registrar = "mc";
 
     public NailedCommandManager(){
         PermissionsManager.registerPermission(commandWarningsPerm, RegisteredPermValue.OP);
 
+        registrar = "nailed";
         this.registerCommand(new CommandGoto());
         this.registerCommand(new CommandTeam());
         this.registerCommand(new CommandStartGame());
@@ -60,6 +66,7 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
         this.registerCommand(new CommandGamerule());
         this.registerCommand(new CommandDifficulty());
 
+        registrar = "mc";
         this.registerCommand(new CommandKill());
         this.registerCommand(new CommandWeather());
         this.registerCommand(new CommandXP());
@@ -154,6 +161,11 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
                 throw new CommandNotFoundException();
             }
 
+            String owner = commandOwners.get(icommand);
+            if(!PermissionsManager.getPerm(sender.getCommandSenderName(), owner + ".commands." + icommand.getCommandName()).check()){
+                throw new CommandException("commands.generic.permission");
+            }
+
             CommandEvent event = new CommandEvent(icommand, sender, args);
             if (MinecraftForge.EVENT_BUS.post(event)){
                 if (event.exception != null){
@@ -170,7 +182,7 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
                     args[usernameIndex] = entityplayermp.getCommandSenderName();
                     try{
                         icommand.processCommand(sender, args);
-                        ++timesExecuted;
+                        timesExecuted ++;
                     }catch(CommandException commandexception){
                         ChatComponentTranslation chatcomponenttranslation1 = new ChatComponentTranslation(commandexception.getMessage(), commandexception.getErrorOjbects());
                         chatcomponenttranslation1.getChatStyle().setColor(EnumChatFormatting.RED);
@@ -198,6 +210,13 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
             logger.error("Couldn\'t process command", throwable);
         }
         return timesExecuted;
+    }
+
+    @Override
+    public ICommand registerCommand(ICommand command){
+        commandOwners.put(command, registrar);
+        PermissionsManager.registerPermission(registrar + ".commands." + command.getCommandName(), RegisteredPermValue.OP);
+        return super.registerCommand(command);
     }
 
     private static String[] dropFirstString(String[] args){
