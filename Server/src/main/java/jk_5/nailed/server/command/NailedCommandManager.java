@@ -1,6 +1,8 @@
 package jk_5.nailed.server.command;
 
 import com.google.common.collect.Maps;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.ModContainer;
 import net.minecraft.command.*;
 import net.minecraft.command.CommandToggleDownfall;
 import net.minecraft.command.server.*;
@@ -29,12 +31,9 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
     private static final Logger logger = LogManager.getLogger();
     private static final Map<ICommand, String> commandOwners = Maps.newHashMap();
 
-    private String registrar = "mc";
-
     public NailedCommandManager(){
         PermissionsManager.registerPermission(commandWarningsPerm, RegisteredPermValue.OP);
 
-        registrar = "nailed";
         this.registerCommand(new CommandGoto());
         this.registerCommand(new CommandTeam());
         this.registerCommand(new CommandStartGame());
@@ -66,7 +65,6 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
         this.registerCommand(new CommandGamerule());
         this.registerCommand(new CommandDifficulty());
 
-        registrar = "mc";
         this.registerCommand(new CommandKill());
         this.registerCommand(new CommandWeather());
         this.registerCommand(new CommandXP());
@@ -214,8 +212,13 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
 
     @Override
     public ICommand registerCommand(ICommand command){
-        commandOwners.put(command, registrar);
-        PermissionsManager.registerPermission(registrar + ".commands." + command.getCommandName(), RegisteredPermValue.OP);
+        String modid = "minecraft";
+        ModContainer container = Loader.instance().activeModContainer();
+        if(container != null){
+            modid = container.getModId();
+        }
+        commandOwners.put(command, modid);
+        PermissionsManager.registerPermission(modid + ".commands." + command.getCommandName(), RegisteredPermValue.OP);
         return super.registerCommand(command);
     }
 
