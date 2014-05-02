@@ -60,9 +60,7 @@ public class MinecraftServerTransformer implements IClassTransformer {
 
         mnode.instructions.insertBefore(mnode.instructions.get(offset - 4), list);
 
-        /*
-         *  Hack the this.anvilConverterForAnvilFile = new AnvilSaveConverter(par1File); to use the file we created above
-         */
+        //Hack the this.anvilConverterForAnvilFile = new AnvilSaveConverter(par1File); to use the file we created above
         while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKESPECIAL) offset ++;
         while(mnode.instructions.get(offset).getOpcode() != Opcodes.ALOAD) offset ++;
         offset ++;
@@ -122,43 +120,23 @@ public class MinecraftServerTransformer implements IClassTransformer {
         while(mnode.instructions.get(offset).getOpcode() != Opcodes.ILOAD) offset ++;
 
         //Modify the end and nether world names from DIM_-1 and DIM_1 to their nailed names (map_-1 and map_1)
-        list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "jk_5/nailed/map/NailedMapLoader", "instance", "()Ljk_5/nailed/map/NailedMapLoader;"));
+        //First we get the name from the mappack
+        list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "jk_5/nailed/api/NailedAPI", "getMapLoader", "()Ljk_5/nailed/api/map/MapLoader;"));
         list.add(new VarInsnNode(Opcodes.ILOAD, 14));
-        list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "jk_5/nailed/map/NailedMapLoader", "getMap", "(I)Ljk_5/nailed/api/map/Map;"));
+        list.add(new MethodInsnNode(Opcodes.INVOKEINTERFACE, "jk_5/nailed/api/map/MapLoader", "getMap", "(I)Ljk_5/nailed/api/map/Map;"));
         list.add(new MethodInsnNode(Opcodes.INVOKEINTERFACE, "jk_5/nailed/api/map/Map", "getSaveFileName", "()Ljava/lang/String;"));
         list.add(new VarInsnNode(Opcodes.ASTORE, 17));
 
+        //Insert this piece of code
         mnode.instructions.insertBefore(mnode.instructions.get(offset), list);
         list.clear();
 
-        while(mnode.instructions.get(offset).getOpcode() != Opcodes.NEW) offset ++;
-        TypeInsnNode newMulti = (TypeInsnNode) mnode.instructions.get(offset);
-        newMulti.desc = data.get("worldServerClass");
-
-        while(mnode.instructions.get(offset).getOpcode() != Opcodes.ALOAD) offset ++;
-        offset ++;
-
-        //Force nether and end to use WorldServer instead of using WorldServerMulti
-        //TODO: this is bad! Remove this?
-        list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-        list.add(new FieldInsnNode(Opcodes.GETFIELD, data.get("className").replace('.', '/'), data.get("saveFormatField"), data.get("saveFormatFieldSig")));
-        list.add(new VarInsnNode(Opcodes.ALOAD, 17));
-        list.add(new InsnNode(Opcodes.ICONST_1));
-        list.add(new MethodInsnNode(Opcodes.INVOKEINTERFACE, data.get("saveFormatClass"), data.get("getSaveLoaderName"), data.get("getSaveLoaderSig")));
-        list.add(new VarInsnNode(Opcodes.ALOAD, 17));
-
-        mnode.instructions.insert(mnode.instructions.get(offset), list);
-        mnode.instructions.remove(mnode.instructions.get(offset));
-        while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKEINTERFACE) offset ++;
-        mnode.instructions.remove(mnode.instructions.get(offset + 2));
-        mnode.instructions.remove(mnode.instructions.get(offset + 4));
-        list.clear();
-
-        while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKESPECIAL) offset ++;
-        MethodInsnNode initMulti = (MethodInsnNode) mnode.instructions.get(offset);
-        initMulti.owner = data.get("worldServerClass");
-        initMulti.name = "<init>";
-        initMulti.desc = data.get("worldServerConstructorSig");
+        //Now we find the ALOAD 2 and replace it by ALOAD 17
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.GOTO) offset ++;
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.DUP) offset ++;
+        offset += 3; //ALOAD 2
+        VarInsnNode vnode = (VarInsnNode) mnode.instructions.get(offset);
+        vnode.var = 17;
 
         return ASMHelper.createBytes(cnode, ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
     }
