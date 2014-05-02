@@ -87,7 +87,7 @@ public class JoinMessageSender {
     }
 
     public static void registerPermissions(){
-        PermissionsManager.registerPermission("nailed.joinmessage", RegisteredPermValue.TRUE);
+        PermissionsManager.registerPermission("nailed.joinMessage", RegisteredPermValue.TRUE);
     }
 
     private static IChatComponent format(String line, Player player){
