@@ -23,7 +23,7 @@ public class TeleportOptions {
     private Map destination;
     private boolean maintainMomentum = false;
     private boolean spawnParticles = true;
-    private boolean clearInventory = true;
+    private boolean clearInventory = false;
     private String sound = "nailed:teleport";
 
     public TeleportOptions(Map destination, Location location){
