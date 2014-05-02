@@ -3,11 +3,14 @@ apply plugin: 'scala'
 version = '0.1'
 
 dependencies{
-    compile rootProject
+    compile 'org.scala-lang:scala-library:2.10.4'
+    compile 'org.apache.logging.log4j:log4j-api:2.0-beta9'
 }
 
-rootProject.tasks.reobf {
-    reobf(tasks.jar) { spec ->
-        spec.classpath = sourceSets.main.compileClasspath
+sourceSets {
+    main {
+        java {
+            compileClasspath += api.output
+        }
     }
 }

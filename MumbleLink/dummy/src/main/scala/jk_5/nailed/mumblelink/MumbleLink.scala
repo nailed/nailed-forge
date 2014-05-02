@@ -1,7 +1,6 @@
 package jk_5.nailed.mumblelink
 
 import cpw.mods.fml.common.{FMLCommonHandler, Mod}
-import net.minecraft.client.Minecraft.{getMinecraft => mc}
 import cpw.mods.fml.common.gameevent.TickEvent
 import net.minecraft.util.ChatComponentText
 import cpw.mods.fml.common.event.FMLPreInitializationEvent
