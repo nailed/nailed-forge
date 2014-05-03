@@ -10,6 +10,7 @@ import io.netty.channel.embedded.EmbeddedChannel;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.NailedServer;
 import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.concurrent.scheduler.NailedRunnable;
 import jk_5.nailed.api.map.GameManager;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.Mappack;
@@ -128,7 +129,12 @@ public class NailedMap implements Map {
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public void unloadAndRemove(){
         NailedAPI.getMapLoader().removeMap(this);
-        this.getSaveFolder().delete();
+        NailedAPI.getScheduler().runTaskAsynchronously(new NailedRunnable() {
+            @Override
+            public void run(){
+                getSaveFolder().delete();
+            }
+        });
     }
 
     @Override

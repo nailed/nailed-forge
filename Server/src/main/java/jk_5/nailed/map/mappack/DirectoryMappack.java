@@ -23,7 +23,6 @@ import org.apache.commons.io.FileUtils;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -112,12 +111,7 @@ public class DirectoryMappack implements Mappack {
 
             world.levelSaving = true;
 
-            FileUtils.copyDirectory(map.getSaveFolder(), worldDir, new FileFilter() {
-                @Override
-                public boolean accept(File file){
-                    return file.getName().equals("level.dat") || file.getName().equals("region");
-                }
-            });
+            FileUtils.copyDirectory(map.getSaveFolder(), worldDir);
 
             world.levelSaving = notSaveEnabled;
         }catch(MinecraftException e){

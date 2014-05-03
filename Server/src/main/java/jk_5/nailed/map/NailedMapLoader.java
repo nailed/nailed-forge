@@ -40,6 +40,9 @@ import net.minecraftforge.event.world.WorldEvent;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
+import java.lang.reflect.Field;
+import java.util.BitSet;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Random;
 
@@ -56,6 +59,9 @@ public class NailedMapLoader implements MapLoader {
     private final List<Map> maps = Lists.newArrayList();
     private Random randomSpawnpointSelector = new Random();
 
+    private final BitSet dimensionIds;
+    private final Hashtable<Integer, Integer> dimensions;
+
     @Nonnull
     public static NailedMapLoader instance(){
         if(NailedAPI.getMapLoader() == null){
@@ -64,8 +70,23 @@ public class NailedMapLoader implements MapLoader {
         return instance;
     }
 
+    @SuppressWarnings("unchecked")
     public NailedMapLoader(){
         instance = this;
+        try{
+            Field f = DimensionManager.class.getDeclaredField("dimensionMap");
+            f.setAccessible(true);
+            this.dimensionIds = (BitSet) f.get(null);
+        }catch(Exception e){
+            throw new RuntimeException(e);
+        }
+        try{
+            Field f = DimensionManager.class.getDeclaredField("dimensions");
+            f.setAccessible(true);
+            this.dimensions = (Hashtable<Integer, Integer>) f.get(null);
+        }catch(Exception e){
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -170,7 +191,7 @@ public class NailedMapLoader implements MapLoader {
     public void onBlockBreak(BlockEvent.BreakEvent event){
         Mappack mappack = this.getMap(event.world).getMappack();
         if(mappack != null && mappack.getMappackMetadata().isPreventingBlockBreak()){
-            event.setCanceled(true);
+            //event.setCanceled(true);
         }
     }
 
@@ -312,6 +333,7 @@ public class NailedMapLoader implements MapLoader {
         }
         DimensionManager.unloadWorld(map.getID());
         this.maps.remove(map);
+        this.releaseDimensionId(map.getID());
         MinecraftForge.EVENT_BUS.post(new MapRemovedEvent(map));
         NailedLog.info("Unloaded map {}", map.getSaveFileName());
     }
@@ -354,5 +376,20 @@ public class NailedMapLoader implements MapLoader {
     @Nonnull
     public Random getRandomSpawnpointSelector(){
         return randomSpawnpointSelector;
+    }
+
+    public int reserveDimensionId(){
+        int next = 0;
+        while (true){
+            next = dimensionIds.nextClearBit(next);
+            dimensionIds.set(next);
+            if(!dimensions.containsKey(next)){
+                return next;
+            }
+        }
+    }
+
+    public void releaseDimensionId(int id){
+        dimensionIds.clear(id);
     }
 }

@@ -159,8 +159,13 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
                 throw new CommandNotFoundException();
             }
 
+            String sname = sender.getCommandSenderName();
+            if(sender instanceof CommandBlockLogic){
+                sname = "[CommandBlock]";
+            }
+
             String owner = commandOwners.get(icommand);
-            if(!PermissionsManager.getPerm(sender.getCommandSenderName(), owner + ".commands." + icommand.getCommandName()).check()){
+            if(!PermissionsManager.getPerm(sname, owner + ".commands." + icommand.getCommandName()).check()){
                 throw new CommandException("commands.generic.permission");
             }
 
@@ -215,7 +220,7 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
         String modid = "minecraft";
         ModContainer container = Loader.instance().activeModContainer();
         if(container != null){
-            modid = container.getModId();
+            modid = container.getModId().toLowerCase();
         }
         commandOwners.put(command, modid);
         PermissionsManager.registerPermission(modid + ".commands." + command.getCommandName(), RegisteredPermValue.OP);

@@ -5,7 +5,6 @@ import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.MapBuilder;
 import jk_5.nailed.api.map.Mappack;
 import lombok.Getter;
-import net.minecraftforge.common.DimensionManager;
 
 import java.io.File;
 
@@ -20,7 +19,7 @@ public final class PotentialMap implements MapBuilder {
     @Getter private final Mappack mappack;
 
     public PotentialMap(Mappack mappack){
-        this.ID = DimensionManager.getNextFreeDimId();
+        this.ID = NailedMapLoader.instance().reserveDimensionId();
         this.mappack = mappack;
     }
 
