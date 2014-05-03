@@ -1,5 +1,6 @@
 package jk_5.nailed.map;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -20,7 +21,6 @@ import jk_5.nailed.api.player.Player;
 import jk_5.nailed.map.gen.NailedWorldProvider;
 import jk_5.nailed.map.script.api.MapApi;
 import jk_5.nailed.players.TeamUndefined;
-import lombok.Getter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.EntityDamageSource;
@@ -37,23 +37,26 @@ import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.ChunkWatchEvent;
 import net.minecraftforge.event.world.WorldEvent;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.List;
 import java.util.Random;
 
 /**
- * No description given
+ * {@inheritDoc}
  *
  * @author jk-5
  */
 public class NailedMapLoader implements MapLoader {
 
     private static NailedMapLoader instance;
-    @Getter private final File mapsFolder = new File("maps");
-    @Getter private Map lobby;
-    @Getter private final List<Map> maps = Lists.newArrayList();
-    @Getter private Random randomSpawnpointSelector = new Random();
+    private final File mapsFolder = new File("maps");
+    private Map lobby;
+    private final List<Map> maps = Lists.newArrayList();
+    private Random randomSpawnpointSelector = new Random();
 
+    @Nonnull
     public static NailedMapLoader instance(){
         if(NailedAPI.getMapLoader() == null){
             NailedAPI.setMapLoader(new NailedMapLoader());
@@ -66,29 +69,31 @@ public class NailedMapLoader implements MapLoader {
     }
 
     @Override
-    public void registerMap(Map map){
+    public void registerMap(@Nonnull Map map){
+        Preconditions.checkNotNull(map, "map");
         if(map.getID() == 0) this.lobby = map;
         this.maps.add(map);
         NailedLog.info("Registered {}", map.getSaveFileName());
     }
 
     @Override
-    public void createMapServer(final Mappack pack, final Callback<Map> callback){
-        final PotentialMap potentialMap = new PotentialMap(pack);
+    public void createMapServer(@Nonnull final Mappack mappack, @Nullable final Callback<Map> callback){
+        Preconditions.checkNotNull(mappack, "mappack");
+        final PotentialMap potentialMap = new PotentialMap(mappack);
         NailedLog.info("Scheduling the load of {}", potentialMap.getSaveFileName());
         NailedAPI.getScheduler().runTaskAsynchronously(new NailedRunnable() {
             @Override
             public void run(){
                 NailedLog.info("Preparing {}", potentialMap.getSaveFileName());
-                pack.prepareWorld(potentialMap.getSaveFolder());
-                final Map map = pack.createMap(potentialMap);
+                mappack.prepareWorld(potentialMap.getSaveFolder());
+                final Map map = mappack.createMap(potentialMap);
                 NailedAPI.getScheduler().runTask(new NailedRunnable() {
                     @Override
                     public void run(){
                         NailedLog.info("Loading {}", potentialMap.getSaveFileName());
                         map.initMapServer();
                         MinecraftForge.EVENT_BUS.post(new MapCreatedEvent(map));
-                        callback.callback(map);
+                        if(callback != null) callback.callback(map);
                     }
                 });
             }
@@ -96,7 +101,9 @@ public class NailedMapLoader implements MapLoader {
     }
 
     @Override
-    public Map getMap(String name){
+    @Nullable
+    public Map getMap(@Nonnull String name){
+        Preconditions.checkNotNull(name, "name");
         for(Map map : this.maps){
             if(map.getSaveFileName().equalsIgnoreCase(name)){
                 return map;
@@ -106,6 +113,7 @@ public class NailedMapLoader implements MapLoader {
     }
 
     @Override
+    @Nullable
     public Map getMap(int id){
         for(Map map : this.maps){
             if(map.getID() == id){
@@ -120,13 +128,14 @@ public class NailedMapLoader implements MapLoader {
     }
 
     @Override
-    public Map getMap(World world){
-        if(world == null) return null;
+    @Nonnull
+    @SuppressWarnings("ConstantConditions")
+    public Map getMap(@Nonnull World world){
+        Preconditions.checkNotNull(world, "world");
         return this.getMap(world.provider.dimensionId);
     }
 
     @SubscribeEvent
-    @SuppressWarnings("unused")
     public void playerLoggedIn(PlayerEvent.PlayerLoggedInEvent event){
         Map map = this.getMap(event.player.worldObj);
         map.onPlayerJoined(NailedAPI.getPlayerRegistry().getPlayer(event.player));
@@ -134,26 +143,20 @@ public class NailedMapLoader implements MapLoader {
         if(event.player.worldObj.provider instanceof NailedWorldProvider){
             ((NailedWorldProvider) event.player.worldObj.provider).sendMapData(event.player);
         }
-        //SkinSyncManager.getInstance().sendSkinToClient(event.player, new File("testskin.png"), "skinTest");
-        //SkinSyncManager.getInstance().setPlayerSkin(event.player, "skinTest");
     }
 
     @SubscribeEvent
-    @SuppressWarnings("unused")
     public void playerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event){
         Map map = this.getMap(event.player.worldObj);
         map.onPlayerLeft(NailedAPI.getPlayerRegistry().getPlayer(event.player));
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    @SuppressWarnings("unused")
     public void onWorldLoad(WorldEvent.Load event){
-        Map map = this.getMap(event.world);
-        if(map != null) map.setWorld(event.world);
+        this.getMap(event.world).setWorld(event.world);
     }
 
     @SubscribeEvent
-    @SuppressWarnings("unused")
     public void onChangeDimension(PlayerChangedDimensionEvent event){
         event.oldMap.onPlayerLeft(event.player);
         event.newMap.onPlayerJoined(event.player);
@@ -164,7 +167,6 @@ public class NailedMapLoader implements MapLoader {
     }
 
     @SubscribeEvent
-    @SuppressWarnings("unused")
     public void onBlockBreak(BlockEvent.BreakEvent event){
         Mappack mappack = this.getMap(event.world).getMappack();
         if(mappack != null && mappack.getMappackMetadata().isPreventingBlockBreak()){
@@ -173,7 +175,6 @@ public class NailedMapLoader implements MapLoader {
     }
 
     @SubscribeEvent
-    @SuppressWarnings("unused")
     public void onEntitySpawn(EntityJoinWorldEvent event){
         Map map = this.getMap(event.world);
         if(event.entity instanceof EntityPlayer && map.getMappack() != null){
@@ -189,7 +190,6 @@ public class NailedMapLoader implements MapLoader {
     }
 
     @SubscribeEvent
-    @SuppressWarnings("unused")
     public void onDamage(LivingHurtEvent event){
         Map map = this.getMap(event.entity.worldObj);
         if(event.entity instanceof EntityPlayer && event.source instanceof EntityDamageSource){
@@ -217,7 +217,6 @@ public class NailedMapLoader implements MapLoader {
     }
 
     @SubscribeEvent
-    @SuppressWarnings("unused")
     public void onAttack(LivingAttackEvent event){
         if(event.source.getEntity() instanceof EntityPlayer && event.entityLiving instanceof EntityPlayer){
             Mappack mappack = this.getMap(event.entity.worldObj).getMappack();
@@ -228,12 +227,10 @@ public class NailedMapLoader implements MapLoader {
     }
 
     @SubscribeEvent
-    @SuppressWarnings("unused")
     public void onDie(LivingDeathEvent event){
         if(!(event.entity instanceof EntityPlayer)) return;
         Player player = NailedAPI.getPlayerRegistry().getPlayer((EntityPlayer) event.entity);
         Map map = player.getCurrentMap();
-        if(player == null) return;
         if(map instanceof NailedMap){
             NailedMap m = (NailedMap) map;
             if(event.source instanceof EntityDamageSource && event.source.getEntity() instanceof EntityPlayer){
@@ -262,7 +259,6 @@ public class NailedMapLoader implements MapLoader {
     }
 
     @SubscribeEvent
-    @SuppressWarnings("unused")
     public void onChunkLoad(ChunkEvent.Load event){
         for(Map map : this.maps){
             map.getSignCommandHandler().onChunkLoad(event);
@@ -270,7 +266,6 @@ public class NailedMapLoader implements MapLoader {
     }
 
     @SubscribeEvent
-    @SuppressWarnings("unused")
     public void onChunkUnload(ChunkEvent.Unload event){
         for(Map map : this.maps){
             map.getSignCommandHandler().onChunkUnload(event);
@@ -278,7 +273,6 @@ public class NailedMapLoader implements MapLoader {
     }
 
     @SubscribeEvent
-    @SuppressWarnings("unused")
     public void onWatch(ChunkWatchEvent.Watch event){
         for(Map map : this.maps){
             map.getSignCommandHandler().onWatch(event);
@@ -286,15 +280,14 @@ public class NailedMapLoader implements MapLoader {
     }
 
     @SubscribeEvent
-    @SuppressWarnings("unused")
     public void onUnwatch(ChunkWatchEvent.UnWatch event){
         for(Map map : this.maps){
             map.getSignCommandHandler().onUnwatch(event);
         }
     }
 
+    @SuppressWarnings("ForLoopReplaceableByForEach")
     @SubscribeEvent
-    @SuppressWarnings("unused")
     public void onInteract(PlayerInteractEvent event){
         //TODO: replace this
         //for(Map map : this.maps){
@@ -303,6 +296,7 @@ public class NailedMapLoader implements MapLoader {
         }
     }
 
+    @SuppressWarnings("ForLoopReplaceableByForEach")
     @SubscribeEvent
     public void onTick(TickEvent.ServerTickEvent event){
         for(int i = 0; i < this.maps.size(); i++){
@@ -311,7 +305,8 @@ public class NailedMapLoader implements MapLoader {
     }
 
     @Override
-    public void removeMap(Map map){
+    public void removeMap(@Nonnull Map map){
+        Preconditions.checkNotNull(map, "map");
         if(map instanceof NailedMap){
             ((NailedMap) map).getMachine().destroy();
         }
@@ -321,7 +316,8 @@ public class NailedMapLoader implements MapLoader {
         NailedLog.info("Unloaded map {}", map.getSaveFileName());
     }
 
-    public void checkShouldStart(Map map){
+    public void checkShouldStart(@Nonnull Map map){
+        Preconditions.checkNotNull(map, "map");
         if(map.getMappack() == null) return;
         String startWhen = map.getMappack().getMappackMetadata().getStartWhen();
         if(startWhen.equals("false")) return;
@@ -338,5 +334,25 @@ public class NailedMapLoader implements MapLoader {
                 }
             }
         }
+    }
+
+    @Nonnull
+    public File getMapsFolder(){
+        return mapsFolder;
+    }
+
+    @Nonnull
+    public Map getLobby(){
+        return lobby;
+    }
+
+    @Nonnull
+    public List<Map> getMaps(){
+        return maps;
+    }
+
+    @Nonnull
+    public Random getRandomSpawnpointSelector(){
+        return randomSpawnpointSelector;
     }
 }
