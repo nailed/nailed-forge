@@ -359,7 +359,10 @@ public class MapApi implements ILuaAPI {
                         break;
                     case 5: //setHealth
                         if(arguments.length == 1 && arguments[0] instanceof Double){
-                            player.getEntity().setHealth(((Double) arguments[0]).floatValue());
+                            EntityPlayerMP entity = player.getEntity();
+                            float newHealth = ((Double) arguments[0]).floatValue();
+                            if(newHealth > 0) entity.deathTime = 0;
+                            entity.setHealth(newHealth);
                         }else{
                             throw new Exception("Expected 1 int argument");
                         }
