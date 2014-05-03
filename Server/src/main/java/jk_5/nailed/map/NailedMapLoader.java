@@ -106,15 +106,19 @@ public class NailedMapLoader implements MapLoader {
             @Override
             public void run(){
                 NailedLog.info("Preparing {}", potentialMap.getSaveFileName());
-                mappack.prepareWorld(potentialMap.getSaveFolder());
-                final Map map = mappack.createMap(potentialMap);
-                NailedAPI.getScheduler().runTask(new NailedRunnable() {
+                mappack.prepareWorld(potentialMap.getSaveFolder(), new Callback<Void>() {
                     @Override
-                    public void run(){
-                        NailedLog.info("Loading {}", potentialMap.getSaveFileName());
-                        map.initMapServer();
-                        MinecraftForge.EVENT_BUS.post(new MapCreatedEvent(map));
-                        if(callback != null) callback.callback(map);
+                    public void callback(Void obj){
+                        final Map map = mappack.createMap(potentialMap);
+                        NailedAPI.getScheduler().runTask(new NailedRunnable() {
+                            @Override
+                            public void run(){
+                                NailedLog.info("Loading {}", potentialMap.getSaveFileName());
+                                map.initMapServer();
+                                MinecraftForge.EVENT_BUS.post(new MapCreatedEvent(map));
+                                if(callback != null) callback.callback(map);
+                            }
+                        });
                     }
                 });
             }

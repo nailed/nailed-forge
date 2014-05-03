@@ -3,6 +3,7 @@ package jk_5.nailed.map.mappack;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.Unpooled;
+import jk_5.nailed.api.concurrent.Callback;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.MapBuilder;
 import jk_5.nailed.api.map.Mappack;
@@ -71,18 +72,16 @@ public class DirectoryMappack implements Mappack {
     }
 
     @Override
-    public File prepareWorld(File destinationDir){
+    public void prepareWorld(File destinationDir, Callback<Void> callback){
         File world = new File(this.mappackFolder, "world");
         if(world.isDirectory() && world.exists()){
             try{
                 FileUtils.copyDirectory(world, destinationDir);
-                return destinationDir;
             }catch(IOException e){
-                e.printStackTrace();
-                return null;
+                throw new RuntimeException("Error while preparing mappack", e);
             }
         }
-        return null;
+        callback.callback(null);
     }
 
     @Override

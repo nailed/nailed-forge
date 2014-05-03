@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.Unpooled;
 import jk_5.nailed.NailedLog;
+import jk_5.nailed.api.concurrent.Callback;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.MapBuilder;
 import jk_5.nailed.api.map.Mappack;
@@ -81,8 +82,9 @@ public class ZipMappack implements Mappack {
     }
 
     @Override
-    public File prepareWorld(File destinationDir) {
-        return this.unzipMapFromMapPack(this.mappackFile, destinationDir);
+    public void prepareWorld(File destinationDir, Callback<Void> callback) {
+        this.unzipMapFromMapPack(this.mappackFile, destinationDir);
+        callback.callback(null);
     }
 
     @Override

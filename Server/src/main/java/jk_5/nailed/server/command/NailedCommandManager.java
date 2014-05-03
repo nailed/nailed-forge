@@ -159,13 +159,23 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
                 throw new CommandNotFoundException();
             }
 
+            boolean hasPermission = false;
+
             String sname = sender.getCommandSenderName();
             if(sender instanceof CommandBlockLogic){
                 sname = "[CommandBlock]";
             }
 
+            if(sender instanceof MinecraftServer){
+                hasPermission = true;
+            }
+
             String owner = commandOwners.get(icommand);
-            if(!PermissionsManager.getPerm(sname, owner + ".commands." + icommand.getCommandName()).check()){
+            if(!hasPermission && PermissionsManager.getPerm(sname, owner + ".commands." + icommand.getCommandName()).check()){
+                hasPermission = true;
+            }
+
+            if(!hasPermission){
                 throw new CommandException("commands.generic.permission");
             }
 

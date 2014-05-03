@@ -29,7 +29,6 @@ import jk_5.nailed.map.stat.StatManager;
 import jk_5.nailed.map.weather.WeatherController;
 import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.network.NailedPacket;
-import jk_5.nailed.util.ChatColor;
 import lombok.Getter;
 import net.minecraft.network.Packet;
 import net.minecraft.server.MinecraftServer;
@@ -139,13 +138,14 @@ public class NailedMap implements Map {
 
     @Override
     public void reloadFromMappack(){
-        for(Player player : this.getPlayers()){
+        throw new RuntimeException("Not supported");
+        /*for(Player player : this.getPlayers()){
             player.getEntity().playerNetServerHandler.kickPlayerFromServer("[" + ChatColor.GREEN + "Nailed" + ChatColor.RESET + "] Reloading the map you were in");
         }
         this.unloadAndRemove();
         this.mappack.prepareWorld(this.getSaveFolder());
         DimensionManager.registerDimension(this.getID(), NailedServer.getProviderID());
-        DimensionManager.initDimension(this.getID());
+        DimensionManager.initDimension(this.getID());*/
     }
 
     @Override

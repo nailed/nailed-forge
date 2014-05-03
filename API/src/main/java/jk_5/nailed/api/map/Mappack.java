@@ -1,6 +1,7 @@
 package jk_5.nailed.api.map;
 
 import io.netty.buffer.ByteBuf;
+import jk_5.nailed.api.concurrent.Callback;
 import jk_5.nailed.api.map.stat.StatConfig;
 import jk_5.nailed.api.scripting.IMount;
 
@@ -29,12 +30,12 @@ public interface Mappack {
     StatConfig getStatConfig();
 
     /**
-     * This method should prepare the game world at the given location
+     * This method should prepare the game world at the given location asynchronously, and call the callback when it's done
      *
      * @param destinationDir The location where the game world should be prepared
-     * @return The location where the world was prepared, or null if it failed
+     * @param callback The callback to call when the map is set up.
      */
-    File prepareWorld(File destinationDir);
+    void prepareWorld(File destinationDir, Callback<Void> callback);
 
     /**
      * Set the Map up, so it can load after this and players can join it
