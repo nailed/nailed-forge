@@ -103,6 +103,7 @@ public class CommandTP extends NailedCommand {
                 boolean particles = !opt.contains("noparticle");
                 boolean sound = !opt.contains("nosound");
                 boolean momentum = opt.contains("momentum");
+                boolean clearInv = opt.contains("clearinventory");
                 EntityPlayerMP[] players = getPlayersList(sender, args[0]);
                 for(EntityPlayerMP player : players){
                     double x = handleRelativeNumber(sender, player.posX, args[1]);
@@ -112,6 +113,7 @@ public class CommandTP extends NailedCommand {
                     option.setSound(sound ? option.getSound() : null);
                     option.setSpawnParticles(particles);
                     option.setMaintainMomentum(momentum);
+                    option.setClearInventory(clearInv);
                     option.setLocation(new Location(x, y, z, player.rotationYaw, player.rotationPitch));
                     option.setDestination(NailedAPI.getMapLoader().getMap(player.worldObj));
                     options.add(new ImmutablePair<Entity, TeleportOptions>(player, option));
