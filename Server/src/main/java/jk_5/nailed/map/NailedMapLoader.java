@@ -2,6 +2,7 @@ package jk_5.nailed.map;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
@@ -12,10 +13,7 @@ import jk_5.nailed.api.concurrent.Callback;
 import jk_5.nailed.api.concurrent.scheduler.NailedRunnable;
 import jk_5.nailed.api.events.MapCreatedEvent;
 import jk_5.nailed.api.events.MapRemovedEvent;
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.MapLoader;
-import jk_5.nailed.api.map.Mappack;
-import jk_5.nailed.api.map.PvpIgnoringDamageSource;
+import jk_5.nailed.api.map.*;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.map.gen.NailedWorldProvider;
 import jk_5.nailed.map.script.api.MapApi;
@@ -334,7 +332,13 @@ public class NailedMapLoader implements MapLoader {
 
     @SubscribeEvent
     public void onPreSpawn(LivingSpawnEvent.CheckSpawn event){
-        NailedLog.info("Checking spawn for " + event.entity.toString());
+        Map map = this.getMap(event.world);
+        if(map.getMappack() != null){
+            MappackMetadata meta = map.getMappack().getMappackMetadata();
+            if(!meta.getSpawnRules().maySpawn(event.entity)){
+                event.setResult(Event.Result.DENY);
+            }
+        }
     }
 
     @Override

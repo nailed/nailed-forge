@@ -60,6 +60,7 @@ public class JsonMappackMetadata implements MappackMetadata {
         this.choosingRandomSpawnpointAtRespawn = json.has("randomSpawnpointOnRespawn") && json.get("randomSpawnpointOnRespawn").getAsBoolean();
         //this.startWhen = config.getTag("map").getTag("startGameWhen").getValue("false");
         this.spawnRules = new Gson().fromJson(json.get("spawns"), SpawnRules.class);
+        this.spawnRules.refresh();
 
         this.defaultTeams = Lists.newArrayList();
         if(json.has("teams")){
