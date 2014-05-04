@@ -15,6 +15,8 @@ import jk_5.nailed.ipc.filestore.MappackFile;
 import jk_5.nailed.ipc.filestore.MappackFilestore;
 import jk_5.nailed.map.mappack.JsonMappackMetadata;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.List;
 
@@ -39,22 +41,25 @@ public class IpcMappack implements Mappack {
     }
 
     @Override
+    @Nonnull
     public String getMappackID(){
         return this.id;
     }
 
     @Override
+    @Nonnull
     public MappackMetadata getMappackMetadata(){
         return this.metadata;
     }
 
     @Override
+    @Nonnull
     public StatConfig getStatConfig(){
         return this.statConfig;
     }
 
     @Override
-    public void prepareWorld(final File destinationDir, final Callback<Void> callback){
+    public void prepareWorld(@Nonnull final File destinationDir, @Nonnull final Callback<Void> callback){
         this.filestore.requestMissingFiles(new Callback<Void>(){
             @Override
             public void callback(Void obj) {
@@ -65,21 +70,24 @@ public class IpcMappack implements Mappack {
     }
 
     @Override
-    public Map createMap(MapBuilder mapBuilder){
+    @Nonnull
+    public Map createMap(@Nonnull MapBuilder mapBuilder){
         return mapBuilder.build();
     }
 
     @Override
-    public boolean saveAsMappack(Map map){
+    public boolean saveAsMappack(@Nonnull Map map){
         return false;
     }
 
     @Override
+    @Nullable
     public ByteBuf getMappackIcon(){
         return null;
     }
 
     @Override
+    @Nullable
     public IMount createMount(){
         return null;
     }

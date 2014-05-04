@@ -14,10 +14,10 @@ import jk_5.nailed.map.DiscardedMappackInitializationException;
 import jk_5.nailed.map.MappackInitializationException;
 import jk_5.nailed.map.stat.StatConfig;
 import jk_5.nailed.util.config.ConfigFile;
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.commons.io.IOUtils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -33,16 +33,14 @@ import java.util.zip.ZipInputStream;
  */
 public class ZipMappack implements Mappack {
 
-    @Getter private final String mappackID;
-    @Getter private final String name;
-    @Getter private final String iconFile;
-    @Getter private final File mappackFile;
-    @Getter private final MappackMetadata mappackMetadata;
-    @Getter @Setter private StatConfig statConfig;
+    private final String mappackID;
+    private final String iconFile;
+    private final File mappackFile;
+    private final MappackMetadata mappackMetadata;
+    private StatConfig statConfig;
 
     private ZipMappack(File mappackFile, ConfigFile config){
         this.mappackID = mappackFile.getName().substring(0, mappackFile.getName().length() - 8);
-        this.name = config.getTag("map").getTag("name").getValue(this.mappackID);
         this.iconFile = config.getTag("map").getTag("iconFile").getValue("icon.png");
         this.mappackFile = mappackFile;
         this.mappackMetadata = new FileMappackMetadata(config);
@@ -77,27 +75,29 @@ public class ZipMappack implements Mappack {
         if(config == null){
             throw new DiscardedMappackInitializationException("mappack.cfg was not found in mappack " + file.getName());
         }
-        pack.setStatConfig(stats);
+        pack.statConfig = stats;
         return pack;
     }
 
     @Override
-    public void prepareWorld(File destinationDir, Callback<Void> callback) {
+    public void prepareWorld(@Nonnull File destinationDir, @Nonnull Callback<Void> callback) {
         this.unzipMapFromMapPack(this.mappackFile, destinationDir);
         callback.callback(null);
     }
 
     @Override
-    public Map createMap(MapBuilder potentialMap) {
+    @Nonnull
+    public Map createMap(@Nonnull MapBuilder potentialMap) {
         return potentialMap.build();
     }
 
     @Override
-    public boolean saveAsMappack(Map map){
+    public boolean saveAsMappack(@Nonnull Map map){
         return false;
     }
 
     @Override
+    @Nullable
     public ByteBuf getMappackIcon(){
         ByteBuf buf = Unpooled.buffer();
         ZipInputStream zipStream = null;
@@ -112,7 +112,7 @@ public class ZipMappack implements Mappack {
                 entry = zipStream.getNextEntry();
             }
         }catch(IOException e){
-
+            return null;
         }finally{
             IOUtils.closeQuietly(zipStream);
         }
@@ -161,7 +161,26 @@ public class ZipMappack implements Mappack {
     }
 
     @Override
+    @Nullable
     public IMount createMount(){
         return null;
+    }
+
+    @Nonnull
+    @Override
+    public String getMappackID() {
+        return this.mappackID;
+    }
+
+    @Nonnull
+    @Override
+    public MappackMetadata getMappackMetadata() {
+        return this.mappackMetadata;
+    }
+
+    @Nonnull
+    @Override
+    public jk_5.nailed.api.map.stat.StatConfig getStatConfig() {
+        return this.statConfig;
     }
 }

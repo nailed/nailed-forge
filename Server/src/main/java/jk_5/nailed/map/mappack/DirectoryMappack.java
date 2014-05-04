@@ -14,13 +14,13 @@ import jk_5.nailed.map.MappackInitializationException;
 import jk_5.nailed.map.script.ReadOnlyMount;
 import jk_5.nailed.map.stat.StatConfig;
 import jk_5.nailed.util.config.ConfigFile;
-import lombok.Getter;
-import lombok.Setter;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.MinecraftException;
 import net.minecraft.world.WorldServer;
 import org.apache.commons.io.FileUtils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -36,18 +36,16 @@ import java.util.Date;
  */
 public class DirectoryMappack implements Mappack {
 
-    @Getter private final String mappackID;
-    @Getter private final String name;
-    @Getter private final String iconFile;
-    @Getter private final File mappackFolder;
-    @Getter private final MappackMetadata mappackMetadata;
-    @Getter @Setter private StatConfig statConfig = new StatConfig();
+    private final String mappackID;
+    private final String iconFile;
+    private final File mappackFolder;
+    private final MappackMetadata mappackMetadata;
+    private StatConfig statConfig = new StatConfig();
 
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     private DirectoryMappack(File directory, ConfigFile config){
         this.mappackID = directory.getName();
-        this.name = config.getTag("map").getTag("name").getValue(this.mappackID);
         this.iconFile = config.getTag("map").getTag("iconFile").getValue("icon.png");
         this.mappackFolder = directory;
         this.mappackMetadata = new FileMappackMetadata(config);
@@ -62,17 +60,18 @@ public class DirectoryMappack implements Mappack {
         if(mappackConfig.isFile() && mappackConfig.exists()){
             config = new ConfigFile(mappackConfig).setReadOnly();
             pack = new DirectoryMappack(directory, config);
-        }else
+        }else{
             throw new DiscardedMappackInitializationException("Directory " + directory.getPath() + " is not a mappack");
+        }
         if(statConfigFile.isFile() && statConfigFile.exists()){
             statConfig = new StatConfig(new ConfigFile(statConfigFile).setReadOnly());
         }
-        pack.setStatConfig(statConfig);
+        pack.statConfig = statConfig;
         return pack;
     }
 
     @Override
-    public void prepareWorld(File destinationDir, Callback<Void> callback){
+    public void prepareWorld(@Nonnull File destinationDir, @Nonnull Callback<Void> callback){
         File world = new File(this.mappackFolder, "world");
         if(world.isDirectory() && world.exists()){
             try{
@@ -85,12 +84,13 @@ public class DirectoryMappack implements Mappack {
     }
 
     @Override
-    public Map createMap(MapBuilder builder){
+    @Nonnull
+    public Map createMap(@Nonnull MapBuilder builder){
         return builder.build();
     }
 
     @Override
-    public boolean saveAsMappack(Map map){
+    public boolean saveAsMappack(@Nonnull Map map){
         File worldDir = new File(this.mappackFolder, "world");
         if(worldDir.isDirectory() && worldDir.exists()){
             worldDir.renameTo(new File(this.mappackFolder, "world-backup-" + dateFormat.format(new Date())));
@@ -123,19 +123,39 @@ public class DirectoryMappack implements Mappack {
     }
 
     @Override
+    @Nullable
     public ByteBuf getMappackIcon(){
         ByteBuf buf = Unpooled.buffer();
         try{
             BufferedImage image = ImageIO.read(new File(this.mappackFolder, this.iconFile));
             ImageIO.write(image, "PNG", new ByteBufOutputStream(buf));
         }catch(IOException e){
-
+            return null;
         }
         return buf;
     }
 
     @Override
+    @Nullable
     public IMount createMount(){
         return new ReadOnlyMount(new File(this.mappackFolder, "lua"));
+    }
+
+    @Nonnull
+    @Override
+    public String getMappackID() {
+        return this.mappackID;
+    }
+
+    @Nonnull
+    @Override
+    public jk_5.nailed.api.map.stat.StatConfig getStatConfig() {
+        return this.statConfig;
+    }
+
+    @Nonnull
+    @Override
+    public MappackMetadata getMappackMetadata() {
+        return this.mappackMetadata;
     }
 }
