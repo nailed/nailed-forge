@@ -3,6 +3,7 @@ package jk_5.nailed.ipc.packet;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.netty.buffer.ByteBuf;
+import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.ipc.PacketUtils;
 import jk_5.nailed.ipc.mappack.IpcMappack;
 import jk_5.nailed.ipc.mappack.IpcMappackRegistry;
@@ -30,6 +31,8 @@ public class PacketLoadMappackMeta extends IpcPacket {
 
     @Override
     public void processPacket(){
-        IpcMappackRegistry.addMappack(new IpcMappack(this.data));
+        IpcMappack mappack = new IpcMappack(this.data);
+        IpcMappackRegistry.addMappack(mappack);
+        NailedAPI.getMapLoader().createMapServer(mappack, null);
     }
 }

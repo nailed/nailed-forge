@@ -40,12 +40,12 @@ public class JsonMappackMetadata implements MappackMetadata {
     public WorldSettings.GameType gamemode;
     public boolean choosingRandomSpawnpointAtRespawn;
     public List<Location> randomSpawnpoints;
-    public String startWhen;
+    public String startWhen = "false";
     public EnumSet<WeatherType> permittedWeatherTypes;
 
     public JsonMappackMetadata(JsonObject json){
         this.json = json;
-        this.spawnPoint = json.has("spawnpoing") ? Location.readFrom(json.get("spawnpoint").getAsJsonObject()) : new Location(0, 64, 0, 0, 0);
+        this.spawnPoint = json.has("spawnpoint") ? Location.readFrom(json.get("spawnpoint").getAsJsonObject()) : new Location(0, 64, 0, 0, 0);
         this.name = json.get("name").getAsString();
         this.pvpEnabled = !json.has("pvpEnabled") || json.get("pvpEnabled").getAsBoolean();
         this.gamemode = WorldSettings.GameType.getByID(json.has("defaultGamemode") ? json.get("defaultGamemode").getAsInt() : 2);

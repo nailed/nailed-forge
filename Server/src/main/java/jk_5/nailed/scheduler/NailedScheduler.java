@@ -11,6 +11,7 @@ import jk_5.nailed.api.concurrent.scheduler.Worker;
 import net.minecraft.server.MinecraftServer;
 import org.apache.commons.lang3.Validate;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -383,5 +384,15 @@ public class NailedScheduler implements Scheduler {
         StringBuilder string = new StringBuilder("Recent tasks from ").append(debugTick - RECENT_TICKS).append('-').append(debugTick).append('{');
         debugHead.debugTo(string);
         return string.append('}').toString();
+    }
+
+    @Override
+    public void execute(@Nonnull final Runnable command) {
+        this.runTaskAsynchronously(new NailedRunnable() {
+            @Override
+            public void run() {
+                command.run();
+            }
+        });
     }
 }

@@ -2,9 +2,10 @@ package jk_5.nailed.api.concurrent.scheduler;
 
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 
-public interface Scheduler {
+public interface Scheduler extends Executor {
 
     /**
      * Schedules a once off task to occur after a delay.
