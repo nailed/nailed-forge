@@ -2,11 +2,13 @@ package jk_5.nailed.map.mappack;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import jk_5.nailed.api.WeatherType;
 import jk_5.nailed.api.map.MappackMetadata;
+import jk_5.nailed.api.map.SpawnRules;
 import jk_5.nailed.api.map.team.TeamBuilder;
 import jk_5.nailed.map.Location;
 import jk_5.nailed.util.ChatColor;
@@ -42,6 +44,7 @@ public class JsonMappackMetadata implements MappackMetadata {
     public List<Location> randomSpawnpoints;
     public String startWhen = "false";
     public EnumSet<WeatherType> permittedWeatherTypes;
+    public SpawnRules spawnRules;
 
     public JsonMappackMetadata(JsonObject json){
         this.json = json;
@@ -56,6 +59,7 @@ public class JsonMappackMetadata implements MappackMetadata {
         this.preventingBlockBreak = json.has("preventBlockBreak") && json.get("preventBlockBreak").getAsBoolean();
         this.choosingRandomSpawnpointAtRespawn = json.has("randomSpawnpointOnRespawn") && json.get("randomSpawnpointOnRespawn").getAsBoolean();
         //this.startWhen = config.getTag("map").getTag("startGameWhen").getValue("false");
+        this.spawnRules = new Gson().fromJson(json.get("spawns"), SpawnRules.class);
 
         this.defaultTeams = Lists.newArrayList();
         if(json.has("teams")){

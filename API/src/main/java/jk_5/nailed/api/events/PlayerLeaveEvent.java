@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
  *
  * @author jk-5
  */
+@Deprecated
 @RequiredArgsConstructor
 public class PlayerLeaveEvent extends Event {
     public final Player player;

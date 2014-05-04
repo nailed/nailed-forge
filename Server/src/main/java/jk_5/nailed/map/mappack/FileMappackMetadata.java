@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import jk_5.nailed.api.WeatherType;
 import jk_5.nailed.api.map.MappackMetadata;
+import jk_5.nailed.api.map.SpawnRules;
 import jk_5.nailed.api.map.team.TeamBuilder;
 import jk_5.nailed.map.Location;
 import jk_5.nailed.util.ChatColor;
@@ -41,6 +42,7 @@ public class FileMappackMetadata implements MappackMetadata {
     public List<Location> randomSpawnpoints;
     public String startWhen;
     public EnumSet<WeatherType> permittedWeatherTypes;
+    public SpawnRules spawnRules = new SpawnRules(); //TODO
 
     public FileMappackMetadata(ConfigFile config){
         this.config = config;

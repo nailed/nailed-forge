@@ -192,7 +192,7 @@ public class MapApi implements ILuaAPI {
                     World server = this.map.getWorld();
                     int difficulty = ((Double) arguments[0]).intValue();
                     server.difficultySetting = EnumDifficulty.getDifficultyEnum(difficulty);
-                    server.setAllowedSpawnTypes(meta.isSpawnHostileMobs() && difficulty > 0, meta.isSpawnFriendlyMobs());
+                    server.setAllowedSpawnTypes(difficulty > 0, true);
                 }else{
                     throw new Exception("Excpected 1 int argument");
                 }

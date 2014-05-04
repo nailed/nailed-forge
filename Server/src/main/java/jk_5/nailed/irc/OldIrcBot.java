@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.NailedServer;
-import jk_5.nailed.api.events.PlayerChatEvent;
 import jk_5.nailed.api.events.PlayerJoinEvent;
 import jk_5.nailed.api.events.PlayerLeaveEvent;
 import jk_5.nailed.util.Utils;
@@ -18,6 +17,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.ServerChatEvent;
 import org.jibble.pircbot.Colors;
 import org.jibble.pircbot.PircBot;
 
@@ -78,8 +78,8 @@ public class OldIrcBot extends PircBot {
 
     @SubscribeEvent
     @SuppressWarnings("unused")
-    public void onChat(PlayerChatEvent event){
-        this.sendMessage(this.channel, "<" + event.player.getUsername() + "> " + event.message);
+    public void onChat(ServerChatEvent event){
+        this.sendMessage(this.channel, "<" + event.player.getGameProfile().getName() + "> " + event.message);
     }
 
     @SubscribeEvent

@@ -220,12 +220,12 @@ public class NailedPlayer implements Player {
             if(mappack != null){
                 MappackMetadata meta = mappack.getMappackMetadata();
                 ByteBufUtils.writeUTF8String(buffer, meta.getName());
-                //TODO: fix sending of Locations and location names
-                /*meta.getSpawnPoint().write(buffer);
+                //TODO: fix sending of location names
+                meta.getSpawnPoint().write(buffer);
                 buffer.writeInt(meta.getRandomSpawnpoints().size());
-                for(Spawnpoint spawnpoint : meta.getRandomSpawnpoints()){
+                for(Location spawnpoint : meta.getRandomSpawnpoints()){
                     spawnpoint.write(buffer);
-                }*/
+                }
                 NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.EditMode(true, buffer), this.getEntity());
             }
         }else{

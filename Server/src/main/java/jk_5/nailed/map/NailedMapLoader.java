@@ -12,7 +12,6 @@ import jk_5.nailed.api.concurrent.Callback;
 import jk_5.nailed.api.concurrent.scheduler.NailedRunnable;
 import jk_5.nailed.api.events.MapCreatedEvent;
 import jk_5.nailed.api.events.MapRemovedEvent;
-import jk_5.nailed.api.events.PlayerChangedDimensionEvent;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.MapLoader;
 import jk_5.nailed.api.map.Mappack;
@@ -31,6 +30,7 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.ChunkEvent;
@@ -182,12 +182,15 @@ public class NailedMapLoader implements MapLoader {
     }
 
     @SubscribeEvent
-    public void onChangeDimension(PlayerChangedDimensionEvent event){
-        event.oldMap.onPlayerLeft(event.player);
-        event.newMap.onPlayerJoined(event.player);
+    public void onChangeDimension(PlayerEvent.PlayerChangedDimensionEvent event){
+        Player p = NailedAPI.getPlayerRegistry().getPlayer(event.player);
+        Map oldMap = p.getCurrentMap();
+        Map newMap = this.getMap(event.player.worldObj);
+        oldMap.onPlayerLeft(p);
+        newMap.onPlayerJoined(p);
         for(Map map : this.maps){
-            map.getSignCommandHandler().onPlayerLeftMap(event.oldMap, event.player);
-            map.getSignCommandHandler().onPlayerJoinMap(event.newMap, event.player);
+            map.getSignCommandHandler().onPlayerLeftMap(oldMap, p);
+            map.getSignCommandHandler().onPlayerJoinMap(newMap, p);
         }
     }
 
@@ -327,6 +330,11 @@ public class NailedMapLoader implements MapLoader {
         for(int i = 0; i < this.maps.size(); i++){
             this.maps.get(i).onTick(event);
         }
+    }
+
+    @SubscribeEvent
+    public void onPreSpawn(LivingSpawnEvent.CheckSpawn event){
+        NailedLog.info("Checking spawn for " + event.entity.toString());
     }
 
     @Override

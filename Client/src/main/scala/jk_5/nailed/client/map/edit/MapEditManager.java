@@ -5,8 +5,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import io.netty.buffer.ByteBuf;
 import jk_5.nailed.client.gui.GuiEditSpawnpoint;
-import jk_5.nailed.map.Spawnpoint;
-import jk_5.nailed.util.ChatColor;
+import jk_5.nailed.map.Location;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -43,7 +42,7 @@ public class MapEditManager {
     private boolean enabled;
     @Getter private MapEditMetadata metadata = new MapEditMetadata();
 
-    private Spawnpoint facingSpawnpoint;
+    private Location facingSpawnpoint;
     private int infoWidth = 0;
     private ScaledResolution resolution;
     private List<String> lineBuffer = Lists.newArrayList();
@@ -76,9 +75,9 @@ public class MapEditManager {
         }
         this.lineBuffer.clear();
 
-        this.drawLine(ChatColor.GREEN + this.facingSpawnpoint.name);
+        //this.drawLine(ChatColor.GREEN + this.facingSpawnpoint.name);
 
-        this.doRenderLines();
+        //this.doRenderLines();
     }
 
     @SubscribeEvent
@@ -96,18 +95,18 @@ public class MapEditManager {
         OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_TRUE, GL11.GL_FALSE);
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
 
-        double rx = this.metadata.spawnPoint.posX - dx;
-        double ry = this.metadata.spawnPoint.posY - dy;
-        double rz = this.metadata.spawnPoint.posZ - dz;
-        this.drawBox(rx, ry - 1, rz, this.facingSpawnpoint == this.metadata.spawnPoint ? 0xFF0000 : 0x00FF00);
-        this.renderLabel("World spawn", rx + 0.5, ry + 0.5, rz + 0.5);
+        double rx = this.metadata.spawnPoint.getX() - dx;
+        double ry = this.metadata.spawnPoint.getY() - dy;
+        double rz = this.metadata.spawnPoint.getZ() - dz;
+        this.drawSpawnpoint(rx, ry, rz, this.metadata.spawnPoint.getYaw(), this.facingSpawnpoint == this.metadata.spawnPoint ? 0xFF0000 : 0x00FF00);
+        this.renderLabel("World spawn", rx, ry + 2, rz);
 
-        for(Spawnpoint spawnpoint : this.metadata.randomSpawnpoints){
-            rx = spawnpoint.posX - dx;
-            ry = spawnpoint.posY - dy;
-            rz = spawnpoint.posZ - dz;
-            this.drawBox(rx, ry - 1, rz, this.facingSpawnpoint == spawnpoint ? 0xFF0000 : 0x00FFFF);
-            this.renderLabel(spawnpoint.name, rx + 0.5, ry + 0.5, rz + 0.5);
+        for(Location spawnpoint : this.metadata.randomSpawnpoints){
+            rx = spawnpoint.getX() - dx;
+            ry = spawnpoint.getY() - dy;
+            rz = spawnpoint.getZ() - dz;
+            this.drawSpawnpoint(rx, ry, rz, spawnpoint.getYaw(), this.facingSpawnpoint == spawnpoint ? 0xFF0000 : 0x00FFFF);
+            //this.renderLabel(spawnpoint.name, rx + 0.5, ry + 0.5, rz + 0.5);
         }
 
         GL11.glDisable(GL11.GL_BLEND);
@@ -115,88 +114,48 @@ public class MapEditManager {
         GL11.glPopMatrix();
     }
 
-    public void drawBox(double x, double y, double z, int color){
+    public void drawSpawnpoint(double x, double y, double z, float yaw, int color){
         float r = (float) (color >> 16 & 255) / 255;
         float g = (float) (color >> 8 & 255) / 255;
         float b = (float) (color & 255) / 255;
 
-        mc.getTextureManager().bindTexture(noise);
-
         GL11.glPushMatrix();
         GL11.glTranslated(x, y, z);
-
-        Tessellator tess = Tessellator.instance;
-
         GL11.glDisable(GL11.GL_TEXTURE_2D);
 
+        GL11.glColor4f(r, g, b, 1f);
+        GL11.glEnable(GL11.GL_LINE_SMOOTH);
+        GL11.glLineWidth(2f);
+        GL11.glBegin(GL11.GL_LINES);
+        GL11.glVertex3d(0, 0, 0);
+        GL11.glVertex3d(0, 1.5, 0);
+        GL11.glEnd();
+        GL11.glDisable(GL11.GL_LINE_SMOOTH);
+
         GL11.glColor4f(r, g, b, 0.3f);
-        tess.startDrawingQuads();
-        tess.addVertex(0, 1, 0);
-        tess.addVertex(1, 1, 0);
-        tess.addVertex(1, 0, 0);
-        tess.addVertex(0, 0, 0);
+        GL11.glBegin(GL11.GL_QUADS);
+        GL11.glVertex3d(-0.2, 0, 0.2);
+        GL11.glVertex3d(0.2, 0, 0.2);
+        GL11.glVertex3d(0.2, 0, -0.2);
+        GL11.glVertex3d(-0.2, 0, -0.2);
+        GL11.glVertex3d(-0.2, 0, -0.2);
+        GL11.glVertex3d(0.2, 0, -0.2);
+        GL11.glVertex3d(0.2, 0, 0.2);
+        GL11.glVertex3d(-0.2, 0, 0.2);
+        GL11.glEnd();
 
-        tess.addVertex(0, 0, 1);
-        tess.addVertex(1, 0, 1);
-        tess.addVertex(1, 1, 1);
-        tess.addVertex(0, 1, 1);
-
-        tess.addVertex(0, 0, 0);
-        tess.addVertex(1, 0, 0);
-        tess.addVertex(1, 0, 1);
-        tess.addVertex(0, 0, 1);
-
-        tess.addVertex(0, 1, 1);
-        tess.addVertex(1, 1, 1);
-        tess.addVertex(1, 1, 0);
-        tess.addVertex(0, 1, 0);
-
-        tess.addVertex(0, 0, 1);
-        tess.addVertex(0, 1, 1);
-        tess.addVertex(0, 1, 0);
-        tess.addVertex(0, 0, 0);
-
-        tess.addVertex(1, 0, 0);
-        tess.addVertex(1, 1, 0);
-        tess.addVertex(1, 1, 1);
-        tess.addVertex(1, 0, 1);
-        tess.draw();
+        GL11.glColor4f(r, g, b, 1f);
+        GL11.glRotatef(-yaw, 0, 1, 0);
+        GL11.glBegin(GL11.GL_TRIANGLES);
+        GL11.glVertex3d(0, 1.1, 0);
+        GL11.glVertex3d(0, 1.3, 0.5);
+        GL11.glVertex3d(0, 1.5, 0);
+        GL11.glVertex3d(0, 1.5, 0);
+        GL11.glVertex3d(0, 1.3, 0.5);
+        GL11.glVertex3d(0, 1.1, 0);
+        GL11.glEnd();
 
         GL11.glEnable(GL11.GL_TEXTURE_2D);
-
-        GL11.glColor4f(r, g, b, 1);
-        tess.startDrawingQuads();
-        tess.addVertexWithUV(0, 1, 0, 0, 1);
-        tess.addVertexWithUV(1, 1, 0, 1, 1);
-        tess.addVertexWithUV(1, 0, 0, 1, 0);
-        tess.addVertexWithUV(0, 0, 0, 0, 0);
-
-        tess.addVertexWithUV(0, 0, 1, 0, 1);
-        tess.addVertexWithUV(1, 0, 1, 1, 1);
-        tess.addVertexWithUV(1, 1, 1, 1, 0);
-        tess.addVertexWithUV(0, 1, 1, 0, 0);
-
-        tess.addVertexWithUV(0, 0, 0, 0, 1);
-        tess.addVertexWithUV(1, 0, 0, 1, 1);
-        tess.addVertexWithUV(1, 0, 1, 1, 0);
-        tess.addVertexWithUV(0, 0, 1, 0, 0);
-
-        tess.addVertexWithUV(0, 1, 1, 0, 1);
-        tess.addVertexWithUV(1, 1, 1, 1, 1);
-        tess.addVertexWithUV(1, 1, 0, 1, 0);
-        tess.addVertexWithUV(0, 1, 0, 0, 0);
-
-        tess.addVertexWithUV(0, 0, 1, 0, 1);
-        tess.addVertexWithUV(0, 1, 1, 1, 1);
-        tess.addVertexWithUV(0, 1, 0, 1, 0);
-        tess.addVertexWithUV(0, 0, 0, 0, 0);
-
-        tess.addVertexWithUV(1, 0, 0, 0, 1);
-        tess.addVertexWithUV(1, 1, 0, 1, 1);
-        tess.addVertexWithUV(1, 1, 1, 1, 0);
-        tess.addVertexWithUV(1, 0, 1, 0, 0);
-        tess.draw();
-
         GL11.glPopMatrix();
     }
 
@@ -243,20 +202,20 @@ public class MapEditManager {
         return v;
     }
 
-    public Spawnpoint rayTraceSpawnpoints(EntityPlayer player, double reach){
+    public Location rayTraceSpawnpoints(EntityPlayer player, double reach){
         Vec3 startVec = getCorrectedHeadVec(player);
         Vec3 lookVec = player.getLookVec();
         Vec3 endVec = startVec.addVector(lookVec.xCoord * reach, lookVec.yCoord * reach, lookVec.zCoord * reach);
         if(!Double.isNaN(startVec.xCoord) && !Double.isNaN(startVec.yCoord) && !Double.isNaN(startVec.zCoord)){
             if(!Double.isNaN(endVec.xCoord) && !Double.isNaN(endVec.yCoord) && !Double.isNaN(endVec.zCoord)){
-                int endX = MathHelper.floor_double(endVec.xCoord);
-                int endY = MathHelper.floor_double(endVec.yCoord);
-                int endZ = MathHelper.floor_double(endVec.zCoord);
-                int startX = MathHelper.floor_double(startVec.xCoord);
-                int startY = MathHelper.floor_double(startVec.yCoord);
-                int startZ = MathHelper.floor_double(startVec.zCoord);
+                double endX = endVec.xCoord;
+                double endY = endVec.yCoord;
+                double endZ = endVec.zCoord;
+                double startX = startVec.xCoord;
+                double startY = startVec.yCoord;
+                double startZ = startVec.zCoord;
 
-                Spawnpoint spawnpoint = this.metadata.getSpawnpoint(startX, startY + 1, startZ);
+                Location spawnpoint = this.metadata.getSpawnpoint(startX, startY, startZ);
 
                 if(spawnpoint != null){
                     return spawnpoint;

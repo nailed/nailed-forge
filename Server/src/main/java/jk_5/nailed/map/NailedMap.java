@@ -112,8 +112,8 @@ public class NailedMap implements Map {
                     rules.setOrCreateGameRule(e.getKey(), e.getValue());
                 }
             }
-            world.difficultySetting = meta.getDifficulty();                                 //TODO: is this correct?
-            world.setAllowedSpawnTypes(meta.isSpawnHostileMobs() && world.difficultySetting.getDifficultyId() > 0, meta.isSpawnFriendlyMobs());
+            world.difficultySetting = meta.getDifficulty();
+            world.setAllowedSpawnTypes(world.difficultySetting.getDifficultyId() > 0, true);
         }
 
         this.machine = new ServerMachine(world, MachineRegistry.getNextId(), ServerMachine.REGISTRY.getUnusedInstanceID(), Terminal.WIDTH, Terminal.HEIGHT);

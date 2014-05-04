@@ -8,14 +8,14 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.events.*;
+import jk_5.nailed.api.events.PlayerJoinEvent;
+import jk_5.nailed.api.events.PlayerLeaveEvent;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.api.player.PlayerRegistry;
 import lombok.Getter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.ServerChatEvent;
 
 import java.util.List;
 
@@ -65,7 +65,6 @@ public class NailedPlayerRegistry implements PlayerRegistry {
         }
         p = new NailedPlayer(gameProfile);
         this.players.add(p);
-        MinecraftForge.EVENT_BUS.post(new PlayerCreatedEvent(p.getEntity(), p));
         return p;
     }
 
@@ -76,21 +75,6 @@ public class NailedPlayerRegistry implements PlayerRegistry {
         Player player = this.getOrCreatePlayer(event.entityPlayer.getGameProfile());
         if(player == null) return;
         event.displayname = player.getChatPrefix();
-    }
-
-    @SuppressWarnings("unused")
-    @SubscribeEvent
-    public void onPlayerChat(ServerChatEvent event){
-        Player player = this.getOrCreatePlayer(event.player.getGameProfile());
-        if(player == null) return;
-        MinecraftForge.EVENT_BUS.post(new PlayerChatEvent(player, event.message));
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    @SuppressWarnings("unused")
-    public void onPlayerChangedDimension(PlayerChangedDimensionEvent event){
-        Map map = NailedAPI.getMapLoader().getMap(event.player.getEntity().worldObj);
-        if(map != null) event.player.setCurrentMap(map);
     }
 
     @SubscribeEvent
@@ -118,17 +102,17 @@ public class NailedPlayerRegistry implements PlayerRegistry {
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     @SuppressWarnings("unused")
     public void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event){
         Player p = this.getPlayer(event.player);
         Map oldMap = p.getCurrentMap();
         Map newMap = NailedAPI.getMapLoader().getMap(event.player.worldObj);
+        p.setCurrentMap(newMap);
         NailedLog.info("Player {} changed dimension", p.getUsername());
         NailedLog.info("   From: {}", oldMap.getSaveFileName());
         NailedLog.info("   To:   {}", newMap.getSaveFileName());
         p.onChangedDimension();
-        MinecraftForge.EVENT_BUS.post(new PlayerChangedDimensionEvent(p, oldMap, newMap));
     }
 
     @SubscribeEvent

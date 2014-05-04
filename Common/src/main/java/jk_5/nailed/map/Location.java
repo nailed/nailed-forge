@@ -2,6 +2,7 @@ package jk_5.nailed.map;
 
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonObject;
+import io.netty.buffer.ByteBuf;
 import jk_5.nailed.util.MathUtil;
 import jk_5.nailed.util.config.ConfigTag;
 import net.minecraft.util.ChunkCoordinates;
@@ -439,5 +440,17 @@ public class Location implements Cloneable {
         float yaw = json.has("yaw") ? json.get("yaw").getAsFloat() : 0;
         float pitch = json.has("pitch") ? json.get("pitch").getAsFloat() : 0;
         return new Location(x, y, z, yaw, pitch);
+    }
+
+    public static Location read(ByteBuf buffer) {
+        return new Location(buffer.readDouble(), buffer.readDouble(), buffer.readDouble(), buffer.readFloat(), buffer.readFloat());
+    }
+
+    public void write(ByteBuf buffer) {
+        buffer.writeDouble(this.x);
+        buffer.writeDouble(this.y);
+        buffer.writeDouble(this.z);
+        buffer.writeFloat(this.yaw);
+        buffer.writeFloat(this.pitch);
     }
 }

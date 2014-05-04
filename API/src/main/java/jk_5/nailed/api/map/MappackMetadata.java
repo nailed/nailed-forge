@@ -20,8 +20,8 @@ public interface MappackMetadata {
     String getName();
     Location getSpawnPoint();
     List<TeamBuilder> getDefaultTeams();
-    boolean isSpawnHostileMobs();
-    boolean isSpawnFriendlyMobs();
+    //@Deprecated boolean isSpawnHostileMobs();
+    //@Deprecated boolean isSpawnFriendlyMobs();
     Map<String, String> getGameruleConfig();
     EnumDifficulty getDifficulty();
     String getGameType();
@@ -31,5 +31,6 @@ public interface MappackMetadata {
     boolean isChoosingRandomSpawnpointAtRespawn();
     List<Location> getRandomSpawnpoints();
     String getStartWhen();
-    EnumSet<WeatherType> getPermittedWeatherTypes();
+    @Deprecated EnumSet<WeatherType> getPermittedWeatherTypes();
+    SpawnRules getSpawnRules();
 }
