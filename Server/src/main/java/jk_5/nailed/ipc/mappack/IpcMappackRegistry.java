@@ -27,5 +27,6 @@ public class IpcMappackRegistry {
         mappackIds.put(mappack.getMappackID(), mappack);
         logger.info("Registered IpcMappack " + mappack.getMappackID());
         mappack.filestore.requestMissingFiles(null);
+        mappack.luaFilestore.requestMissingFiles(null);
     }
 }

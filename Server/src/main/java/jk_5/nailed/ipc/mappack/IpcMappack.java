@@ -11,6 +11,7 @@ import jk_5.nailed.api.map.Mappack;
 import jk_5.nailed.api.map.MappackMetadata;
 import jk_5.nailed.api.map.stat.StatConfig;
 import jk_5.nailed.api.scripting.IMount;
+import jk_5.nailed.ipc.filestore.FilestoreMount;
 import jk_5.nailed.ipc.filestore.MappackFile;
 import jk_5.nailed.ipc.filestore.MappackFilestore;
 import jk_5.nailed.map.mappack.JsonMappackMetadata;
@@ -33,11 +34,15 @@ public class IpcMappack implements Mappack {
     private final MappackMetadata metadata;
     private final StatConfig statConfig = new jk_5.nailed.map.stat.StatConfig();
     public final MappackFilestore filestore = new MappackFilestore();
+    public final MappackFilestore luaFilestore = new MappackFilestore();
 
     public IpcMappack(JsonObject json){
         this.id = json.get("mpid").getAsString();
         this.metadata = new JsonMappackMetadata(json);
         this.filestore.files = gson.fromJson(json.get("worldFiles"), new TypeToken<List<MappackFile>>(){}.getType());
+        this.luaFilestore.files = gson.fromJson(json.get("luaFiles"), new TypeToken<List<MappackFile>>(){}.getType());
+        this.filestore.refresh();
+        this.luaFilestore.refresh();
     }
 
     @Override
@@ -67,6 +72,7 @@ public class IpcMappack implements Mappack {
                 callback.callback(null);
             }
         });
+        this.luaFilestore.requestMissingFiles(null);
     }
 
     @Override
@@ -89,6 +95,6 @@ public class IpcMappack implements Mappack {
     @Override
     @Nullable
     public IMount createMount(){
-        return null;
+        return new FilestoreMount(this.luaFilestore);
     }
 }

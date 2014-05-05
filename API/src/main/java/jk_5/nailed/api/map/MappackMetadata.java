@@ -20,8 +20,6 @@ public interface MappackMetadata {
     String getName();
     Location getSpawnPoint();
     List<TeamBuilder> getDefaultTeams();
-    //@Deprecated boolean isSpawnHostileMobs();
-    //@Deprecated boolean isSpawnFriendlyMobs();
     Map<String, String> getGameruleConfig();
     EnumDifficulty getDifficulty();
     String getGameType();

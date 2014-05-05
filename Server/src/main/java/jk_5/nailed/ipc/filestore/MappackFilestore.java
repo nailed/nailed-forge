@@ -1,6 +1,7 @@
 package jk_5.nailed.ipc.filestore;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.ning.http.client.AsyncHttpClient;
 import jk_5.nailed.api.concurrent.Callback;
@@ -9,6 +10,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -24,6 +26,7 @@ public class MappackFilestore {
     public static final AsyncHttpClient httpClient = new AsyncHttpClient();
 
     public List<MappackFile> files = Lists.newArrayList();
+    public Map<String, MappackFile> paths = Maps.newHashMap();
 
     public void requestMissingFiles(final Callback<Void> callback){
         final Set<MappackFile> downloading = Sets.newHashSet();
@@ -60,6 +63,13 @@ public class MappackFilestore {
             try{
                 FileUtils.copyFile(file.getLocation(), dest);
             }catch(IOException ignored){}
+        }
+    }
+
+    public void refresh(){
+        this.paths.clear();
+        for(MappackFile file : this.files){
+            this.paths.put(file.path, file);
         }
     }
 }

@@ -52,8 +52,6 @@ public class JsonMappackMetadata implements MappackMetadata {
         this.name = json.get("name").getAsString();
         this.pvpEnabled = !json.has("pvpEnabled") || json.get("pvpEnabled").getAsBoolean();
         this.gamemode = WorldSettings.GameType.getByID(json.has("defaultGamemode") ? json.get("defaultGamemode").getAsInt() : 2);
-        //this.spawnHostileMobs = config.getTag("map").getTag("spawn-hostile-mobs").getBooleanValue(true);
-        //this.spawnFriendlyMobs = config.getTag("map").getTag("spawn-friendly-mobs").getBooleanValue(true);
         this.difficulty = EnumDifficulty.getDifficultyEnum(json.has("difficulty") ? json.get("difficulty").getAsInt() : 2);
         this.gameType = json.has("gametype") ? json.get("gametype").getAsString() : "default";
         this.preventingBlockBreak = json.has("preventBlockBreak") && json.get("preventBlockBreak").getAsBoolean();
