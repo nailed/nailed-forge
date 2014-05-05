@@ -66,6 +66,8 @@ public class NailedMap implements Map {
     public IMount mappackMount;
     public boolean mounted = false;
 
+    private boolean loadNextTick = false;
+
     public NailedMap(Mappack mappack, int id){
         this.ID = id;
         this.mappack = mappack;
@@ -104,17 +106,7 @@ public class NailedMap implements Map {
         this.isLoaded = true;
         this.teamManager.onWorldSet();
 
-        if(this.mappack != null){
-            MappackMetadata meta = this.mappack.getMappackMetadata();
-            GameRules rules = world.getGameRules();
-            for(java.util.Map.Entry<String, String> e : meta.getGameruleConfig().entrySet()){
-                if(rules.hasRule(e.getKey())){
-                    rules.setOrCreateGameRule(e.getKey(), e.getValue());
-                }
-            }
-            world.difficultySetting = meta.getDifficulty();
-            world.setAllowedSpawnTypes(world.difficultySetting.getDifficultyId() > 0, true);
-        }
+        this.loadNextTick = true;
 
         this.machine = new ServerMachine(world, MachineRegistry.getNextId(), ServerMachine.REGISTRY.getUnusedInstanceID(), Terminal.WIDTH, Terminal.HEIGHT);
         this.machine.setPreferredSaveDir(new File(this.getSaveFolder(), "machine"));
@@ -183,6 +175,21 @@ public class NailedMap implements Map {
                         this.mounted = true;
                     }
                 }
+            }
+            if(this.loadNextTick){
+                //Delay this by one tick because world difficulty is set after the world load event is fired.
+                if(this.mappack != null){
+                    MappackMetadata meta = this.mappack.getMappackMetadata();
+                    GameRules rules = world.getGameRules();
+                    for(java.util.Map.Entry<String, String> e : meta.getGameruleConfig().entrySet()){
+                        if(rules.hasRule(e.getKey())){
+                            rules.setOrCreateGameRule(e.getKey(), e.getValue());
+                        }
+                    }
+                    world.difficultySetting = meta.getDifficulty();
+                    world.setAllowedSpawnTypes(world.difficultySetting.getDifficultyId() > 0, true);
+                }
+                this.loadNextTick = false;
             }
         }
     }
