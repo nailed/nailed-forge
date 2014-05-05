@@ -6,7 +6,6 @@ import java.util.List;
 
 /**
  * Represents a read only part of a virtual filesystem that can be mounted onto a machine using Machine.mount().
- * Ready made implementations of this interface can be created using NailedAPI.createSaveDirMount() or NailedAPI.createResourceMount(), or you're free to implement it yourselves!
  */
 public interface IMount{
 
