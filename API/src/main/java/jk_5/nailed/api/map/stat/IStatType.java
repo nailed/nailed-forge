@@ -1,6 +1,6 @@
 package jk_5.nailed.api.map.stat;
 
-import jk_5.nailed.util.config.ConfigTag;
+import com.google.gson.JsonObject;
 
 /**
  * No description given
@@ -9,5 +9,5 @@ import jk_5.nailed.util.config.ConfigTag;
  */
 public interface IStatType {
 
-    void readAdditionalData(ConfigTag config, Stat stat);
+    void readAdditionalData(JsonObject obj, Stat stat);
 }

@@ -1,11 +1,12 @@
 package jk_5.nailed.map.stat;
 
 import com.google.common.collect.Lists;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.api.map.stat.IStatType;
 import jk_5.nailed.api.map.stat.Stat;
-import jk_5.nailed.util.config.ConfigFile;
-import jk_5.nailed.util.config.ConfigTag;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -22,25 +23,26 @@ public class StatConfig implements jk_5.nailed.api.map.stat.StatConfig {
     @Getter
     private List<Stat> stats = Lists.newArrayList();
 
-    public StatConfig(ConfigFile file){
-        for(ConfigTag tag : file.getSortedTagList()){
-            tag.useBraces();
-            DefaultStat stat = new DefaultStat(tag.name);
-            ConfigTag typeTag = tag.getTag("type");
-            if(typeTag != null){
-                IStatType type = StatTypeManager.instance().getStatType(typeTag.getValue());
+    public StatConfig(JsonArray json) {
+        for(JsonElement element : json){
+            JsonObject obj = element.getAsJsonObject();
+            DefaultStat stat = new DefaultStat(obj.get("name").getAsString());
+            if(obj.has("type")){
+                String t = obj.get("type").getAsString();
+                IStatType type = StatTypeManager.instance().getStatType(t);
                 if(type == null){
-                    NailedLog.warn("Unknown stat type {}", typeTag.getValue());
+                    NailedLog.warn("Unknown stat type {}", t);
                     continue;
                 }
                 stat.setType(type);
-                stat.getType().readAdditionalData(typeTag, stat);
+                type.readAdditionalData(obj, stat);
             }
             this.stats.add(stat);
         }
     }
 
-    public StatConfig clone(){
+    @SuppressWarnings("CloneDoesntDeclareCloneNotSupportedException")
+    public StatConfig clone() {
         StatConfig config = new StatConfig();
         for(Stat stat : this.stats){
             config.stats.add(stat.clone());

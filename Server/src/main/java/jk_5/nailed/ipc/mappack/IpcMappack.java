@@ -3,7 +3,6 @@ package jk_5.nailed.ipc.mappack;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-import io.netty.buffer.ByteBuf;
 import jk_5.nailed.api.concurrent.Callback;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.MapBuilder;
@@ -32,7 +31,7 @@ public class IpcMappack implements Mappack {
 
     private final String id;
     private final MappackMetadata metadata;
-    private final StatConfig statConfig = new jk_5.nailed.map.stat.StatConfig();
+    private final StatConfig statConfig;
     public final MappackFilestore filestore = new MappackFilestore();
     public final MappackFilestore luaFilestore = new MappackFilestore();
 
@@ -43,6 +42,7 @@ public class IpcMappack implements Mappack {
         this.luaFilestore.files = gson.fromJson(json.get("luaFiles"), new TypeToken<List<MappackFile>>(){}.getType());
         this.filestore.refresh();
         this.luaFilestore.refresh();
+        this.statConfig = new jk_5.nailed.map.stat.StatConfig(json.get("stats").getAsJsonArray());
     }
 
     @Override
@@ -84,12 +84,6 @@ public class IpcMappack implements Mappack {
     @Override
     public boolean saveAsMappack(@Nonnull Map map){
         return false;
-    }
-
-    @Override
-    @Nullable
-    public ByteBuf getMappackIcon(){
-        return null;
     }
 
     @Override

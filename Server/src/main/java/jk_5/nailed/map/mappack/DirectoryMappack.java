@@ -1,8 +1,6 @@
 package jk_5.nailed.map.mappack;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufOutputStream;
-import io.netty.buffer.Unpooled;
+import com.google.gson.JsonParser;
 import jk_5.nailed.api.concurrent.Callback;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.MapBuilder;
@@ -18,12 +16,12 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.MinecraftException;
 import net.minecraft.world.WorldServer;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -37,7 +35,6 @@ import java.util.Date;
 public class DirectoryMappack implements Mappack {
 
     private final String mappackID;
-    private final String iconFile;
     private final File mappackFolder;
     private final MappackMetadata mappackMetadata;
     private StatConfig statConfig = new StatConfig();
@@ -46,7 +43,6 @@ public class DirectoryMappack implements Mappack {
 
     private DirectoryMappack(File directory, ConfigFile config){
         this.mappackID = directory.getName();
-        this.iconFile = config.getTag("map").getTag("iconFile").getValue("icon.png");
         this.mappackFolder = directory;
         this.mappackMetadata = new FileMappackMetadata(config);
     }
@@ -56,7 +52,7 @@ public class DirectoryMappack implements Mappack {
         ConfigFile config;
         StatConfig statConfig = new StatConfig();
         File mappackConfig = new File(directory, "mappack.cfg");
-        File statConfigFile = new File(directory, "stats.cfg");
+        File statConfigFile = new File(directory, "stats.json");
         if(mappackConfig.isFile() && mappackConfig.exists()){
             config = new ConfigFile(mappackConfig).setReadOnly();
             pack = new DirectoryMappack(directory, config);
@@ -64,7 +60,15 @@ public class DirectoryMappack implements Mappack {
             throw new DiscardedMappackInitializationException("Directory " + directory.getPath() + " is not a mappack");
         }
         if(statConfigFile.isFile() && statConfigFile.exists()){
-            statConfig = new StatConfig(new ConfigFile(statConfigFile).setReadOnly());
+            FileReader fr = null;
+            try{
+                fr = new FileReader(statConfigFile);
+                statConfig = new StatConfig(new JsonParser().parse(fr).getAsJsonArray());
+            }catch(Exception e){
+                throw new MappackInitializationException("Exception while reading stats.json", e);
+            }finally{
+                IOUtils.closeQuietly(fr);
+            }
         }
         pack.statConfig = statConfig;
         return pack;
@@ -120,19 +124,6 @@ public class DirectoryMappack implements Mappack {
         }
 
         return true;
-    }
-
-    @Override
-    @Nullable
-    public ByteBuf getMappackIcon(){
-        ByteBuf buf = Unpooled.buffer();
-        try{
-            BufferedImage image = ImageIO.read(new File(this.mappackFolder, this.iconFile));
-            ImageIO.write(image, "PNG", new ByteBufOutputStream(buf));
-        }catch(IOException e){
-            return null;
-        }
-        return buf;
     }
 
     @Override

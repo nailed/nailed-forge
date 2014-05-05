@@ -1,8 +1,6 @@
 package jk_5.nailed.map.mappack;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufOutputStream;
-import io.netty.buffer.Unpooled;
+import com.google.gson.JsonParser;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.api.concurrent.Callback;
 import jk_5.nailed.api.map.Map;
@@ -18,8 +16,6 @@ import org.apache.commons.io.IOUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
@@ -34,14 +30,12 @@ import java.util.zip.ZipInputStream;
 public class ZipMappack implements Mappack {
 
     private final String mappackID;
-    private final String iconFile;
     private final File mappackFile;
     private final MappackMetadata mappackMetadata;
     private StatConfig statConfig;
 
     private ZipMappack(File mappackFile, ConfigFile config){
         this.mappackID = mappackFile.getName().substring(0, mappackFile.getName().length() - 8);
-        this.iconFile = config.getTag("map").getTag("iconFile").getValue("icon.png");
         this.mappackFile = mappackFile;
         this.mappackMetadata = new FileMappackMetadata(config);
     }
@@ -58,8 +52,8 @@ public class ZipMappack implements Mappack {
                 if(entry.getName().equals("mappack.cfg")){
                     config = new ConfigFile(new InputStreamReader(zipStream)).setReadOnly();
                     pack = new ZipMappack(file, config);
-                }else if(entry.getName().equals("stats.cfg")){
-                    stats = new StatConfig(new ConfigFile(new InputStreamReader(zipStream)).setReadOnly());
+                }else if(entry.getName().equals("stats.json")){
+                    stats = new StatConfig(new JsonParser().parse(new InputStreamReader(zipStream)).getAsJsonArray());
                 }
                 entry = zipStream.getNextEntry();
             }
@@ -96,29 +90,6 @@ public class ZipMappack implements Mappack {
         return false;
     }
 
-    @Override
-    @Nullable
-    public ByteBuf getMappackIcon(){
-        ByteBuf buf = Unpooled.buffer();
-        ZipInputStream zipStream = null;
-        try{
-            zipStream = new ZipInputStream(new FileInputStream(new File(this.mappackFile, this.iconFile)));
-            ZipEntry entry = zipStream.getNextEntry();
-            while(entry != null){
-                if(entry.getName().equals(this.iconFile)){
-                    BufferedImage image = ImageIO.read(zipStream);
-                    ImageIO.write(image, "PNG", new ByteBufOutputStream(buf));
-                }
-                entry = zipStream.getNextEntry();
-            }
-        }catch(IOException e){
-            return null;
-        }finally{
-            IOUtils.closeQuietly(zipStream);
-        }
-        return buf;
-    }
-
     public File unzipMapFromMapPack(File mapPack, File destDir){
         try{
             ZipFile zipFile = new ZipFile(mapPack);
@@ -134,14 +105,8 @@ public class ZipMappack implements Mappack {
                 destinationFilePath.getParentFile().mkdirs();
                 if(!entry.isDirectory()){
                     BufferedInputStream bis = new BufferedInputStream(zipFile.getInputStream(entry));
-
-                    int b;
-                    byte buffer[] = new byte[1024];
-                    FileOutputStream fos = new FileOutputStream(destinationFilePath);
-                    BufferedOutputStream bos = new BufferedOutputStream(fos, 1024);
-                    while ((b = bis.read(buffer, 0, 1024)) != -1) {
-                        bos.write(buffer, 0, b);
-                    }
+                    BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(destinationFilePath), 1024);
+                    IOUtils.copy(bis, bos);
                     bos.flush();
                     bos.close();
                     bis.close();

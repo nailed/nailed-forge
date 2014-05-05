@@ -1,6 +1,5 @@
 package jk_5.nailed.api.map;
 
-import io.netty.buffer.ByteBuf;
 import jk_5.nailed.api.concurrent.Callback;
 import jk_5.nailed.api.map.stat.StatConfig;
 import jk_5.nailed.api.scripting.IMount;
@@ -64,11 +63,6 @@ public interface Mappack {
      * @return True if this operation is supported, false otherwise
      */
     boolean saveAsMappack(@Nonnull Map map);
-
-    /**
-     * @return The data from the mappack icon (PNG) used for displaying in the webinterface and ingame
-     */
-    @Nullable ByteBuf getMappackIcon();
 
     @Nullable IMount createMount();
 }

@@ -1,8 +1,8 @@
 package jk_5.nailed.map.stat.types;
 
+import com.google.gson.JsonObject;
 import jk_5.nailed.api.map.stat.IStatType;
 import jk_5.nailed.api.map.stat.Stat;
-import jk_5.nailed.util.config.ConfigTag;
 
 /**
  * No description given
@@ -12,7 +12,7 @@ import jk_5.nailed.util.config.ConfigTag;
 public class StatTypeModifiable implements IStatType {
 
     @Override
-    public void readAdditionalData(ConfigTag config, Stat stat){
-        stat.setDefaultState(config.getTag("default").getBooleanValue(false));
+    public void readAdditionalData(JsonObject obj, Stat stat) {
+        stat.setDefaultState(obj.has("default") && obj.get("default").getAsBoolean());
     }
 }
