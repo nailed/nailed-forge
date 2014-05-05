@@ -39,7 +39,12 @@ public abstract class Sign {
     }
 
     public S33PacketUpdateSign getUpdatePacket(){
-        return new S33PacketUpdateSign(this.x, this.y, this.z, this.getContent());
+        String[] lines = this.getContent();
+        if(lines[0].length() > 15) lines[0] = lines[0].substring(0, 15);
+        if(lines[1].length() > 15) lines[1] = lines[1].substring(0, 15);
+        if(lines[2].length() > 15) lines[2] = lines[2].substring(0, 15);
+        if(lines[3].length() > 15) lines[3] = lines[3].substring(0, 15);
+        return new S33PacketUpdateSign(this.x, this.y, this.z, lines);
     }
 
     public void sendUpdate(Player player){

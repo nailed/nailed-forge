@@ -60,6 +60,7 @@ object NailedClient {
     MinecraftForge.EVENT_BUS.register(MapEditManager.instance())
     MinecraftForge.EVENT_BUS.register(StencilSkyRenderer)
     //MinecraftForge.EVENT_BUS.register(handler)
+    MinecraftForge.EVENT_BUS.register(TeamInformationRenderer)
     //FMLCommonHandler.instance().bus().register(handler)
     FMLCommonHandler.instance().bus().register(MapEditManager.instance())
     FMLCommonHandler.instance().bus().register(TickHandlerClient)
