@@ -40,7 +40,7 @@ nailed {
 
     deploy artifact: 'nailedClient', project: 'Client', load: true, reobf: true, coremod: 'jk_5.nailed.client.coremod.NailedFMLPlugin'
     deploy artifact: 'nailedCommon', project: 'Common', load: true, reobf: true, coremod: 'jk_5.nailed.common.coremod.NailedCommonFMLPlugin'
-    deploy artifact: 'nailedMumbleLink', project: 'MumbleLink', load: true
+    //deploy artifact: 'nailedMumbleLink', project: 'MumbleLink', load: true
     deploy artifact: 'nailedCrashReporter', project: 'CrashReporter', load: true
     deploy artifact: 'nailedUpdater', project: 'Updater', restart: 'game', mclib: true
     deploy artifact: 'forge', maven: 'net.minecraftforge:forge:1.7.2-10.12.1.1065:universal', load: true, server: 'http://files.minecraftforge.net/maven/'
