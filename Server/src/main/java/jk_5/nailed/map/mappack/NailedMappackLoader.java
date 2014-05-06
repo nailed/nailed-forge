@@ -3,6 +3,7 @@ package jk_5.nailed.map.mappack;
 import com.google.common.collect.Lists;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.concurrent.Callback;
 import jk_5.nailed.api.concurrent.scheduler.NailedRunnable;
 import jk_5.nailed.api.map.Mappack;
 import jk_5.nailed.api.map.MappackLoader;
@@ -41,7 +42,7 @@ public class NailedMappackLoader implements MappackLoader {
     }
 
     @Override
-    public void loadMappacks(){
+    public void loadMappacks(@Nullable final Callback<MappackLoader> callback){
         NailedRunnable runnable = new NailedRunnable() {
             @Override
             public void run(){
@@ -73,6 +74,7 @@ public class NailedMappackLoader implements MappackLoader {
                     listener.onReload(NailedMappackLoader.this);
                 }
                 NailedLog.info("Successfully loaded {} mappacks!", newMappackList.size());
+                if(callback != null) callback.callback(NailedMappackLoader.this);
             }
         };
         if(this.loadASync){

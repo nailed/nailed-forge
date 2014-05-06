@@ -174,7 +174,7 @@ public class NailedServer {
     @SuppressWarnings("unused")
     public void postInit(FMLPostInitializationEvent event){
         NailedLog.info("Loading the mappacks");
-        NailedAPI.getMappackLoader().loadMappacks();
+        NailedAPI.getMappackLoader().loadMappacks(null);
 
         //ircConnector.connect();
         ircBot.connect();
