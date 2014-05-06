@@ -6,21 +6,27 @@ import jk_5.nailed.api.player.Player;
 import jk_5.nailed.ipc.PacketUtils;
 import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.network.NailedPacket;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-@NoArgsConstructor
-@AllArgsConstructor
 public class PacketCheckAccount extends IpcPacket {
 
     public String playerId;
     public String data;
     public int type;
+
+    public PacketCheckAccount() {
+
+    }
+
+    public PacketCheckAccount(String playerId, String data, int type) {
+        this.playerId = playerId;
+        this.data = data;
+        this.type = type;
+    }
 
     @Override
     public void encode(ByteBuf buffer){

@@ -17,6 +17,15 @@ public class PacketLoginResponse extends IpcPacket {
     private String playerId;
     private int state; //0 = OK, 1 = Wrong Username, 2 = Wrong Password, 3 = Unknown Player
 
+    public PacketLoginResponse() {
+
+    }
+
+    public PacketLoginResponse(String playerId, int state) {
+        this.playerId = playerId;
+        this.state = state;
+    }
+
     @Override
     public void encode(ByteBuf buffer){
 

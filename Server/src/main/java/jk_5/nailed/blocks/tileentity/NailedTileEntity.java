@@ -7,7 +7,6 @@ import jk_5.nailed.api.player.Player;
 import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.network.NailedPacket;
 import jk_5.nailed.util.ISynchronizedTileEntity;
-import lombok.NoArgsConstructor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
@@ -17,7 +16,6 @@ import net.minecraft.tileentity.TileEntity;
  *
  * @author jk-5
  */
-@NoArgsConstructor
 public abstract class NailedTileEntity extends TileEntity {
 
     public boolean onBlockActivated(EntityPlayer entity, int side, float hitX, float hitY, float hitZ){

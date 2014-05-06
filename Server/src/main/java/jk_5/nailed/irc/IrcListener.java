@@ -2,17 +2,19 @@ package jk_5.nailed.irc;
 
 import jk_5.asyncirc.ConversationListener;
 import jk_5.asyncirc.User;
-import lombok.RequiredArgsConstructor;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-@RequiredArgsConstructor
 public class IrcListener implements ConversationListener {
 
     private final IrcChannel channel;
+
+    public IrcListener(IrcChannel channel) {
+        this.channel = channel;
+    }
 
     @Override
     public void onMessage(User sender, String message){

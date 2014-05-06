@@ -19,6 +19,17 @@ public class PacketUserdata extends IpcPacket {
     private String fullname;
     private String email;
 
+    public PacketUserdata() {
+
+    }
+
+    public PacketUserdata(String id, String username, String fullname, String email) {
+        this.id = id;
+        this.username = username;
+        this.fullname = fullname;
+        this.email = email;
+    }
+
     @Override
     public void encode(ByteBuf buffer){
 

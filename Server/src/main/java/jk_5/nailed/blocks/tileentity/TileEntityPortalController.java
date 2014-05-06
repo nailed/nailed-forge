@@ -9,7 +9,6 @@ import jk_5.nailed.api.player.Player;
 import jk_5.nailed.blocks.BlockPortalController;
 import jk_5.nailed.gui.IGuiReturnHandler;
 import jk_5.nailed.util.ISynchronizedTileEntity;
-import lombok.Getter;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
@@ -22,9 +21,9 @@ public class TileEntityPortalController extends NailedTileEntity implements IGui
     public String title = "";
     public short yaw;
     public short pitch;
-    @Getter private int color;
-    @Getter private TeleportOptions destination;
-    @Getter private String programmedName = "";
+    private int color;
+    private TeleportOptions destination;
+    private String programmedName = "";
 
     public TileEntityPortalController(){
         this.yaw = 0;
@@ -93,5 +92,17 @@ public class TileEntityPortalController extends NailedTileEntity implements IGui
     @Override
     public void writeData(ByteBuf buffer){
         buffer.writeInt(this.color);
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public TeleportOptions getDestination() {
+        return destination;
+    }
+
+    public String getProgrammedName() {
+        return programmedName;
     }
 }

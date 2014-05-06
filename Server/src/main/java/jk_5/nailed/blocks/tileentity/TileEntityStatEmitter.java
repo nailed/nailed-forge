@@ -11,9 +11,6 @@ import jk_5.nailed.api.player.Player;
 import jk_5.nailed.blocks.NailedBlocks;
 import jk_5.nailed.gui.IGuiReturnHandler;
 import jk_5.nailed.map.stat.StatMode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
@@ -24,15 +21,14 @@ import net.minecraftforge.permissions.api.PermissionsManager;
  *
  * @author jk-5
  */
-@NoArgsConstructor
 public class TileEntityStatEmitter extends NailedTileEntity implements IStatTileEntity, IGuiTileEntity, IGuiReturnHandler {
 
     public static final String PERMNODE = "nailed.statEmitter.edit";
 
-    @Getter private String programmedName = "";
-    @Getter private boolean signalEnabled = false;
-    @Getter @Setter private StatMode mode = StatMode.NORMAL;
-    @Getter private Stat stat;
+    private String programmedName = "";
+    private boolean signalEnabled = false;
+    private StatMode mode = StatMode.NORMAL;
+    private Stat stat;
     private boolean needsUpdate = false;
     private boolean isLoaded = false;
     private int redstonePulseTicks = -1;
@@ -192,5 +188,25 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
     public void scheduleRedstoneUpdate(){
         //this.worldObj.notifyBlockChange(this.xCoord, this.yCoord, this.zCoord, NailedBlocks.stat);
         this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, NailedBlocks.stat);
+    }
+
+    public String getProgrammedName() {
+        return programmedName;
+    }
+
+    public boolean isSignalEnabled() {
+        return signalEnabled;
+    }
+
+    public StatMode getMode() {
+        return mode;
+    }
+
+    public Stat getStat() {
+        return stat;
+    }
+
+    public void setMode(StatMode mode) {
+        this.mode = mode;
     }
 }

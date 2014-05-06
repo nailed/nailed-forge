@@ -8,8 +8,6 @@ import jk_5.nailed.api.events.PlayerJoinEvent;
 import jk_5.nailed.api.events.PlayerLeaveEvent;
 import jk_5.nailed.util.Utils;
 import jk_5.nailed.util.config.ConfigTag;
-import lombok.Getter;
-import lombok.Setter;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.ServerConfigurationManager;
@@ -30,7 +28,7 @@ import java.util.Map;
  */
 public class OldIrcBot extends PircBot {
 
-    @Getter @Setter private boolean enabled = false;
+    private boolean enabled = false;
     private final String host;
     private final int port;
     private String serverPassword;
@@ -352,5 +350,13 @@ public class OldIrcBot extends PircBot {
         //for(IChatComponent c : (List<IChatComponent>) component.getSiblings()){
             //http(s)?://(([A-Za-z0-9]+)\.)+([A-Za-z0-9]{2,4})(/)?
         //}
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }

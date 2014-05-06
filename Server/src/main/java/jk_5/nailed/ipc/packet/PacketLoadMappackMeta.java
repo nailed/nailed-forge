@@ -18,6 +18,15 @@ public class PacketLoadMappackMeta extends IpcPacket {
     public String id;
     public JsonObject data;
 
+    public PacketLoadMappackMeta() {
+
+    }
+
+    public PacketLoadMappackMeta(String id, JsonObject data) {
+        this.id = id;
+        this.data = data;
+    }
+
     @Override
     public void encode(ByteBuf buffer){
 

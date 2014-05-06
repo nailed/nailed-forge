@@ -2,16 +2,12 @@ package jk_5.nailed.ipc.packet;
 
 import io.netty.buffer.ByteBuf;
 import jk_5.nailed.ipc.PacketUtils;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-@NoArgsConstructor
-@AllArgsConstructor
 public class PacketCreateAccount extends IpcPacket {
 
     public String playerId;
@@ -19,6 +15,18 @@ public class PacketCreateAccount extends IpcPacket {
     public String email;
     public String name;
     public String password;
+
+    public PacketCreateAccount() {
+
+    }
+
+    public PacketCreateAccount(String playerId, String username, String email, String name, String password) {
+        this.playerId = playerId;
+        this.username = username;
+        this.email = email;
+        this.name = name;
+        this.password = password;
+    }
 
     @Override
     public void encode(ByteBuf buffer){

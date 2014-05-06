@@ -16,6 +16,14 @@ public class PacketPromptLogin extends IpcPacket {
 
     private String playerId;
 
+    public PacketPromptLogin() {
+
+    }
+
+    public PacketPromptLogin(String playerId) {
+        this.playerId = playerId;
+    }
+
     @Override
     public void encode(ByteBuf buffer){
 

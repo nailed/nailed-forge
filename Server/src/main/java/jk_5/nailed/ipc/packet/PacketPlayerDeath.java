@@ -3,20 +3,25 @@ package jk_5.nailed.ipc.packet;
 import io.netty.buffer.ByteBuf;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.ipc.PacketUtils;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-@NoArgsConstructor
-@AllArgsConstructor
 public class PacketPlayerDeath extends IpcPacket {
 
     private Player player;
     private String cause;
+
+    public PacketPlayerDeath() {
+
+    }
+
+    public PacketPlayerDeath(Player player, String cause) {
+        this.player = player;
+        this.cause = cause;
+    }
 
     @Override
     public void encode(ByteBuf buffer){

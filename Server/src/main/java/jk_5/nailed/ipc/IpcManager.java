@@ -10,7 +10,6 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import jk_5.nailed.NailedServer;
 import jk_5.nailed.ipc.packet.IpcPacket;
 import jk_5.nailed.util.config.ConfigTag;
-import lombok.Getter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,9 +27,9 @@ public class IpcManager {
     private static final IpcManager instance = new IpcManager();
     private Channel channel;
 
-    @Getter private final boolean enabled;
-    @Getter private final String host;
-    @Getter private final int port;
+    private final boolean enabled;
+    private final String host;
+    private final int port;
 
     public static void main(String[] args){
         IpcManager.instance().start();
@@ -94,5 +93,17 @@ public class IpcManager {
 
     public boolean isConnected(){
         return this.enabled && this.channel.isOpen();
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public int getPort() {
+        return port;
     }
 }

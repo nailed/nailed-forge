@@ -1,7 +1,6 @@
 package jk_5.nailed.ipc.filestore;
 
 import jk_5.nailed.api.scripting.IMount;
-import lombok.RequiredArgsConstructor;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,10 +13,13 @@ import java.util.List;
  *
  * @author jk-5
  */
-@RequiredArgsConstructor
 public class FilestoreMount implements IMount {
 
     private final MappackFilestore filestore;
+
+    public FilestoreMount(MappackFilestore filestore) {
+        this.filestore = filestore;
+    }
 
     @Override
     public boolean exists(String path) throws IOException {
