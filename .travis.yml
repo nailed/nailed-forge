@@ -1,7 +1,7 @@
 language: java
 notifications:
   webhooks:
-  - http://n.tkte.ch/h/2168/p4YwarspH9F_JhoNNBJWXkNe
+  - http://n.tkte.ch/h/2168/PI8KOHF2ER_RWZDeUw9TS_wV
   email: false
 install: TERM=dumb ./gradlew setupCIWorkspace
 script: TERM=dumb ./gradlew check -S
