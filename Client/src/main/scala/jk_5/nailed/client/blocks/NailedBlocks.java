@@ -37,7 +37,7 @@ public class NailedBlocks {
         registerBlock(portalController);
         registerBlock(portal);
         registerBlock(stat, ItemBlockMulti.class);
-        registerBlock(light, ItemBlockMulti.class);
+        registerBlock(light);
 
         GameRegistry.registerTileEntity(TileEntityPortalController.class, "nailed.portalController");
         GameRegistry.registerTileEntity(TileEntityStatEmitter.class, "nailed.stat");
