@@ -1,4 +1,4 @@
-package jk_5.nailed.effect.fireworks;
+package jk_5.nailed.effect;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -10,7 +10,7 @@ import net.minecraft.nbt.NBTTagList;
  *
  * @author jk-5
  */
-public class Firework {
+public class FireworkColorizer {
 
     public static ItemStack getItemStack(int color){
         /*ItemStack firework = new ItemStack(Item.firework, 1);
