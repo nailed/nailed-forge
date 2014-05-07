@@ -20,8 +20,9 @@ object TeamInformationRenderer extends Gui {
 
   val textures = mutable.HashMap[String, ResourceLocation]()
 
-  @SubscribeEvent def render(event: RenderGameOverlayEvent.Post) = if(event.`type` == ElementType.ALL){
+  @SubscribeEvent def render(event: RenderGameOverlayEvent.Post): Unit = if(event.`type` == ElementType.ALL) {
     import GL11._
+    if(true) return
 
     val start1 = event.resolution.getScaledWidth / 7
     val end1 = start1 * 3

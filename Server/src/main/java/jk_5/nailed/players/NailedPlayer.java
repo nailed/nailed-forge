@@ -46,7 +46,6 @@ public class NailedPlayer implements Player {
     private final GameProfile gameProfile;
     private Map currentMap;
     private boolean online = false;
-    private int teamSpeakClientID = -1;
     private int fps;
     private Spawnpoint spawnpoint;
     private int pdaID = -1;
@@ -241,10 +240,6 @@ public class NailedPlayer implements Player {
         return this.online;
     }
 
-    public int getTeamSpeakClientID() {
-        return this.teamSpeakClientID;
-    }
-
     @Override
     public int getFps() {
         return this.fps;
@@ -278,10 +273,6 @@ public class NailedPlayer implements Player {
     @Override
     public void setCurrentMap(Map currentMap) {
         this.currentMap = currentMap;
-    }
-
-    public void setTeamSpeakClientID(int teamSpeakClientID) {
-        this.teamSpeakClientID = teamSpeakClientID;
     }
 
     @Override

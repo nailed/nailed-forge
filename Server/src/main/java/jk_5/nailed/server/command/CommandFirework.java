@@ -1,7 +1,7 @@
 package jk_5.nailed.server.command;
 
 import jk_5.nailed.api.map.Map;
-import jk_5.nailed.effect.fireworks.Firework;
+import jk_5.nailed.effect.Firework;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.item.EntityFireworkRocket;
 import net.minecraft.util.ChunkCoordinates;

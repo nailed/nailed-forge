@@ -34,24 +34,21 @@ public class BlockStat extends BlockMulti implements ITileEntityProvider {
 
     @Override
     public String getUnlocalizedName(ItemStack stack){
-        if(stack.getItemDamage() == 0){
-            return "statEmitter";
-        }else if(stack.getItemDamage() == 1){
-            return "statModifier";
-        }else if(stack.getItemDamage() == 2){
-            return "elevator";
+        switch (stack.getItemDamage()){
+            case 0: return "statEmitter";
+            case 1: return "statModifier";
+            case 2: return "elevator";
+            default: return "";
         }
-        return "";
     }
 
     @Override
     public TileEntity createNewTileEntity(World world, int meta){
-        if(meta == 0){
-            return new TileEntityStatEmitter();
-        }else if(meta == 1){
-            return new TileEntityStatModifier();
+        switch (meta){
+            case 0: return new TileEntityStatEmitter();
+            case 1: return new TileEntityStatModifier();
+            default: return null;
         }
-        return null;
     }
 
     @Override

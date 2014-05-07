@@ -37,18 +37,14 @@ public class BlockInvisibleWall extends BlockMulti {
 
     @Override
     public String getUnlocalizedName(ItemStack stack){
-        if(stack.getItemDamage() == 0){
-            return "invisibleWall";
-        }else if(stack.getItemDamage() == 1){
-            return "invisibleBlock";
-        }else if(stack.getItemDamage() == 2){
-            return "invisibleLight";
-        }else if(stack.getItemDamage() == 3){
-            return "invisibleRedstone";
-        }else if(stack.getItemDamage() == 4){
-            return "sky";
+        switch (stack.getItemDamage()){
+            case 0: return "invisibleWall";
+            case 1: return "invisibleBlock";
+            case 2: return "invisibleLight";
+            case 3: return "invisibleRedstone";
+            case 4: return "sky";
+            default: return "";
         }
-        return "";
     }
 
     @Override
