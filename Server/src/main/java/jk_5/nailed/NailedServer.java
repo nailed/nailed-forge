@@ -1,5 +1,7 @@
 package jk_5.nailed;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -12,8 +14,7 @@ import jk_5.nailed.blocks.NailedBlocks;
 import jk_5.nailed.chat.joinmessage.JoinMessageSender;
 import jk_5.nailed.ipc.IpcEventListener;
 import jk_5.nailed.ipc.IpcManager;
-import jk_5.nailed.irc.IrcConnector;
-import jk_5.nailed.irc.OldIrcBot;
+import jk_5.nailed.irc.IrcBot;
 import jk_5.nailed.item.NailedItems;
 import jk_5.nailed.map.NailedMapLoader;
 import jk_5.nailed.map.gen.NailedWorldProvider;
@@ -34,15 +35,15 @@ import jk_5.nailed.scheduler.SchedulerCrashCallable;
 import jk_5.nailed.server.command.LoggingCommandListener;
 import jk_5.nailed.server.command.NailedCommandManager;
 import jk_5.nailed.util.MotdManager;
-import jk_5.nailed.util.config.ConfigFile;
 import jk_5.nailed.util.invsee.InvSeeTicker;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.permissions.api.PermissionsManager;
 import net.minecraftforge.permissions.api.RegisteredPermValue;
+import org.apache.commons.io.IOUtils;
 
-import java.io.File;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -55,14 +56,11 @@ import java.util.Date;
 public class NailedServer {
 
     protected static final String modid = "Nailed";
-    @SuppressWarnings("unused")
-    private static ConfigFile config;
+    private static JsonObject config;
     private static int providerID;
 
-    private static IrcConnector ircConnector;
-    @Deprecated private static OldIrcBot ircBot;
+    private static IrcBot ircBot;
     private static NailedPermissionFactory permissionFactory;
-    private static File configDir;
 
     public static final String COMMANDBLOCK_PERMISSION = "minecraft.commandBlock.edit";
 
@@ -82,21 +80,38 @@ public class NailedServer {
         MinecraftServer.getServer().commandManager = new NailedCommandManager();
     }
 
-    public static ConfigFile getConfig() {
-        return NailedServer.config;
-    }
-
-    public static int getProviderID() {
-        return NailedServer.providerID;
-    }
-
     @EventHandler
     public void preInit(FMLPreInitializationEvent event){
-        configDir = new File(event.getModConfigurationDirectory(), "nailed");
+        File configDir = new File(event.getModConfigurationDirectory(), "nailed");
         configDir.mkdirs();
 
+        File configFile = new File(configDir, "config.json");
+        if(!configFile.exists()){
+            NailedLog.info("Loading default config file");
+            InputStream is = null;
+            PrintWriter pw = null;
+            try{
+                is = NailedServer.class.getResourceAsStream("/assets/nailed/config.json");
+                pw = new PrintWriter(configFile);
+                IOUtils.copy(is, pw);
+            }catch(Exception e){
+                NailedLog.fatal("Error while creating default config file", e);
+            }finally {
+                IOUtils.closeQuietly(is);
+                IOUtils.closeQuietly(pw);
+            }
+        }
+
         NailedLog.info("Creating config file");
-        config = new ConfigFile(new File(configDir, "config.cfg")).setComment("Nailed main config file");
+        FileReader fr = null;
+        try {
+            fr = new FileReader(configFile);
+            config = (JsonObject) new JsonParser().parse(fr);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }finally {
+            IOUtils.closeQuietly(fr);
+        }
 
         if(NailedAPI.getMapLoader().getMapsFolder().exists()){
             NailedLog.info("Clearing away old maps folder");
@@ -138,7 +153,7 @@ public class NailedServer {
         NailedItems.init();
 
         NailedLog.info("Registering Nailed WorldProvider");
-        NailedServer.providerID = NailedServer.config.getTag("providerId").setComment("The id for the nailed world provider").getIntValue(10);
+        NailedServer.providerID = config.get("providerId").getAsInt();
         DimensionManager.registerProviderType(NailedServer.providerID, NailedWorldProvider.class, false);
 
         NailedLog.info("Overriding Default WorldProviders");
@@ -155,10 +170,7 @@ public class NailedServer {
         permissionFactory = new NailedPermissionFactory();
         PermissionsManager.setPermFactory(permissionFactory, NailedServer.modid);
 
-        ircConnector = new IrcConnector();
-        ircBot = new OldIrcBot();
-
-        ircConnector.readConfig(config.getTag("irc"));
+        ircBot = new IrcBot();
     }
 
     @EventHandler
@@ -178,7 +190,6 @@ public class NailedServer {
         NailedLog.info("Loading the mappacks");
         NailedAPI.getMappackLoader().loadMappacks(null);
 
-        //ircConnector.connect();
         ircBot.connect();
     }
 
@@ -195,5 +206,13 @@ public class NailedServer {
         permissionFactory.readConfig();
 
         ((NailedMappackLoader) NailedAPI.getMappackLoader()).loadASync = true;
+    }
+
+    public static JsonObject getConfig() {
+        return NailedServer.config;
+    }
+
+    public static int getProviderID() {
+        return NailedServer.providerID;
     }
 }

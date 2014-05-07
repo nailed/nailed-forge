@@ -1,5 +1,6 @@
 package jk_5.nailed.map.mappack;
 
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.api.concurrent.Callback;
@@ -11,7 +12,6 @@ import jk_5.nailed.api.scripting.IMount;
 import jk_5.nailed.map.DiscardedMappackInitializationException;
 import jk_5.nailed.map.MappackInitializationException;
 import jk_5.nailed.map.stat.StatConfig;
-import jk_5.nailed.util.config.ConfigFile;
 import org.apache.commons.io.IOUtils;
 
 import javax.annotation.Nonnull;
@@ -34,24 +34,22 @@ public class ZipMappack implements Mappack {
     private final MappackMetadata mappackMetadata;
     private StatConfig statConfig;
 
-    private ZipMappack(File mappackFile, ConfigFile config){
+    private ZipMappack(File mappackFile, JsonMappackMetadata metadata){
         this.mappackID = mappackFile.getName().substring(0, mappackFile.getName().length() - 8);
         this.mappackFile = mappackFile;
-        this.mappackMetadata = new FileMappackMetadata(config);
+        this.mappackMetadata = metadata;
     }
 
     public static Mappack create(File file) throws MappackInitializationException {
         ZipMappack pack = null;
-        ConfigFile config = null;
         StatConfig stats = new StatConfig();
         ZipInputStream zipStream = null;
         try{
             zipStream = new ZipInputStream(new FileInputStream(file));
             ZipEntry entry = zipStream.getNextEntry();
             while(entry != null){
-                if(entry.getName().equals("mappack.cfg")){
-                    config = new ConfigFile(new InputStreamReader(zipStream)).setReadOnly();
-                    pack = new ZipMappack(file, config);
+                if(entry.getName().equals("mappack.json")){
+                    pack = new ZipMappack(file, new JsonMappackMetadata((JsonObject) new JsonParser().parse(new InputStreamReader(zipStream))));
                 }else if(entry.getName().equals("stats.json")){
                     stats = new StatConfig(new JsonParser().parse(new InputStreamReader(zipStream)).getAsJsonArray());
                 }
@@ -66,8 +64,8 @@ public class ZipMappack implements Mappack {
         }finally{
             IOUtils.closeQuietly(zipStream);
         }
-        if(config == null){
-            throw new DiscardedMappackInitializationException("mappack.cfg was not found in mappack " + file.getName());
+        if(pack == null){
+            throw new DiscardedMappackInitializationException("mappack.json was not found in mappack " + file.getName());
         }
         pack.statConfig = stats;
         return pack;

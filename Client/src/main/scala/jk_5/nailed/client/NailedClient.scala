@@ -2,7 +2,6 @@ package jk_5.nailed.client
 
 import cpw.mods.fml.common.{FMLCommonHandler, Mod}
 import cpw.mods.fml.relauncher.FMLLaunchHandler
-import jk_5.nailed.util.config.ConfigFile
 import cpw.mods.fml.common.Mod.EventHandler
 import cpw.mods.fml.common.event.{FMLInitializationEvent, FMLPreInitializationEvent}
 import jk_5.nailed.NailedLog
@@ -38,14 +37,13 @@ object NailedClient {
     throw new RuntimeException("Nailed-Client is client-only, don\'t use it on the server!")
   }
 
-  var config: ConfigFile = _
-  var providerId = -1
+  var providerId = 10
   var fixedWidthFontRenderer: FixedWidthFontRenderer = _
   val machines = new MachineRegistry[ClientMachine]()
 
   @EventHandler def preInit(event: FMLPreInitializationEvent){
-    NailedLog.info("Creating config file")
-    config = new ConfigFile(event.getSuggestedConfigurationFile).setComment("Nailed main config file")
+    val cfg = event.getSuggestedConfigurationFile
+    if(cfg.exists()) cfg.delete()
 
     NailedLog.info("Loading achievements")
     NailedAchievements.addAchievements()
@@ -74,7 +72,6 @@ object NailedClient {
     NailedItems.init()
 
     NailedLog.info("Registering Nailed WorldProvider")
-    NailedClient.providerId = NailedClient.config.getTag("providerId").setComment("The id for the nailed world provider").getIntValue(10)
     DimensionManager.registerProviderType(NailedClient.providerId, classOf[NailedWorldProvider], false)
 
     NailedLog.info("Overriding Default WorldProviders")

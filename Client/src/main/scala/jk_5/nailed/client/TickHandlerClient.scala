@@ -20,7 +20,7 @@ object TickHandlerClient {
   private var wasSneaking = false
   private var ellapsedTicks = 0
   private var totalTicks = 0l
-  private final val sendFpsInterval = NailedClient.config.getTag("sendFpsInterval").setComment("For tracking purposes the client sends its fps to the server. By default this is every 40 ticks (2 seconds). Set to -1 to disable").getIntValue(40)
+  private final val sendFpsInterval = 40
 
   @SubscribeEvent
   @SuppressWarnings(Array("unused"))

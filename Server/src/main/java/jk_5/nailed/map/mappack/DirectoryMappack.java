@@ -1,5 +1,6 @@
 package jk_5.nailed.map.mappack;
 
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import jk_5.nailed.api.concurrent.Callback;
 import jk_5.nailed.api.map.Map;
@@ -11,7 +12,6 @@ import jk_5.nailed.map.DiscardedMappackInitializationException;
 import jk_5.nailed.map.MappackInitializationException;
 import jk_5.nailed.map.script.ReadOnlyMount;
 import jk_5.nailed.map.stat.StatConfig;
-import jk_5.nailed.util.config.ConfigFile;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.MinecraftException;
 import net.minecraft.world.WorldServer;
@@ -42,21 +42,27 @@ public class DirectoryMappack implements Mappack {
 
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH.mm.ss");
 
-    private DirectoryMappack(File directory, ConfigFile config){
+    private DirectoryMappack(File directory, JsonMappackMetadata metadata){
         this.mappackID = directory.getName();
         this.mappackFolder = directory;
-        this.mappackMetadata = new FileMappackMetadata(config);
+        this.mappackMetadata = metadata;
     }
 
     public static DirectoryMappack create(File directory) throws MappackInitializationException{
         DirectoryMappack pack;
-        ConfigFile config;
         StatConfig statConfig = new StatConfig();
-        File mappackConfig = new File(directory, "mappack.cfg");
+        File mappackConfig = new File(directory, "mappack.json");
         File statConfigFile = new File(directory, "stats.json");
         if(mappackConfig.isFile() && mappackConfig.exists()){
-            config = new ConfigFile(mappackConfig).setReadOnly();
-            pack = new DirectoryMappack(directory, config);
+            FileReader fr = null;
+            try{
+                fr = new FileReader(statConfigFile);
+                pack = new DirectoryMappack(directory, new JsonMappackMetadata((JsonObject) new JsonParser().parse(fr)));
+            }catch(Exception e){
+                throw new MappackInitializationException("Exception while reading mappack.json", e);
+            }finally{
+                IOUtils.closeQuietly(fr);
+            }
         }else{
             throw new DiscardedMappackInitializationException("Directory " + directory.getPath() + " is not a mappack");
         }

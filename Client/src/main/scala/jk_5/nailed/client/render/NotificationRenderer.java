@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import jk_5.nailed.client.NailedClient;
 import jk_5.nailed.client.Notification;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -27,8 +26,8 @@ public class NotificationRenderer {
     private static final ResourceLocation particle = new ResourceLocation("nailed", "textures/misc/particles.png");
 
     public static List<Notification> notifications = Lists.newArrayList();
-    private static final int notificationDelay = NailedClient.config().getTag("notification").getTag("delay").setComment("Delay before an notification will disappear").getIntValue(5000);
-    private static final int notificationMax = NailedClient.config().getTag("notification").getTag("maxNotifications").setComment("Maximum number of notifications").getIntValue(15);
+    private static final int notificationDelay = 5000;
+    private static final int notificationMax = 15;
 
     public static void addNotification(String text){
         addNotification(text, null, 0xFFFFFF);

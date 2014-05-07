@@ -1,5 +1,6 @@
 package jk_5.nailed.ipc;
 
+import com.google.gson.JsonObject;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -9,7 +10,6 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import jk_5.nailed.NailedServer;
 import jk_5.nailed.ipc.packet.IpcPacket;
-import jk_5.nailed.util.config.ConfigTag;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -41,10 +41,10 @@ public class IpcManager {
             this.host = "127.0.0.1";
             this.port = 9001;
         }else{
-            ConfigTag config = NailedServer.getConfig().getTag("IPC").useBraces();
-            this.enabled = config.getTag("enabled").getBooleanValue(false);
-            this.host = config.getTag("host").getValue("127.0.0.1");
-            this.port = config.getTag("port").getIntValue(9001);
+            JsonObject cfg = NailedServer.getConfig().getAsJsonObject("ipc");
+            this.enabled = cfg.get("enabled").getAsBoolean();
+            this.host = cfg.get("host").getAsString();
+            this.port = cfg.get("port").getAsInt();
         }
     }
 

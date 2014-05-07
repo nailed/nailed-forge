@@ -1,0 +1,16 @@
+{
+    "providerId": 10,
+    "ipc": {
+        "enabled": false,
+        "host": "127.0.0.1",
+        "port": 9001
+    },
+    "irc": {
+        "enabled": false,
+        "host": "",
+        "port": 6667,
+        "serverPassword": "",
+        "channel": "",
+        "channelPassword": ""
+    }
+}
