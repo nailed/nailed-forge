@@ -21,6 +21,7 @@ import org.apache.commons.io.IOUtils;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -39,7 +40,7 @@ public class DirectoryMappack implements Mappack {
     private final MappackMetadata mappackMetadata;
     private StatConfig statConfig = new StatConfig();
 
-    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH.mm.ss");
 
     private DirectoryMappack(File directory, ConfigFile config){
         this.mappackID = directory.getName();
@@ -114,7 +115,13 @@ public class DirectoryMappack implements Mappack {
 
             world.levelSaving = true;
 
-            FileUtils.copyDirectory(map.getSaveFolder(), worldDir);
+            FileUtils.copyDirectory(map.getSaveFolder(), worldDir, new FileFilter() {
+                @Override
+                public boolean accept(File file) {
+                    File parent = file.getParentFile();
+                    return file.getName().startsWith("level.dat") || (file.getName().equals("region") && file.isDirectory()) || (parent.getName().equals("region") && parent.isDirectory() && file.getName().endsWith(".mca"));
+                }
+            });
 
             world.levelSaving = notSaveEnabled;
         }catch(MinecraftException e){
