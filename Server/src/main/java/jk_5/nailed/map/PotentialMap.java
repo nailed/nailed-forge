@@ -4,7 +4,6 @@ import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.MapBuilder;
 import jk_5.nailed.api.map.Mappack;
-import lombok.Getter;
 
 import java.io.File;
 
@@ -15,8 +14,8 @@ import java.io.File;
  */
 public final class PotentialMap implements MapBuilder {
 
-    @Getter private final int ID;
-    @Getter private final Mappack mappack;
+    private final int ID;
+    private final Mappack mappack;
 
     public PotentialMap(Mappack mappack){
         this.ID = NailedMapLoader.instance().reserveDimensionId();
@@ -40,5 +39,15 @@ public final class PotentialMap implements MapBuilder {
 
     public static String getSaveFileName(Map map){
         return "map" + (map.getMappack() == null ? "" : "_" + map.getMappack().getMappackID()) + "_" + map.getID();
+    }
+
+    @Override
+    public int getID() {
+        return this.ID;
+    }
+
+    @Override
+    public Mappack getMappack() {
+        return this.mappack;
     }
 }

@@ -13,7 +13,6 @@ import jk_5.nailed.api.events.PlayerLeaveEvent;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.api.player.PlayerRegistry;
-import lombok.Getter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -26,7 +25,7 @@ import java.util.List;
  */
 public class NailedPlayerRegistry implements PlayerRegistry {
 
-    @Getter private final List<Player> players = Lists.newArrayList();
+    private final List<Player> players = Lists.newArrayList();
 
     @Override
     public Player getPlayer(EntityPlayer pl){
@@ -132,5 +131,10 @@ public class NailedPlayerRegistry implements PlayerRegistry {
             }
         }
         return ret;
+    }
+
+    @Override
+    public List<Player> getPlayers() {
+        return this.players;
     }
 }

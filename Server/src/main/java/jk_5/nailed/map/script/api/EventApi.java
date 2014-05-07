@@ -6,7 +6,6 @@ import com.google.common.collect.Multimap;
 import jk_5.nailed.api.scripting.ILuaAPI;
 import jk_5.nailed.api.scripting.ILuaContext;
 import jk_5.nailed.map.script.IAPIEnvironment;
-import lombok.RequiredArgsConstructor;
 import org.luaj.vm2.LuaClosure;
 import org.luaj.vm2.LuaValue;
 
@@ -19,7 +18,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * @author jk-5
  */
-@RequiredArgsConstructor
 public class EventApi implements ILuaAPI {
 
     private final IAPIEnvironment env;
@@ -28,6 +26,11 @@ public class EventApi implements ILuaAPI {
     private Map<Integer, LuaClosure> idListenerMap = Maps.newHashMap();
     private Map<Integer, String> idTypeMap = Maps.newHashMap();
     private AtomicInteger nextId = new AtomicInteger(0);
+
+    @java.beans.ConstructorProperties({"env"})
+    public EventApi(IAPIEnvironment env) {
+        this.env = env;
+    }
 
     @Override
     public String[] getNames(){

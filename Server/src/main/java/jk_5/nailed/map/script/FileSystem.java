@@ -5,7 +5,6 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import jk_5.nailed.api.scripting.IMount;
 import jk_5.nailed.api.scripting.IWritableMount;
-import lombok.Getter;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
@@ -543,8 +542,8 @@ public class FileSystem {
     }
 
     private class MountWrapper {
-        @Getter private String label;
-        @Getter private String location;
+        private String label;
+        private String location;
         private IMount mount;
         private IWritableMount writableMount;
 
@@ -709,6 +708,14 @@ public class FileSystem {
 
         private String toLocal(String path){
             return FileSystem.toLocal(path, this.location);
+        }
+
+        public String getLabel() {
+            return this.label;
+        }
+
+        public String getLocation() {
+            return this.location;
         }
     }
 }

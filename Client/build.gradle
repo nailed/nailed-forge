@@ -10,6 +10,7 @@ jar.manifest{
 dependencies {
     compile rootProject
     packed 'jk_5.asyncirc:ASyncIRCClient:0.1-SNAPSHOT'
+    compile 'org.projectlombok:lombok:1.12.6'
     compile project(":Common")
     //runtime project(":MumbleLink")
     runtime project(":CrashReporter")

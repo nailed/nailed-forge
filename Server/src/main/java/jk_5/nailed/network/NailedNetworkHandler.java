@@ -8,7 +8,6 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
 import jk_5.nailed.map.script.ScriptPacketHandler;
 import jk_5.nailed.network.handlers.*;
-import lombok.Getter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
@@ -21,7 +20,6 @@ import net.minecraft.network.Packet;
  */
 public class NailedNetworkHandler {
 
-    @Getter
     private static FMLEmbeddedChannel channel;
 
     public static void registerChannel(){
@@ -60,5 +58,9 @@ public class NailedNetworkHandler {
 
     public static Packet getProxyPacket(NailedPacket packet){
         return channel.generatePacketFrom(packet);
+    }
+
+    public static FMLEmbeddedChannel getChannel() {
+        return channel;
     }
 }

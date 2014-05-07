@@ -33,11 +33,9 @@ import jk_5.nailed.scheduler.NailedScheduler;
 import jk_5.nailed.scheduler.SchedulerCrashCallable;
 import jk_5.nailed.server.command.LoggingCommandListener;
 import jk_5.nailed.server.command.NailedCommandManager;
-import jk_5.nailed.teamspeak.TeamspeakClient;
 import jk_5.nailed.util.MotdManager;
 import jk_5.nailed.util.config.ConfigFile;
 import jk_5.nailed.util.invsee.InvSeeTicker;
-import lombok.Getter;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
@@ -56,15 +54,15 @@ import java.util.Date;
 @Mod(modid = NailedServer.modid, version = "0.1", useMetadata = true, certificateFingerprint = "87401ecb3314a1a18fb267281b2432975a7e2e84")
 public class NailedServer {
 
-    @Getter protected static final String modid = "Nailed";
-    @SuppressWarnings("unused") @Getter private static ConfigFile config;
-    @Getter private static int providerID;
+    protected static final String modid = "Nailed";
+    @SuppressWarnings("unused")
+    private static ConfigFile config;
+    private static int providerID;
 
-    @Getter private static IrcConnector ircConnector;
-    @Getter @Deprecated private static OldIrcBot ircBot;
-    @Getter private static TeamspeakClient teamspeakClient;
-    @Getter private static NailedPermissionFactory permissionFactory;
-    @Getter private static File configDir;
+    private static IrcConnector ircConnector;
+    @Deprecated private static OldIrcBot ircBot;
+    private static NailedPermissionFactory permissionFactory;
+    private static File configDir;
 
     public static final String COMMANDBLOCK_PERMISSION = "minecraft.commandBlock.edit";
 
@@ -84,8 +82,15 @@ public class NailedServer {
         MinecraftServer.getServer().commandManager = new NailedCommandManager();
     }
 
+    public static ConfigFile getConfig() {
+        return NailedServer.config;
+    }
+
+    public static int getProviderID() {
+        return NailedServer.providerID;
+    }
+
     @EventHandler
-    @SuppressWarnings("unused")
     public void preInit(FMLPreInitializationEvent event){
         configDir = new File(event.getModConfigurationDirectory(), "nailed");
         configDir.mkdirs();
@@ -152,13 +157,11 @@ public class NailedServer {
 
         ircConnector = new IrcConnector();
         ircBot = new OldIrcBot();
-        teamspeakClient = new TeamspeakClient();
 
         ircConnector.readConfig(config.getTag("irc"));
     }
 
     @EventHandler
-    @SuppressWarnings("unused")
     public void init(FMLInitializationEvent event){
         MinecraftForge.EVENT_BUS.post(new RegisterStatTypeEvent(StatTypeManager.instance().getStatTypes()));
 
@@ -171,7 +174,6 @@ public class NailedServer {
     }
 
     @EventHandler
-    @SuppressWarnings("unused")
     public void postInit(FMLPostInitializationEvent event){
         NailedLog.info("Loading the mappacks");
         NailedAPI.getMappackLoader().loadMappacks(null);
@@ -181,32 +183,11 @@ public class NailedServer {
     }
 
     @EventHandler
-    @SuppressWarnings("unused")
-    public void onMismatch(FMLMissingMappingsEvent event){
-        NailedLog.info("Missing mapping!");
-    }
-
-    @EventHandler
-    @SuppressWarnings("unused")
-    public void onMismatch(FMLModIdMappingEvent event){
-        NailedLog.info("Remap");
-    }
-
-    @EventHandler
-    @SuppressWarnings("unused")
-    public void serverStarting(FMLServerStartingEvent event){
-        //ircConnector.connect();
-        //teamspeakClient.connect();
-    }
-
-    @EventHandler
-    @SuppressWarnings("unused")
     public void serverAboutToStart(FMLServerAboutToStartEvent event){
         IpcManager.instance().start();
     }
 
     @EventHandler
-    @SuppressWarnings("unused")
     public void serverStarted(FMLServerStartedEvent event){
         PermissionsManager.addPermissionsToFactory();
 

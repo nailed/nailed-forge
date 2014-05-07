@@ -196,7 +196,7 @@ public class NailedMapLoader implements MapLoader {
     public void onBlockBreak(BlockEvent.BreakEvent event){
         Mappack mappack = this.getMap(event.world).getMappack();
         if(mappack != null && mappack.getMappackMetadata().isPreventingBlockBreak()){
-            if(NailedAPI.getPlayerRegistry().getPlayer(event.getPlayer()).isEditModeEnabled()){
+            if(!NailedAPI.getPlayerRegistry().getPlayer(event.getPlayer()).isEditModeEnabled()){
                 event.setCanceled(true);
             }
         }

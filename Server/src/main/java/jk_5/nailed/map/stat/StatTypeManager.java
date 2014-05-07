@@ -4,7 +4,6 @@ import com.google.common.collect.Maps;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import jk_5.nailed.api.map.stat.IStatType;
 import jk_5.nailed.map.stat.types.*;
-import lombok.Getter;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.util.Map;
@@ -22,7 +21,7 @@ public class StatTypeManager {
         return instance;
     }
 
-    @Getter private Map<String, IStatType> statTypes = Maps.newHashMap();
+    private Map<String, IStatType> statTypes = Maps.newHashMap();
 
     public StatTypeManager() {
         MinecraftForge.EVENT_BUS.register(this);
@@ -51,5 +50,9 @@ public class StatTypeManager {
             }
         }
         return null;
+    }
+
+    public Map<String, IStatType> getStatTypes() {
+        return this.statTypes;
     }
 }

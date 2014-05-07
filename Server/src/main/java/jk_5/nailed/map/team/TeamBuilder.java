@@ -4,7 +4,6 @@ import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.team.Team;
 import jk_5.nailed.players.NailedTeam;
 import jk_5.nailed.util.ChatColor;
-import lombok.Getter;
 
 import javax.annotation.Nonnull;
 
@@ -13,7 +12,6 @@ import javax.annotation.Nonnull;
  *
  * @author jk-5
  */
-@Getter
 public class TeamBuilder implements jk_5.nailed.api.map.team.TeamBuilder {
 
     private String name;
@@ -22,6 +20,7 @@ public class TeamBuilder implements jk_5.nailed.api.map.team.TeamBuilder {
     private boolean friendlyFire;
     private boolean seeFriendlyInvisibles;
 
+    @Override
     @Nonnull
     public Team build(Map map){
         Team team = new NailedTeam(map, this.internalName);
@@ -60,5 +59,30 @@ public class TeamBuilder implements jk_5.nailed.api.map.team.TeamBuilder {
     public TeamBuilder setSeeFriendlyInvisibles(boolean isSeeFriendlyInvisibles){
         this.seeFriendlyInvisibles = isSeeFriendlyInvisibles;
         return this;
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
+    @Override
+    public String getInternalName() {
+        return this.internalName;
+    }
+
+    @Override
+    public ChatColor getColor() {
+        return this.color;
+    }
+
+    @Override
+    public boolean isFriendlyFire() {
+        return this.friendlyFire;
+    }
+
+    @Override
+    public boolean isSeeFriendlyInvisibles() {
+        return this.seeFriendlyInvisibles;
     }
 }

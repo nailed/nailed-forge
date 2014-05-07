@@ -1,6 +1,5 @@
 package jk_5.nailed.permissions;
 
-import lombok.RequiredArgsConstructor;
 import net.minecraftforge.permissions.api.PermBuilder;
 import net.minecraftforge.permissions.api.context.IContext;
 
@@ -9,7 +8,6 @@ import net.minecraftforge.permissions.api.context.IContext;
  *
  * @author jk-5
  */
-@RequiredArgsConstructor
 public class NailedPermissionBuilder implements PermBuilder<NailedPermissionBuilder> {
 
     private final NailedPermissionFactory factory;
@@ -19,6 +17,10 @@ public class NailedPermissionBuilder implements PermBuilder<NailedPermissionBuil
     private String username;
     private String node;
     private User userObj;
+
+    public NailedPermissionBuilder(NailedPermissionFactory factory) {
+        this.factory = factory;
+    }
 
     @Override
     public boolean check(){

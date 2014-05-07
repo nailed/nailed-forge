@@ -12,4 +12,5 @@ rootProject.tasks.reobf {
 
 dependencies {
     compile rootProject
+    compile 'org.projectlombok:lombok:1.12.6'
 }

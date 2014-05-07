@@ -5,7 +5,6 @@ import com.google.common.collect.Sets;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.scoreboard.ScoreboardTeam;
 import jk_5.nailed.api.player.Player;
-import lombok.Getter;
 import net.minecraft.network.play.server.S3EPacketTeams;
 
 import javax.annotation.Nonnull;
@@ -23,8 +22,8 @@ public class TeamImpl implements ScoreboardTeam {
     private String displayName;
     private String prefix = "";
     private String suffix = "";
-    @Getter private boolean friendlyFire = true;
-    @Getter private boolean friendlyInvisiblesVisible = false;
+    private boolean friendlyFire = true;
+    private boolean friendlyInvisiblesVisible = false;
     private final Set<Player> players = Sets.newHashSet();
 
     public TeamImpl(String id, Map map){
@@ -148,5 +147,15 @@ public class TeamImpl implements ScoreboardTeam {
     @Nonnull
     public Set<Player> getPlayers(){
         return players;
+    }
+
+    @Override
+    public boolean isFriendlyFire() {
+        return this.friendlyFire;
+    }
+
+    @Override
+    public boolean isFriendlyInvisiblesVisible() {
+        return this.friendlyInvisiblesVisible;
     }
 }

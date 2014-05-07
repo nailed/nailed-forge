@@ -3,10 +3,6 @@ package jk_5.nailed.map.stat;
 import com.google.common.collect.Maps;
 import jk_5.nailed.api.map.stat.IStatType;
 import jk_5.nailed.api.map.stat.Stat;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.util.Map;
@@ -16,14 +12,23 @@ import java.util.Map;
  *
  * @author jk-5
  */
-@RequiredArgsConstructor
-@AllArgsConstructor
 public class DefaultStat implements Stat {
 
-    @Getter private final String name;
-    @Getter @Setter private IStatType type;
-    @Getter private boolean enabled = false;
+    private final String name;
+    private IStatType type;
+    private boolean enabled = false;
     private Map<String, Object> storage = Maps.newHashMap();
+
+    public DefaultStat(String name) {
+        this.name = name;
+    }
+
+    public DefaultStat(String name, IStatType type, boolean enabled, Map<String, Object> storage) {
+        this.name = name;
+        this.type = type;
+        this.enabled = enabled;
+        this.storage = storage;
+    }
 
     @Override
     public void setDefaultState(boolean defaultState){
@@ -55,5 +60,23 @@ public class DefaultStat implements Stat {
     @Override
     public Object load(String key){
         return this.storage.get(key);
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
+    public IStatType getType() {
+        return this.type;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.enabled;
+    }
+
+    public void setType(IStatType type) {
+        this.type = type;
     }
 }

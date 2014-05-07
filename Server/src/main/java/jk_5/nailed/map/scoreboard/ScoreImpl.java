@@ -3,7 +3,6 @@ package jk_5.nailed.map.scoreboard;
 import com.google.common.base.Preconditions;
 import jk_5.nailed.api.map.scoreboard.Objective;
 import jk_5.nailed.api.map.scoreboard.Score;
-import lombok.Getter;
 import net.minecraft.network.play.server.S3CPacketUpdateScore;
 
 import javax.annotation.Nonnull;
@@ -17,7 +16,7 @@ public class ScoreImpl implements Score {
 
     private final Objective owner;
     private final String name;
-    @Getter private int value = 0;
+    private int value = 0;
 
     public ScoreImpl(@Nonnull Objective owner, @Nonnull String name){
         Preconditions.checkNotNull(owner, "owner");
@@ -54,5 +53,10 @@ public class ScoreImpl implements Score {
     @Nonnull
     public String getName(){
         return name;
+    }
+
+    @Override
+    public int getValue() {
+        return this.value;
     }
 }

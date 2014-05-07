@@ -22,7 +22,6 @@ import jk_5.nailed.map.script.IAPIEnvironment;
 import jk_5.nailed.map.script.LuaMachine;
 import jk_5.nailed.map.stat.DefaultStat;
 import jk_5.nailed.map.stat.types.StatTypeModifiable;
-import lombok.RequiredArgsConstructor;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.PlayerCapabilities;
 import net.minecraft.item.Item;
@@ -44,11 +43,15 @@ import java.util.List;
  *
  * @author jk-5
  */
-@RequiredArgsConstructor
 public class MapApi implements ILuaAPI {
 
     private final IAPIEnvironment env;
     private Map map;
+
+    @java.beans.ConstructorProperties({"env"})
+    public MapApi(IAPIEnvironment env) {
+        this.env = env;
+    }
 
     @Override
     public String[] getNames(){

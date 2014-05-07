@@ -3,7 +3,6 @@ package jk_5.nailed.map.weather;
 import jk_5.nailed.api.WeatherType;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.Mappack;
-import lombok.Getter;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -20,8 +19,8 @@ public class WeatherController implements jk_5.nailed.api.map.WeatherController 
 
     private Random random = new Random();
     private int updateLCG = this.random.nextInt();
-    @Getter private double rainingStrength;
-    @Getter private double thunderingStrength;
+    private double rainingStrength;
+    private double thunderingStrength;
     protected int rainDuration;
     protected int rainDurationBase;
     protected int rainCooldown;
@@ -47,6 +46,7 @@ public class WeatherController implements jk_5.nailed.api.map.WeatherController 
         }
     }
 
+    @Override
     public void updateRaining(){
         if(this.thunderCounter <= 0){
             if(this.thundering){
@@ -111,6 +111,7 @@ public class WeatherController implements jk_5.nailed.api.map.WeatherController 
         }
     }
 
+    @Override
     public void tick(World worldObj, Chunk chunk){
         if(worldObj.isRaining() && worldObj.isThundering() && worldObj.rand.nextInt(100000) == 0){
             int xBase = chunk.xPosition * 16;
@@ -126,6 +127,7 @@ public class WeatherController implements jk_5.nailed.api.map.WeatherController 
         }
     }
 
+    @Override
     public void clear(){
         this.rainCounter = 0;
         this.raining = false;
@@ -149,7 +151,18 @@ public class WeatherController implements jk_5.nailed.api.map.WeatherController 
         return Math.min(Math.max(value, 0d), 1d);
     }
 
+    @Override
     public void toggleRain(){
         this.rainCounter = 1;
+    }
+
+    @Override
+    public double getRainingStrength() {
+        return this.rainingStrength;
+    }
+
+    @Override
+    public double getThunderingStrength() {
+        return this.thunderingStrength;
     }
 }

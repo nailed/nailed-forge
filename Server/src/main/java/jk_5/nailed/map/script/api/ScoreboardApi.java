@@ -13,7 +13,6 @@ import jk_5.nailed.api.scripting.ILuaContext;
 import jk_5.nailed.api.scripting.ILuaObject;
 import jk_5.nailed.map.script.IAPIEnvironment;
 import jk_5.nailed.map.script.LuaMachine;
-import lombok.RequiredArgsConstructor;
 import org.luaj.vm2.LuaClosure;
 import org.luaj.vm2.LuaFunction;
 import org.luaj.vm2.LuaValue;
@@ -26,12 +25,16 @@ import java.util.Set;
  *
  * @author jk-5
  */
-@RequiredArgsConstructor
 public class ScoreboardApi implements ILuaAPI {
 
     private final IAPIEnvironment env;
     private Map map;
     private ScoreboardManager manager;
+
+    @java.beans.ConstructorProperties({"env"})
+    public ScoreboardApi(IAPIEnvironment env) {
+        this.env = env;
+    }
 
     @Override
     public String[] getNames(){

@@ -5,7 +5,6 @@ import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.sign.Sign;
 import jk_5.nailed.api.map.sign.SignMappack;
 import jk_5.nailed.api.player.Player;
-import lombok.RequiredArgsConstructor;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.world.World;
@@ -22,12 +21,17 @@ import java.util.Set;
  *
  * @author jk-5
  */
-@RequiredArgsConstructor
 public class SignCommandHandler implements jk_5.nailed.api.map.sign.SignCommandHandler {
 
     private final Map map;
     private final Set<Sign> signs = Sets.newHashSet();
 
+    @java.beans.ConstructorProperties({"map"})
+    public SignCommandHandler(Map map) {
+        this.map = map;
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public void onChunkLoad(ChunkEvent.Load event){
         for(TileEntity tile : (Collection<TileEntity>) event.getChunk().chunkTileEntityMap.values()){
@@ -41,6 +45,7 @@ public class SignCommandHandler implements jk_5.nailed.api.map.sign.SignCommandH
         }
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public void onChunkUnload(ChunkEvent.Unload event){
         for(TileEntity tile : (Collection<TileEntity>) event.getChunk().chunkTileEntityMap.values()){
@@ -51,6 +56,7 @@ public class SignCommandHandler implements jk_5.nailed.api.map.sign.SignCommandH
         }
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public void onWatch(ChunkWatchEvent.Watch event){
         World world = event.player.worldObj;
@@ -65,6 +71,7 @@ public class SignCommandHandler implements jk_5.nailed.api.map.sign.SignCommandH
         }
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public void onUnwatch(ChunkWatchEvent.UnWatch event){
         World world = event.player.worldObj;
@@ -96,6 +103,7 @@ public class SignCommandHandler implements jk_5.nailed.api.map.sign.SignCommandH
         return sign;
     }
 
+    @Override
     public void onSignAdded(String[] lines, int x, int y, int z){
         if(this.getSign(x, y, z) == null){
             Sign sign = this.getSignData(lines, x, y, z);
@@ -114,6 +122,7 @@ public class SignCommandHandler implements jk_5.nailed.api.map.sign.SignCommandH
         this.signs.remove(sign);
     }
 
+    @Override
     public Sign getSign(int x, int y, int z){
         for(Sign sign : this.signs){
             if(sign.getX() == x && sign.getY() == y && sign.getZ() == z){
@@ -123,18 +132,21 @@ public class SignCommandHandler implements jk_5.nailed.api.map.sign.SignCommandH
         return null;
     }
 
+    @Override
     public void onPlayerLeftMap(Map oldMap, Player player){
         for(Sign sign : this.signs){
             sign.onPlayerLeftMap(oldMap, player);
         }
     }
 
+    @Override
     public void onPlayerJoinMap(Map newMap, Player player){
         for(Sign sign : this.signs){
             sign.onPlayerJoinMap(newMap, player);
         }
     }
 
+    @Override
     public void onInteract(PlayerInteractEvent event){
         if(event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK){
             Sign sign = this.getSign(event.x, event.y, event.z);

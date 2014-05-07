@@ -2,9 +2,6 @@ package jk_5.nailed.permissions;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import net.minecraftforge.permissions.api.PermissionsManager;
 import net.minecraftforge.permissions.api.RegisteredPermValue;
 import net.minecraftforge.permissions.api.UnregisterredPermissionException;
@@ -17,12 +14,15 @@ import java.util.Map;
  *
  * @author jk-5
  */
-@RequiredArgsConstructor
 public class User {
 
-    @Getter(AccessLevel.PACKAGE) private final Map<String, Boolean> permissions = Maps.newHashMap();
-    @Getter private final List<Group> groups = Lists.newArrayList();
-    @Getter private final String name;
+    private final Map<String, Boolean> permissions = Maps.newHashMap();
+    private final List<Group> groups = Lists.newArrayList();
+    private final String name;
+
+    public User(String name) {
+        this.name = name;
+    }
 
     public RegisteredPermValue getPermissionLevel(String node){
         return this.getPermissionLevel(node, ((NailedPermissionFactory) PermissionsManager.getPermFactory()).getPerms().get(node));
@@ -61,5 +61,17 @@ public class User {
 
     public boolean isOp(){
         return NailedPermissionFactory.isOp(this.name);
+    }
+
+    Map<String, Boolean> getPermissions() {
+        return this.permissions;
+    }
+
+    public List<Group> getGroups() {
+        return this.groups;
+    }
+
+    public String getName() {
+        return this.name;
     }
 }

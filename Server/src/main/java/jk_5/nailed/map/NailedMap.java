@@ -29,7 +29,6 @@ import jk_5.nailed.map.stat.StatManager;
 import jk_5.nailed.map.weather.WeatherController;
 import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.network.NailedPacket;
-import lombok.Getter;
 import net.minecraft.network.Packet;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
@@ -49,20 +48,20 @@ import java.util.List;
  */
 public class NailedMap implements Map {
 
-    @Getter private int ID;
-    @Getter private final Mappack mappack;
-    @Getter private World world;
-    @Getter private boolean isLoaded = false;
-    @Getter private final TeamManager teamManager;
-    @Getter private final StatManager statManager;
-    @Getter private boolean dataResyncRequired = true;
-    @Getter private WeatherController weatherController;
-    @Getter private SignCommandHandler signCommandHandler;
-    @Getter private GameManager gameManager;
-    @Getter private NailedScoreboardManager scoreboardManager;
-    @Getter private List<Player> players = Lists.newArrayList();
+    private int ID;
+    private final Mappack mappack;
+    private World world;
+    private boolean isLoaded = false;
+    private final TeamManager teamManager;
+    private final StatManager statManager;
+    private boolean dataResyncRequired = true;
+    private WeatherController weatherController;
+    private SignCommandHandler signCommandHandler;
+    private GameManager gameManager;
+    private NailedScoreboardManager scoreboardManager;
+    private List<Player> players = Lists.newArrayList();
 
-    @Getter private ServerMachine machine;
+    private ServerMachine machine;
     public IMount mappackMount;
     public boolean mounted = false;
 
@@ -85,6 +84,7 @@ public class NailedMap implements Map {
         }
     }
 
+    @Override
     public void initMapServer(){
         if(this.isLoaded) return;
         NailedLog.info("Initializing {}", this.getSaveFileName());
@@ -194,14 +194,17 @@ public class NailedMap implements Map {
         }
     }
 
+    @Override
     public String getSaveFileName(){
         return PotentialMap.getSaveFileName(this);
     }
 
+    @Override
     public File getSaveFolder(){
         return new File(NailedMapLoader.instance().getMapsFolder(), this.getSaveFileName());
     }
 
+    @Override
     public TeleportOptions getSpawnTeleport(){
         if(this.mappack == null){
             return new TeleportOptions(this, new Location(this.world.getSpawnPoint()));
@@ -211,6 +214,7 @@ public class NailedMap implements Map {
         return new TeleportOptions(this, spawnpoint);
     }
 
+    @Override
     public void broadcastChatMessage(IChatComponent message){
         for(Player player : NailedAPI.getPlayerRegistry().getPlayers()){
             if(player.getCurrentMap() == this){
@@ -219,6 +223,7 @@ public class NailedMap implements Map {
         }
     }
 
+    @Override
     public void broadcastChatMessage(String message){
         this.broadcastChatMessage(new ChatComponentText(message));
     }
@@ -271,5 +276,64 @@ public class NailedMap implements Map {
                 ", mappack=" + mappack +
                 ", isLoaded=" + isLoaded +
                 '}';
+    }
+
+    @Override
+    public int getID() {
+        return this.ID;
+    }
+
+    @Override
+    public Mappack getMappack() {
+        return this.mappack;
+    }
+
+    @Override
+    public World getWorld() {
+        return this.world;
+    }
+
+    @Override
+    public boolean isLoaded() {
+        return this.isLoaded;
+    }
+
+    @Override
+    public TeamManager getTeamManager() {
+        return this.teamManager;
+    }
+
+    @Override
+    public StatManager getStatManager() {
+        return this.statManager;
+    }
+
+    @Override
+    public WeatherController getWeatherController() {
+        return this.weatherController;
+    }
+
+    @Override
+    public SignCommandHandler getSignCommandHandler() {
+        return this.signCommandHandler;
+    }
+
+    @Override
+    public GameManager getGameManager() {
+        return this.gameManager;
+    }
+
+    @Override
+    public NailedScoreboardManager getScoreboardManager() {
+        return this.scoreboardManager;
+    }
+
+    @Override
+    public List<Player> getPlayers() {
+        return this.players;
+    }
+
+    public ServerMachine getMachine() {
+        return this.machine;
     }
 }

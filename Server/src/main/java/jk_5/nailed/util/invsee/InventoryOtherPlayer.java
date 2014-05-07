@@ -1,6 +1,5 @@
 package jk_5.nailed.util.invsee;
 
-import lombok.Getter;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryBasic;
 
@@ -11,7 +10,7 @@ import net.minecraft.inventory.InventoryBasic;
  */
 public class InventoryOtherPlayer extends InventoryBasic {
 
-    @Getter private EntityPlayerMP owner;
+    private EntityPlayerMP owner;
     private EntityPlayerMP viewer;
     private boolean allowUpdate;
 
@@ -61,5 +60,9 @@ public class InventoryOtherPlayer extends InventoryBasic {
         }
         this.allowUpdate = true;
         this.markDirty();
+    }
+
+    public EntityPlayerMP getOwner() {
+        return this.owner;
     }
 }

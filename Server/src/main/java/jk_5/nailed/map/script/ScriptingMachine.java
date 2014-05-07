@@ -5,7 +5,6 @@ import jk_5.nailed.api.scripting.ILuaAPI;
 import jk_5.nailed.api.scripting.IMount;
 import jk_5.nailed.api.scripting.IWritableMount;
 import jk_5.nailed.map.script.api.*;
-import lombok.Getter;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
@@ -26,14 +25,14 @@ public class ScriptingMachine {
     private static IMount romMount = null;
 
     private final int id;
-    @Getter private final IMachine machine;
+    private final IMachine machine;
     private int ticksSinceStart = -1;
     private boolean blinking = false;
     private boolean startupRequested = false;
     private MachineState state = MachineState.OFF;
-    @Getter private LuaMachine luaMachine = null;
+    private LuaMachine luaMachine = null;
     private List<ILuaAPI> apis = Lists.newArrayList();
-    @Getter private APIEnvironment apiEnvironment = new APIEnvironment(this);
+    private APIEnvironment apiEnvironment = new APIEnvironment(this);
     private Terminal terminal;
     private FileSystem fileSystem = null;
 
@@ -363,6 +362,18 @@ public class ScriptingMachine {
                 }
             }
         }, this);
+    }
+
+    public IMachine getMachine() {
+        return this.machine;
+    }
+
+    public LuaMachine getLuaMachine() {
+        return this.luaMachine;
+    }
+
+    public APIEnvironment getApiEnvironment() {
+        return this.apiEnvironment;
     }
 
     private static class APIEnvironment implements IAPIEnvironment {

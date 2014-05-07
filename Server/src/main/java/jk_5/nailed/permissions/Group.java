@@ -2,10 +2,6 @@ package jk_5.nailed.permissions;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import net.minecraftforge.permissions.api.PermissionsManager;
 import net.minecraftforge.permissions.api.RegisteredPermValue;
 import net.minecraftforge.permissions.api.UnregisterredPermissionException;
@@ -18,16 +14,19 @@ import java.util.Map;
  *
  * @author jk-5
  */
-@RequiredArgsConstructor
 public class Group {
 
-    @Getter(AccessLevel.PACKAGE) private final Map<String, Boolean> permissions = Maps.newHashMap();
-    @Getter private final List<Group> inheritions = Lists.newArrayList();
-    @Getter private final String name;
+    private final Map<String, Boolean> permissions = Maps.newHashMap();
+    private final List<Group> inheritions = Lists.newArrayList();
+    private final String name;
 
-    @Getter @Setter @GroupOption("prefix") private String prefix = "";
-    @Getter @Setter @GroupOption("suffix") private String suffix = "";
-    @Getter @Setter @GroupOption("default") private boolean isDefault = false;
+    @GroupOption("prefix") private String prefix = "";
+    @GroupOption("suffix") private String suffix = "";
+    @GroupOption("default") private boolean isDefault = false;
+
+    public Group(String name) {
+        this.name = name;
+    }
 
     public RegisteredPermValue hasPermission(String node){
         return this.hasPermission(node, ((NailedPermissionFactory) PermissionsManager.getPermFactory()).getPerms().get(node));
@@ -49,5 +48,41 @@ public class Group {
             }
         }
         return def;
+    }
+
+    Map<String, Boolean> getPermissions() {
+        return this.permissions;
+    }
+
+    public List<Group> getInheritions() {
+        return this.inheritions;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public String getPrefix() {
+        return this.prefix;
+    }
+
+    public String getSuffix() {
+        return this.suffix;
+    }
+
+    public boolean isDefault() {
+        return this.isDefault;
+    }
+
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }
+
+    public void setSuffix(String suffix) {
+        this.suffix = suffix;
+    }
+
+    public void setDefault(boolean isDefault) {
+        this.isDefault = isDefault;
     }
 }

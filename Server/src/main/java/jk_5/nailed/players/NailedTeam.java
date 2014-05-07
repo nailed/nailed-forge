@@ -8,9 +8,6 @@ import jk_5.nailed.api.map.team.Team;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.map.Location;
 import jk_5.nailed.util.ChatColor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 
@@ -21,22 +18,27 @@ import java.util.List;
  *
  * @author jk-5
  */
-@RequiredArgsConstructor
 public class NailedTeam implements Team {
 
-    @Getter private final Map map;
-    @Getter private final String teamId;
+    private final Map map;
+    private final String teamId;
 
-    @Getter @Setter private String name;
-    @Getter @Setter private ChatColor color = ChatColor.RESET;
-    @Getter @Setter private Player leader;
-    @Getter private boolean ready = false;
-    @Getter @Setter private boolean friendlyFireEnabled = false;
-    @Setter private boolean seeFriendlyInvisibles = false;
-    @Getter @Setter private ScoreboardTeam scoreboardTeam;
-    @Getter @Setter private Location spawnpoint;
-    @Getter @Setter private int teamSpeakChannelID = -1;
+    private String name;
+    private ChatColor color = ChatColor.RESET;
+    private Player leader;
+    private boolean ready = false;
+    private boolean friendlyFireEnabled = false;
+    private boolean seeFriendlyInvisibles = false;
+    private ScoreboardTeam scoreboardTeam;
+    private Location spawnpoint;
+    private int teamSpeakChannelID = -1;
 
+    public NailedTeam(Map map, String teamId) {
+        this.map = map;
+        this.teamId = teamId;
+    }
+
+    @Override
     public void onWorldSet(){
         if(this.scoreboardTeam == null){
             this.scoreboardTeam = this.map.getScoreboardManager().getOrCreateTeam(this.teamId);
@@ -48,6 +50,7 @@ public class NailedTeam implements Team {
         }
     }
 
+    @Override
     public void setReady(boolean ready){
         this.ready = ready;
         if(this.isReady()){
@@ -71,14 +74,17 @@ public class NailedTeam implements Team {
         }
     }
 
+    @Override
     public boolean shouldOverrideDefaultSpawnpoint(){
         return this.spawnpoint != null;
     }
 
+    @Override
     public String getColoredName(){
         return this.color + this.name + ChatColor.RESET;
     }
 
+    @Override
     public List<Player> getMembers(){
         List<Player> ret = Lists.newArrayList();
         for(Player player : this.map.getPlayers()){
@@ -89,19 +95,23 @@ public class NailedTeam implements Team {
         return ret;
     }
 
+    @Override
     public void onAddPlayer(Player player){
         this.addPlayerToScoreboardTeam(player);
     }
 
+    @Override
     public void onRemovePlayer(Player player){
         this.removePlayerFromScoreboardTeam(player);
     }
 
+    @Override
     public void addPlayerToScoreboardTeam(Player player){
         if(this.scoreboardTeam == null) return;
         this.scoreboardTeam.addPlayer(player);
     }
 
+    @Override
     public void removePlayerFromScoreboardTeam(Player player){
         if(this.scoreboardTeam == null) return;
         this.scoreboardTeam.removePlayer(player);
@@ -120,5 +130,93 @@ public class NailedTeam implements Team {
     @Override
     public boolean canSeeFriendlyInvisibles(){
         return this.seeFriendlyInvisibles;
+    }
+
+    @Override
+    public Map getMap() {
+        return this.map;
+    }
+
+    @Override
+    public String getTeamId() {
+        return this.teamId;
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
+    @Override
+    public ChatColor getColor() {
+        return this.color;
+    }
+
+    @Override
+    public Player getLeader() {
+        return this.leader;
+    }
+
+    @Override
+    public boolean isReady() {
+        return this.ready;
+    }
+
+    @Override
+    public boolean isFriendlyFireEnabled() {
+        return this.friendlyFireEnabled;
+    }
+
+    @Override
+    public ScoreboardTeam getScoreboardTeam() {
+        return this.scoreboardTeam;
+    }
+
+    @Override
+    public Location getSpawnpoint() {
+        return this.spawnpoint;
+    }
+
+    public int getTeamSpeakChannelID() {
+        return this.teamSpeakChannelID;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public void setColor(ChatColor color) {
+        this.color = color;
+    }
+
+    @Override
+    public void setLeader(Player leader) {
+        this.leader = leader;
+    }
+
+    @Override
+    public void setFriendlyFireEnabled(boolean friendlyFireEnabled) {
+        this.friendlyFireEnabled = friendlyFireEnabled;
+    }
+
+    @Override
+    public void setSeeFriendlyInvisibles(boolean seeFriendlyInvisibles) {
+        this.seeFriendlyInvisibles = seeFriendlyInvisibles;
+    }
+
+    @Override
+    public void setScoreboardTeam(ScoreboardTeam scoreboardTeam) {
+        this.scoreboardTeam = scoreboardTeam;
+    }
+
+    @Override
+    public void setSpawnpoint(Location spawnpoint) {
+        this.spawnpoint = spawnpoint;
+    }
+
+    public void setTeamSpeakChannelID(int teamSpeakChannelID) {
+        this.teamSpeakChannelID = teamSpeakChannelID;
     }
 }

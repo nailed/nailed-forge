@@ -10,7 +10,6 @@ import jk_5.nailed.api.map.scoreboard.Objective;
 import jk_5.nailed.api.map.scoreboard.ScoreboardManager;
 import jk_5.nailed.api.map.scoreboard.ScoreboardTeam;
 import jk_5.nailed.api.player.Player;
-import lombok.RequiredArgsConstructor;
 import net.minecraft.network.play.server.S3BPacketScoreboardObjective;
 import net.minecraft.network.play.server.S3DPacketDisplayScoreboard;
 import net.minecraft.network.play.server.S3EPacketTeams;
@@ -25,7 +24,6 @@ import java.util.Set;
  *
  * @author jk-5
  */
-@RequiredArgsConstructor
 public class NailedScoreboardManager implements ScoreboardManager {
 
     private final Map map;
@@ -33,6 +31,10 @@ public class NailedScoreboardManager implements ScoreboardManager {
     private final Set<ScoreboardTeam> teams = Sets.newHashSet();
 
     private final EnumMap<DisplayType, Objective> displayLocations = Maps.newEnumMap(DisplayType.class);
+
+    public NailedScoreboardManager(Map map) {
+        this.map = map;
+    }
 
     @Override
     @Nonnull

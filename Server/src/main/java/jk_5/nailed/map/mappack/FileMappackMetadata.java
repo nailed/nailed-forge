@@ -10,7 +10,6 @@ import jk_5.nailed.map.Location;
 import jk_5.nailed.util.ChatColor;
 import jk_5.nailed.util.config.ConfigFile;
 import jk_5.nailed.util.config.ConfigTag;
-import lombok.Getter;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.WorldSettings;
 
@@ -23,15 +22,12 @@ import java.util.Map;
  *
  * @author jk-5
  */
-@Getter
 public class FileMappackMetadata implements MappackMetadata {
 
     private final ConfigFile config;
     public String name;
     public Location spawnPoint;
     private List<TeamBuilder> defaultTeams;
-    public boolean spawnFriendlyMobs;
-    public boolean spawnHostileMobs;
     public Map<String, String> gameruleConfig;
     public EnumDifficulty difficulty;
     public String gameType;
@@ -50,8 +46,6 @@ public class FileMappackMetadata implements MappackMetadata {
         this.name = config.getTag("map").getTag("name").getValue("");
         this.pvpEnabled = config.getTag("map").getTag("pvp").getBooleanValue(true);
         this.gamemode = WorldSettings.GameType.getByID(config.getTag("map").getTag("gamemode").getIntValue(2));
-        this.spawnHostileMobs = config.getTag("map").getTag("spawn-hostile-mobs").getBooleanValue(true);
-        this.spawnFriendlyMobs = config.getTag("map").getTag("spawn-friendly-mobs").getBooleanValue(true);
         this.difficulty = EnumDifficulty.getDifficultyEnum(config.getTag("map").getTag("difficulty").getIntValue(2));
         this.gameType = config.getTag("map").getTag("gametype").getValue("default");
         this.preventingBlockBreak = config.getTag("map").getTag("preventBlockBreak").getBooleanValue(false);
@@ -91,5 +85,79 @@ public class FileMappackMetadata implements MappackMetadata {
                 this.permittedWeatherTypes.add(type);
             }
         }
+    }
+
+    public ConfigFile getConfig() {
+        return this.config;
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
+    @Override
+    public Location getSpawnPoint() {
+        return this.spawnPoint;
+    }
+
+    @Override
+    public List<TeamBuilder> getDefaultTeams() {
+        return this.defaultTeams;
+    }
+
+    @Override
+    public Map<String, String> getGameruleConfig() {
+        return this.gameruleConfig;
+    }
+
+    @Override
+    public EnumDifficulty getDifficulty() {
+        return this.difficulty;
+    }
+
+    @Override
+    public String getGameType() {
+        return this.gameType;
+    }
+
+    @Override
+    public boolean isPreventingBlockBreak() {
+        return this.preventingBlockBreak;
+    }
+
+    @Override
+    public boolean isPvpEnabled() {
+        return this.pvpEnabled;
+    }
+
+    @Override
+    public WorldSettings.GameType getGamemode() {
+        return this.gamemode;
+    }
+
+    @Override
+    public boolean isChoosingRandomSpawnpointAtRespawn() {
+        return this.choosingRandomSpawnpointAtRespawn;
+    }
+
+    @Override
+    public List<Location> getRandomSpawnpoints() {
+        return this.randomSpawnpoints;
+    }
+
+    @Override
+    public String getStartWhen() {
+        return this.startWhen;
+    }
+
+    @Override
+    public EnumSet<WeatherType> getPermittedWeatherTypes() {
+        return this.permittedWeatherTypes;
+    }
+
+    @Override
+    public SpawnRules getSpawnRules() {
+        return this.spawnRules;
     }
 }

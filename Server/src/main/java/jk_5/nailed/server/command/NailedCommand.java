@@ -3,13 +3,12 @@ package jk_5.nailed.server.command;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.player.Player;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -17,11 +16,13 @@ import java.util.List;
  *
  * @author jk-5
  */
-@RequiredArgsConstructor
 public abstract class NailedCommand implements ICommand {
 
-    @Getter
     private final String commandName;
+
+    public NailedCommand(String commandName) {
+        this.commandName = commandName;
+    }
 
     @Override
     public String getCommandUsage(ICommandSender icommandsender){
@@ -51,7 +52,6 @@ public abstract class NailedCommand implements ICommand {
     @Override
     public final void processCommand(ICommandSender sender, String[] args){
         Map map = NailedAPI.getMapLoader().getMap(sender.getEntityWorld());
-        if(map == null) this.process(sender, args);
         Player player = null;
         if(sender instanceof EntityPlayer) player = NailedAPI.getPlayerRegistry().getPlayer(((EntityPlayer) sender));
         if(player == null){
@@ -73,8 +73,8 @@ public abstract class NailedCommand implements ICommand {
         throw new CommandException("commands.nailed.error.notValid");
     }
 
-    @SuppressWarnings("NullableProblems")
-    public final int compareTo(Object o){
+    @Override
+    public final int compareTo(@Nonnull Object o){
         return this.compareTo((ICommand)o);
     }
 
@@ -136,5 +136,9 @@ public abstract class NailedCommand implements ICommand {
             players = new EntityPlayerMP[]{p.getEntity()};
         }
         return players;
+    }
+
+    public String getCommandName() {
+        return this.commandName;
     }
 }

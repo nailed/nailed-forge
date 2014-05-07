@@ -10,7 +10,6 @@ import jk_5.nailed.api.map.MappackLoader;
 import jk_5.nailed.api.map.MappackReloadListener;
 import jk_5.nailed.map.DiscardedMappackInitializationException;
 import jk_5.nailed.map.MappackInitializationException;
-import lombok.Getter;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -26,7 +25,7 @@ public class NailedMappackLoader implements MappackLoader {
 
     private final File mappackFolder = new File("mappacks");
     private final List<Mappack> mappacks = Lists.newArrayList();
-    @Getter private final List<MappackReloadListener> listeners = Lists.newArrayList();
+    private final List<MappackReloadListener> listeners = Lists.newArrayList();
 
     public boolean loadASync = false;
 

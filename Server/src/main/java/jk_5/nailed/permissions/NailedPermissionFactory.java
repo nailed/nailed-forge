@@ -8,7 +8,6 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.player.Player;
-import lombok.Getter;
 import net.minecraft.dispenser.ILocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -45,7 +44,7 @@ public class NailedPermissionFactory implements PermBuilderFactory<NailedPermiss
     private final Set<Group> groups = Sets.newHashSet();
     private final Map<String, User> users = Maps.newHashMap();
     private Group defaultGroup;
-    @Getter private final Map<String, RegisteredPermValue> perms = Maps.newHashMap();
+    private final Map<String, RegisteredPermValue> perms = Maps.newHashMap();
 
     static {
         configDir.mkdirs();
@@ -324,5 +323,9 @@ public class NailedPermissionFactory implements PermBuilderFactory<NailedPermiss
         }
 
         return server.getConfigurationManager().getOps().contains(username);
+    }
+
+    public Map<String, RegisteredPermValue> getPerms() {
+        return this.perms;
     }
 }

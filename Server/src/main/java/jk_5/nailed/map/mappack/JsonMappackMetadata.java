@@ -12,7 +12,6 @@ import jk_5.nailed.api.map.SpawnRules;
 import jk_5.nailed.api.map.team.TeamBuilder;
 import jk_5.nailed.map.Location;
 import jk_5.nailed.util.ChatColor;
-import lombok.Getter;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.WorldSettings;
 
@@ -25,15 +24,12 @@ import java.util.Map;
  *
  * @author jk-5
  */
-@Getter
 public class JsonMappackMetadata implements MappackMetadata {
 
     private final JsonObject json;
     public String name;
     public Location spawnPoint;
     private List<TeamBuilder> defaultTeams;
-    public boolean spawnFriendlyMobs = false;
-    public boolean spawnHostileMobs = false;
     public Map<String, String> gameruleConfig;
     public EnumDifficulty difficulty;
     public String gameType;
@@ -101,5 +97,75 @@ public class JsonMappackMetadata implements MappackMetadata {
                 this.permittedWeatherTypes.add(type);
             }
         }*/
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
+    @Override
+    public Location getSpawnPoint() {
+        return this.spawnPoint;
+    }
+
+    @Override
+    public List<TeamBuilder> getDefaultTeams() {
+        return this.defaultTeams;
+    }
+
+    @Override
+    public Map<String, String> getGameruleConfig() {
+        return this.gameruleConfig;
+    }
+
+    @Override
+    public EnumDifficulty getDifficulty() {
+        return this.difficulty;
+    }
+
+    @Override
+    public String getGameType() {
+        return this.gameType;
+    }
+
+    @Override
+    public boolean isPreventingBlockBreak() {
+        return this.preventingBlockBreak;
+    }
+
+    @Override
+    public boolean isPvpEnabled() {
+        return this.pvpEnabled;
+    }
+
+    @Override
+    public WorldSettings.GameType getGamemode() {
+        return this.gamemode;
+    }
+
+    @Override
+    public boolean isChoosingRandomSpawnpointAtRespawn() {
+        return this.choosingRandomSpawnpointAtRespawn;
+    }
+
+    @Override
+    public List<Location> getRandomSpawnpoints() {
+        return this.randomSpawnpoints;
+    }
+
+    @Override
+    public String getStartWhen() {
+        return this.startWhen;
+    }
+
+    @Override
+    public EnumSet<WeatherType> getPermittedWeatherTypes() {
+        return this.permittedWeatherTypes;
+    }
+    @Override
+
+    public SpawnRules getSpawnRules() {
+        return this.spawnRules;
     }
 }

@@ -2,6 +2,7 @@ version = '1.2'
 
 dependencies{
     compile 'net.minecraft:launchwrapper:1.9'
+    compile 'org.projectlombok:lombok:1.12.6'
 
     packed 'jk_5.asyncirc:ASyncIRCClient:0.2-SNAPSHOT'
 }

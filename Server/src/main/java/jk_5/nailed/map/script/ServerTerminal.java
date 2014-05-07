@@ -1,22 +1,22 @@
 package jk_5.nailed.map.script;
 
 import io.netty.buffer.ByteBuf;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-@NoArgsConstructor
 public class ServerTerminal implements ITerminal {
 
-    @Getter private Terminal terminal = null;
+    private Terminal terminal = null;
     public boolean terminalChanged = false;
 
     public ServerTerminal(int width, int height){
         this.terminal = new Terminal(width, height);
+    }
+
+    public ServerTerminal() {
     }
 
     public void copyFrom(Terminal terminal){
@@ -60,5 +60,9 @@ public class ServerTerminal implements ITerminal {
         }else{
             buffer.writeBoolean(false);
         }
+    }
+
+    public Terminal getTerminal() {
+        return this.terminal;
     }
 }

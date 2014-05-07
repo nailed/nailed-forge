@@ -2,9 +2,6 @@ package jk_5.nailed.scheduler;
 
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.concurrent.scheduler.Task;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * No description given
@@ -13,7 +10,7 @@ import lombok.Setter;
  */
 class NailedTask implements Task, Runnable {
 
-    @Getter(AccessLevel.PACKAGE) @Setter(AccessLevel.PACKAGE) private volatile NailedTask next = null;
+    private volatile NailedTask next = null;
 
     /**
      * -1 means no repeating <br>
@@ -23,8 +20,8 @@ class NailedTask implements Task, Runnable {
      * Never 0 <br>
      * >0 means number of ticks to wait between each execution
      */
-    @Getter(AccessLevel.PACKAGE) @Setter(AccessLevel.PACKAGE) private volatile long period;
-    @Getter(AccessLevel.PACKAGE) @Setter(AccessLevel.PACKAGE) private long nextRun;
+    private volatile long period;
+    private long nextRun;
     private final Runnable task;
     private final int id;
 
@@ -42,14 +39,17 @@ class NailedTask implements Task, Runnable {
         this.period = period;
     }
 
+    @Override
     public final int getTaskId() {
         return id;
     }
 
+    @Override
     public boolean isSync() {
         return true;
     }
 
+    @Override
     public void run() {
         task.run();
     }
@@ -58,6 +58,7 @@ class NailedTask implements Task, Runnable {
         return task.getClass();
     }
 
+    @Override
     public void cancel(){
         NailedAPI.getScheduler().cancelTask(id);
     }
@@ -70,5 +71,29 @@ class NailedTask implements Task, Runnable {
     boolean cancel0() {
         setPeriod(-2l);
         return true;
+    }
+
+    NailedTask getNext() {
+        return this.next;
+    }
+
+    long getPeriod() {
+        return this.period;
+    }
+
+    long getNextRun() {
+        return this.nextRun;
+    }
+
+    void setNext(NailedTask next) {
+        this.next = next;
+    }
+
+    void setPeriod(long period) {
+        this.period = period;
+    }
+
+    void setNextRun(long nextRun) {
+        this.nextRun = nextRun;
     }
 }

@@ -30,7 +30,7 @@ public class VoidWorldChunkManager extends WorldChunkManager {
             }
             Map map = NailedAPI.getMapLoader().getMap(this.world);
             ChunkCoordinates spawn;
-            if(map != null && map.getMappack() != null){
+            if(map.getMappack() != null){
                 spawn = map.getMappack().getMappackMetadata().getSpawnPoint().toChunkCoordinates();
             }else{
                 spawn = new ChunkCoordinates(0, 65, 0);

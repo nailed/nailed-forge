@@ -7,8 +7,6 @@ import jk_5.nailed.api.scripting.IMount;
 import jk_5.nailed.api.scripting.IWritableMount;
 import jk_5.nailed.map.NailedMapLoader;
 import jk_5.nailed.network.NailedNetworkHandler;
-import lombok.Getter;
-import lombok.Setter;
 import net.minecraft.world.World;
 
 import java.io.File;
@@ -22,10 +20,10 @@ public class ServerMachine extends ServerTerminal implements IMachine {
 
     public static final MachineRegistry<ServerMachine> REGISTRY = new MachineRegistry<ServerMachine>();
 
-    @Getter @Setter private World world;
-    @Getter private final int instanceId;
+    private World world;
+    private final int instanceId;
     private final ScriptingMachine machine;
-    @Getter @Setter private File preferredSaveDir = null;
+    private File preferredSaveDir = null;
 
     public ServerMachine(World world, int id, int instanceId, int termWidth, int termHeight){
         super(termWidth, termHeight);
@@ -107,5 +105,25 @@ public class ServerMachine extends ServerTerminal implements IMachine {
         buffer.writeInt(this.machine.getID());
         buffer.writeBoolean(this.machine.isOn());
         buffer.writeBoolean(this.machine.isBlinking());
+    }
+
+    public World getWorld() {
+        return this.world;
+    }
+
+    public int getInstanceId() {
+        return this.instanceId;
+    }
+
+    public File getPreferredSaveDir() {
+        return this.preferredSaveDir;
+    }
+
+    public void setWorld(World world) {
+        this.world = world;
+    }
+
+    public void setPreferredSaveDir(File preferredSaveDir) {
+        this.preferredSaveDir = preferredSaveDir;
     }
 }

@@ -23,8 +23,6 @@ import jk_5.nailed.permissions.NailedPermissionFactory;
 import jk_5.nailed.permissions.User;
 import jk_5.nailed.util.ChatColor;
 import jk_5.nailed.web.auth.WebUser;
-import lombok.Getter;
-import lombok.Setter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
@@ -45,17 +43,17 @@ import net.minecraftforge.permissions.api.PermissionsManager;
  */
 public class NailedPlayer implements Player {
 
-    @Getter private final GameProfile gameProfile;
-    @Setter private Map currentMap;
-    @Getter private boolean online = false;
-    @Getter @Setter private int teamSpeakClientID = -1;
-    @Getter @Setter private int fps;
-    @Getter @Setter private Spawnpoint spawnpoint;
-    @Getter @Setter private int pdaID = -1;
-    @Getter private NetHandlerPlayServer netHandler;
-    @Getter private boolean editModeEnabled = false;
+    private final GameProfile gameProfile;
+    private Map currentMap;
+    private boolean online = false;
+    private int teamSpeakClientID = -1;
+    private int fps;
+    private Spawnpoint spawnpoint;
+    private int pdaID = -1;
+    private NetHandlerPlayServer netHandler;
+    private boolean editModeEnabled = false;
 
-    @Getter @Setter private NailedWebUser webUser;
+    private NailedWebUser webUser;
 
     public NailedPlayer(GameProfile gameProfile){
         this.gameProfile = gameProfile;
@@ -231,5 +229,78 @@ public class NailedPlayer implements Player {
         }else{
             NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.EditMode(false, null), this.getEntity());
         }
+    }
+
+    @Override
+    public GameProfile getGameProfile() {
+        return this.gameProfile;
+    }
+
+    @Override
+    public boolean isOnline() {
+        return this.online;
+    }
+
+    public int getTeamSpeakClientID() {
+        return this.teamSpeakClientID;
+    }
+
+    @Override
+    public int getFps() {
+        return this.fps;
+    }
+
+    @Override
+    public Spawnpoint getSpawnpoint() {
+        return this.spawnpoint;
+    }
+
+    @Override
+    public int getPdaID() {
+        return this.pdaID;
+    }
+
+    @Override
+    public NetHandlerPlayServer getNetHandler() {
+        return this.netHandler;
+    }
+
+    @Override
+    public boolean isEditModeEnabled() {
+        return this.editModeEnabled;
+    }
+
+    @Override
+    public NailedWebUser getWebUser() {
+        return this.webUser;
+    }
+
+    @Override
+    public void setCurrentMap(Map currentMap) {
+        this.currentMap = currentMap;
+    }
+
+    public void setTeamSpeakClientID(int teamSpeakClientID) {
+        this.teamSpeakClientID = teamSpeakClientID;
+    }
+
+    @Override
+    public void setFps(int fps) {
+        this.fps = fps;
+    }
+
+    @Override
+    public void setSpawnpoint(Spawnpoint spawnpoint) {
+        this.spawnpoint = spawnpoint;
+    }
+
+    @Override
+    public void setPdaID(int pdaID) {
+        this.pdaID = pdaID;
+    }
+
+    @Override
+    public void setWebUser(NailedWebUser webUser) {
+        this.webUser = webUser;
     }
 }

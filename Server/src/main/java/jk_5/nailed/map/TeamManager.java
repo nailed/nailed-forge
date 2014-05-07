@@ -2,14 +2,11 @@ package jk_5.nailed.map;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import jk_5.nailed.NailedServer;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.team.Team;
 import jk_5.nailed.api.map.team.TeamBuilder;
 import jk_5.nailed.api.player.Player;
-import jk_5.nailed.players.NailedTeam;
 import jk_5.nailed.players.TeamUndefined;
-import lombok.Getter;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.List;
@@ -21,8 +18,8 @@ import java.util.List;
  */
 public class TeamManager implements jk_5.nailed.api.map.team.TeamManager {
 
-    @Getter private final Team defaultTeam;
-    @Getter private final List<Team> teams = Lists.newArrayList();
+    private final Team defaultTeam;
+    private final List<Team> teams = Lists.newArrayList();
 
     private final java.util.Map<Player, Team> playerTeamMap = Maps.newHashMap();
 
@@ -36,6 +33,7 @@ public class TeamManager implements jk_5.nailed.api.map.team.TeamManager {
         }
     }
 
+    @Override
     public Team getTeam(String name){
         for(Team team : this.teams){
             if(team.getTeamId().equals(name)){
@@ -45,12 +43,14 @@ public class TeamManager implements jk_5.nailed.api.map.team.TeamManager {
         return null;
     }
 
+    @Override
     public Team getPlayerTeam(Player player) {
         Team team = this.playerTeamMap.get(player);
         if(team == null) return this.defaultTeam;
         return team;
     }
 
+    @Override
     public void setPlayerTeam(Player player, Team team) {
         if(this.playerTeamMap.get(player) == team) return;
         if(this.playerTeamMap.containsKey(player)){
@@ -86,24 +86,18 @@ public class TeamManager implements jk_5.nailed.api.map.team.TeamManager {
     }
 
     public void onGameStarted(){
-        for(Team team : this.teams){
-            if(!(team instanceof NailedTeam)) continue;
-            NailedTeam t = (NailedTeam) team;
-            if(t.getTeamSpeakChannelID() == -1){
-                NailedServer.getTeamspeakClient().createChannelFor(t);
-            }
-            NailedServer.getTeamspeakClient().movePlayersIntoChannel(t);
-        }
+
     }
 
     public void onGameEnded(){
-        for(Team team : this.teams){
-            if(!(team instanceof NailedTeam)) continue;
-            NailedTeam t = (NailedTeam) team;
-            if(t.getTeamSpeakChannelID() != -1){
-                NailedServer.getTeamspeakClient().movePlayersToLobby(t);
-                NailedServer.getTeamspeakClient().removeChannel(t);
-            }
-        }
+
+    }
+
+    public Team getDefaultTeam() {
+        return this.defaultTeam;
+    }
+
+    public List<Team> getTeams() {
+        return this.teams;
     }
 }

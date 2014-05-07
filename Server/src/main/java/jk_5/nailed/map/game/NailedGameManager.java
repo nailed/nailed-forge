@@ -12,23 +12,24 @@ import jk_5.nailed.map.stat.types.StatTypeGameloopStopped;
 import jk_5.nailed.map.stat.types.StatTypeIsWinner;
 import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.network.NailedPacket;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-@RequiredArgsConstructor
 public class NailedGameManager implements GameManager {
 
     private final Map map;
-    @Getter @Setter private boolean watchUnready = false;
-    @Getter @Setter private boolean winnerInterrupt = false;
-    @Getter private boolean gameRunning;
-    @Getter private PossibleWinner winner = null;
+    private boolean watchUnready = false;
+    private boolean winnerInterrupt = false;
+    private boolean gameRunning;
+    private PossibleWinner winner = null;
+
+    @java.beans.ConstructorProperties({"map"})
+    public NailedGameManager(Map map) {
+        this.map = map;
+    }
 
     @Override
     public void setCountdownMessage(String message){
@@ -73,5 +74,29 @@ public class NailedGameManager implements GameManager {
         this.map.getScoreboardManager().setDisplay(DisplayType.BELOW_NAME, null);
         this.map.getScoreboardManager().setDisplay(DisplayType.SIDEBAR, null);
         this.map.getScoreboardManager().setDisplay(DisplayType.BELOW_NAME, null);
+    }
+
+    public boolean isWatchUnready() {
+        return this.watchUnready;
+    }
+
+    public boolean isWinnerInterrupt() {
+        return this.winnerInterrupt;
+    }
+
+    public boolean isGameRunning() {
+        return this.gameRunning;
+    }
+
+    public PossibleWinner getWinner() {
+        return this.winner;
+    }
+
+    public void setWatchUnready(boolean watchUnready) {
+        this.watchUnready = watchUnready;
+    }
+
+    public void setWinnerInterrupt(boolean winnerInterrupt) {
+        this.winnerInterrupt = winnerInterrupt;
     }
 }
