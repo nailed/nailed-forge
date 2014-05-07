@@ -75,7 +75,7 @@ public class DirectoryMappack implements Mappack {
     }
 
     @Override
-    public void prepareWorld(@Nonnull File destinationDir, @Nonnull Callback<Void> callback){
+    public void prepareWorld(@Nonnull File destinationDir, @Nullable Callback<Void> callback){
         File world = new File(this.mappackFolder, "world");
         if(world.isDirectory() && world.exists()){
             try{
@@ -84,7 +84,7 @@ public class DirectoryMappack implements Mappack {
                 throw new RuntimeException("Error while preparing mappack", e);
             }
         }
-        callback.callback(null);
+        if(callback != null) callback.callback(null);
     }
 
     @Override

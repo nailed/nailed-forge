@@ -144,7 +144,7 @@ public class NailedMapLoader implements MapLoader {
             }
         }
         if(DimensionManager.isDimensionRegistered(id)){
-            return new WrappedMap(id);
+            return new NailedMap(null, id);
         }else{
             return null;
         }

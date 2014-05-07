@@ -64,12 +64,12 @@ public class IpcMappack implements Mappack {
     }
 
     @Override
-    public void prepareWorld(@Nonnull final File destinationDir, @Nonnull final Callback<Void> callback){
+    public void prepareWorld(@Nonnull final File destinationDir, @Nullable final Callback<Void> callback){
         this.filestore.requestMissingFiles(new Callback<Void>(){
             @Override
             public void callback(Void obj) {
                 filestore.reconstruct(destinationDir);
-                callback.callback(null);
+                if(callback != null) callback.callback(null);
             }
         });
         this.luaFilestore.requestMissingFiles(null);

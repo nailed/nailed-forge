@@ -74,9 +74,9 @@ public class ZipMappack implements Mappack {
     }
 
     @Override
-    public void prepareWorld(@Nonnull File destinationDir, @Nonnull Callback<Void> callback) {
+    public void prepareWorld(@Nonnull File destinationDir, @Nullable Callback<Void> callback) {
         this.unzipMapFromMapPack(this.mappackFile, destinationDir);
-        callback.callback(null);
+        if(callback != null) callback.callback(null);
     }
 
     @Override

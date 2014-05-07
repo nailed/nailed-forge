@@ -39,7 +39,7 @@ public interface Mappack {
      * @param destinationDir The location where the game world should be prepared
      * @param callback The callback to call when the map is set up.
      */
-    void prepareWorld(@Nonnull File destinationDir, @Nonnull Callback<Void> callback);
+    void prepareWorld(@Nonnull File destinationDir, @Nullable Callback<Void> callback);
 
     /**
      * Set the Map up, so it can load after this and players can join it
