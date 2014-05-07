@@ -128,8 +128,7 @@ public class NailedWorldProvider extends WorldProvider implements MappackContain
         if(this.hasMappack()){
             return this.map.getMappack().getMappackMetadata().getSpawnPoint().toChunkCoordinates();
         }else{
-            //FIXME: this line causes infinite recursion and a stack overflow
-            return super.getRandomizedSpawnPoint();
+            return new ChunkCoordinates(0, 64, 0);
         }
     }
 
