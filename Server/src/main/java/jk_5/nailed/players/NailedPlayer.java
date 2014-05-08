@@ -51,8 +51,8 @@ public class NailedPlayer implements Player {
     private int pdaID = -1;
     private NetHandlerPlayServer netHandler;
     private boolean editModeEnabled = false;
-    private int maxHealth;
-    private int minHealth;
+    private int maxHealth = 20;
+    private int minHealth = 0;
 
     private NailedWebUser webUser;
 
