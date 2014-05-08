@@ -34,6 +34,7 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
     public NailedCommandManager(){
         PermissionsManager.registerPermission(commandWarningsPerm, RegisteredPermValue.OP);
 
+        this.registerCommand(new CommandHeal());
         this.registerCommand(new CommandGoto());
         this.registerCommand(new CommandTeam());
         this.registerCommand(new CommandStartGame());
