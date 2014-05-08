@@ -6,6 +6,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.*;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.FMLLaunchHandler;
 import jk_5.nailed.achievement.AchievementEventListener;
 import jk_5.nailed.achievement.NailedAchievements;
@@ -133,6 +134,7 @@ public class NailedServer {
         NailedNetworkHandler.registerChannel();
 
         NailedLog.info("Registering event handlers");
+        MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(NailedAPI.getPlayerRegistry());
         MinecraftForge.EVENT_BUS.register(NailedAPI.getMapLoader());
         MinecraftForge.EVENT_BUS.register(NailedAPI.getMappackLoader());
@@ -211,7 +213,7 @@ public class NailedServer {
         ((NailedMappackLoader) NailedAPI.getMappackLoader()).loadASync = true;
     }
 
-    @EventHandler
+    @SubscribeEvent
     public void onPlayerJoin(EntityJoinWorldEvent event){
         if(event.entity instanceof EntityPlayer){
             EntityPlayer player = (EntityPlayer) event.entity;
