@@ -4,7 +4,6 @@ import com.google.common.base.Preconditions;
 import com.google.gson.JsonObject;
 import io.netty.buffer.ByteBuf;
 import jk_5.nailed.util.MathUtil;
-import jk_5.nailed.util.config.ConfigTag;
 import net.minecraft.util.ChunkCoordinates;
 
 import javax.annotation.Nonnull;
@@ -427,10 +426,6 @@ public class Location implements Cloneable {
      */
     public static int locToBlock(double loc) {
         return MathUtil.floor(loc);
-    }
-
-    public static Location readFrom(ConfigTag tag){
-        return new Location(tag.getTag("x").getDoubleValue(), tag.getTag("y").getDoubleValue(64), tag.getTag("z").getDoubleValue(), (float) tag.getTag("yaw").getDoubleValue(0), (float) tag.getTag("pitch").getDoubleValue(0));
     }
 
     public static Location readFrom(JsonObject json){

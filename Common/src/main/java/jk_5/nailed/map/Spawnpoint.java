@@ -3,7 +3,6 @@ package jk_5.nailed.map;
 import com.google.common.base.Objects;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
-import jk_5.nailed.util.config.ConfigTag;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ChunkCoordinates;
 
@@ -59,21 +58,6 @@ public class Spawnpoint extends ChunkCoordinates {
     @Override
     public int compareTo(Object o){
         return this.compareTo((ChunkCoordinates) o);
-    }
-
-    public static Spawnpoint readFromConfig(ConfigTag tag){
-        Spawnpoint spawn = new Spawnpoint(tag.getTag("x").getIntValue(), tag.getTag("y").getIntValue(64), tag.getTag("z").getIntValue(), tag.getTag("yaw").getIntValue(0), tag.getTag("pitch").getIntValue(0));
-        spawn.name = tag.name;
-        return spawn;
-    }
-
-    public void writeToConfig(ConfigTag tag){
-        tag.name = this.name;
-        tag.getTag("x").setIntValue(this.posX);
-        tag.getTag("y").setIntValue(this.posY);
-        tag.getTag("z").setIntValue(this.posZ);
-        tag.getTag("yaw").setIntValue((int) this.yaw);
-        tag.getTag("pitch").setIntValue((int) this.pitch);
     }
 
     @Override
