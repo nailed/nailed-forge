@@ -295,5 +295,5 @@ public class NailedPlayer implements Player {
         this.webUser = webUser;
     }
 
-    public void teleportToLobby(){ this.teleportToMap(NailedAPI.getMapLoader().getMap("lobby"));}
+    public void teleportToLobby(){ this.teleportToMap(NailedAPI.getMapLoader().getLobby());}
 }

@@ -7,13 +7,13 @@ Todo:
 
 Lua:
 - player.keepHealth
-- player.keepFood
++ player.keepFood
 - inventory management (give)
 - respawn event
 - join event
 - leave event
-- minimum food level
-- minimum health level
++ minimum food level
++ minimum health level
 - map.getPlayers() doesn't return dead players
 
 General

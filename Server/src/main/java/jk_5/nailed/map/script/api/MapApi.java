@@ -99,7 +99,9 @@ public class MapApi implements ILuaAPI {
                 "hasMappack",
                 "onStarted",
                 "onStopped",
-                "stopGame"
+                "stopGame",
+                "setMaxFood",
+                "setMinFood"
         };
     }
 
@@ -302,6 +304,26 @@ public class MapApi implements ILuaAPI {
             case 23: //stopGame
                 this.map.getGameManager().stopGame();
                 break;
+            case 24: //setMaxFood
+                if(arguments.length == 1 && arguments[0] instanceof Double){
+                    this.map.getMappack().getMappackMetadata().setMaxFoodLevel(((Double) arguments[0]).intValue());
+                    for(Player player:this.map.getPlayers()){
+                        player.getEntity().getFoodStats().setMaxFoodLevel(((Double) arguments[0]).intValue());
+                    }
+                }else{
+                    throw new Exception("Expected 1 integer argument");
+                }
+                break;
+            case 25: //setMinFood
+                if(arguments.length == 1 && arguments[0] instanceof Double){
+                    this.map.getMappack().getMappackMetadata().setMinFoodLevel(((Double) arguments[0]).intValue());
+                    for(Player player:this.map.getPlayers()){
+                        player.getEntity().getFoodStats().setMinFoodLevel(((Double) arguments[0]).intValue());
+                    }
+                }else{
+                    throw new Exception("Expected 1 integer argument");
+                }
+                break;
         }
         return null;
     }
@@ -329,7 +351,8 @@ public class MapApi implements ILuaAPI {
                         "addPotionEffect",
                         "removePotionEffect",
                         "sendTimeUpdate",
-                        "giveItem"
+                        "giveItem",
+                        "setInventoryItem"
                 };
             }
 
@@ -471,6 +494,32 @@ public class MapApi implements ILuaAPI {
                             throw new Exception("Expected 1 string and 1 or 2 int arguments");
                         }
                         break;
+                    case 16: //setInventoryItem
+                        if(arguments.length == 3 && arguments[0] instanceof Double && arguments[1] instanceof String && arguments[2] instanceof Double && arguments[3] instanceof Double){
+                            int amount = ((Double) arguments[2]).intValue();
+                            int amount = ((Double) arguments[2]).intValue();
+                            String item = (String) arguments[1];
+                            int slot = ((Double) arguments[0]).intValue();
+                            Object i = Item.itemRegistry.getObject(item);
+                            if(i == null){
+                                throw new Exception("Unknown item " + item);
+                            }
+                            ItemStack stack = new ItemStack((Item) i, amount);
+                            player.getEntity().inventory.setInventorySlotContents(slot, stack);
+                        }else if(arguments.length == 3 && arguments[0] instanceof Double && arguments[1] instanceof String && arguments[2] instanceof Double && arguments[3] instanceof Double){
+                            int meta = ((Double) arguments[3]).intValue();
+                            int amount = ((Double) arguments[2]).intValue();
+                            String item = (String) arguments[1];
+                            int slot = ((Double) arguments[0]).intValue();
+                            Object i = Item.itemRegistry.getObject(item);
+                            if(i == null){
+                                throw new Exception("Unknown item " + item);
+                            }
+                            ItemStack stack = new ItemStack((Item) i, amount, meta);
+                            player.getEntity().inventory.setInventorySlotContents(slot, stack);
+                        }else{
+                            throw new Exception("Expected 1 int, 1 string and then 1 or 2 int arguments");
+                        }
                 }
                 return null;
             }
