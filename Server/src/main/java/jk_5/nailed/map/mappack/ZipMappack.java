@@ -38,6 +38,7 @@ public class ZipMappack implements Mappack {
         this.mappackID = mappackFile.getName().substring(0, mappackFile.getName().length() - 8);
         this.mappackFile = mappackFile;
         this.mappackMetadata = metadata;
+        if(metadata.name == null) metadata.name = this.mappackID;
     }
 
     public static Mappack create(File file) throws MappackInitializationException {
@@ -95,7 +96,7 @@ public class ZipMappack implements Mappack {
             File worldDir = null;
             while(e.hasMoreElements()){
                 ZipEntry entry = (ZipEntry)e.nextElement();
-                if(entry.getName().equals("mappack.cfg")) continue;
+                if(entry.getName().equals("mappack.json")) continue;
                 if(entry.getName().equals("gameinstructions.cfg")) continue;
                 if(entry.getName().contains("##MCEDIT.TEMP##")) continue;
                 if(entry.getName().startsWith("__MACOSX/")) continue;

@@ -46,6 +46,7 @@ public class DirectoryMappack implements Mappack {
         this.mappackID = directory.getName();
         this.mappackFolder = directory;
         this.mappackMetadata = metadata;
+        if(metadata.name == null) metadata.name = this.mappackID;
     }
 
     public static DirectoryMappack create(File directory) throws MappackInitializationException{
@@ -56,7 +57,7 @@ public class DirectoryMappack implements Mappack {
         if(mappackConfig.isFile() && mappackConfig.exists()){
             FileReader fr = null;
             try{
-                fr = new FileReader(statConfigFile);
+                fr = new FileReader(mappackConfig);
                 pack = new DirectoryMappack(directory, new JsonMappackMetadata((JsonObject) new JsonParser().parse(fr)));
             }catch(Exception e){
                 throw new MappackInitializationException("Exception while reading mappack.json", e);

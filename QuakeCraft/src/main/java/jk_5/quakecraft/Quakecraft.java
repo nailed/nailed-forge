@@ -6,9 +6,12 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.common.network.NetworkCheckHandler;
+import cpw.mods.fml.relauncher.Side;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.RayTracer;
 import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.Mappack;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.util.ChatColor;
 import net.minecraft.entity.Entity;
@@ -49,8 +52,12 @@ public class Quakecraft {
 
     public java.util.Map<String, Integer> reloadCooldown = Maps.newHashMap();
 
+    @NetworkCheckHandler
+    public boolean accept(java.util.Map<String, String> versions, Side side){
+        return true;
+    }
+
     @Mod.EventHandler
-    @SuppressWarnings("unused")
     public void preInit(FMLPreInitializationEvent event){
         if(event.getSide().isServer()){
             FMLCommonHandler.instance().bus().register(this);
@@ -59,7 +66,6 @@ public class Quakecraft {
     }
 
     @SubscribeEvent
-    @SuppressWarnings("unused")
     public void onCooldownTick(TickEvent.PlayerTickEvent event){
         if(event.phase == TickEvent.Phase.START) return;
         String id = event.player.getGameProfile().getId();
@@ -70,7 +76,6 @@ public class Quakecraft {
     }
 
     @SubscribeEvent
-    @SuppressWarnings("unused")
     public void onInteract(PlayerInteractEvent event){
         World world = event.entity.worldObj;
         Player player = NailedAPI.getPlayerRegistry().getPlayer(event.entityPlayer);
@@ -136,7 +141,6 @@ public class Quakecraft {
     }
 
     @SubscribeEvent
-    @SuppressWarnings("unused")
     public void onPlayerDrop(PlayerDropsEvent event){
         if(this.isQuakecraft(event.entity.worldObj)){
             event.setCanceled(true);
@@ -144,7 +148,7 @@ public class Quakecraft {
     }
 
     @SubscribeEvent
-    @SuppressWarnings({"unused", "deprecation"})
+    @SuppressWarnings("deprecation")
     public void onEntitySpawn(EntityJoinWorldEvent event){
         if(event.entity instanceof EntityPlayer){
             EntityPlayer player = (EntityPlayer) event.entity;
@@ -164,7 +168,6 @@ public class Quakecraft {
     }
 
     @SubscribeEvent
-    @SuppressWarnings("unused")
     public void onDamage(LivingHurtEvent event){
         if(!this.isQuakecraft(event.entity.worldObj)) return;
         if(!(event.source instanceof DamageSourceRailgun) && !(event.source == DamageSource.outOfWorld)){
@@ -173,7 +176,6 @@ public class Quakecraft {
     }
 
     @SubscribeEvent
-    @SuppressWarnings("unused")
     public void onFall(LivingFallEvent event){
         if(this.isQuakecraft(event.entity.worldObj)){
             event.setCanceled(true);
@@ -198,6 +200,7 @@ public class Quakecraft {
     }
 
     public boolean isQuakecraft(World world){
-        return NailedAPI.getMapLoader().getMap(world).getMappack().getMappackMetadata().getGameType().equals("quakecraft");
+        Mappack mappack = NailedAPI.getMapLoader().getMap(world).getMappack();
+        return mappack != null && mappack.getMappackMetadata().getGameType().equals("quakecraft");
     }
 }

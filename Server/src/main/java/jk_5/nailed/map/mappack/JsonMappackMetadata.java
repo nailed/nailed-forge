@@ -45,7 +45,7 @@ public class JsonMappackMetadata implements MappackMetadata {
     public JsonMappackMetadata(JsonObject json){
         this.json = json;
         this.spawnPoint = json.has("spawnpoint") ? Location.readFrom(json.get("spawnpoint").getAsJsonObject()) : new Location(0, 64, 0, 0, 0);
-        this.name = json.get("name").getAsString();
+        this.name = json.has("name") ? json.get("name").getAsString() : null;
         this.pvpEnabled = !json.has("pvpEnabled") || json.get("pvpEnabled").getAsBoolean();
         this.gamemode = WorldSettings.GameType.getByID(json.has("defaultGamemode") ? json.get("defaultGamemode").getAsInt() : 2);
         this.difficulty = EnumDifficulty.getDifficultyEnum(json.has("difficulty") ? json.get("difficulty").getAsInt() : 2);
@@ -53,8 +53,12 @@ public class JsonMappackMetadata implements MappackMetadata {
         this.preventingBlockBreak = json.has("preventBlockBreak") && json.get("preventBlockBreak").getAsBoolean();
         this.choosingRandomSpawnpointAtRespawn = json.has("randomSpawnpointOnRespawn") && json.get("randomSpawnpointOnRespawn").getAsBoolean();
         //this.startWhen = config.getTag("map").getTag("startGameWhen").getValue("false");
-        this.spawnRules = new Gson().fromJson(json.get("spawns"), SpawnRules.class);
-        this.spawnRules.refresh();
+        if(json.has("spawns")){
+            this.spawnRules = new Gson().fromJson(json.get("spawns"), SpawnRules.class);
+            this.spawnRules.refresh();
+        }else{
+            this.spawnRules = new SpawnRules();
+        }
 
         this.defaultTeams = Lists.newArrayList();
         if(json.has("teams")){

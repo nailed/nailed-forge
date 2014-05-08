@@ -38,6 +38,7 @@ public class IpcMappack implements Mappack {
     public IpcMappack(JsonObject json){
         this.id = json.get("mpid").getAsString();
         this.metadata = new JsonMappackMetadata(json);
+        if(metadata.getName() == null) ((JsonMappackMetadata) metadata).name = this.id;
         this.filestore.files = gson.fromJson(json.get("worldFiles"), new TypeToken<List<MappackFile>>(){}.getType());
         this.luaFilestore.files = gson.fromJson(json.get("luaFiles"), new TypeToken<List<MappackFile>>(){}.getType());
         this.filestore.refresh();
