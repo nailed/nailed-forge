@@ -43,7 +43,7 @@ nailed {
     //deploy artifact: 'nailedMumbleLink', project: 'MumbleLink', load: true
     deploy artifact: 'nailedCrashReporter', project: 'CrashReporter', load: true
     deploy artifact: 'nailedUpdater', project: 'Updater', restart: 'game', mclib: true
-    deploy artifact: 'forge', maven: 'net.minecraftforge:forge:1.7.2-10.12.1.1072:universal', load: true, server: 'http://files.minecraftforge.net/maven/'
+    deploy artifact: 'forge', maven: 'net.minecraftforge:forge:1.7.2-10.12.1.1073:universal', load: true, server: 'http://files.minecraftforge.net/maven/'
     deploy artifact: 'minecraft', maven: 'versions::1.7.2', localmaven: 'net.minecraft:minecraft:1.7.2', load: true, server: 'https://s3.amazonaws.com/Minecraft.Download/'
 
     tweaker = 'jk_5.nailed.crashreporter.CrashReporterTweaker'
@@ -66,7 +66,7 @@ createLauncherProfile {
 }
 
 minecraft {
-    version = '1.7.2-10.12.1.1072'
+    version = '1.7.2-10.12.1.1073'
     assetDir = 'runtime/client/assets'
 }
 
