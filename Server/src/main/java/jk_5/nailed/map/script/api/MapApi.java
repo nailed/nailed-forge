@@ -22,6 +22,7 @@ import jk_5.nailed.map.script.IAPIEnvironment;
 import jk_5.nailed.map.script.LuaMachine;
 import jk_5.nailed.map.stat.DefaultStat;
 import jk_5.nailed.map.stat.types.StatTypeModifiable;
+import jk_5.nailed.util.NailedFoodStats;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.PlayerCapabilities;
 import net.minecraft.item.Item;
@@ -308,7 +309,7 @@ public class MapApi implements ILuaAPI {
                 if(arguments.length == 1 && arguments[0] instanceof Double){
                     this.map.getMappack().getMappackMetadata().setMaxFoodLevel(((Double) arguments[0]).intValue());
                     for(Player player:this.map.getPlayers()){
-                        player.getEntity().getFoodStats().setMaxFoodLevel(((Double) arguments[0]).intValue());
+                        ((NailedFoodStats) player.getEntity().getFoodStats()).setMaxFoodLevel(((Double) arguments[0]).intValue());
                     }
                 }else{
                     throw new Exception("Expected 1 integer argument");
@@ -318,7 +319,7 @@ public class MapApi implements ILuaAPI {
                 if(arguments.length == 1 && arguments[0] instanceof Double){
                     this.map.getMappack().getMappackMetadata().setMinFoodLevel(((Double) arguments[0]).intValue());
                     for(Player player:this.map.getPlayers()){
-                        player.getEntity().getFoodStats().setMinFoodLevel(((Double) arguments[0]).intValue());
+                        ((NailedFoodStats) player.getEntity().getFoodStats()).setMinFoodLevel(((Double) arguments[0]).intValue());
                     }
                 }else{
                     throw new Exception("Expected 1 integer argument");
@@ -496,7 +497,6 @@ public class MapApi implements ILuaAPI {
                         break;
                     case 16: //setInventoryItem
                         if(arguments.length == 3 && arguments[0] instanceof Double && arguments[1] instanceof String && arguments[2] instanceof Double && arguments[3] instanceof Double){
-                            int amount = ((Double) arguments[2]).intValue();
                             int amount = ((Double) arguments[2]).intValue();
                             String item = (String) arguments[1];
                             int slot = ((Double) arguments[0]).intValue();
