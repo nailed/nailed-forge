@@ -2,11 +2,8 @@ Todo:
 - Add transformer obf mappings
 - Zone protection
 - Add a lot of chat commands
-- Login gui
 - Skinsync
 - Native cypher
-- Command signs crash connection when mappack names are >16
-- /heal for people not ingame
 
 Lua:
 - player.keepHealth / food
