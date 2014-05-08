@@ -115,7 +115,7 @@ public class DirectoryMappack implements Mappack {
         }
 
         try{
-            WorldServer world = (WorldServer) map.getWorld();
+            WorldServer world = map.getWorld();
             boolean notSaveEnabled = world.levelSaving;
             world.levelSaving = false;
             world.saveAllChunks(true, null);

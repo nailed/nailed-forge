@@ -22,6 +22,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -176,7 +177,7 @@ public class NailedMapLoader implements MapLoader {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onWorldLoad(WorldEvent.Load event){
-        this.getMap(event.world).setWorld(event.world);
+        this.getMap(event.world).setWorld((WorldServer) event.world);
     }
 
     @SubscribeEvent

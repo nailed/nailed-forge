@@ -26,7 +26,6 @@ import java.util.Map;
  */
 public class JsonMappackMetadata implements MappackMetadata {
 
-    private final JsonObject json;
     public String name;
     public Location spawnPoint;
     private List<TeamBuilder> defaultTeams;
@@ -43,7 +42,6 @@ public class JsonMappackMetadata implements MappackMetadata {
     public SpawnRules spawnRules;
 
     public JsonMappackMetadata(JsonObject json){
-        this.json = json;
         this.spawnPoint = json.has("spawnpoint") ? Location.readFrom(json.get("spawnpoint").getAsJsonObject()) : new Location(0, 64, 0, 0, 0);
         this.name = json.has("name") ? json.get("name").getAsString() : null;
         this.pvpEnabled = !json.has("pvpEnabled") || json.get("pvpEnabled").getAsBoolean();
