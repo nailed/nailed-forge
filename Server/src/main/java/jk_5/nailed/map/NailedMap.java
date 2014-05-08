@@ -154,6 +154,7 @@ public class NailedMap implements Map {
         playerFoodStats.setMinFoodLevel(mappack.getMappackMetadata().getMinFoodLevel());
         playerFoodStats.setMaxFoodLevel(mappack.getMappackMetadata().getMaxFoodLevel());
         player.getEntity().foodStats = playerFoodStats;
+        this.getMachine().queueEvent("playerJoinEvent", player.getUsername());
     }
 
     @Override
@@ -162,6 +163,7 @@ public class NailedMap implements Map {
         this.teamManager.onPlayerLeftMap(player);
         this.players.remove(player);
         NailedMapLoader.instance().checkShouldStart(this);
+        this.getMachine().queueEvent("playerLeaveEvent", player.getUsername());
     }
 
     @Override
