@@ -35,5 +35,5 @@ public interface MappackMetadata {
     int getMaxFoodLevel();
     void setMinFoodLevel(int min);
     int getMinFoodLevel();
-    boolean getTeleportLobby();
+    PostGameAction getPostGameAction();
 }
