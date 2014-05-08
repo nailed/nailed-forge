@@ -35,10 +35,13 @@ import jk_5.nailed.scheduler.SchedulerCrashCallable;
 import jk_5.nailed.server.command.LoggingCommandListener;
 import jk_5.nailed.server.command.NailedCommandManager;
 import jk_5.nailed.util.MotdManager;
+import jk_5.nailed.util.NailedFoodStats;
 import jk_5.nailed.util.invsee.InvSeeTicker;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.permissions.api.PermissionsManager;
 import net.minecraftforge.permissions.api.RegisteredPermValue;
 import org.apache.commons.io.IOUtils;
@@ -206,6 +209,14 @@ public class NailedServer {
         permissionFactory.readConfig();
 
         ((NailedMappackLoader) NailedAPI.getMappackLoader()).loadASync = true;
+    }
+
+    @EventHandler
+    public void onPlayerJoin(EntityJoinWorldEvent event){
+        if(event.entity instanceof EntityPlayer){
+            EntityPlayer player = (EntityPlayer) event.entity;
+            player.foodStats = new NailedFoodStats();
+        }
     }
 
     public static JsonObject getConfig() {

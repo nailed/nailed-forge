@@ -10,9 +10,8 @@ import jk_5.nailed.api.player.Player;
 import jk_5.nailed.map.Location;
 import net.minecraft.network.Packet;
 import net.minecraft.util.IChatComponent;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.util.List;
 
@@ -24,9 +23,9 @@ import java.util.List;
 public interface Map {
 
     public int getID();
-    @Nullable public Mappack getMappack();
-    public WorldServer getWorld();
-    public void setWorld(WorldServer world);
+    public Mappack getMappack();
+    public World getWorld();
+    public void setWorld(World world);
     public boolean isLoaded();
     public TeamManager getTeamManager();
     public StatManager getStatManager();
@@ -52,4 +51,6 @@ public interface Map {
     public GameManager getGameManager();
     public ScoreboardManager getScoreboardManager();
     public void broadcastPacket(Packet packet);
+    public int getMaxFoodLevel();
+    public int getMinFoodLevel();
 }

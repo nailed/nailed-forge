@@ -26,6 +26,7 @@ import java.util.Map;
  */
 public class JsonMappackMetadata implements MappackMetadata {
 
+    private final JsonObject json;
     public String name;
     public Location spawnPoint;
     private List<TeamBuilder> defaultTeams;
@@ -40,8 +41,11 @@ public class JsonMappackMetadata implements MappackMetadata {
     public String startWhen = "false";
     public EnumSet<WeatherType> permittedWeatherTypes;
     public SpawnRules spawnRules;
+    public int minFoodLevel;
+    public int maxFoodLevel;
 
     public JsonMappackMetadata(JsonObject json){
+        this.json = json;
         this.spawnPoint = json.has("spawnpoint") ? Location.readFrom(json.get("spawnpoint").getAsJsonObject()) : new Location(0, 64, 0, 0, 0);
         this.name = json.has("name") ? json.get("name").getAsString() : null;
         this.pvpEnabled = !json.has("pvpEnabled") || json.get("pvpEnabled").getAsBoolean();
@@ -88,7 +92,14 @@ public class JsonMappackMetadata implements MappackMetadata {
                 this.randomSpawnpoints.add(Location.readFrom(t.getAsJsonObject()));
             }
         }
-
+        this.minFoodLevel = 0;
+        this.maxFoodLevel = -1;
+        if(json.has("minFoodLevel")){
+            this.minFoodLevel = json.get("minFoodLevel").getAsInt();
+        }
+        if(json.has("maxFoodLevel")){
+            this.maxFoodLevel = json.get("maxFoodLevel").getAsInt();
+        }
         //TODO: this is not used yet
         /*this.permittedWeatherTypes = EnumSet.noneOf(WeatherType.class);
         ConfigTag weatherTag = this.config.getTag("permittedWeather");
@@ -169,5 +180,15 @@ public class JsonMappackMetadata implements MappackMetadata {
 
     public SpawnRules getSpawnRules() {
         return this.spawnRules;
+    }
+
+    @Override
+    public int getMinFoodLevel(){
+        return this.minFoodLevel;
+    }
+
+    @Override
+    public int getMaxFoodLevel(){
+        return this.maxFoodLevel;
     }
 }

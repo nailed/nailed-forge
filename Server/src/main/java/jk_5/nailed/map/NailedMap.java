@@ -29,16 +29,16 @@ import jk_5.nailed.map.stat.StatManager;
 import jk_5.nailed.map.weather.WeatherController;
 import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.network.NailedPacket;
+import jk_5.nailed.util.NailedFoodStats;
 import net.minecraft.network.Packet;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.GameRules;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.network.ForgeMessage;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.util.List;
 
@@ -50,8 +50,8 @@ import java.util.List;
 public class NailedMap implements Map {
 
     private int ID;
-    @Nullable private final Mappack mappack;
-    private WorldServer world;
+    private final Mappack mappack;
+    private World world;
     private boolean isLoaded = false;
     private final TeamManager teamManager;
     private final StatManager statManager;
@@ -61,6 +61,8 @@ public class NailedMap implements Map {
     private GameManager gameManager;
     private NailedScoreboardManager scoreboardManager;
     private List<Player> players = Lists.newArrayList();
+    private int minFoodLevel;
+    private int maxFoodLevel;
 
     private ServerMachine machine;
     public IMount mappackMount;
@@ -100,7 +102,7 @@ public class NailedMap implements Map {
     }
 
     @Override
-    public void setWorld(WorldServer world){
+    public void setWorld(World world){
         Preconditions.checkNotNull(world);
         this.world = world;
         if(world.provider != null) this.ID = world.provider.dimensionId;
@@ -148,6 +150,10 @@ public class NailedMap implements Map {
         this.teamManager.onPlayerJoinedMap(player);
         this.players.add(player);
         NailedMapLoader.instance().checkShouldStart(this);
+        NailedFoodStats playerFoodStats = new NailedFoodStats();
+        playerFoodStats.setMinFoodLevel(mappack.getMappackMetadata().getMinFoodLevel());
+        playerFoodStats.setMaxFoodLevel(mappack.getMappackMetadata().getMaxFoodLevel());
+        player.getEntity().foodStats = playerFoodStats;
     }
 
     @Override
@@ -241,7 +247,6 @@ public class NailedMap implements Map {
 
     @Override
     public Location getRandomSpawnpoint(){
-        if(this.mappack == null) return null;
         List<Location> spawnpoints = mappack.getMappackMetadata().getRandomSpawnpoints();
         if(spawnpoints.size() == 0) return null;
         return spawnpoints.get(NailedMapLoader.instance().getRandomSpawnpointSelector().nextInt(spawnpoints.size()));
@@ -291,7 +296,7 @@ public class NailedMap implements Map {
     }
 
     @Override
-    public WorldServer getWorld() {
+    public World getWorld() {
         return this.world;
     }
 
@@ -337,5 +342,13 @@ public class NailedMap implements Map {
 
     public ServerMachine getMachine() {
         return this.machine;
+    }
+
+    public int getMaxFoodLevel(){
+        return mappack.getMappackMetadata().getMaxFoodLevel();
+    }
+
+    public int getMinFoodLevel(){
+        return mappack.getMappackMetadata().getMinFoodLevel();
     }
 }
