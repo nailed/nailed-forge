@@ -1,9 +1,12 @@
 package jk_5.nailed.map.game;
 
+import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.GameManager;
 import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.Mappack;
 import jk_5.nailed.api.map.PossibleWinner;
 import jk_5.nailed.api.map.scoreboard.DisplayType;
+import jk_5.nailed.api.map.teleport.TeleportOptions;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.map.NailedMap;
 import jk_5.nailed.map.stat.StatTypeManager;
@@ -75,16 +78,25 @@ public class NailedGameManager implements GameManager {
         this.map.getScoreboardManager().setDisplay(DisplayType.BELOW_NAME, null);
         this.map.getScoreboardManager().setDisplay(DisplayType.SIDEBAR, null);
         this.map.getScoreboardManager().setDisplay(DisplayType.BELOW_NAME, null);
-        if (!(map.getMappack() == null) && this.map.getMappack().getMappackMetadata().getTeleportLobby()){
-            for (Player player : this.map.getPlayers()){
-                player.teleportToMap(this.map);
-            }
-        } else {
-            for(Player player : this.map.getPlayers()){
-                player.teleportToLobby();
+
+        Mappack mappack = this.map.getMappack();
+        if(mappack != null){
+            switch(mappack.getMappackMetadata().getPostGameAction()){
+                case TO_LOBBY:
+                    for(Player player : this.map.getPlayers()){
+                        player.teleportToLobby();
+                    }
+                    break;
+                case TO_SPAWN:
+                    TeleportOptions options = this.map.getSpawnTeleport();
+                    for(Player player : this.map.getPlayers()){
+                        NailedAPI.getTeleporter().teleportEntity(player.getEntity(), options);
+                    }
+                    break;
+                case NOTHING:
+                    break;
             }
         }
-
     }
 
     public boolean isWatchUnready() {

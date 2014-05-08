@@ -8,6 +8,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import jk_5.nailed.api.WeatherType;
 import jk_5.nailed.api.map.MappackMetadata;
+import jk_5.nailed.api.map.PostGameAction;
 import jk_5.nailed.api.map.SpawnRules;
 import jk_5.nailed.api.map.team.TeamBuilder;
 import jk_5.nailed.map.Location;
@@ -26,7 +27,6 @@ import java.util.Map;
  */
 public class JsonMappackMetadata implements MappackMetadata {
 
-    private final JsonObject json;
     public String name;
     public Location spawnPoint;
     private List<TeamBuilder> defaultTeams;
@@ -43,10 +43,9 @@ public class JsonMappackMetadata implements MappackMetadata {
     public SpawnRules spawnRules;
     public int minFoodLevel;
     public int maxFoodLevel;
-    public boolean teleportLobby;
+    public PostGameAction postGameAction;
 
     public JsonMappackMetadata(JsonObject json){
-        this.json = json;
         this.spawnPoint = json.has("spawnpoint") ? Location.readFrom(json.get("spawnpoint").getAsJsonObject()) : new Location(0, 64, 0, 0, 0);
         this.name = json.has("name") ? json.get("name").getAsString() : null;
         this.pvpEnabled = !json.has("pvpEnabled") || json.get("pvpEnabled").getAsBoolean();
@@ -56,6 +55,8 @@ public class JsonMappackMetadata implements MappackMetadata {
         this.preventingBlockBreak = json.has("preventBlockBreak") && json.get("preventBlockBreak").getAsBoolean();
         this.choosingRandomSpawnpointAtRespawn = json.has("randomSpawnpointOnRespawn") && json.get("randomSpawnpointOnRespawn").getAsBoolean();
         //this.startWhen = config.getTag("map").getTag("startGameWhen").getValue("false");
+        this.postGameAction = json.has("postGameAction") ? PostGameAction.fromType(json.get("postGameAction").getAsString()) : PostGameAction.NOTHING;
+
         if(json.has("spawns")){
             this.spawnRules = new Gson().fromJson(json.get("spawns"), SpawnRules.class);
             this.spawnRules.refresh();
@@ -101,10 +102,6 @@ public class JsonMappackMetadata implements MappackMetadata {
         if(json.has("maxFoodLevel")){
             this.maxFoodLevel = json.get("maxFoodLevel").getAsInt();
         }
-        if(json.has("TeleportToLobby")){
-            this.teleportLobby = json.get("TeleportToLobby").getAsBoolean();
-        } else { this.teleportLobby = false; }   // true if players teleport to lobby at end of game,
-                                            // otherwise teleported to spawn of mappack
 
         //TODO: this is not used yet
         /*this.permittedWeatherTypes = EnumSet.noneOf(WeatherType.class);
@@ -209,5 +206,5 @@ public class JsonMappackMetadata implements MappackMetadata {
     }
 
     @Override
-    public boolean getTeleportLobby() { return this.teleportLobby; }
+    public PostGameAction getPostGameAction() { return this.postGameAction; }
 }
