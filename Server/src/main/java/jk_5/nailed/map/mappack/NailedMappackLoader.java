@@ -1,6 +1,8 @@
 package jk_5.nailed.map.mappack;
 
 import com.google.common.collect.Lists;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.concurrent.Callback;
@@ -10,6 +12,11 @@ import jk_5.nailed.api.map.MappackLoader;
 import jk_5.nailed.api.map.MappackReloadListener;
 import jk_5.nailed.map.DiscardedMappackInitializationException;
 import jk_5.nailed.map.MappackInitializationException;
+import jk_5.nailed.players.NailedPlayer;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

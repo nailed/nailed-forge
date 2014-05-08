@@ -59,4 +59,8 @@ public interface Player extends PossibleWinner {
     public NailedWebUser getWebUser();
     public void setWebUser(NailedWebUser webUser);
     public void teleportToLobby();
+    public void setMinHealth(int min);
+    public int getMinHealth();
+    public void setMaxHealth(int max);
+    public int getMaxHealth();
 }

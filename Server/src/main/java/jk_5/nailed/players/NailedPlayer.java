@@ -51,6 +51,8 @@ public class NailedPlayer implements Player {
     private int pdaID = -1;
     private NetHandlerPlayServer netHandler;
     private boolean editModeEnabled = false;
+    private int maxHealth;
+    private int minHealth;
 
     private NailedWebUser webUser;
 
@@ -296,4 +298,12 @@ public class NailedPlayer implements Player {
     }
 
     public void teleportToLobby(){ this.teleportToMap(NailedAPI.getMapLoader().getLobby());}
+
+    public void setMaxHealth(int max){ this.maxHealth = max; }
+
+    public int getMaxHealth(){ return this.maxHealth; }
+
+    public void setMinHealth(int min){ this.minHealth = min; }
+
+    public int getMinHealth(){ return this.minHealth; }
 }

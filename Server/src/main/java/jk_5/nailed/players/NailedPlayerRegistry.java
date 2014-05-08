@@ -6,6 +6,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.events.PlayerJoinEvent;
@@ -15,6 +16,7 @@ import jk_5.nailed.api.player.Player;
 import jk_5.nailed.api.player.PlayerRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
 import java.util.List;
 
@@ -136,5 +138,26 @@ public class NailedPlayerRegistry implements PlayerRegistry {
     @Override
     public List<Player> getPlayers() {
         return this.players;
+    }
+
+
+    @SubscribeEvent
+    public void onPlayerHurt(LivingHurtEvent event){
+        if (event.entity instanceof EntityPlayer){
+            float ammount = event.ammount;
+            NailedPlayer player = NailedAPI.getPlayerRegistry().getPlayer((EntityPlayer) event.entity);
+            if (player.getEntity().getHealth() - ammount < player.getMinHealth()){
+                player.getEntity().setHealth(player.getMinHealth());
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onTick(TickEvent.ServerTickEvent event){
+        for(Player player : this.getOnlinePlayers()){
+            if( player.getEntity().getHealth() > player.getMaxHealth()){
+                player.getEntity().setHealth(player.getMaxHealth());
+            }
+        }
     }
 }
