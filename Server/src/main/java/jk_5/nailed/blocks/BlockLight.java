@@ -4,6 +4,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -39,6 +40,7 @@ public class BlockLight extends NailedBlock {
             meta = Math.min(Math.max(meta, 0), 15);
             if(meta != oldMeta){
                 world.setBlockMetadataWithNotify(x, y, z, meta, 3);
+                world.updateLightByType(EnumSkyBlock.Block, x, y, z);
                 entity.addChatComponentMessage(new ChatComponentTranslation("tile.nailed.light.newLevel", meta));
             }
             return true;

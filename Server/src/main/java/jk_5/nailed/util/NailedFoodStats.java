@@ -14,8 +14,8 @@ public class NailedFoodStats extends FoodStats {
     public void onUpdate(EntityPlayer player){
         super.onUpdate(player);
         if (this.maxFoodLevel < this.minFoodLevel && this.maxFoodLevel > 0) return;
-        if (this.getFoodLevel() < this.minFoodLevel) this.setFoodLevel(this.minFoodLevel);
-        if (this.getFoodLevel() > this.maxFoodLevel && this.maxFoodLevel > 0) this.setFoodLevel(this.maxFoodLevel);
+        if (this.getFoodLevel() < this.minFoodLevel) this.foodLevel = this.minFoodLevel;
+        if (this.getFoodLevel() > this.maxFoodLevel && this.maxFoodLevel > 0) this.foodLevel = this.maxFoodLevel;
     }
 
     public void setMinFoodLevel(int value){

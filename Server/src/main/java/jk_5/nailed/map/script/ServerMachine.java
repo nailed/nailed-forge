@@ -126,4 +126,8 @@ public class ServerMachine extends ServerTerminal implements IMachine {
     public void setPreferredSaveDir(File preferredSaveDir) {
         this.preferredSaveDir = preferredSaveDir;
     }
+
+    public ScriptingMachine getVM(){
+        return this.machine;
+    }
 }

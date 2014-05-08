@@ -154,6 +154,7 @@ public class NailedPlayerRegistry implements PlayerRegistry {
 
     @SubscribeEvent
     public void onTick(TickEvent.ServerTickEvent event){
+        if(event.phase == TickEvent.Phase.START) return;
         for(Player player : this.getOnlinePlayers()){
             if( player.getEntity().getHealth() > player.getMaxHealth()){
                 player.getEntity().setHealth(player.getMaxHealth());
