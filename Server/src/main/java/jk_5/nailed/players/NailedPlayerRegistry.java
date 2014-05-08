@@ -145,7 +145,7 @@ public class NailedPlayerRegistry implements PlayerRegistry {
     public void onPlayerHurt(LivingHurtEvent event){
         if (event.entity instanceof EntityPlayer){
             float ammount = event.ammount;
-            NailedPlayer player = NailedAPI.getPlayerRegistry().getPlayer((EntityPlayer) event.entity);
+            Player player = this.getPlayer((EntityPlayer) event.entity);
             if (player.getEntity().getHealth() - ammount < player.getMinHealth()){
                 player.getEntity().setHealth(player.getMinHealth());
             }

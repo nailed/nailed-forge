@@ -102,7 +102,9 @@ public class MapApi implements ILuaAPI {
                 "onStopped",
                 "stopGame",
                 "setMaxFood",
-                "setMinFood"
+                "setMinFood",
+                "setMaxHealth",
+                "setMinHealth"
         };
     }
 
@@ -307,7 +309,6 @@ public class MapApi implements ILuaAPI {
                 break;
             case 24: //setMaxFood
                 if(arguments.length == 1 && arguments[0] instanceof Double){
-                    this.map.getMappack().getMappackMetadata().setMaxFoodLevel(((Double) arguments[0]).intValue());
                     for(Player player:this.map.getPlayers()){
                         ((NailedFoodStats) player.getEntity().getFoodStats()).setMaxFoodLevel(((Double) arguments[0]).intValue());
                     }
@@ -317,9 +318,26 @@ public class MapApi implements ILuaAPI {
                 break;
             case 25: //setMinFood
                 if(arguments.length == 1 && arguments[0] instanceof Double){
-                    this.map.getMappack().getMappackMetadata().setMinFoodLevel(((Double) arguments[0]).intValue());
                     for(Player player:this.map.getPlayers()){
                         ((NailedFoodStats) player.getEntity().getFoodStats()).setMinFoodLevel(((Double) arguments[0]).intValue());
+                    }
+                }else{
+                    throw new Exception("Expected 1 integer argument");
+                }
+                break;
+            case 26:
+                if(arguments.length == 1 && arguments[0] instanceof Double){
+                    for(Player player:this.map.getPlayers()){
+                        player.setMaxHealth(((Double)arguments[0]).intValue());
+                    }
+                }else{
+                    throw new Exception("Expected 1 integer argument");
+                }
+                break;
+            case 27:
+                if(arguments.length == 1 && arguments[0] instanceof Double){
+                    for(Player player:this.map.getPlayers()){
+                        player.setMinHealth(((Double) arguments[0]).intValue());
                     }
                 }else{
                     throw new Exception("Expected 1 integer argument");
