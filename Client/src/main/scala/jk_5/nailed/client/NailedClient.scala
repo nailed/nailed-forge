@@ -17,9 +17,6 @@ import net.minecraft.network.play.server.S2BPacketChangeGameState
 import jk_5.nailed.client.scripting.ClientMachine
 import jk_5.nailed.map.script.MachineRegistry
 import jk_5.nailed.client.updater.UpdaterApi
-import cpw.mods.fml.common.eventhandler.SubscribeEvent
-import cpw.mods.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent
-import net.minecraft.client.Minecraft.{getMinecraft => mc}
 
 /**
  * No description given
@@ -52,14 +49,11 @@ object NailedClient {
     ClientNetworkHandler.registerChannel()
 
     NailedLog.info("Registering event handlers")
-    //val handler = new ServerListHandler
     MinecraftForge.EVENT_BUS.register(TimeUpdateRenderer)
     MinecraftForge.EVENT_BUS.register(new NotificationRenderer())
     MinecraftForge.EVENT_BUS.register(MapEditManager.instance())
     MinecraftForge.EVENT_BUS.register(StencilSkyRenderer)
-    //MinecraftForge.EVENT_BUS.register(handler)
     MinecraftForge.EVENT_BUS.register(TeamInformationRenderer)
-    //FMLCommonHandler.instance().bus().register(handler)
     FMLCommonHandler.instance().bus().register(MapEditManager.instance())
     FMLCommonHandler.instance().bus().register(TickHandlerClient)
     FMLCommonHandler.instance().bus().register(this)
@@ -75,12 +69,8 @@ object NailedClient {
     DimensionManager.registerProviderType(NailedClient.providerId, classOf[NailedWorldProvider], false)
 
     NailedLog.info("Overriding Default WorldProviders")
-    //DimensionManager.unregisterProviderType(-1)
     DimensionManager.unregisterProviderType(0)
-    //DimensionManager.unregisterProviderType(1)
-    //DimensionManager.registerProviderType(-1, classOf[NailedWorldProvider], false)
     DimensionManager.registerProviderType(0, classOf[NailedWorldProvider], true)
-    //DimensionManager.registerProviderType(1, classOf[NailedWorldProvider], false)
 
     S2BPacketChangeGameState.field_149142_a(3) = null //Prevent annoying "Your gamemode has been updated" message. If we want it we'll send it ourselves
 
@@ -91,11 +81,5 @@ object NailedClient {
     NailedLog.info("Registering achievements")
     NailedAchievements.init()
     fixedWidthFontRenderer = new FixedWidthFontRenderer
-  }
-
-  @SubscribeEvent def login(event: ClientConnectedToServerEvent){
-    /*val uuid = mc.getSession.getPlayerID
-    val packet = new NailedPacket.Login(uuid, "§uuidauth")
-    ClientNetworkHandler.sendPacketToServer(packet)*/
   }
 }
