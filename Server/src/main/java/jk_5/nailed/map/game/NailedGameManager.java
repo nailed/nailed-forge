@@ -75,7 +75,7 @@ public class NailedGameManager implements GameManager {
         this.map.getScoreboardManager().setDisplay(DisplayType.BELOW_NAME, null);
         this.map.getScoreboardManager().setDisplay(DisplayType.SIDEBAR, null);
         this.map.getScoreboardManager().setDisplay(DisplayType.BELOW_NAME, null);
-        if (this.map.getMappack().getMappackMetadata().getTeleportLobby()){
+        if (!(map.getMappack() == null) && this.map.getMappack().getMappackMetadata().getTeleportLobby()){
             for (Player player : this.map.getPlayers()){
                 player.teleportToMap(this.map);
             }
