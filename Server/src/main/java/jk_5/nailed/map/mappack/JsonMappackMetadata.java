@@ -191,18 +191,8 @@ public class JsonMappackMetadata implements MappackMetadata {
     }
 
     @Override
-    public void setMinFoodLevel(int min){
-        this.minFoodLevel = min;
-    }
-
-    @Override
     public int getMaxFoodLevel(){
         return this.maxFoodLevel;
-    }
-
-    @Override
-    public void setMaxFoodLevel(int max){
-        this.maxFoodLevel = max;
     }
 
     @Override

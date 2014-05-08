@@ -31,9 +31,7 @@ public interface MappackMetadata {
     String getStartWhen();
     @Deprecated EnumSet<WeatherType> getPermittedWeatherTypes();
     SpawnRules getSpawnRules();
-    void setMaxFoodLevel(int max);
     int getMaxFoodLevel();
-    void setMinFoodLevel(int min);
     int getMinFoodLevel();
     PostGameAction getPostGameAction();
 }
