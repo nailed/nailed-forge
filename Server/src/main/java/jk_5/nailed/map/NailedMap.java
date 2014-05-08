@@ -35,7 +35,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.network.ForgeMessage;
 
@@ -51,7 +51,7 @@ public class NailedMap implements Map {
 
     private int ID;
     private final Mappack mappack;
-    private World world;
+    private WorldServer world;
     private boolean isLoaded = false;
     private final TeamManager teamManager;
     private final StatManager statManager;
@@ -102,7 +102,7 @@ public class NailedMap implements Map {
     }
 
     @Override
-    public void setWorld(World world){
+    public void setWorld(WorldServer world){
         Preconditions.checkNotNull(world);
         this.world = world;
         if(world.provider != null) this.ID = world.provider.dimensionId;
@@ -125,7 +125,7 @@ public class NailedMap implements Map {
         NailedAPI.getMapLoader().removeMap(this);
         NailedAPI.getScheduler().runTaskAsynchronously(new NailedRunnable() {
             @Override
-            public void run(){
+            public void run() {
                 getSaveFolder().delete();
             }
         });
@@ -298,7 +298,7 @@ public class NailedMap implements Map {
     }
 
     @Override
-    public World getWorld() {
+    public WorldServer getWorld() {
         return this.world;
     }
 
