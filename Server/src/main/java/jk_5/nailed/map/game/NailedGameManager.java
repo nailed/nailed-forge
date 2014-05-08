@@ -4,6 +4,7 @@ import jk_5.nailed.api.map.GameManager;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.PossibleWinner;
 import jk_5.nailed.api.map.scoreboard.DisplayType;
+import jk_5.nailed.api.player.Player;
 import jk_5.nailed.map.NailedMap;
 import jk_5.nailed.map.stat.StatTypeManager;
 import jk_5.nailed.map.stat.types.StatTypeGameHasWinner;
@@ -74,6 +75,16 @@ public class NailedGameManager implements GameManager {
         this.map.getScoreboardManager().setDisplay(DisplayType.BELOW_NAME, null);
         this.map.getScoreboardManager().setDisplay(DisplayType.SIDEBAR, null);
         this.map.getScoreboardManager().setDisplay(DisplayType.BELOW_NAME, null);
+        if (this.map.getMappack().getMappackMetadata().getTeleportLobby()){
+            for (Player player : this.map.getPlayers()){
+                player.teleportToMap(this.map);
+            }
+        } else {
+            for(Player player : this.map.getPlayers()){
+                player.teleportToLobby();
+            }
+        }
+
     }
 
     public boolean isWatchUnready() {

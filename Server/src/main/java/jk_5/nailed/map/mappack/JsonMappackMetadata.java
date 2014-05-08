@@ -43,6 +43,7 @@ public class JsonMappackMetadata implements MappackMetadata {
     public SpawnRules spawnRules;
     public int minFoodLevel;
     public int maxFoodLevel;
+    public boolean teleportLobby;
 
     public JsonMappackMetadata(JsonObject json){
         this.json = json;
@@ -100,6 +101,11 @@ public class JsonMappackMetadata implements MappackMetadata {
         if(json.has("maxFoodLevel")){
             this.maxFoodLevel = json.get("maxFoodLevel").getAsInt();
         }
+        if(json.has("TeleportToLobby")){
+            this.teleportLobby = json.get("TeleportToLobby").getAsBoolean();
+        } else { this.teleportLobby = false; }   // true if players teleport to lobby at end of game,
+                                            // otherwise teleported to spawn of mappack
+
         //TODO: this is not used yet
         /*this.permittedWeatherTypes = EnumSet.noneOf(WeatherType.class);
         ConfigTag weatherTag = this.config.getTag("permittedWeather");
@@ -191,4 +197,7 @@ public class JsonMappackMetadata implements MappackMetadata {
     public int getMaxFoodLevel(){
         return this.maxFoodLevel;
     }
+
+    @Override
+    public boolean getTeleportLobby() { return this.teleportLobby; }
 }

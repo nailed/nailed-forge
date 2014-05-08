@@ -58,4 +58,5 @@ public interface Player extends PossibleWinner {
     public void setEditModeEnabled(boolean editModeEnabled);
     public NailedWebUser getWebUser();
     public void setWebUser(NailedWebUser webUser);
+    public void teleportToLobby();
 }

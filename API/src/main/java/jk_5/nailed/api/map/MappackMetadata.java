@@ -33,4 +33,5 @@ public interface MappackMetadata {
     SpawnRules getSpawnRules();
     int getMaxFoodLevel();
     int getMinFoodLevel();
+    boolean getTeleportLobby();
 }
