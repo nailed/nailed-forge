@@ -150,6 +150,7 @@ public class NailedPlayerRegistry implements PlayerRegistry {
                 player.getEntity().setHealth(player.getMinHealth());
             }
         }
+        event.setCanceled(true);
     }
 
     @SubscribeEvent
