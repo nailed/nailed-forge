@@ -6,7 +6,7 @@ Todo:
 - Native cypher
 
 Lua:
-- player.keepHealth
++ player.keepHealth
 + player.keepFood
 + inventory management (give)
 - respawn event

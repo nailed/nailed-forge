@@ -144,15 +144,20 @@ public class NailedMap implements Map {
     }
 
     @Override
-    public void onPlayerJoined(Player player){
+    public void onPlayerJoined(Player player) {
         NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.TimeUpdate(""), player.getEntity());
         this.scoreboardManager.onPlayerJoinedMap(player);
         this.teamManager.onPlayerJoinedMap(player);
         this.players.add(player);
         NailedMapLoader.instance().checkShouldStart(this);
         NailedFoodStats playerFoodStats = new NailedFoodStats();
-        playerFoodStats.setMinFoodLevel(mappack.getMappackMetadata().getMinFoodLevel());
-        playerFoodStats.setMaxFoodLevel(mappack.getMappackMetadata().getMaxFoodLevel());
+        if (mappack != null) {
+            playerFoodStats.setMinFoodLevel(mappack.getMappackMetadata().getMinFoodLevel());
+            playerFoodStats.setMaxFoodLevel(mappack.getMappackMetadata().getMaxFoodLevel());
+        }else{
+            playerFoodStats.setMinFoodLevel(0);
+            playerFoodStats.setMinFoodLevel(-1);
+        }
         player.getEntity().foodStats = playerFoodStats;
         this.getMachine().queueEvent("playerJoinEvent", player.getUsername());
     }
