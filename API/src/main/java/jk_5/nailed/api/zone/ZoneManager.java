@@ -1,5 +1,7 @@
 package jk_5.nailed.api.zone;
 
+import jk_5.nailed.api.player.Player;
+
 import java.util.Set;
 
 /**
@@ -10,4 +12,5 @@ import java.util.Set;
 public interface ZoneManager {
 
     public Set<IZone> getZones(double x, double y, double z);
+    public Set<IZone> getZones(Player player);
 }

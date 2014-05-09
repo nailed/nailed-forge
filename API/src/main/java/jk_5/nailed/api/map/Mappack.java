@@ -3,6 +3,7 @@ package jk_5.nailed.api.map;
 import jk_5.nailed.api.concurrent.Callback;
 import jk_5.nailed.api.map.stat.StatConfig;
 import jk_5.nailed.api.scripting.IMount;
+import jk_5.nailed.api.zone.ZoneConfig;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -65,4 +66,6 @@ public interface Mappack {
     boolean saveAsMappack(@Nonnull Map map);
 
     @Nullable IMount createMount();
+
+    @Nonnull ZoneConfig getZoneConfig();
 }

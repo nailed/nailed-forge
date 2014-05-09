@@ -9,9 +9,11 @@ import jk_5.nailed.api.map.MapBuilder;
 import jk_5.nailed.api.map.Mappack;
 import jk_5.nailed.api.map.MappackMetadata;
 import jk_5.nailed.api.scripting.IMount;
+import jk_5.nailed.api.zone.ZoneConfig;
 import jk_5.nailed.map.DiscardedMappackInitializationException;
 import jk_5.nailed.map.MappackInitializationException;
 import jk_5.nailed.map.stat.StatConfig;
+import jk_5.nailed.permissions.zone.DefaultZoneConfig;
 import org.apache.commons.io.IOUtils;
 
 import javax.annotation.Nonnull;
@@ -33,6 +35,7 @@ public class ZipMappack implements Mappack {
     private final File mappackFile;
     private final MappackMetadata mappackMetadata;
     private StatConfig statConfig;
+    private ZoneConfig zoneConfig;
 
     private ZipMappack(File mappackFile, JsonMappackMetadata metadata){
         this.mappackID = mappackFile.getName().substring(0, mappackFile.getName().length() - 8);
@@ -44,6 +47,7 @@ public class ZipMappack implements Mappack {
     public static Mappack create(File file) throws MappackInitializationException {
         ZipMappack pack = null;
         StatConfig stats = new StatConfig();
+        ZoneConfig zones = new DefaultZoneConfig();
         ZipInputStream zipStream = null;
         try{
             zipStream = new ZipInputStream(new FileInputStream(file));
@@ -53,6 +57,8 @@ public class ZipMappack implements Mappack {
                     pack = new ZipMappack(file, new JsonMappackMetadata((JsonObject) new JsonParser().parse(new InputStreamReader(zipStream))));
                 }else if(entry.getName().equals("stats.json")){
                     stats = new StatConfig(new JsonParser().parse(new InputStreamReader(zipStream)).getAsJsonArray());
+                }else if(entry.getName().equals("zones.json")){
+                    zones = new DefaultZoneConfig(new JsonParser().parse(new InputStreamReader(zipStream)).getAsJsonArray());
                 }
                 entry = zipStream.getNextEntry();
             }
@@ -69,6 +75,7 @@ public class ZipMappack implements Mappack {
             throw new DiscardedMappackInitializationException("mappack.json was not found in mappack " + file.getName());
         }
         pack.statConfig = stats;
+        pack.zoneConfig = zones;
         return pack;
     }
 
@@ -146,5 +153,11 @@ public class ZipMappack implements Mappack {
     @Override
     public jk_5.nailed.api.map.stat.StatConfig getStatConfig() {
         return this.statConfig;
+    }
+
+    @Nonnull
+    @Override
+    public ZoneConfig getZoneConfig() {
+        return this.zoneConfig;
     }
 }

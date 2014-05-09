@@ -3,6 +3,7 @@ package jk_5.nailed.permissions.zone;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.player.Player;
 import jk_5.nailed.api.zone.IZone;
 import jk_5.nailed.api.zone.ZoneConfig;
 import jk_5.nailed.api.zone.ZoneManager;
@@ -36,5 +37,10 @@ public class DefaultZoneManager implements ZoneManager {
             }
         }
         return ret;
+    }
+
+    @Override
+    public Set<IZone> getZones(Player player) {
+        return this.getZones(player.getEntity().posX, player.getEntity().posY, player.getEntity().posZ);
     }
 }
