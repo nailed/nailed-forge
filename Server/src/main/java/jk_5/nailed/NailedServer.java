@@ -11,6 +11,7 @@ import cpw.mods.fml.relauncher.FMLLaunchHandler;
 import jk_5.nailed.achievement.AchievementEventListener;
 import jk_5.nailed.achievement.NailedAchievements;
 import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.events.RegisterZoneEvent;
 import jk_5.nailed.blocks.NailedBlocks;
 import jk_5.nailed.chat.joinmessage.JoinMessageSender;
 import jk_5.nailed.ipc.IpcEventListener;
@@ -31,6 +32,7 @@ import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.permissions.NailedPermissionFactory;
 import jk_5.nailed.permissions.PermissionEventHandler;
 import jk_5.nailed.permissions.zone.NailedZoneRegistry;
+import jk_5.nailed.permissions.zone.types.*;
 import jk_5.nailed.players.NailedPlayerRegistry;
 import jk_5.nailed.scheduler.NailedScheduler;
 import jk_5.nailed.scheduler.SchedulerCrashCallable;
@@ -226,6 +228,14 @@ public class NailedServer {
             EntityPlayer player = (EntityPlayer) event.entity;
             player.foodStats = new NailedFoodStats();
         }
+    }
+
+    @SubscribeEvent
+    public void onZoneRegistry(RegisterZoneEvent event){
+        event.registerZoneType("Square", new SquareZoneType());
+        event.registerZoneType("Cube", new CubeZoneType());
+        event.registerZoneType("Circle", new CircleZoneType());
+        event.registerZoneType("Sphere", new SphereZoneType());
     }
 
     public static JsonObject getConfig() {
