@@ -2,7 +2,7 @@ package jk_5.nailed.api.zone;
 
 import com.google.gson.JsonObject;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * No description given
@@ -10,6 +10,5 @@ import javax.annotation.Nullable;
  * @author jk-5
  */
 public interface IZoneType {
-    @Nullable
-    IZone read(JsonObject json);
+    @Nonnull IZone read(JsonObject json) throws ZoneDataException;
 }

@@ -9,6 +9,7 @@ import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.zone.IZone;
 import jk_5.nailed.api.zone.IZoneType;
 import jk_5.nailed.api.zone.ZoneConfig;
+import jk_5.nailed.api.zone.ZoneDataException;
 
 import java.util.List;
 
@@ -33,12 +34,12 @@ public class DefaultZoneConfig implements ZoneConfig {
                     NailedLog.warn("Unknown zone type {}", obj.get("type").getAsString());
                     continue;
                 }
-                IZone zone = type.read(obj);
-                if(zone == null){
-                    NailedLog.warn("Invalid or corrupt zone data");
-                    continue;
+                try{
+                    IZone zone = type.read(obj);
+                    this.zones.add(zone);
+                }catch(ZoneDataException e){
+                    NailedLog.warn("Invalid or corrupt zone data", e);
                 }
-                this.zones.add(zone);
             }
         }
     }
