@@ -6,8 +6,6 @@ import jk_5.nailed.api.zone.IZoneType;
 import jk_5.nailed.api.zone.ZoneRegistry;
 import net.minecraftforge.common.MinecraftForge;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Map;
 
 /**
@@ -28,11 +26,5 @@ public class NailedZoneRegistry implements ZoneRegistry {
     @Override
     public void registerZones() {
         MinecraftForge.EVENT_BUS.post(new RegisterZoneEvent(this.zoneTypes));
-    }
-
-    @Nullable
-    @Override
-    public IZoneType getZoneType(@Nonnull String type) {
-        return this.zoneTypes.get(type);
     }
 }
