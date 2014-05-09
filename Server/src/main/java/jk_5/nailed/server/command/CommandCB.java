@@ -1,11 +1,8 @@
 package jk_5.nailed.server.command;
 
 import com.google.common.base.Joiner;
-import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.teleport.TeleportOptions;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChatComponentText;
 
 /**
@@ -30,11 +27,6 @@ public class CommandCB extends NailedCommand {
             String msg = Joiner.on(' ').join(args);
             msg = msg.substring(msg.indexOf(' ') + 1);
             map.broadcastNotification(msg);
-        }else if(args[0].equalsIgnoreCase("tpToRandomSpawn")){
-            EntityPlayerMP[] players = getPlayersList(sender, args[1]);
-            for(EntityPlayerMP player : players){
-                NailedAPI.getTeleporter().teleportEntity(player, TeleportOptions.builder().location(map.getRandomSpawnpoint()).build());
-            }
         }
     }
 }
