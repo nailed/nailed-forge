@@ -37,7 +37,7 @@ public class CommandDifficulty extends NailedCommand {
                 newDifficulty = EnumDifficulty.HARD;
             }else throw new WrongUsageException("commands.difficulty.usage");
             map.getWorld().difficultySetting = newDifficulty;
-            map.getWorld().setAllowedSpawnTypes(newDifficulty != EnumDifficulty.PEACEFUL, true); //TODO: check mappack config?
+            map.getWorld().setAllowedSpawnTypes(newDifficulty != EnumDifficulty.PEACEFUL, true);
             sender.addChatMessage(new ChatComponentText("Successfully changed difficulty"));
         }else throw new WrongUsageException("commands.difficulty.usage");
     }

@@ -6,18 +6,7 @@ Todo:
 - Native cypher
 
 Lua:
-+ player.keepHealth
-+ player.keepFood
-+ inventory management (give)
-+ respawn event
-+ join event
-+ leave event
-+ minimum food level
-+ minimum health level
 - map.getPlayers() doesn't return dead players
-
-General
-+ Teleport everyone to map spawn after game (With mappack config)
 
 Bugs:
 - PULSE_OFF pulses on enable
@@ -41,6 +30,3 @@ loggerConfig.setLevel(Level.ALL);
 ctx.updateLoggers();
 
 http://stackoverflow.com/questions/2937406/how-to-bundle-a-native-library-and-a-jni-library-inside-a-jar
-
-
-field_147334_j is always ""
