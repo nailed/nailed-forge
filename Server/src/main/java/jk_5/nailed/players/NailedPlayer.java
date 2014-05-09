@@ -15,6 +15,7 @@ import jk_5.nailed.api.player.Player;
 import jk_5.nailed.chat.joinmessage.JoinMessageSender;
 import jk_5.nailed.ipc.IpcManager;
 import jk_5.nailed.map.Location;
+import jk_5.nailed.map.NailedMap;
 import jk_5.nailed.map.Spawnpoint;
 import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.network.NailedPacket;
@@ -155,6 +156,9 @@ public class NailedPlayer implements Player {
 
     public void onRespawn() {
         this.getEntity().setSpawnChunk(null, false);
+        if(this.getCurrentMap() instanceof NailedMap){
+            ((NailedMap) this.getCurrentMap()).getMachine().queueEvent("respawnEvent", this);
+        }
     }
 
     public void teleportToMap(Map map){

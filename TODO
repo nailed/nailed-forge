@@ -9,7 +9,7 @@ Lua:
 + player.keepHealth
 + player.keepFood
 + inventory management (give)
-- respawn event
++ respawn event
 + join event
 + leave event
 + minimum food level
@@ -27,8 +27,8 @@ Bugs:
 Command permission levels:  (See http://minecraft.gamepedia.com/Server.properties#Minecraft_server_properties)
 0. Everybody
 1. Ops can only bypass spawn protection
-2. OP & Commandblock
-3. OP Only
+2. OP & Commandblock (clear, difficulty)
+3. OP Only (kick, ban etc)
 4. Permission for /stop
 
 Op permission level is configurable
