@@ -12,6 +12,7 @@ import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.events.PlayerJoinEvent;
 import jk_5.nailed.api.events.PlayerLeaveEvent;
 import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.Mappack;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.api.player.PlayerRegistry;
 import net.minecraft.entity.player.EntityPlayer;
@@ -160,6 +161,10 @@ public class NailedPlayerRegistry implements PlayerRegistry {
         if (event.entity instanceof EntityPlayer){
             Player player = this.getPlayer((EntityPlayer) event.entity);
             float damageTaken = event.distance - 4;
+            if (player.getCurrentMap().getMappack() != null) {
+                Mappack mappack = player.getCurrentMap().getMappack();
+                if (mappack.getMappackMetadata().isFallDamageDisabled()) damageTaken = 0;
+            }
             if (player.getEntity().getHealth() - damageTaken < player.getMinHealth()){
                 event.setCanceled(true);
                 player.getEntity().setHealth(player.getMinHealth());

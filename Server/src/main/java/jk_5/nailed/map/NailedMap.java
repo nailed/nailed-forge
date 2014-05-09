@@ -61,8 +61,6 @@ public class NailedMap implements Map {
     private GameManager gameManager;
     private NailedScoreboardManager scoreboardManager;
     private List<Player> players = Lists.newArrayList();
-    private int minFoodLevel;
-    private int maxFoodLevel;
 
     private ServerMachine machine;
     public IMount mappackMount;
@@ -159,6 +157,8 @@ public class NailedMap implements Map {
         }else{
             playerFoodStats.setMinFoodLevel(0);
             playerFoodStats.setMinFoodLevel(15);
+            player.setMinHealth(1);
+            player.setMaxHealth(20);
         }
         player.getEntity().foodStats = playerFoodStats;
         this.getMachine().queueEvent("playerJoinEvent", player.getUsername());

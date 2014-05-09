@@ -35,6 +35,7 @@ public class JsonMappackMetadata implements MappackMetadata {
     public String gameType;
     public boolean preventingBlockBreak;
     public boolean pvpEnabled;
+    public boolean fallDamageDisabled;
     public WorldSettings.GameType gamemode;
     public boolean choosingRandomSpawnpointAtRespawn;
     public List<Location> randomSpawnpoints;
@@ -55,6 +56,7 @@ public class JsonMappackMetadata implements MappackMetadata {
         this.difficulty = EnumDifficulty.getDifficultyEnum(json.has("difficulty") ? json.get("difficulty").getAsInt() : 2);
         this.gameType = json.has("gametype") ? json.get("gametype").getAsString() : "default";
         this.preventingBlockBreak = json.has("preventBlockBreak") && json.get("preventBlockBreak").getAsBoolean();
+        this.fallDamageDisabled = json.has("fallDamageDisabled") && json.get("FallDamageDisabled").getAsBoolean();
         this.choosingRandomSpawnpointAtRespawn = json.has("randomSpawnpointOnRespawn") && json.get("randomSpawnpointOnRespawn").getAsBoolean();
         this.startWhen = json.has("startGameWhen") ? json.get("startGameWhen").getAsString() : "false";
         this.postGameAction = json.has("postGameAction") ? PostGameAction.fromType(json.get("postGameAction").getAsString()) : PostGameAction.NOTHING;
@@ -164,6 +166,9 @@ public class JsonMappackMetadata implements MappackMetadata {
     public boolean isPvpEnabled() {
         return this.pvpEnabled;
     }
+
+    @Override
+    public boolean isFallDamageDisabled() { return this.fallDamageDisabled; }
 
     @Override
     public WorldSettings.GameType getGamemode() {

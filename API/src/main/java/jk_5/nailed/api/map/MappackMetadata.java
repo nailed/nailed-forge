@@ -25,6 +25,7 @@ public interface MappackMetadata {
     String getGameType();
     boolean isPreventingBlockBreak();
     boolean isPvpEnabled();
+    boolean isFallDamageDisabled();
     WorldSettings.GameType getGamemode();
     boolean isChoosingRandomSpawnpointAtRespawn();
     List<Location> getRandomSpawnpoints();
