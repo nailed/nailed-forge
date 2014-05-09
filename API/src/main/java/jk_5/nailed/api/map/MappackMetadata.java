@@ -37,4 +37,5 @@ public interface MappackMetadata {
     int getMaxHealth();
     int getMinHealth();
     PostGameAction getPostGameAction();
+    List<NailedZone> getMapZones();
 }

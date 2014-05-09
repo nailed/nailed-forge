@@ -8,10 +8,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import jk_5.nailed.api.WeatherType;
 import jk_5.nailed.api.map.MappackMetadata;
+import jk_5.nailed.api.map.NailedZone;
 import jk_5.nailed.api.map.PostGameAction;
 import jk_5.nailed.api.map.SpawnRules;
 import jk_5.nailed.api.map.team.TeamBuilder;
 import jk_5.nailed.map.Location;
+import jk_5.nailed.map.NailedSecureZone;
 import jk_5.nailed.util.ChatColor;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.WorldSettings;
@@ -47,6 +49,7 @@ public class JsonMappackMetadata implements MappackMetadata {
     public int minHealth;
     public int maxHealth;
     public PostGameAction postGameAction;
+    public List<NailedZone> zones;
 
     public JsonMappackMetadata(JsonObject json){
         this.spawnPoint = json.has("spawnpoint") ? Location.readFrom(json.get("spawnpoint").getAsJsonObject()) : new Location(0, 64, 0, 0, 0);
@@ -98,6 +101,16 @@ public class JsonMappackMetadata implements MappackMetadata {
                 this.randomSpawnpoints.add(Location.readFrom(t.getAsJsonObject()));
             }
         }
+
+        this.zones = Lists.newArrayList();
+        if(json.has("zones")){
+            JsonArray zones = json.getAsJsonArray("zones");
+            for(JsonElement z : zones){
+                NailedZone zone = NailedSecureZone.readFrom(z.getAsJsonObject());
+                if( zone != null) this.zones.add(zone);
+            }
+        }
+
         this.minFoodLevel = 0;
         this.maxFoodLevel = -1;
         this.minHealth = 5;
@@ -218,4 +231,9 @@ public class JsonMappackMetadata implements MappackMetadata {
 
     @Override
     public PostGameAction getPostGameAction() { return this.postGameAction; }
+
+    @Override
+    public List<NailedZone> getMapZones(){
+        return this.zones;
+    }
 }

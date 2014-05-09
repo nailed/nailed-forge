@@ -55,7 +55,9 @@ public interface Player extends PossibleWinner {
     public NetHandlerPlayServer getNetHandler();
     public void sendTimeUpdate(String argument);
     public boolean isEditModeEnabled();
+    public boolean isSuperEditModeEnabled();
     public void setEditModeEnabled(boolean editModeEnabled);
+    public void setSuperEditModeEnabled(boolean superEditModeEnabled);
     public NailedWebUser getWebUser();
     public void setWebUser(NailedWebUser webUser);
     public void teleportToLobby();

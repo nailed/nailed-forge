@@ -197,7 +197,15 @@ public class NailedMapLoader implements MapLoader {
     public void onBlockBreak(BlockEvent.BreakEvent event){
         Mappack mappack = this.getMap(event.world).getMappack();
         if(mappack != null && mappack.getMappackMetadata().isPreventingBlockBreak()){
-            if(!NailedAPI.getPlayerRegistry().getPlayer(event.getPlayer()).isEditModeEnabled()){
+            boolean inSecureZone = false;
+            for( NailedZone zone : mappack.getMappackMetadata().getMapZones()){
+                inSecureZone = (inSecureZone || (zone.isInZone(event.x, event.y, event.z) && zone.isSecure()));
+            }
+            if(!inSecureZone){
+                if(!NailedAPI.getPlayerRegistry().getPlayer(event.getPlayer()).isEditModeEnabled()){
+                    event.setCanceled(true);
+                }
+            } else if (!NailedAPI.getPlayerRegistry().getPlayer(event.getPlayer()).isSuperEditModeEnabled()){
                 event.setCanceled(true);
             }
         }

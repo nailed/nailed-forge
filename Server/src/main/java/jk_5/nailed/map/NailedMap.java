@@ -11,10 +11,7 @@ import jk_5.nailed.NailedLog;
 import jk_5.nailed.NailedServer;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.concurrent.scheduler.NailedRunnable;
-import jk_5.nailed.api.map.GameManager;
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.Mappack;
-import jk_5.nailed.api.map.MappackMetadata;
+import jk_5.nailed.api.map.*;
 import jk_5.nailed.api.map.teleport.TeleportOptions;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.api.scripting.IMount;
@@ -61,6 +58,7 @@ public class NailedMap implements Map {
     private GameManager gameManager;
     private NailedScoreboardManager scoreboardManager;
     private List<Player> players = Lists.newArrayList();
+    private List<NailedZone> zones = Lists.newArrayList();
 
     private ServerMachine machine;
     public IMount mappackMount;
