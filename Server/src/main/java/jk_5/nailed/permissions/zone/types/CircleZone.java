@@ -1,26 +1,21 @@
 package jk_5.nailed.permissions.zone.types;
 
-import jk_5.nailed.api.zone.IZone;
-
-import javax.annotation.Nonnull;
+import com.google.common.base.Objects;
 
 /**
  * Created by matthias on 9-5-14.
  */
-public class CircleZone implements IZone {
+public class CircleZone extends AbstractZone {
 
-    private String name;
     private int x;
     private int z;
     private int r;
-    private boolean inverted;
 
     public CircleZone(String name, int x, int z, int r, boolean inverted){
-        this.name = name;
+        super(name, inverted);
         this.x = x;
         this.z = z;
         this.r = r;
-        this.inverted = inverted;
     }
 
     @Override
@@ -33,9 +28,14 @@ public class CircleZone implements IZone {
         return new CircleZone(this.name, this.x, this.z, this.r, this.inverted);
     }
 
-    @Nonnull
     @Override
-    public String getName(){
-        return this.name;
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("name", name)
+                .add("inverted", inverted)
+                .add("x", x)
+                .add("z", z)
+                .add("r", r)
+                .toString();
     }
 }
