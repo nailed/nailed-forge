@@ -1,5 +1,7 @@
 package jk_5.nailed.api.zone;
 
+import java.util.List;
+
 /**
  * No description given
  *
@@ -7,4 +9,7 @@ package jk_5.nailed.api.zone;
  */
 public interface ZoneConfig {
 
+    @SuppressWarnings("CloneDoesntDeclareCloneNotSupportedException")
+    public ZoneConfig clone();
+    public List<IZone> getZones();
 }

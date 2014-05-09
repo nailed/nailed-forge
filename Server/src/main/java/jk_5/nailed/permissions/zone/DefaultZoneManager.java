@@ -1,8 +1,10 @@
 package jk_5.nailed.permissions.zone;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Sets;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.zone.IZone;
+import jk_5.nailed.api.zone.ZoneConfig;
 import jk_5.nailed.api.zone.ZoneManager;
 
 import java.util.Set;
@@ -14,14 +16,25 @@ import java.util.Set;
  */
 public class DefaultZoneManager implements ZoneManager {
 
-    private final Map map;
+    private final ZoneConfig zones;
 
     public DefaultZoneManager(Map map){
-        this.map = map;
+        if(map.getMappack() != null){
+            Preconditions.checkNotNull(map.getMappack().getZoneConfig(), "ZoneConfig may not be null!");
+            this.zones = map.getMappack().getZoneConfig().clone();
+        }else{
+            this.zones = new DefaultZoneConfig();
+        }
     }
 
     @Override
     public Set<IZone> getZones(double x, double y, double z) {
-        return ImmutableSet.of(); //TODO: jk-5: implement this
+        Set<IZone> ret = Sets.newHashSet();
+        for(IZone zone : this.zones.getZones()){
+            if(zone.isInZone(x, y, z)){
+                ret.add(zone);
+            }
+        }
+        return ret;
     }
 }

@@ -42,4 +42,18 @@ public class DefaultZoneConfig implements ZoneConfig {
             }
         }
     }
+
+    @SuppressWarnings("CloneDoesntDeclareCloneNotSupportedException")
+    public ZoneConfig clone() {
+        DefaultZoneConfig config = new DefaultZoneConfig();
+        for(IZone zone : this.zones){
+            config.zones.add(zone.clone());
+        }
+        return config;
+    }
+
+    @Override
+    public List<IZone> getZones() {
+        return this.zones;
+    }
 }
