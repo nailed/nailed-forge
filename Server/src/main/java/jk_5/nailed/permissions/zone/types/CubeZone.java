@@ -1,10 +1,8 @@
 package jk_5.nailed.permissions.zone.types;
 
-import com.google.gson.JsonObject;
-import com.sun.javafx.beans.annotations.NonNull;
 import jk_5.nailed.api.zone.IZone;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * Created by matthias on 9-5-14.
@@ -12,6 +10,7 @@ import javax.annotation.Nullable;
  * Secure non-break zone
  */
 public class CubeZone implements IZone {
+
     private String name;
     private int x1;
     private int y1;
@@ -32,15 +31,17 @@ public class CubeZone implements IZone {
         this.inverted = inverted;
     }
 
+    @Override
     public boolean isInZone(double x, double y, double z){
         return ((x1<x && x<x2 && y1 < y && y < y2 && z1 < z && z < z2) ^ inverted);
     }
 
+    @Override
     public CubeZone reMake(){
         return new CubeZone(this.name, this.x1, this.y1, this.z1, this.x2, this.y2, this.z2, this.inverted);
     }
 
-    @NonNull
+    @Nonnull
     @Override
     public String getName(){
         return this.name;

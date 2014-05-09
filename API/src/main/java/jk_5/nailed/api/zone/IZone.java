@@ -8,6 +8,5 @@ import javax.annotation.Nonnull;
 public interface IZone {
     public boolean isInZone(double x, double y, double z);
     public IZone reMake();
-    @Nonnull
-    public String getName();
+    @Nonnull public String getName();
 }

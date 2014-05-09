@@ -10,6 +10,8 @@ import javax.annotation.Nullable;
  * Created by matthias on 9-5-14.
  */
 public class CubeZoneType implements IZoneType {
+
+    @Override
     @Nullable
     public IZone read(JsonObject object){
         String name = object.has("name") ? object.get("name").getAsString() : "";
@@ -19,7 +21,7 @@ public class CubeZoneType implements IZoneType {
         int x2 = object.has("x2") ? object.get("x2").getAsInt() : 1;
         int y2 = object.has("y2") ? object.get("y2").getAsInt() : 1;
         int z2 = object.has("z2") ? object.get("z2").getAsInt() : 1;
-        boolean inverted = object.has("inverted") ? object.get("inverted").getAsBoolean() : false;
+        boolean inverted = object.has("inverted") && object.get("inverted").getAsBoolean();
 
         if(x2 <= x1 || y2 <= y1 || z2 <= z1 || name.equals("")) return null;
         return new CubeZone(name, x1, y1, z1, x2, y2, z2, inverted);

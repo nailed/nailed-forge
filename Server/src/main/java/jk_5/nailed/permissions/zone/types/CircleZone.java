@@ -1,12 +1,14 @@
 package jk_5.nailed.permissions.zone.types;
 
-import com.sun.javafx.beans.annotations.NonNull;
 import jk_5.nailed.api.zone.IZone;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by matthias on 9-5-14.
  */
 public class CircleZone implements IZone {
+
     private String name;
     private int x;
     private int z;
@@ -21,15 +23,17 @@ public class CircleZone implements IZone {
         this.inverted = inverted;
     }
 
+    @Override
     public boolean isInZone(double x, double y, double z){
         return ((r >= Math.sqrt((x-this.x)*(x-this.x) + (z-this.z)*(z-this.z))) ^ inverted);
     }
 
+    @Override
     public CircleZone reMake(){
         return new CircleZone(this.name, this.x, this.z, this.r, this.inverted);
     }
 
-    @NonNull
+    @Nonnull
     @Override
     public String getName(){
         return this.name;

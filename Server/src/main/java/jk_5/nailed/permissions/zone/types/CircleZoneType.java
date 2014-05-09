@@ -10,6 +10,8 @@ import javax.annotation.Nullable;
  * Created by matthias on 9-5-14.
  */
 public class CircleZoneType implements IZoneType {
+
+    @Override
     @Nullable
     public IZone read(JsonObject object){
         String name = object.has("name") ? object.get("name").getAsString() : "";
@@ -17,9 +19,9 @@ public class CircleZoneType implements IZoneType {
         int y = object.has("y") ? object.get("y").getAsInt() : 0;
         int z = object.has("z") ? object.get("z").getAsInt() : 0;
         int r = object.has("r") ? object.get("r").getAsInt() : 1;
-        boolean inverted = object.has("inverted") ? object.get("inverted").getAsBoolean() : false;
+        boolean inverted = object.has("inverted") && object.get("inverted").getAsBoolean();
 
         if(r <= 0 || name.equals("")) return null;
-        return new SphereZone(x, y, z, r, inverted);
+        return new SphereZone(name, x, y, z, r, inverted);
     }
 }

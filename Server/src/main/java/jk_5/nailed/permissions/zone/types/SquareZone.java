@@ -2,6 +2,8 @@ package jk_5.nailed.permissions.zone.types;
 
 import jk_5.nailed.api.zone.IZone;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by matthias on 9-5-14.
  */
@@ -22,14 +24,18 @@ public class SquareZone implements IZone {
         this.inverted = inverted;
     }
 
+    @Override
     public boolean isInZone(double x, double y, double z){
         return ((x1 < x && x < x2 && z1 < z && z < z2) ^ inverted);
     }
 
+    @Override
     public SquareZone reMake(){
         return new SquareZone(this.name, this.x1, this.z1, this.x2, this.z2, this.inverted);
     }
 
+    @Nonnull
+    @Override
     public String getName(){
         return this.name;
     }

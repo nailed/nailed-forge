@@ -1,12 +1,14 @@
 package jk_5.nailed.permissions.zone.types;
 
-import com.sun.javafx.beans.annotations.NonNull;
 import jk_5.nailed.api.zone.IZone;
+
+import javax.annotation.Nonnull;
 
 /**
  * Created by matthias on 9-5-14.
  */
 public class SphereZone implements IZone {
+
     private String name;
     private int x;
     private int y;
@@ -23,15 +25,17 @@ public class SphereZone implements IZone {
         this.inverted = inverted;
     }
 
+    @Override
     public boolean isInZone(double x, double y, double z){
         return ((r >= Math.sqrt((x-this.x) * (x-this.x) + (y-this.y) * (y-this.y) + (z-this.z) * (z-this.z))) ^ inverted);
     }
 
+    @Override
     public SphereZone reMake(){
         return new SphereZone(this.name, this.x, this.y, this.z, this.r, this.inverted);
     }
 
-    @NonNull
+    @Nonnull
     @Override
     public String getName(){
         return this.name;
