@@ -9,5 +9,5 @@ import java.util.Set;
  */
 public interface ZoneManager {
 
-    public Set<NailedZone> getZones(double x, double y, double z);
+    public Set<IZone> getZones(double x, double y, double z);
 }

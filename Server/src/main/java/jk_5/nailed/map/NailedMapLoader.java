@@ -15,7 +15,7 @@ import jk_5.nailed.api.events.MapCreatedEvent;
 import jk_5.nailed.api.events.MapRemovedEvent;
 import jk_5.nailed.api.map.*;
 import jk_5.nailed.api.player.Player;
-import jk_5.nailed.api.zone.NailedZone;
+import jk_5.nailed.api.zone.IZone;
 import jk_5.nailed.map.gen.NailedWorldProvider;
 import jk_5.nailed.map.script.api.MapApi;
 import jk_5.nailed.players.TeamUndefined;
@@ -199,7 +199,7 @@ public class NailedMapLoader implements MapLoader {
         Mappack mappack = this.getMap(event.world).getMappack();
         if(mappack != null && mappack.getMappackMetadata().isPreventingBlockBreak()){
             boolean inSecureZone = false;
-            for( NailedZone zone : mappack.getMappackMetadata().getMapZones()){
+            for( IZone zone : mappack.getMappackMetadata().getMapZones()){
                 inSecureZone = (inSecureZone || (zone.isInZone(event.x, event.y, event.z) && zone.isSecure()));
             }
             if(!inSecureZone){

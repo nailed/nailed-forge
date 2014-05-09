@@ -2,7 +2,7 @@ package jk_5.nailed.permissions.zone;
 
 import com.google.common.collect.ImmutableSet;
 import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.zone.NailedZone;
+import jk_5.nailed.api.zone.IZone;
 import jk_5.nailed.api.zone.ZoneManager;
 
 import java.util.Set;
@@ -21,7 +21,7 @@ public class DefaultZoneManager implements ZoneManager {
     }
 
     @Override
-    public Set<NailedZone> getZones(double x, double y, double z) {
+    public Set<IZone> getZones(double x, double y, double z) {
         return ImmutableSet.of(); //TODO: jk-5: implement this
     }
 }

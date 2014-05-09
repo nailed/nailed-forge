@@ -1,7 +1,7 @@
 package jk_5.nailed.permissions.zone;
 
 import com.google.gson.JsonObject;
-import jk_5.nailed.api.zone.NailedZone;
+import jk_5.nailed.api.zone.IZone;
 
 import javax.annotation.Nullable;
 
@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
  *
  * Secure non-break zone
  */
-public class NailedSecureZone implements NailedZone {
+public class CubeZone implements IZone {
     private int x1;
     private int y1;
     private int z1;
@@ -19,7 +19,7 @@ public class NailedSecureZone implements NailedZone {
     private int z2;
     private boolean isSecure = true;
 
-    public NailedSecureZone(int x1, int y1, int z1, int x2, int y2, int z2, boolean isSecure){
+    public CubeZone(int x1, int y1, int z1, int x2, int y2, int z2, boolean isSecure){
         this.x1 = x1;
         this.y1 = y1;
         this.z1 = z1;
@@ -36,7 +36,7 @@ public class NailedSecureZone implements NailedZone {
     public boolean isSecure(){ return this.isSecure; }
 
     @Nullable
-    public static NailedSecureZone readFrom(JsonObject object){
+    public static CubeZone readFrom(JsonObject object){
         int x1 = object.has("x1") ? object.get("x1").getAsInt() : 0;
         int y1 = object.has("y1") ? object.get("y1").getAsInt() : 0;
         int z1 = object.has("z1") ? object.get("z1").getAsInt() : 0;
@@ -46,6 +46,6 @@ public class NailedSecureZone implements NailedZone {
         boolean isSecure = object.has("isSecure") ? object.get("isSecure").getAsBoolean() : false;
 
         if(x2 < x1 || y2 < y1 || z2 < z1) return null;
-        return new NailedSecureZone(x1, y1, z1, x2, y2, z2, isSecure);
+        return new CubeZone(x1, y1, z1, x2, y2, z2, isSecure);
     }
 }

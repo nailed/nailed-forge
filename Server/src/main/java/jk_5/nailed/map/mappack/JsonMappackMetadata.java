@@ -11,9 +11,9 @@ import jk_5.nailed.api.map.MappackMetadata;
 import jk_5.nailed.api.map.PostGameAction;
 import jk_5.nailed.api.map.SpawnRules;
 import jk_5.nailed.api.map.team.TeamBuilder;
-import jk_5.nailed.api.zone.NailedZone;
+import jk_5.nailed.api.zone.IZone;
 import jk_5.nailed.map.Location;
-import jk_5.nailed.permissions.zone.NailedSecureZone;
+import jk_5.nailed.permissions.zone.CubeZone;
 import jk_5.nailed.util.ChatColor;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.WorldSettings;
@@ -49,7 +49,7 @@ public class JsonMappackMetadata implements MappackMetadata {
     public int minHealth;
     public int maxHealth;
     public PostGameAction postGameAction;
-    public List<NailedZone> zones;
+    public List<IZone> zones;
 
     public JsonMappackMetadata(JsonObject json){
         this.spawnPoint = json.has("spawnpoint") ? Location.readFrom(json.get("spawnpoint").getAsJsonObject()) : new Location(0, 64, 0, 0, 0);
@@ -106,7 +106,7 @@ public class JsonMappackMetadata implements MappackMetadata {
         if(json.has("zones")){
             JsonArray zones = json.getAsJsonArray("zones");
             for(JsonElement z : zones){
-                NailedZone zone = NailedSecureZone.readFrom(z.getAsJsonObject());
+                IZone zone = CubeZone.readFrom(z.getAsJsonObject());
                 if( zone != null) this.zones.add(zone);
             }
         }
@@ -233,7 +233,7 @@ public class JsonMappackMetadata implements MappackMetadata {
     public PostGameAction getPostGameAction() { return this.postGameAction; }
 
     @Override
-    public List<NailedZone> getMapZones(){
+    public List<IZone> getMapZones(){
         return this.zones;
     }
 }

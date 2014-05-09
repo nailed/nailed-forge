@@ -9,5 +9,5 @@ import com.google.gson.JsonObject;
  */
 public interface IZoneType {
 
-    NailedZone read(JsonObject json);
+    IZone read(JsonObject json);
 }
