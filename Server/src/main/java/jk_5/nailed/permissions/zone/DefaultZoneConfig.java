@@ -43,7 +43,6 @@ public class DefaultZoneConfig implements ZoneConfig {
         }
     }
 
-    @SuppressWarnings("CloneDoesntDeclareCloneNotSupportedException")
     public ZoneConfig reMake() {
         DefaultZoneConfig config = new DefaultZoneConfig();
         for(IZone zone : this.zones){
