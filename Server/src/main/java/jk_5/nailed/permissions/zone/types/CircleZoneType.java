@@ -12,12 +12,14 @@ import javax.annotation.Nullable;
 public class CircleZoneType implements IZoneType {
     @Nullable
     public IZone read(JsonObject object){
+        String name = object.has("name") ? object.get("name").getAsString() : "";
         int x = object.has("x") ? object.get("x").getAsInt() : 0;
         int y = object.has("y") ? object.get("y").getAsInt() : 0;
         int z = object.has("z") ? object.get("z").getAsInt() : 0;
         int r = object.has("r") ? object.get("r").getAsInt() : 1;
+        boolean inverted = object.has("inverted") ? object.get("inverted").getAsBoolean() : false;
 
-        if(r <= 0) return null;
-        return new SphereZone(x, y, z, r);
+        if(r <= 0 || name.equals("")) return null;
+        return new SphereZone(x, y, z, r, inverted);
     }
 }
