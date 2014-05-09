@@ -8,10 +8,12 @@ import jk_5.nailed.api.map.MapBuilder;
 import jk_5.nailed.api.map.Mappack;
 import jk_5.nailed.api.map.MappackMetadata;
 import jk_5.nailed.api.scripting.IMount;
+import jk_5.nailed.api.zone.ZoneConfig;
 import jk_5.nailed.map.DiscardedMappackInitializationException;
 import jk_5.nailed.map.MappackInitializationException;
 import jk_5.nailed.map.script.ReadOnlyMount;
 import jk_5.nailed.map.stat.StatConfig;
+import jk_5.nailed.permissions.zone.DefaultZoneConfig;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.MinecraftException;
 import net.minecraft.world.WorldServer;
@@ -39,6 +41,7 @@ public class DirectoryMappack implements Mappack {
     private final File mappackFolder;
     private final MappackMetadata mappackMetadata;
     private StatConfig statConfig = new StatConfig();
+    private ZoneConfig zoneConfig = new DefaultZoneConfig();
 
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH.mm.ss");
 
@@ -52,8 +55,10 @@ public class DirectoryMappack implements Mappack {
     public static DirectoryMappack create(File directory) throws MappackInitializationException{
         DirectoryMappack pack;
         StatConfig statConfig = new StatConfig();
+        ZoneConfig zoneConfig = new DefaultZoneConfig();
         File mappackConfig = new File(directory, "mappack.json");
         File statConfigFile = new File(directory, "stats.json");
+        File zoneConfigFile = new File(directory, "zones.json");
         if(mappackConfig.isFile() && mappackConfig.exists()){
             FileReader fr = null;
             try{
@@ -78,7 +83,19 @@ public class DirectoryMappack implements Mappack {
                 IOUtils.closeQuietly(fr);
             }
         }
+        if(zoneConfigFile.isFile() && zoneConfigFile.exists()){
+            FileReader fr = null;
+            try{
+                fr = new FileReader(zoneConfigFile);
+                zoneConfig = new DefaultZoneConfig(new JsonParser().parse(fr).getAsJsonArray());
+            }catch(Exception e){
+                throw new MappackInitializationException("Exception while reading zones.json", e);
+            }finally{
+                IOUtils.closeQuietly(fr);
+            }
+        }
         pack.statConfig = statConfig;
+        pack.zoneConfig = zoneConfig;
         return pack;
     }
 
@@ -115,7 +132,7 @@ public class DirectoryMappack implements Mappack {
         }
 
         try{
-            WorldServer world = (WorldServer) map.getWorld();
+            WorldServer world = map.getWorld();
             boolean notSaveEnabled = world.levelSaving;
             world.levelSaving = false;
             world.saveAllChunks(true, null);
@@ -162,5 +179,11 @@ public class DirectoryMappack implements Mappack {
     @Override
     public MappackMetadata getMappackMetadata() {
         return this.mappackMetadata;
+    }
+
+    @Nonnull
+    @Override
+    public ZoneConfig getZoneConfig() {
+        return this.zoneConfig;
     }
 }

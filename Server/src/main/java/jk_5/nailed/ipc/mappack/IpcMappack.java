@@ -10,10 +10,12 @@ import jk_5.nailed.api.map.Mappack;
 import jk_5.nailed.api.map.MappackMetadata;
 import jk_5.nailed.api.map.stat.StatConfig;
 import jk_5.nailed.api.scripting.IMount;
+import jk_5.nailed.api.zone.ZoneConfig;
 import jk_5.nailed.ipc.filestore.FilestoreMount;
 import jk_5.nailed.ipc.filestore.MappackFile;
 import jk_5.nailed.ipc.filestore.MappackFilestore;
 import jk_5.nailed.map.mappack.JsonMappackMetadata;
+import jk_5.nailed.permissions.zone.DefaultZoneConfig;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,6 +34,7 @@ public class IpcMappack implements Mappack {
     private final String id;
     private final MappackMetadata metadata;
     private final StatConfig statConfig;
+    private final ZoneConfig zoneConfig;
     public final MappackFilestore filestore = new MappackFilestore();
     public final MappackFilestore luaFilestore = new MappackFilestore();
 
@@ -44,6 +47,7 @@ public class IpcMappack implements Mappack {
         this.filestore.refresh();
         this.luaFilestore.refresh();
         this.statConfig = new jk_5.nailed.map.stat.StatConfig(json.get("stats").getAsJsonArray());
+        this.zoneConfig = new DefaultZoneConfig(json.get("zones").getAsJsonArray());
     }
 
     @Override
@@ -91,5 +95,11 @@ public class IpcMappack implements Mappack {
     @Nullable
     public IMount createMount(){
         return new FilestoreMount(this.luaFilestore);
+    }
+
+    @Nonnull
+    @Override
+    public ZoneConfig getZoneConfig() {
+        return this.zoneConfig;
     }
 }
