@@ -7,6 +7,7 @@ import jk_5.nailed.api.map.stat.StatManager;
 import jk_5.nailed.api.map.team.TeamManager;
 import jk_5.nailed.api.map.teleport.TeleportOptions;
 import jk_5.nailed.api.player.Player;
+import jk_5.nailed.api.zone.ZoneManager;
 import jk_5.nailed.map.Location;
 import net.minecraft.network.Packet;
 import net.minecraft.util.IChatComponent;
@@ -54,4 +55,5 @@ public interface Map {
     public void broadcastPacket(Packet packet);
     public int getMaxFoodLevel();
     public int getMinFoodLevel();
+    public ZoneManager getZoneManager();
 }

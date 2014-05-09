@@ -5,6 +5,7 @@ import jk_5.nailed.api.map.MapLoader;
 import jk_5.nailed.api.map.MappackLoader;
 import jk_5.nailed.api.map.teleport.Teleporter;
 import jk_5.nailed.api.player.PlayerRegistry;
+import jk_5.nailed.api.zone.ZoneRegistry;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,4 +21,5 @@ public class NailedAPI {
     @Getter @Setter private static PlayerRegistry playerRegistry;
     @Getter @Setter private static Scheduler scheduler;
     @Getter @Setter private static Teleporter teleporter;
+    @Getter @Setter private static ZoneRegistry zoneRegistry;
 }

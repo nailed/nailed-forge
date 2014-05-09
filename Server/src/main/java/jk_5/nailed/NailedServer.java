@@ -30,6 +30,7 @@ import jk_5.nailed.map.teleport.TeleportEventListenerMotion;
 import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.permissions.NailedPermissionFactory;
 import jk_5.nailed.permissions.PermissionEventHandler;
+import jk_5.nailed.permissions.zone.NailedZoneRegistry;
 import jk_5.nailed.players.NailedPlayerRegistry;
 import jk_5.nailed.scheduler.NailedScheduler;
 import jk_5.nailed.scheduler.SchedulerCrashCallable;
@@ -78,6 +79,7 @@ public class NailedServer {
         NailedAPI.setPlayerRegistry(new NailedPlayerRegistry());
         NailedAPI.setScheduler(new NailedScheduler());
         NailedAPI.setTeleporter(new NailedTeleporter());
+        NailedAPI.setZoneRegistry(new NailedZoneRegistry());
 
         FMLCommonHandler.instance().bus().register(NailedAPI.getScheduler());
 
@@ -188,6 +190,9 @@ public class NailedServer {
         NailedLog.info("Registering permissions");
         JoinMessageSender.registerPermissions();
         PermissionsManager.registerPermission(COMMANDBLOCK_PERMISSION, RegisteredPermValue.OP);
+
+        NailedLog.info("Registering zone types");
+        NailedAPI.getZoneRegistry().registerZones();
     }
 
     @EventHandler
@@ -201,6 +206,8 @@ public class NailedServer {
     @EventHandler
     public void serverAboutToStart(FMLServerAboutToStartEvent event){
         IpcManager.instance().start();
+
+        NailedAPI.getZoneRegistry().lockZones();
     }
 
     @EventHandler

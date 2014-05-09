@@ -1,9 +1,9 @@
 Todo:
 - Add transformer obf mappings
 - Zone protection
-- Add a lot of chat commands
-- Skinsync
-- Native cypher
+- Add a lot of chat commands - When nailed-web is stable and running
+- Skinsync - Scrap this?
+- Native cypher - Difficult to do
 
 Lua:
 - map.getPlayers() doesn't return dead players

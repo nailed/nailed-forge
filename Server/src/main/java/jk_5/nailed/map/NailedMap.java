@@ -11,10 +11,15 @@ import jk_5.nailed.NailedLog;
 import jk_5.nailed.NailedServer;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.concurrent.scheduler.NailedRunnable;
-import jk_5.nailed.api.map.*;
+import jk_5.nailed.api.map.GameManager;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.Mappack;
+import jk_5.nailed.api.map.MappackMetadata;
 import jk_5.nailed.api.map.teleport.TeleportOptions;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.api.scripting.IMount;
+import jk_5.nailed.api.zone.NailedZone;
+import jk_5.nailed.api.zone.ZoneManager;
 import jk_5.nailed.map.game.NailedGameManager;
 import jk_5.nailed.map.scoreboard.NailedScoreboardManager;
 import jk_5.nailed.map.script.FileSystemException;
@@ -26,6 +31,7 @@ import jk_5.nailed.map.stat.StatManager;
 import jk_5.nailed.map.weather.WeatherController;
 import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.network.NailedPacket;
+import jk_5.nailed.permissions.zone.DefaultZoneManager;
 import jk_5.nailed.util.NailedFoodStats;
 import net.minecraft.network.Packet;
 import net.minecraft.server.MinecraftServer;
@@ -57,6 +63,7 @@ public class NailedMap implements Map {
     private SignCommandHandler signCommandHandler;
     private GameManager gameManager;
     private NailedScoreboardManager scoreboardManager;
+    private DefaultZoneManager zoneManager;
     private List<Player> players = Lists.newArrayList();
     private List<NailedZone> zones = Lists.newArrayList();
 
@@ -75,6 +82,7 @@ public class NailedMap implements Map {
         this.signCommandHandler = new SignCommandHandler(this);
         this.gameManager = new NailedGameManager(this);
         this.scoreboardManager = new NailedScoreboardManager(this);
+        this.zoneManager = new DefaultZoneManager(this);
 
         NailedAPI.getMapLoader().registerMap(this);
 
@@ -357,5 +365,10 @@ public class NailedMap implements Map {
 
     public int getMinFoodLevel(){
         return mappack.getMappackMetadata().getMinFoodLevel();
+    }
+
+    @Override
+    public ZoneManager getZoneManager() {
+        return this.zoneManager;
     }
 }

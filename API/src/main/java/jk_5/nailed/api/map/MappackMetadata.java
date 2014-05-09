@@ -2,6 +2,7 @@ package jk_5.nailed.api.map;
 
 import jk_5.nailed.api.WeatherType;
 import jk_5.nailed.api.map.team.TeamBuilder;
+import jk_5.nailed.api.zone.NailedZone;
 import jk_5.nailed.map.Location;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.WorldSettings;

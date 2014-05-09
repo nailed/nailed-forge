@@ -15,6 +15,7 @@ import jk_5.nailed.api.events.MapCreatedEvent;
 import jk_5.nailed.api.events.MapRemovedEvent;
 import jk_5.nailed.api.map.*;
 import jk_5.nailed.api.player.Player;
+import jk_5.nailed.api.zone.NailedZone;
 import jk_5.nailed.map.gen.NailedWorldProvider;
 import jk_5.nailed.map.script.api.MapApi;
 import jk_5.nailed.players.TeamUndefined;

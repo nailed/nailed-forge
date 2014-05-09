@@ -1,7 +1,7 @@
-package jk_5.nailed.map;
+package jk_5.nailed.permissions.zone;
 
 import com.google.gson.JsonObject;
-import jk_5.nailed.api.map.NailedZone;
+import jk_5.nailed.api.zone.NailedZone;
 
 import javax.annotation.Nullable;
 
