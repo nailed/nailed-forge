@@ -22,7 +22,7 @@ public class DefaultZoneManager implements ZoneManager {
     public DefaultZoneManager(Map map){
         if(map.getMappack() != null){
             Preconditions.checkNotNull(map.getMappack().getZoneConfig(), "ZoneConfig may not be null!");
-            this.zones = map.getMappack().getZoneConfig().clone();
+            this.zones = map.getMappack().getZoneConfig().reMake();
         }else{
             this.zones = new DefaultZoneConfig();
         }
