@@ -1,8 +1,6 @@
 package jk_5.nailed.api.zone;
 
-import com.google.gson.JsonArray;
-
-import java.util.Set;
+import com.google.gson.JsonObject;
 
 /**
  * No description given
@@ -11,5 +9,5 @@ import java.util.Set;
  */
 public interface IZoneType {
 
-    Set<NailedZone> read(JsonArray json);
+    NailedZone read(JsonObject json);
 }
