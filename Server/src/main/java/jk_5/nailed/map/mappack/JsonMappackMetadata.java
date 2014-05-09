@@ -54,7 +54,7 @@ public class JsonMappackMetadata implements MappackMetadata {
         this.gameType = json.has("gametype") ? json.get("gametype").getAsString() : "default";
         this.preventingBlockBreak = json.has("preventBlockBreak") && json.get("preventBlockBreak").getAsBoolean();
         this.choosingRandomSpawnpointAtRespawn = json.has("randomSpawnpointOnRespawn") && json.get("randomSpawnpointOnRespawn").getAsBoolean();
-        //this.startWhen = config.getTag("map").getTag("startGameWhen").getValue("false");
+        this.startWhen = json.has("startGameWhen") ? json.get("startGameWhen").getAsString() : "false";
         this.postGameAction = json.has("postGameAction") ? PostGameAction.fromType(json.get("postGameAction").getAsString()) : PostGameAction.NOTHING;
 
         if(json.has("spawns")){

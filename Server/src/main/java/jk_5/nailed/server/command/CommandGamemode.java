@@ -48,7 +48,7 @@ public class CommandGamemode extends NailedCommand {
         }else if(args.length == 1){
             // /gm 1
             if(sender instanceof EntityPlayer){
-                Gamemode gamemode = this.getGameModeFromCommand(args[0]);
+                Gamemode gamemode = this.getGameModeFromCommand(args[0]); //TODO: bulletproof this for nulls
                 Player target = NailedAPI.getPlayerRegistry().getPlayer((EntityPlayer) sender);
                 target.setGameMode(gamemode);
             }else throw new CommandException("You are not a player");

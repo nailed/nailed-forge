@@ -10,8 +10,12 @@ import cpw.mods.fml.common.network.NetworkCheckHandler;
 import cpw.mods.fml.relauncher.Side;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.RayTracer;
+import jk_5.nailed.api.events.MapCreatedEvent;
+import jk_5.nailed.api.events.RegisterLuaApiEvent;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.Mappack;
+import jk_5.nailed.api.map.scoreboard.Objective;
+import jk_5.nailed.api.map.scoreboard.Score;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.util.ChatColor;
 import net.minecraft.entity.Entity;
@@ -25,9 +29,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.scoreboard.Score;
-import net.minecraft.scoreboard.ScoreObjective;
-import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MovingObjectPosition;
@@ -66,6 +67,21 @@ public class Quakecraft {
     }
 
     @SubscribeEvent
+    public void registerApi(RegisterLuaApiEvent event){
+        if(isQuakecraft(event.getMap())){
+            event.registerApi(new QuakecraftLuaApi(event.getMap()));
+        }
+    }
+
+    @SubscribeEvent
+    public void registerApi(MapCreatedEvent event){
+        if(isQuakecraft(event.map)){
+            Objective obj = event.map.getScoreboardManager().getOrCreateObjective("kills");
+            obj.setDisplayName(ChatColor.GOLD + "" + ChatColor.BOLD + "Kills");
+        }
+    }
+
+    @SubscribeEvent
     public void onCooldownTick(TickEvent.PlayerTickEvent event){
         if(event.phase == TickEvent.Phase.START) return;
         String id = event.player.getGameProfile().getId();
@@ -79,8 +95,8 @@ public class Quakecraft {
     public void onInteract(PlayerInteractEvent event){
         World world = event.entity.worldObj;
         Player player = NailedAPI.getPlayerRegistry().getPlayer(event.entityPlayer);
-        if(this.isQuakecraft(world)){
-            Map map = NailedAPI.getMapLoader().getMap(world);
+        Map map = NailedAPI.getMapLoader().getMap(world);
+        if(this.isQuakecraft(map)){
             if(event.action == PlayerInteractEvent.Action.RIGHT_CLICK_AIR || event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK){
                 if(!this.reloadCooldown.containsKey(player.getId())){
                     this.reloadCooldown.put(player.getId(), 21);
@@ -117,12 +133,11 @@ public class Quakecraft {
                             EntityLivingBase hit = (EntityLivingBase) result.entityHit;
                             hit.attackEntityFrom(new DamageSourceRailgun(event.entity), hit.getMaxHealth());
 
-                            Scoreboard scoreboard = world.getScoreboard();
-                            ScoreObjective objective = scoreboard.getObjective(map.getID() + "-kills");
-                            Score score = scoreboard.func_96529_a(player.getUsername(), objective);
-                            score.increseScore(1);
+                            Objective obj = map.getScoreboardManager().getOrCreateObjective("kills");
+                            Score score = obj.getScore(player.getUsername());
+                            score.addValue(1);
 
-                            if(score.getScorePoints() >= 25){
+                            if(score.getValue() >= 25){
                                 /*for(IInstruction instruction : map.getInstructionController().getInstructions()){
                                     if(instruction instanceof InstructionAwaitFinalKill){
                                         ((InstructionAwaitFinalKill) instruction).finalKillMade = true;
@@ -183,6 +198,7 @@ public class Quakecraft {
     }
 
     public ItemStack getEntityExplosionEffect(int color){
+
         ItemStack firework = new ItemStack(Items.fireworks, 1);
         NBTTagCompound tag = new NBTTagCompound();
         firework.setTagCompound(tag);
@@ -201,6 +217,11 @@ public class Quakecraft {
 
     public boolean isQuakecraft(World world){
         Mappack mappack = NailedAPI.getMapLoader().getMap(world).getMappack();
+        return mappack != null && mappack.getMappackMetadata().getGameType().equals("quakecraft");
+    }
+
+    public boolean isQuakecraft(Map map){
+        Mappack mappack = map.getMappack();
         return mappack != null && mappack.getMappackMetadata().getGameType().equals("quakecraft");
     }
 }

@@ -1,10 +1,13 @@
 package jk_5.nailed.map.script;
 
 import com.google.common.collect.Lists;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.events.RegisterLuaApiEvent;
 import jk_5.nailed.api.scripting.ILuaAPI;
 import jk_5.nailed.api.scripting.IMount;
 import jk_5.nailed.api.scripting.IWritableMount;
 import jk_5.nailed.map.script.api.*;
+import net.minecraftforge.common.MinecraftForge;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
@@ -166,6 +169,7 @@ public class ScriptingMachine {
         this.apis.add(new MapApi(this.apiEnvironment));
         this.apis.add(new ScoreboardApi(this.apiEnvironment));
         this.apis.add(new EventApi(this.apiEnvironment));
+        MinecraftForge.EVENT_BUS.post(new RegisterLuaApiEvent(NailedAPI.getMapLoader().getMap(this.apiEnvironment.getMachine().getMachine().getWorld()), this.apis));
     }
 
     private void initLua(){
