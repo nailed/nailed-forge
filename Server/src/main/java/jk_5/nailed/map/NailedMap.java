@@ -154,9 +154,11 @@ public class NailedMap implements Map {
         if (mappack != null) {
             playerFoodStats.setMinFoodLevel(mappack.getMappackMetadata().getMinFoodLevel());
             playerFoodStats.setMaxFoodLevel(mappack.getMappackMetadata().getMaxFoodLevel());
+            player.setMaxHealth(mappack.getMappackMetadata().getMaxHealth());
+            player.setMinHealth(mappack.getMappackMetadata().getMinHealth());
         }else{
             playerFoodStats.setMinFoodLevel(0);
-            playerFoodStats.setMinFoodLevel(-1);
+            playerFoodStats.setMinFoodLevel(15);
         }
         player.getEntity().foodStats = playerFoodStats;
         this.getMachine().queueEvent("playerJoinEvent", player.getUsername());

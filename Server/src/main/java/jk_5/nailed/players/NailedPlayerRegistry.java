@@ -16,6 +16,8 @@ import jk_5.nailed.api.player.Player;
 import jk_5.nailed.api.player.PlayerRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
 import java.util.List;
@@ -141,16 +143,28 @@ public class NailedPlayerRegistry implements PlayerRegistry {
     }
 
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onPlayerHurt(LivingHurtEvent event){
         if (event.entity instanceof EntityPlayer){
+            event.setCanceled(true);
             float ammount = event.ammount;
             Player player = this.getPlayer((EntityPlayer) event.entity);
             if (player.getEntity().getHealth() - ammount < player.getMinHealth()){
                 player.getEntity().setHealth(player.getMinHealth());
             }
         }
-        event.setCanceled(true);
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onPlayerFall(LivingFallEvent event){
+        if (event.entity instanceof EntityPlayer){
+            Player player = this.getPlayer((EntityPlayer) event.entity);
+            float damageTaken = event.distance - 4;
+            if (player.getEntity().getHealth() - damageTaken < player.getMinHealth()){
+                event.setCanceled(true);
+                player.getEntity().setHealth(player.getMinHealth());
+            }
+        }
     }
 
     @SubscribeEvent

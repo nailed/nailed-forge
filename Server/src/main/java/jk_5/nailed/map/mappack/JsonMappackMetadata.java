@@ -43,6 +43,8 @@ public class JsonMappackMetadata implements MappackMetadata {
     public SpawnRules spawnRules;
     public int minFoodLevel;
     public int maxFoodLevel;
+    public int minHealth;
+    public int maxHealth;
     public PostGameAction postGameAction;
 
     public JsonMappackMetadata(JsonObject json){
@@ -96,11 +98,19 @@ public class JsonMappackMetadata implements MappackMetadata {
         }
         this.minFoodLevel = 0;
         this.maxFoodLevel = -1;
+        this.minHealth = 5;
+        this.maxHealth = 20;
         if(json.has("minFoodLevel")){
             this.minFoodLevel = json.get("minFoodLevel").getAsInt();
         }
         if(json.has("maxFoodLevel")){
             this.maxFoodLevel = json.get("maxFoodLevel").getAsInt();
+        }
+        if(json.has("minHealth")){
+            this.minHealth = json.get("minHealth").getAsInt();
+        }
+        if(json.has("maxHealth")){
+            this.maxHealth = json.get("maxHealth").getAsInt();
         }
 
         //TODO: this is not used yet
@@ -194,6 +204,12 @@ public class JsonMappackMetadata implements MappackMetadata {
     public int getMaxFoodLevel(){
         return this.maxFoodLevel;
     }
+
+    @Override
+    public int getMinHealth(){ return this.minHealth; }
+
+    @Override
+    public int getMaxHealth(){ return this.maxHealth; }
 
     @Override
     public PostGameAction getPostGameAction() { return this.postGameAction; }
