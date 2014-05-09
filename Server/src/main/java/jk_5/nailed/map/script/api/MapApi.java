@@ -196,7 +196,7 @@ public class MapApi implements ILuaAPI {
                 }
             case 10: //setDifficulty
                 if(arguments.length == 1 && arguments[0] instanceof Double){
-                    MappackMetadata meta = this.map.getMappack().getMappackMetadata();
+                    // MappackMetadata meta = this.map.getMappack().getMappackMetadata();this is not used, and has a possibility of NPE, so i commented it out. TODO: check if needed
                     World server = this.map.getWorld();
                     int difficulty = ((Double) arguments[0]).intValue();
                     server.difficultySetting = EnumDifficulty.getDifficultyEnum(difficulty);
@@ -371,7 +371,11 @@ public class MapApi implements ILuaAPI {
                         "removePotionEffect",
                         "sendTimeUpdate",
                         "giveItem",
-                        "setInventoryItem"
+                        "setInventoryItem",
+                        "setMinFood",
+                        "setMinHealth",
+                        "setMaxFood",
+                        "setMaxHealth"
                 };
             }
 
@@ -538,6 +542,35 @@ public class MapApi implements ILuaAPI {
                         }else{
                             throw new Exception("Expected 1 int, 1 string and then 1 or 2 int arguments");
                         }
+                        break;
+                    case 17: // setMinFood
+                        if(arguments.length == 1 && arguments[0] instanceof Double){
+                            ((NailedFoodStats)player.getEntity().getFoodStats()).setMinFoodLevel(((Double)arguments[0]).intValue());
+                        }else{
+                            throw new Exception("Expected 1 int argument");
+                        }
+                        break;
+                    case 18: // setMinHealth
+                        if(arguments.length == 1 && arguments[0] instanceof Double){
+                            player.setMinHealth(((Double)arguments[0]).intValue());
+                        }else{
+                            throw new Exception("Expected 1 int argument");
+                        }
+                        break;
+                    case 19: // setMaxFood
+                        if(arguments.length == 1 && arguments[0] instanceof Double){
+                            ((NailedFoodStats)player.getEntity().getFoodStats()).setMaxFoodLevel(((Double) arguments[0]).intValue());
+                        }else{
+                            throw new Exception("Expected 1 int argument");
+                        }
+                        break;
+                    case 20: // setMaxHealth
+                        if(arguments.length == 1 && arguments[0] instanceof Double){
+                            player.setMaxHealth(((Double) arguments[0]).intValue());
+                        }else{
+                            throw new Exception("Expected 1 int argument");
+                        }
+                        break;
                 }
                 return null;
             }
@@ -557,7 +590,11 @@ public class MapApi implements ILuaAPI {
                         "forEachPlayer",
                         "setSpawn",
                         "getType",
-                        "getID"
+                        "getID",
+                        "setMinFood",
+                        "setMinHealth",
+                        "setMaxFood",
+                        "setMaxHealth"
                 };
             }
 
@@ -600,6 +637,42 @@ public class MapApi implements ILuaAPI {
                         return new Object[]{"team"};
                     case 5: //getID
                         return new Object[]{team.getTeamId()};
+                    case 6: // setMinFood
+                        if(arguments.length == 1 && arguments[0] instanceof Double){
+                            for(Player player : team.getMembers()) {
+                                ((NailedFoodStats) player.getEntity().getFoodStats()).setMinFoodLevel(((Double) arguments[0]).intValue());
+                            }
+                        }else{
+                            throw new Exception("Expected 1 int argument");
+                        }
+                        break;
+                    case 7: // setMinHealth
+                        if(arguments.length == 1 && arguments[0] instanceof Double){
+                            for(Player player : team.getMembers()) {
+                                player.setMinHealth(((Double) arguments[0]).intValue());
+                            }
+                        }else{
+                            throw new Exception("Expected 1 int argument");
+                        }
+                        break;
+                    case 8: // setMaxFood
+                        if(arguments.length == 1 && arguments[0] instanceof Double){
+                            for(Player player : team.getMembers()) {
+                                ((NailedFoodStats) player.getEntity().getFoodStats()).setMaxFoodLevel(((Double) arguments[0]).intValue());
+                            }
+                        }else{
+                            throw new Exception("Expected 1 int argument");
+                        }
+                        break;
+                    case 9: // setMaxHealth
+                        if(arguments.length == 1 && arguments[0] instanceof Double){
+                            for(Player player : team.getMembers()) {
+                                player.setMaxHealth(((Double) arguments[0]).intValue());
+                            }
+                        }else{
+                            throw new Exception("Expected 1 int argument");
+                        }
+                        break;
                 }
                 return null;
             }
