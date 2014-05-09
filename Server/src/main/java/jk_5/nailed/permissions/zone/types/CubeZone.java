@@ -31,7 +31,7 @@ public class CubeZone implements IZone {
         return (x1<x && x<x2 && y1 < y && y < y2 && z1 < z && z < z2);
     }
 
-    public CubeZone clone(){
+    public CubeZone reMake(){
         return new CubeZone(this.x1, this.y1, this.z1, this.x2, this.y2, this.z2);
     }
 }

@@ -22,7 +22,7 @@ public class SphereZone implements IZone {
         return (r >= Math.sqrt((x-this.x) * (x-this.x) + (y-this.y) * (y-this.y) + (z-this.z) * (z-this.z)));
     }
 
-    public SphereZone clone(){
+    public SphereZone reMake(){
         return new SphereZone(this.x, this.y, this.z, this.r);
     }
 }

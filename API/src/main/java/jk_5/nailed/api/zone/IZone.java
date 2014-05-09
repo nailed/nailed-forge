@@ -5,6 +5,5 @@ package jk_5.nailed.api.zone;
  */
 public interface IZone {
     public boolean isInZone(double x, double y, double z);
-    @SuppressWarnings("CloneDoesntDeclareCloneNotSupportedException")
-    public IZone clone();
+    public IZone reMake();
 }

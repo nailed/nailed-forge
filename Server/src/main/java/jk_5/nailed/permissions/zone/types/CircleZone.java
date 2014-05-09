@@ -20,7 +20,7 @@ public class CircleZone implements IZone {
         return (r >= Math.sqrt((x-this.x)*(x-this.x) + (z-this.z)*(z-this.z)));
     }
 
-    public CircleZone clone(){
+    public CircleZone reMake(){
         return new CircleZone(this.x, this.z, this.r);
     }
 }

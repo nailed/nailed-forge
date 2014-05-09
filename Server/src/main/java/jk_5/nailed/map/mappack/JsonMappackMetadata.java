@@ -11,7 +11,9 @@ import jk_5.nailed.api.map.MappackMetadata;
 import jk_5.nailed.api.map.PostGameAction;
 import jk_5.nailed.api.map.SpawnRules;
 import jk_5.nailed.api.map.team.TeamBuilder;
+import jk_5.nailed.api.zone.IZone;
 import jk_5.nailed.map.Location;
+import jk_5.nailed.permissions.zone.types.CubeZone;
 import jk_5.nailed.util.ChatColor;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.WorldSettings;
@@ -47,6 +49,7 @@ public class JsonMappackMetadata implements MappackMetadata {
     public int minHealth;
     public int maxHealth;
     public PostGameAction postGameAction;
+    public List<IZone> zones;
 
     public JsonMappackMetadata(JsonObject json){
         this.spawnPoint = json.has("spawnpoint") ? Location.readFrom(json.get("spawnpoint").getAsJsonObject()) : new Location(0, 64, 0, 0, 0);
@@ -60,10 +63,6 @@ public class JsonMappackMetadata implements MappackMetadata {
         this.choosingRandomSpawnpointAtRespawn = json.has("randomSpawnpointOnRespawn") && json.get("randomSpawnpointOnRespawn").getAsBoolean();
         this.startWhen = json.has("startGameWhen") ? json.get("startGameWhen").getAsString() : "false";
         this.postGameAction = json.has("postGameAction") ? PostGameAction.fromType(json.get("postGameAction").getAsString()) : PostGameAction.NOTHING;
-        this.minFoodLevel = json.has("minFoodLevel") ? json.get("minFoodLevel").getAsInt() : 0;
-        this.maxFoodLevel = json.has("maxFoodLevel") ? json.get("maxFoodLevel").getAsInt() : -1;
-        this.minHealth = json.has("minHealth") ? json.get("minHealth").getAsInt() : 5;
-        this.maxHealth = json.has("maxHealth") ? json.get("maxHealth").getAsInt() : 20;
 
         if(json.has("spawns")){
             this.spawnRules = new Gson().fromJson(json.get("spawns"), SpawnRules.class);
@@ -101,6 +100,32 @@ public class JsonMappackMetadata implements MappackMetadata {
             for(JsonElement t : points){
                 this.randomSpawnpoints.add(Location.readFrom(t.getAsJsonObject()));
             }
+        }
+
+        this.zones = Lists.newArrayList();
+        if(json.has("zones")){
+            JsonArray zones = json.getAsJsonArray("zones");
+            for(JsonElement z : zones){
+                IZone zone = CubeZone.readFrom(z.getAsJsonObject());
+                if( zone != null) this.zones.add(zone);
+            }
+        }
+
+        this.minFoodLevel = 0;
+        this.maxFoodLevel = -1;
+        this.minHealth = 5;
+        this.maxHealth = 20;
+        if(json.has("minFoodLevel")){
+            this.minFoodLevel = json.get("minFoodLevel").getAsInt();
+        }
+        if(json.has("maxFoodLevel")){
+            this.maxFoodLevel = json.get("maxFoodLevel").getAsInt();
+        }
+        if(json.has("minHealth")){
+            this.minHealth = json.get("minHealth").getAsInt();
+        }
+        if(json.has("maxHealth")){
+            this.maxHealth = json.get("maxHealth").getAsInt();
         }
 
         //TODO: this is not used yet
@@ -206,4 +231,9 @@ public class JsonMappackMetadata implements MappackMetadata {
 
     @Override
     public PostGameAction getPostGameAction() { return this.postGameAction; }
+
+    @Override
+    public List<IZone> getMapZones(){
+        return this.zones;
+    }
 }

@@ -10,6 +10,6 @@ import java.util.List;
 public interface ZoneConfig {
 
     @SuppressWarnings("CloneDoesntDeclareCloneNotSupportedException")
-    public ZoneConfig clone();
+    public ZoneConfig reMake();
     public List<IZone> getZones();
 }

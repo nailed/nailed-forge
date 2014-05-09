@@ -22,7 +22,7 @@ public class SquareZone implements IZone {
         return (x1 < x && x < x2 && z1 < z && z < z2);
     }
 
-    public SquareZone clone(){
+    public SquareZone reMake(){
         return new SquareZone(this.x1, this.z1, this.x2, this.z2);
     }
 }
