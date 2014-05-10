@@ -1,4 +1,5 @@
 apply plugin: 'scala'
+apply plugin: 'java'
 
 version = '0.1'
 

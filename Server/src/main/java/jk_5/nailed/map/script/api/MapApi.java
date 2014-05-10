@@ -6,7 +6,6 @@ import cpw.mods.fml.relauncher.ReflectionHelper;
 import jk_5.nailed.api.Gamemode;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.MappackMetadata;
 import jk_5.nailed.api.map.stat.IStatType;
 import jk_5.nailed.api.map.stat.Stat;
 import jk_5.nailed.api.map.team.Team;
@@ -545,7 +544,7 @@ public class MapApi implements ILuaAPI {
                         break;
                     case 17: // setMinFood
                         if(arguments.length == 1 && arguments[0] instanceof Double){
-                            ((NailedFoodStats)player.getEntity().getFoodStats()).setMinFoodLevel(((Double)arguments[0]).intValue());
+                            ((NailedFoodStats) player.getEntity().getFoodStats()).setMinFoodLevel(((Double)arguments[0]).intValue());
                         }else{
                             throw new Exception("Expected 1 int argument");
                         }

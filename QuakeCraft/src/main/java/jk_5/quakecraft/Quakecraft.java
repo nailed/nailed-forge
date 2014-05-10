@@ -143,6 +143,7 @@ public class Quakecraft {
                                         ((InstructionAwaitFinalKill) instruction).finalKillMade = true;
                                     }
                                 }*/
+                                QuakecraftLuaApi.doneMaps.add(map.getSaveFileName());
                                 map.broadcastChatMessage(new ChatComponentTranslation("quakecraft.message.winner", player.getUsername()));
                             }
                         }
@@ -198,7 +199,6 @@ public class Quakecraft {
     }
 
     public ItemStack getEntityExplosionEffect(int color){
-
         ItemStack firework = new ItemStack(Items.fireworks, 1);
         NBTTagCompound tag = new NBTTagCompound();
         firework.setTagCompound(tag);
