@@ -19,15 +19,19 @@ public class SquareZoneType implements IZoneType {
             throw new ZoneDataException("Zone does not have a name");
         }
         String name = object.has("name") ? object.get("name").getAsString() : "";
-        int x1 = object.has("x1") ? object.get("x1").getAsInt() : 0;
-        int z1 = object.has("z1") ? object.get("z1").getAsInt() : 0;
-        int x2 = object.has("x2") ? object.get("x2").getAsInt() : 1;
-        int z2 = object.has("z2") ? object.get("z2").getAsInt() : 1;
-        boolean inverted = object.has("inverted") && object.get("inverted").getAsBoolean();
+        if(object.has("x1") & object.has("z1") & object.has("x2") & object.has("z2")) {
+            int x1 = object.get("x1").getAsInt();
+            int z1 = object.get("z1").getAsInt();
+            int x2 = object.get("x2").getAsInt();
+            int z2 = object.get("z2").getAsInt();
+            boolean inverted = object.has("inverted") && object.get("inverted").getAsBoolean();
 
-        if(x2 <= x1 || z2 <= z1){
-            throw new ZoneDataException("Coordinate 1 should be smaller than coordinate 2");
+            if (x2 <= x1 || z2 <= z1) {
+                throw new ZoneDataException("Coordinate 1 should be smaller than coordinate 2");
+            }
+            return new SquareZone(name, x1, z1, x2, z2, inverted);
+        } else {
+            throw new ZoneDataException("Zone has to have all coords specified");
         }
-        return new SquareZone(name, x1, z1, x2, z2, inverted);
     }
 }
