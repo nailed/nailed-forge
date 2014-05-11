@@ -85,7 +85,7 @@ object Quakecraft {
       val result = RayTracer.rayTrace(event.entityPlayer)
       if(result != null){
         if(result.typeOfHit == MovingObjectType.ENTITY){
-          this.particleBeam((event.entity.posX, event.entity.posY, event.entity.posZ), (result.entityHit.posX, result.entityHit.posY, result.entityHit.posZ), world)
+          this.particleBeam((event.entity.posX, event.entity.posY + event.entity.getEyeHeight, event.entity.posZ), (result.entityHit.posX, result.entityHit.posY, result.entityHit.posZ), world)
           val entity = new EntityFireworkRocket(world, result.entityHit.posX, result.entityHit.posY + (result.entityHit.height / 2), result.entityHit.posZ, this.getExplosionEffect(player).toItemStack)
           world.spawnEntityInWorld(entity)
           world.setEntityState(entity, 17.toByte)
@@ -105,7 +105,7 @@ object Quakecraft {
             case _ =>
           }
         }else if(result.typeOfHit == MovingObjectType.BLOCK){
-          this.particleBeam((event.entity.posX, event.entity.posY, event.entity.posZ), (result.blockX + 0.5d, result.blockY + 0.5d, result.blockZ + 0.5d), world)
+          this.particleBeam((event.entity.posX, event.entity.posY + event.entity.getEyeHeight, event.entity.posZ), (result.blockX + 0.5d, result.blockY + 0.5d, result.blockZ + 0.5d), world)
           world.playSoundAtEntity(event.entity, "mob.blaze.hit", 2f, 4f)
         }
         this.reloadCooldown.put(player.getId, 0)

@@ -53,7 +53,6 @@ object CrashReporter {
         post.setEntity(builder.build())
 
         val res = client.execute(post)
-        println(res.getStatusLine.getStatusCode)
         if(res.getStatusLine.getStatusCode == 200){
           logger.info("Successfully reported exception")
           val received = EntityUtils.toString(res.getEntity)

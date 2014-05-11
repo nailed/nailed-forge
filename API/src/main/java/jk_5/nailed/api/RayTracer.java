@@ -51,7 +51,7 @@ public class RayTracer {
         MovingObjectPosition result;
 
         World world = player.worldObj;
-        MovingObjectPosition pointedBlock = RayTracer.rayTraceBlocks(world, player);
+        MovingObjectPosition pointedBlock = RayTracer.rayTraceBlocks(world, player, 500);
         result = pointedBlock;
         double rangeLimit = 500;
         double d1 = rangeLimit;

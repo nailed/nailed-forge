@@ -5,7 +5,7 @@ import com.google.common.eventbus.{Subscribe, EventBus}
 import cpw.mods.fml.common.event.FMLPreInitializationEvent
 import java.io._
 import org.apache.logging.log4j.LogManager
-import cpw.mods.fml.client.{FMLFileResourcePack, FMLFolderResourcePack}
+import cpw.mods.fml.client.FMLFileResourcePack
 import java.util
 import org.apache.commons.io.IOUtils
 import com.google.gson.{JsonObject, JsonParser}
@@ -66,34 +66,5 @@ class Mod extends DummyModContainer(new ModMetadata()) {
 
   @Subscribe def onPreinit(event: FMLPreInitializationEvent){
     //controller.errorOccurred(this, new RuntimeException("Bye!"))
-  }
-
-  override def getSource: File = {
-    val injected = CorePlugin.injectedLocation
-    if(injected != null) return injected
-    val url = this.getClass.getResource(".")
-    try{
-      var root = new File(url.toURI)
-      if(root.getName.equals("jk_5")){
-        root = root.getParentFile
-      }
-      return root
-    }catch{
-      case e: Exception => Mod.logger.info("Failed to extract source from URL " + url, e)
-    }
-    null
-  }
-
-  override def getCustomResourcePackClass: Class[_] = {
-    val source = this.getSource
-    if(source == null){
-      Mod.logger.warn("Failed to get source, resource pack missing")
-      return null
-    }
-    if(source.isDirectory){
-      classOf[FMLFolderResourcePack]
-    }else{
-      classOf[FMLFileResourcePack]
-    }
   }
 }
