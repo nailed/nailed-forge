@@ -9,7 +9,7 @@ import cpw.mods.fml.relauncher.Side
  *
  * @author jk-5
  */
-@Mod(modid = "nailedCommon", name = "Nailed Common", modLanguage = "scala", version = "0.1")
+@Mod(modid = "NailedCommon", name = "Nailed Common", modLanguage = "scala", version = "0.1")
 object NailedCommon {
   @NetworkCheckHandler def check(versions: java.util.Map[String, String], side: Side) = true
 }

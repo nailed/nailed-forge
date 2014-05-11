@@ -1,5 +1,8 @@
 package jk_5.nailed.effect;
 
+import jk_5.nailed.api.effect.firework.Color;
+import jk_5.nailed.api.effect.firework.FireworkEffect;
+
 import java.util.Random;
 
 /**

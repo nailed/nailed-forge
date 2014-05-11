@@ -11,6 +11,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -45,6 +46,7 @@ public class RayTracer {
     }
 
     @SuppressWarnings("unchecked")
+    @Nullable
     public static MovingObjectPosition rayTrace(EntityPlayer player){
         MovingObjectPosition result;
 

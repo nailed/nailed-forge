@@ -15,7 +15,9 @@ dependencies {
     compile rootProject
     compile project(":Common")
     compile project(":API")
+
     runtime project(":CrashReporter")
+    runtime project(":QuakeCraft")
 }
 
 /*rootProject.tasks.reobf {

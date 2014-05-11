@@ -1,4 +1,4 @@
-package jk_5.nailed.effect;
+package jk_5.nailed.api.effect.firework;
 
 import com.google.common.collect.Lists;
 import net.minecraft.init.Items;
