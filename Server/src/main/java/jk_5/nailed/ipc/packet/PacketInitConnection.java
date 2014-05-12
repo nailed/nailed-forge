@@ -17,7 +17,7 @@ public class PacketInitConnection extends IpcPacket {
     @Override
     public void encode(ByteBuf buffer){
         List<Player> players = NailedAPI.getPlayerRegistry().getOnlinePlayers();
-        PacketUtils.writeString("minecraft.kogint.tk:25566", buffer);
+        PacketUtils.writeString("minecraft.jk-5.tk:25566", buffer);
         PacketUtils.writeVarInt(players.size(), buffer);
         for(Player player : players){
             PacketUtils.writeString(player.getId(), buffer);

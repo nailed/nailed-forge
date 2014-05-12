@@ -124,9 +124,12 @@ object Quakecraft {
       val x = dx / d * i + start._1
       val y = dy / d * i + start._2
       val z = dz / d * i + start._3
-      val entity = new EntityFireworkRocket(world, x, y, z, null)
-      world.spawnEntityInWorld(entity) //TODO: spawnParticle
-      world.removeEntity(entity)
+      world.spawnParticle("fireworksSpark", x, y, z, 0, 0, 0)
+      /*
+       *  val entity = new EntityFireworkRocket(world, x, y, z, null)
+       *  world.spawnEntityInWorld(entity) //TODO: spawnParticle // done
+       *  world.removeEntity(entity)
+       */
     }
   }
 
