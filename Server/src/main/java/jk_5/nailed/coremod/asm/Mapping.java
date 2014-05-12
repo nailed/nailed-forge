@@ -184,6 +184,10 @@ public class Mapping {
         return this;
     }
 
+    public MethodInsnNode toMethodInsn(int opcode){
+        return new MethodInsnNode(opcode, this.owner, this.name, this.desc);
+    }
+
     public Mapping copy(){
         return new Mapping(this.owner, this.name, this.desc);
     }
