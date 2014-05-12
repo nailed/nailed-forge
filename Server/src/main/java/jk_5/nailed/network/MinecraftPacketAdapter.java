@@ -16,6 +16,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.client.C12PacketUpdateSign;
 import net.minecraft.network.play.server.S02PacketChat;
 import net.minecraft.network.play.server.S33PacketUpdateSign;
+import net.minecraft.network.play.server.S38PacketPlayerListItem;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
@@ -90,20 +91,20 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
                 ctx.write(sign.getUpdatePacket(), promise);
                 return;
             }
-        }/* else if(msg instanceof S38PacketPlayerListItem){
+        } else if(msg instanceof S38PacketPlayerListItem){
             S38PacketPlayerListItem playerList = (S38PacketPlayerListItem) msg;
-            Player pPlayer = NailedAPI.getPlayerRegistry().getPlayerByUsername(playerList.func_149122_c());
-            if (playerList.func_149121_d()){
+            Player pPlayer = NailedAPI.getPlayerRegistry().getPlayerByUsername(playerList.field_149126_a);
+            if (playerList.field_149124_b){
                 Player nPlayer = NailedAPI.getPlayerRegistry().getPlayer(player);
                 if(!nPlayer.getPlayersVisible().contains(pPlayer)){
                     return;
                 } else {
-                    msg = new S38PacketPlayerListItem(pPlayer.getChatPrefix(), playerList.func_149121_d(), playerList.func_149120_e());
+                    msg = new S38PacketPlayerListItem(pPlayer.getChatPrefix(), playerList.field_149124_b, playerList.field_149125_c);
                     ctx.write(msg, promise);
                     return;
                 }
             }
-        }*/
+        }
         ctx.write(msg, promise);
     }
 }
