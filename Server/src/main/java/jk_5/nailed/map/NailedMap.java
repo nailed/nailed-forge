@@ -43,6 +43,7 @@ import net.minecraftforge.common.network.ForgeMessage;
 
 import java.io.File;
 import java.util.List;
+import java.util.Random;
 
 /**
  * No description given
@@ -165,6 +166,7 @@ public class NailedMap implements Map {
             player.setMaxHealth(20);
         }
         player.getEntity().foodStats = playerFoodStats;
+        player.setPlayersVisible(this.getPlayers());
         this.getMachine().queueEvent("playerJoinEvent", player.getUsername());
     }
 

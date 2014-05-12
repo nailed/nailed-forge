@@ -14,6 +14,7 @@ import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * No description given
@@ -72,5 +73,5 @@ public interface Player extends PossibleWinner {
     public void addPlayerVisible(Player player);
     public int getNumPlayersVisible();
     public void setPlayersVisible(List<Player> list);
-    public void replacePlayerVisible(Player player, List<Player> players);
+    public void replacePlayerVisible(Player player, List<Player> players, Random random);
 }

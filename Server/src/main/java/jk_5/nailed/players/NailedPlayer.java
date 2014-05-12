@@ -338,10 +338,9 @@ public class NailedPlayer implements Player {
         this.playersVisible.add(player);
     }
 
-    public void replacePlayerVisible(Player player, List<Player> players){
+    public void replacePlayerVisible(Player player, List<Player> players, Random random){
         players.remove(this.playersVisible);
         this.playersVisible.remove(player);
-        Random random = new Random();
         this.playersVisible.add(players.get(random.nextInt() % players.size()));
     }
 

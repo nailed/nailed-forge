@@ -14,6 +14,7 @@ import java.util.Random;
  * @author jk-5
  */
 public class LobbyMap extends NailedMap {
+    private Random random = new Random();
 
     public LobbyMap(){
         super(NailedAPI.getMappackLoader().getMappack("lobby"), 0);
@@ -30,9 +31,8 @@ public class LobbyMap extends NailedMap {
         } else {
             List<Player> allPlayers = this.getPlayers();
             List<Player> visiblePlayers = Lists.newArrayList();
-            Random random = new Random();
             for(int a = 0; a < 40; ++a){
-                Player b = allPlayers.get(random.nextInt() % allPlayers.size());
+                Player b = allPlayers.get(this.random.nextInt() % allPlayers.size());
                 allPlayers.remove(b);
                 visiblePlayers.add(b);
             }
@@ -51,7 +51,7 @@ public class LobbyMap extends NailedMap {
         } else {
             List<Player> mapPlayers = this.getPlayers();
             for (Player otherPlayer: mapPlayers){
-                otherPlayer.replacePlayerVisible(player, mapPlayers);
+                otherPlayer.replacePlayerVisible(player, mapPlayers, this.random);
             }
         }
     }
