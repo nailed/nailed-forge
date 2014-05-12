@@ -50,7 +50,7 @@ public class MotdManager {
                 this.motd = (ChatComponentText) data.func_151317_a();
             }
             String comment = this.comments.get(this.rand.nextInt(this.comments.size()));
-            this.motd.text = ChatColor.AQUA + "Nailed " + ChatColor.GOLD + "| " + ChatColor.WHITE + "New Game: " + ChatColor.YELLOW + ChatColor.BOLD + "Together we Cry \n" + ChatColor.GRAY + comment;
+            this.motd.text = ChatColor.AQUA + "Nailed " + ChatColor.GOLD + "| " + ChatColor.WHITE + "Quakecraft is up and running again!\n" + ChatColor.GRAY + comment;
         }
     }
 }

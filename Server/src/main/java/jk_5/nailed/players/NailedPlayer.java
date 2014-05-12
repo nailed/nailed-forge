@@ -56,7 +56,6 @@ public class NailedPlayer implements Player {
     private int pdaID = -1;
     private NetHandlerPlayServer netHandler;
     private boolean editModeEnabled = false;
-    private boolean superEditModeEnabled = false;
     private int maxHealth = 20;
     private int minHealth = 0;
     private List<Player> playersVisible = Lists.newArrayList();
@@ -164,7 +163,7 @@ public class NailedPlayer implements Player {
     public void onRespawn() {
         this.getEntity().setSpawnChunk(null, false);
         if(this.getCurrentMap() instanceof NailedMap){
-            ((NailedMap) this.getCurrentMap()).getMachine().queueEvent("respawnEvent", this);
+            ((NailedMap) this.getCurrentMap()).getMachine().queueEvent("respawn", this);
         }
     }
 
@@ -223,13 +222,6 @@ public class NailedPlayer implements Player {
         this.sendEditModePacket();
     }
 
-    public void setSuperEditModeEnabled(boolean superEditModeEnabled){
-        this.superEditModeEnabled = superEditModeEnabled;
-        IChatComponent component = new ChatComponentText("SuperEdit mode is " + (this.superEditModeEnabled ? "enabled" : "disabled"));
-        component.getChatStyle().setColor(EnumChatFormatting.DARK_RED);
-        this.sendChat(component);
-    }
-
     public void sendEditModePacket(){
         if(this.editModeEnabled){
             ByteBuf buffer = Unpooled.buffer();
@@ -283,11 +275,6 @@ public class NailedPlayer implements Player {
     @Override
     public boolean isEditModeEnabled() {
         return this.editModeEnabled;
-    }
-
-    @Override
-    public boolean isSuperEditModeEnabled() {
-        return this.superEditModeEnabled;
     }
 
     @Override
