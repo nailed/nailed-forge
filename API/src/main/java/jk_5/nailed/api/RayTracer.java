@@ -47,7 +47,7 @@ public class RayTracer {
 
     @SuppressWarnings("unchecked")
     @Nullable
-    public static MovingObjectPosition rayTrace(EntityPlayer player){
+    public static MovingObjectPosition rayTrace(EntityPlayer player, Entity... skip){
         MovingObjectPosition result;
 
         World world = player.worldObj;
@@ -67,7 +67,15 @@ public class RayTracer {
         double d2 = d1;
 
         for (Entity entity : list){
-            if (entity.canBeCollidedWith()){
+            boolean cont = false;
+            for (Entity s : skip) {
+                if(s == entity){
+                    cont = true;
+                    break;
+                }
+            }
+            if(cont) continue;
+            if (entity.canBeCollidedWith() && !entity.isDead){
                 float f2 = entity.getCollisionBorderSize();
                 AxisAlignedBB axisalignedbb = entity.boundingBox.expand((double)f2, (double)f2, (double)f2);
                 MovingObjectPosition movingobjectposition = axisalignedbb.calculateIntercept(vec3, vec32);

@@ -56,4 +56,5 @@ public interface Map {
     public int getMaxFoodLevel();
     public int getMinFoodLevel();
     public ZoneManager getZoneManager();
+    public void queueEvent(String event, Object... args);
 }

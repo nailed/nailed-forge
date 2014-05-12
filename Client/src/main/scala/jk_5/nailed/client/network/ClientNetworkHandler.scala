@@ -31,6 +31,7 @@ object ClientNetworkHandler {
     pipeline.addAfter(targetName, "DisplayLoginHandler", DisplayLoginHandler)
     pipeline.addAfter(targetName, "LoginResponseHandler", LoginResponseHandler)
     pipeline.addAfter(targetName, "FieldStatusHandler", FieldStatusHandler)
+    pipeline.addAfter(targetName, "SpawnVanillaParticleHandler", SpawnVanillaParticleHandler)
 
     pipeline.addAfter(targetName, "Script-MachineUpdateHandler", new ScriptPacketHandler.MachineUpdateHandler)
   }

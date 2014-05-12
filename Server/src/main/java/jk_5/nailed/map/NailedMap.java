@@ -43,7 +43,6 @@ import net.minecraftforge.common.network.ForgeMessage;
 
 import java.io.File;
 import java.util.List;
-import java.util.Random;
 
 /**
  * No description given
@@ -167,7 +166,7 @@ public class NailedMap implements Map {
         }
         player.getEntity().foodStats = playerFoodStats;
         player.setPlayersVisible(this.getPlayers());
-        this.getMachine().queueEvent("playerJoinEvent", player.getUsername());
+        this.getMachine().queueEvent("player_join", player.getUsername());
     }
 
     @Override
@@ -176,7 +175,7 @@ public class NailedMap implements Map {
         this.teamManager.onPlayerLeftMap(player);
         this.players.remove(player);
         NailedMapLoader.instance().checkShouldStart(this);
-        this.getMachine().queueEvent("playerLeaveEvent", player.getUsername());
+        this.getMachine().queueEvent("player_leave", player.getUsername());
     }
 
     @Override
@@ -370,5 +369,10 @@ public class NailedMap implements Map {
     @Override
     public ZoneManager getZoneManager() {
         return this.zoneManager;
+    }
+
+    @Override
+    public void queueEvent(String event, Object... args) {
+        this.getMachine().queueEvent(event, args);
     }
 }

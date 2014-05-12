@@ -9,7 +9,6 @@ import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.sign.Sign;
 import jk_5.nailed.api.map.sign.SignCommandHandler;
 import jk_5.nailed.api.player.Player;
-import jk_5.nailed.api.player.PlayerRegistry;
 import jk_5.nailed.util.ChatColor;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
@@ -17,7 +16,6 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.client.C12PacketUpdateSign;
 import net.minecraft.network.play.server.S02PacketChat;
 import net.minecraft.network.play.server.S33PacketUpdateSign;
-import net.minecraft.network.play.server.S38PacketPlayerListItem;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
@@ -92,7 +90,7 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
                 ctx.write(sign.getUpdatePacket(), promise);
                 return;
             }
-        } else if(msg instanceof S38PacketPlayerListItem){
+        }/* else if(msg instanceof S38PacketPlayerListItem){
             S38PacketPlayerListItem playerList = (S38PacketPlayerListItem) msg;
             Player pPlayer = NailedAPI.getPlayerRegistry().getPlayerByUsername(playerList.func_149122_c());
             if (playerList.func_149121_d()){
@@ -105,7 +103,7 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
                     return;
                 }
             }
-        }
+        }*/
         ctx.write(msg, promise);
     }
 }

@@ -527,7 +527,7 @@ public class MapApi implements ILuaAPI {
                             }
                             ItemStack stack = new ItemStack((Item) i, amount);
                             player.getEntity().inventory.setInventorySlotContents(slot, stack);
-                        }else if(arguments.length == 3 && arguments[0] instanceof Double && arguments[1] instanceof String && arguments[2] instanceof Double && arguments[3] instanceof Double){
+                        }else if(arguments.length == 4 && arguments[0] instanceof Double && arguments[1] instanceof String && arguments[2] instanceof Double && arguments[3] instanceof Double){
                             int meta = ((Double) arguments[3]).intValue();
                             int amount = ((Double) arguments[2]).intValue();
                             String item = (String) arguments[1];

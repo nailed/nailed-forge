@@ -147,3 +147,9 @@ object FieldStatusHandler extends SimpleChannelInboundHandler[FieldStatus] {
     }
   }
 }
+
+object SpawnVanillaParticleHandler extends SimpleChannelInboundHandler[SpawnVanillaParticle] {
+  override def channelRead0(ctx: ChannelHandlerContext, msg: SpawnVanillaParticle){
+    mc.theWorld.spawnParticle(msg.name, msg.x, msg.y, msg.z, msg.vx, msg.vy, msg.vz)
+  }
+}

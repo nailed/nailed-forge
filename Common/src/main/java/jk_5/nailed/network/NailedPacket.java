@@ -414,4 +414,35 @@ public abstract class NailedPacket {
             this.password = ByteBufUtils.readUTF8String(buffer);
         }
     }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class SpawnVanillaParticle extends NailedPacket {
+
+        public String name;
+        public double x, y, z;
+        public double vx, vy, vz;
+
+        @Override
+        public void encode(ByteBuf buffer){
+            ByteBufUtils.writeUTF8String(buffer, this.name);
+            buffer.writeDouble(x);
+            buffer.writeDouble(y);
+            buffer.writeDouble(z);
+            buffer.writeDouble(vx);
+            buffer.writeDouble(vy);
+            buffer.writeDouble(vz);
+        }
+
+        @Override
+        public void decode(ByteBuf buffer){
+            this.name = ByteBufUtils.readUTF8String(buffer);
+            this.x = buffer.readDouble();
+            this.y = buffer.readDouble();
+            this.z = buffer.readDouble();
+            this.vx = buffer.readDouble();
+            this.vy = buffer.readDouble();
+            this.vz = buffer.readDouble();
+        }
+    }
 }
