@@ -1,7 +1,9 @@
 package jk_5.nailed.blocks;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
@@ -102,5 +104,13 @@ public class BlockInvisibleWall extends BlockMulti {
     @Override
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z){
         return new ItemStack(Item.getItemFromBlock(this), 1, world.getBlockMetadata(x, y, z));
+    }
+
+    public static Block getReplacementBlock(){
+        return Blocks.air;
+    }
+
+    public static int getReplacementMetadata(){
+        return 0;
     }
 }

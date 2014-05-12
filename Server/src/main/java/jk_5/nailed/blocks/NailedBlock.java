@@ -3,8 +3,10 @@ package jk_5.nailed.blocks;
 import jk_5.nailed.blocks.tileentity.NailedTileEntity;
 import lombok.Getter;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockAir;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
@@ -43,5 +45,13 @@ public class NailedBlock extends Block {
         super.onBlockEventReceived(world, x, y, z, eventID, data);
         TileEntity tileentity = world.getTileEntity(x, y, z);
         return tileentity != null && tileentity.receiveClientEvent(eventID, data);
+    }
+
+    public static Block getReplacementBlock(){
+        return (Blocks.air);
+    }
+
+    public static int getReplacementMetadata(){
+        return 0;
     }
 }

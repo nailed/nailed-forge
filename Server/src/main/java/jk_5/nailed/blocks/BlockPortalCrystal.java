@@ -3,6 +3,7 @@ package jk_5.nailed.blocks;
 import jk_5.nailed.blocks.tileentity.TileEntityPortalController;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
@@ -28,5 +29,13 @@ public class BlockPortalCrystal extends NailedBlock {
             world.setBlockMetadataWithNotify(x, y, z, 0, 2);
             BlockPortalController.unpath(world, x, y, z);
         }
+    }
+
+    public static Block getReplacementBlock(){
+        return Blocks.glowstone;
+    }
+
+    public static int getReplacementMetadata(){
+        return 0;
     }
 }

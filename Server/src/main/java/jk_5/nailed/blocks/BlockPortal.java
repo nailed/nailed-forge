@@ -200,4 +200,12 @@ public class BlockPortal extends NailedBlock {
         }
         return score > 1;
     }
+
+    public static Block getReplacementBlock(){
+        return Blocks.portal;
+    }
+
+    public static int getReplacementMetadata(){
+        return 0;
+    }
 }

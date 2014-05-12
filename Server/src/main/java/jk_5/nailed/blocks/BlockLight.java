@@ -1,7 +1,9 @@
 package jk_5.nailed.blocks;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.EnumSkyBlock;
@@ -86,5 +88,13 @@ public class BlockLight extends NailedBlock {
     @Override
     public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side){
         return false;
+    }
+
+    public static Block getReplacementBlock(){
+        return Blocks.air;
+    }
+
+    public static int getReplacementMetadata(){
+        return 0;
     }
 }

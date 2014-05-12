@@ -2,9 +2,11 @@ package jk_5.nailed.blocks;
 
 import jk_5.nailed.blocks.tileentity.TileEntityStatEmitter;
 import jk_5.nailed.blocks.tileentity.TileEntityStatModifier;
+import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -72,5 +74,13 @@ public class BlockStat extends BlockMulti implements ITileEntityProvider {
     @Override
     public boolean shouldCheckWeakPower(IBlockAccess world, int x, int y, int z, int side){
         return false;
+    }
+
+    public static Block getReplacementBlock(){
+        return Blocks.piston;
+    }
+
+    public static int getReplacementMetadata(){
+        return 6;
     }
 }
