@@ -124,12 +124,12 @@ object Quakecraft {
       val x = dx / d * i + start._1
       val y = dy / d * i + start._2
       val z = dz / d * i + start._3
-      world.spawnParticle("fireworksSpark", x, y, z, 0, 0, 0)
-      /*
-       *  val entity = new EntityFireworkRocket(world, x, y, z, null)
-       *  world.spawnEntityInWorld(entity) //TODO: spawnParticle // done
-       *  world.removeEntity(entity)
-       */
+
+      //world.spawnParticle("fireworksSpark", x, y, z, 0, 0, 0) // this is not working since particles in 1.7 are clientside
+
+      val entity = new EntityFireworkRocket(world, x, y, z, null)
+      world.spawnEntityInWorld(entity) //TODO: spawnParticle // done
+      world.removeEntity(entity)
     }
   }
 
