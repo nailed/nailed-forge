@@ -100,7 +100,7 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
                 if(!nPlayer.getPlayersVisible().contains(pPlayer)){
                     return;
                 } else {
-                    msg = new S38PacketPlayerListItem(pPlayer.getUsername(), playerList.func_149121_d(), playerList.func_149120_e());
+                    msg = new S38PacketPlayerListItem(pPlayer.getChatPrefix(), playerList.func_149121_d(), playerList.func_149120_e());
                     ctx.write(msg, promise);
                     return;
                 }
