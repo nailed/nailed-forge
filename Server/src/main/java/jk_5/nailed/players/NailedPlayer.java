@@ -60,6 +60,7 @@ public class NailedPlayer implements Player {
     private int maxHealth = 20;
     private int minHealth = 0;
     private List<Player> playersVisible = Lists.newArrayList();
+    private boolean isClient = false;
 
     private NailedWebUser webUser;
 
@@ -354,5 +355,9 @@ public class NailedPlayer implements Player {
 
     public void setPlayersVisible(List<Player> list){
         if (list != null) this.playersVisible = list;
+    }
+
+    public boolean isClient(){
+        return this.isClient;
     }
 }

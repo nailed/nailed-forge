@@ -14,9 +14,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.client.C12PacketUpdateSign;
-import net.minecraft.network.play.server.S02PacketChat;
-import net.minecraft.network.play.server.S33PacketUpdateSign;
-import net.minecraft.network.play.server.S38PacketPlayerListItem;
+import net.minecraft.network.play.server.*;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
@@ -103,6 +101,18 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
                     ctx.write(msg, promise);
                     return;
                 }
+            }
+        } else if(msg instanceof S21PacketChunkData){
+            if(!NailedAPI.getPlayerRegistry().getPlayer(player).isClient()){
+
+                ctx.write(msg, promise);
+                return;
+            }
+        } else if(msg instanceof S26PacketMapChunkBulk){
+            if(!NailedAPI.getPlayerRegistry().getPlayer(player).isClient()){
+
+                ctx.write(msg, promise);
+                return;
             }
         }
         ctx.write(msg, promise);
