@@ -10,8 +10,6 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import jk_5.nailed.NailedServer;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
-import jk_5.nailed.network.MinecraftPacketAdapter;
-import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraftforge.common.network.ForgeMessage;
 
 /**
@@ -25,7 +23,6 @@ public class FMLHandshakeHandler extends ChannelInboundHandlerAdapter {
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception{
         if(evt instanceof NetworkHandshakeEstablished){
             NetworkHandshakeEstablished event = (NetworkHandshakeEstablished) evt;
-            NetHandlerPlayServer handler = (NetHandlerPlayServer) event.netHandler;
             FMLEmbeddedChannel channel = NetworkRegistry.INSTANCE.getChannel("FORGE", Side.SERVER);
             channel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.DISPATCHER);
             channel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(event.dispatcher);
@@ -35,9 +32,6 @@ public class FMLHandshakeHandler extends ChannelInboundHandlerAdapter {
                 }
                 channel.writeOutbound(new ForgeMessage.DimensionRegisterMessage(map.getID(), NailedServer.getProviderID()));
             }
-
-            //Try to hack a handler into Minecraft's main pipeline so we can change some packets before they are sent
-            handler.netManager.channel().pipeline().addAfter("encoder", "NailedPacketAdapter", new MinecraftPacketAdapter());
         }
         ctx.fireUserEventTriggered(evt);
     }

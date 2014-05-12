@@ -26,6 +26,12 @@ import net.minecraft.util.IChatComponent;
  */
 public class MinecraftPacketAdapter extends ChannelDuplexHandler {
 
+    private final EntityPlayerMP player;
+
+    public MinecraftPacketAdapter(EntityPlayerMP player) {
+        this.player = player;
+    }
+
     /**
      * Adapt inbound packets
      *
@@ -114,7 +120,13 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
                 ctx.write(msg, promise);
                 return;
             }
-        }
+        }/* else if(msg instanceof CustomChunkPacket){
+            ByteBuf buf = Unpooled.buffer();
+            PacketBuffer buffer = new PacketBuffer(buf);
+            buffer.writeVarIntToBuffer(33); //33 = S21. 38 = S26
+
+            //buffer.writeIets, zoals je gewend bent en gebeurt in S21 en S26
+        }*/
         ctx.write(msg, promise);
     }
 }

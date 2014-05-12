@@ -3,6 +3,7 @@ package jk_5.nailed.network;
 import cpw.mods.fml.common.network.FMLEmbeddedChannel;
 import cpw.mods.fml.common.network.FMLOutboundHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.handshake.NetworkDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
@@ -62,5 +63,10 @@ public class NailedNetworkHandler {
 
     public static FMLEmbeddedChannel getChannel() {
         return channel;
+    }
+
+    public static void vanillaHandshake(NetworkDispatcher dispatcher, EntityPlayerMP player){
+        ChannelPipeline pipe = dispatcher.manager.channel().pipeline();
+        pipe.addAfter("encoder", "NailedPacketAdapter", new MinecraftPacketAdapter(player));
     }
 }
