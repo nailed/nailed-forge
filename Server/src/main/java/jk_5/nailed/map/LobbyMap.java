@@ -1,6 +1,11 @@
 package jk_5.nailed.map;
 
+import com.google.common.collect.Lists;
 import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.player.Player;
+
+import java.util.List;
+import java.util.Random;
 
 /**
  * Map for the normal overworld, used for the lobby
@@ -14,6 +19,40 @@ public class LobbyMap extends NailedMap {
         super(NailedAPI.getMappackLoader().getMappack("lobby"), 0);
         if(this.getMappack() != null){
             this.getMappack().prepareWorld(this.getSaveFolder(), null);
+        }
+    }
+
+    @Override
+    public void onPlayerJoined(Player player){
+        super.onPlayerJoined(player);
+        if (this.getAmountOfPlayers() < 40) {
+            player.setPlayersVisible(this.getPlayers());
+        } else {
+            List<Player> allPlayers = this.getPlayers();
+            List<Player> visiblePlayers = Lists.newArrayList();
+            Random random = new Random();
+            for(int a = 0; a < 40; ++a){
+                Player b = allPlayers.get(random.nextInt() % allPlayers.size());
+                allPlayers.remove(b);
+                visiblePlayers.add(b);
+            }
+            player.setPlayersVisible(visiblePlayers);
+        }
+    }
+
+    @Override
+    public void onPlayerLeft(Player player){
+        super.onPlayerLeft(player);
+        if( this.getAmountOfPlayers() < 40){
+            List<Player> mapPlayers = this.getPlayers();
+            for (Player otherPlayer: mapPlayers){
+                otherPlayer.setPlayersVisible(mapPlayers);
+            }
+        } else {
+            List<Player> mapPlayers = this.getPlayers();
+            for (Player otherPlayer: mapPlayers){
+                otherPlayer.replacePlayerVisible(player, mapPlayers);
+            }
         }
     }
 }

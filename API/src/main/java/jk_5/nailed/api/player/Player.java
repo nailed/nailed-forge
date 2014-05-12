@@ -13,6 +13,8 @@ import net.minecraft.network.Packet;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
 
+import java.util.List;
+
 /**
  * No description given
  *
@@ -65,4 +67,10 @@ public interface Player extends PossibleWinner {
     public int getMinHealth();
     public void setMaxHealth(int max);
     public int getMaxHealth();
+    public List<Player> getPlayersVisible();
+    public void removePlayerVisible(Player player);
+    public void addPlayerVisible(Player player);
+    public int getNumPlayersVisible();
+    public void setPlayersVisible(List<Player> list);
+    public void replacePlayerVisible(Player player, List<Player> players);
 }

@@ -1,5 +1,6 @@
 package jk_5.nailed.players;
 
+import com.google.common.collect.Lists;
 import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
@@ -37,6 +38,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.WorldSettings;
 import net.minecraftforge.permissions.api.PermissionsManager;
 
+import java.util.List;
+import java.util.Random;
+
 /**
  * No description given
  *
@@ -55,6 +59,7 @@ public class NailedPlayer implements Player {
     private boolean superEditModeEnabled = false;
     private int maxHealth = 20;
     private int minHealth = 0;
+    private List<Player> playersVisible = Lists.newArrayList();
 
     private NailedWebUser webUser;
 
@@ -323,4 +328,32 @@ public class NailedPlayer implements Player {
     public void setMinHealth(int min){ this.minHealth = min; }
 
     public int getMinHealth(){ return this.minHealth; }
+
+    public List<Player> getPlayersVisible(){
+        return this.playersVisible;
+    }
+
+    public void addPlayerVisible(Player player){
+        if (this.playersVisible.contains(player)) return;
+        this.playersVisible.add(player);
+    }
+
+    public void replacePlayerVisible(Player player, List<Player> players){
+        players.remove(this.playersVisible);
+        this.playersVisible.remove(player);
+        Random random = new Random();
+        this.playersVisible.add(players.get(random.nextInt() % players.size()));
+    }
+
+    public void removePlayerVisible(Player player){
+        if (this.playersVisible.contains(player)) this.playersVisible.remove(player);
+    }
+
+    public int getNumPlayersVisible(){
+        return this.playersVisible.size();
+    }
+
+    public void setPlayersVisible(List<Player> list){
+        if (list != null) this.playersVisible = list;
+    }
 }
