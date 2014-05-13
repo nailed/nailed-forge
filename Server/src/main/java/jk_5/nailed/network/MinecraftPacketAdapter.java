@@ -17,6 +17,7 @@ import jk_5.nailed.network.packets.CustomChunkPacket;
 import jk_5.nailed.util.ChatColor;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.PacketBuffer;
@@ -31,6 +32,7 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.NibbleArray;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 
+import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.zip.Deflater;
 
@@ -133,7 +135,7 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
             boolean groundUpCont = ccPacket.groundUpCont;
             ByteBuf buf = Unpooled.buffer();
             PacketBuffer buffer = new PacketBuffer(buf);
-            buffer.writeVarIntToBuffer(38); // 38 = S26
+            buffer.writeVarIntToBuffer(33); // 33 = S21
             buffer.writeVarIntToBuffer(chunk.xPosition);
             buffer.writeVarIntToBuffer(chunk.zPosition);
             buffer.writeBoolean(groundUpCont);
@@ -160,9 +162,64 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
             ctx.write(buf, promise);
             return;
         } else if(msg instanceof CustomBulkChunkPacket) {
+            Player nplayer = NailedAPI.getPlayerRegistry().getPlayer(player);
             ByteBuf buf = Unpooled.buffer();
             PacketBuffer buffer = new PacketBuffer(buf);
-            buffer.writeVarIntToBuffer(33); //33 = S21. 38 = S26
+            buffer.writeVarIntToBuffer(38); // 38 = S26
+
+            List<Chunk> chunks = ((CustomBulkChunkPacket) msg).getChunks();
+            int i = chunks.size();
+            int[] xArray = new int[i];
+            int[] zArray = new int[i];
+            int[] bitmaskArray = new int[i];
+            int[] addBitmapArray = new int[i];
+            byte[][] chunkdata = new byte[i][];
+            boolean groundUpCont = !chunks.isEmpty() && ((Chunk)chunks.get(0)).worldObj.provider.hasNoSky;
+
+            int j = 0;
+            int k;
+            for(k = 0; k < i; ++k){
+                Chunk chunk = (Chunk) chunks.get(k);
+                Extracted extracted = extractData(chunk, true, 65535, nplayer.isClient());
+                j += extracted.aBlock.length;
+                xArray[k] = chunk.xPosition;
+                zArray[k] = chunk.zPosition;
+                bitmaskArray[k] = extracted.bitmask;
+                addBitmapArray[k] = extracted.addBitmap;
+                chunkdata[k] = extracted.aBlock;
+            }
+
+            byte[] data = new byte[j];
+            int offset = 0;
+            for(k = 0; k < chunkdata.length; k++){
+                System.arraycopy(chunkdata[k], 0, data, offset, chunkdata[k].length);
+                offset += chunkdata[k].length;
+            }
+            Deflater deflater = new Deflater(-1);
+            int length = 0;
+            byte[] deflated;
+            try{
+                deflater.setInput(data, 0, data.length);
+                deflater.finish();
+                deflated = new byte[data.length];
+                length = deflater.deflate(deflated);
+            }
+            finally{
+                deflater.end();
+            }
+            buffer.writeShort(xArray.length);
+            buffer.writeInt(length);
+            buffer.writeBoolean(groundUpCont);
+            buffer.writeBytes(deflated);
+
+            for(k = 0; k < xArray.length; ++k){
+                buffer.writeInt(xArray[k]);
+                buffer.writeInt(zArray[k]);
+                buffer.writeShort((short) (bitmaskArray[k] & 65535));
+                buffer.writeShort((short) (addBitmapArray[k] & 65535));
+            }
+            
+            ctx.write(buf, promise);
 
             //buffer.writeIets, zoals je gewend bent en gebeurt in S21 en S26
         }
@@ -173,7 +230,7 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
         int j = 0;
         ExtendedBlockStorage[] aExtendedBlockStorage = chunk.getBlockStorageArray();
         ExtendedBlockStorage[] aextendedblockstorage = new ExtendedBlockStorage[aExtendedBlockStorage.length];
-        System.arraycopy(aExtendedBlockStorage, 0, aextendedblockstorage, 0, aExtendedBlockStorage.length);
+
         int k = 0;
         MinecraftPacketAdapter.Extracted extracted = new MinecraftPacketAdapter.Extracted();
         byte[] abyte = new byte[196864];
@@ -181,7 +238,22 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
         if (groundUpCont) {
             chunk.sendUpdates = true;
         }
-        if (isClient){
+
+        int l;
+
+        if (!isClient){
+            for( l = 0; l < aExtendedBlockStorage.length; ++l){
+                ExtendedBlockStorage array = aExtendedBlockStorage[l];
+                ExtendedBlockStorage pExtendedBlockStorage = new ExtendedBlockStorage(array.getYLocation(), true);
+
+                pExtendedBlockStorage.setBlockLSBArray(array.getBlockLSBArray());
+                pExtendedBlockStorage.setBlocklightArray(array.getBlocklightArray());
+                pExtendedBlockStorage.setBlockMetadataArray(array.getMetadataArray());
+                pExtendedBlockStorage.setBlockMSBArray(array.getBlockMSBArray());
+                pExtendedBlockStorage.setSkylightArray(array.getSkylightArray());
+                aextendedblockstorage[l] = pExtendedBlockStorage;
+            }
+
             for (ExtendedBlockStorage extendedBlockStorage : aextendedblockstorage) {
                 if (extendedBlockStorage != null) {
                     for (int x = 0; x < 16; ++x) {
@@ -198,8 +270,6 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
                 }
             }
         }
-
-        int l;
 
         for (l = 0; l < aextendedblockstorage.length; ++l)
         {
@@ -283,6 +353,11 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
         extracted.aBlock = new byte[j];
         System.arraycopy(abyte, 0, extracted.aBlock, 0, j);
         return extracted;
+    }
+
+    public NBTBase fixNBTforPlayer(NBTBase tag, boolean isClient){
+        if (isClient) return tag;
+        return tag;
     }
 
     public static class Extracted{
