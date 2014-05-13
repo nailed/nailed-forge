@@ -31,11 +31,13 @@ public class BlockPortalCrystal extends NailedBlock {
         }
     }
 
-    public static Block getReplacementBlock(){
+    @Override
+    public Block getReplacementBlock(){
         return Blocks.glowstone;
     }
 
-    public static int getReplacementMetadata(){
+    @Override
+    public int getReplacementMetadata(){
         return 0;
     }
 }

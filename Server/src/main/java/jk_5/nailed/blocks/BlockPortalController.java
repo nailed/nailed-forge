@@ -429,11 +429,13 @@ public class BlockPortalController extends NailedBlock implements ITileEntityPro
         return blockaccess.getTileEntity(x, y, z);
     }
 
-    public static Block getReplacementBlock(){
+    @Override
+    public Block getReplacementBlock(){
         return Blocks.sponge;
     }
 
-    public static int getReplacementMetadata(){
+    @Override
+    public int getReplacementMetadata(){
         return 0;
     }
 }

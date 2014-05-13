@@ -106,11 +106,13 @@ public class BlockInvisibleWall extends BlockMulti {
         return new ItemStack(Item.getItemFromBlock(this), 1, world.getBlockMetadata(x, y, z));
     }
 
-    public static Block getReplacementBlock(){
+    @Override
+    public Block getReplacementBlock(){
         return Blocks.air;
     }
 
-    public static int getReplacementMetadata(){
+    @Override
+    public int getReplacementMetadata(){
         return 0;
     }
 }

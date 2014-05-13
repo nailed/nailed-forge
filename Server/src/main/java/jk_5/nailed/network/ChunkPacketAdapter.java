@@ -19,6 +19,8 @@ public class ChunkPacketAdapter {
         NailedLog.info("Serializing chunk " + chunk.toString());
         int j = 0;
         ExtendedBlockStorage[] aextendedblockstorage = chunk.getBlockStorageArray();
+
+        System.arraycopy(chunk.getBlockStorageArray(),0,aextendedblockstorage,0,chunk.getBlockStorageArray().length);
         int k = 0;
         S21PacketChunkData.Extracted extracted = new S21PacketChunkData.Extracted();
         byte[] abyte = new byte[196864];
@@ -30,8 +32,8 @@ public class ChunkPacketAdapter {
                         for (int z = 0; z < 16; ++z){
                             Block block = extendedBlockStorage.getBlockByExtId(x, y, z);
                             if (block instanceof NailedBlock){
-                                extendedBlockStorage.func_150818_a(x, y, z, NailedBlock.getReplacementBlock());
-                                extendedBlockStorage.setExtBlockMetadata(x, y, z, NailedBlock.getReplacementMetadata());
+                                extendedBlockStorage.func_150818_a(x, y, z, ((NailedBlock) block).getReplacementBlock());
+                                extendedBlockStorage.setExtBlockMetadata(x, y, z, ((NailedBlock) block).getReplacementMetadata());
                             }
                         }
                     }

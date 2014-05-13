@@ -201,11 +201,13 @@ public class BlockPortal extends NailedBlock {
         return score > 1;
     }
 
-    public static Block getReplacementBlock(){
+    @Override
+    public Block getReplacementBlock(){
         return Blocks.portal;
     }
 
-    public static int getReplacementMetadata(){
+    @Override
+    public int getReplacementMetadata(){
         return 0;
     }
 }

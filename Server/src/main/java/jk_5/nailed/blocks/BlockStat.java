@@ -76,11 +76,13 @@ public class BlockStat extends BlockMulti implements ITileEntityProvider {
         return false;
     }
 
-    public static Block getReplacementBlock(){
+    @Override
+    public Block getReplacementBlock(){
         return Blocks.piston;
     }
 
-    public static int getReplacementMetadata(){
+    @Override
+    public int getReplacementMetadata(){
         return 6;
     }
 }

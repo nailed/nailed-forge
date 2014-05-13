@@ -1,5 +1,6 @@
 package jk_5.nailed.blocks;
 
+import jk_5.nailed.api.block.INailedBlock;
 import jk_5.nailed.blocks.tileentity.NailedTileEntity;
 import lombok.Getter;
 import net.minecraft.block.Block;
@@ -15,7 +16,7 @@ import net.minecraft.world.World;
  *
  * @author jk-5
  */
-public class NailedBlock extends Block {
+public class NailedBlock extends Block implements INailedBlock{
 
     @Getter private final String registeredName;
 
@@ -47,11 +48,11 @@ public class NailedBlock extends Block {
         return tileentity != null && tileentity.receiveClientEvent(eventID, data);
     }
 
-    public static Block getReplacementBlock(){
+    public Block getReplacementBlock(){
         return (Blocks.air);
     }
 
-    public static int getReplacementMetadata(){
+    public int getReplacementMetadata(){
         return 0;
     }
 }

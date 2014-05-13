@@ -1,6 +1,7 @@
 package jk_5.nailed.blocks;
 
 import jk_5.nailed.NailedLog;
+import jk_5.nailed.api.block.INailedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCommandBlock;
 import net.minecraft.init.Blocks;
@@ -13,7 +14,7 @@ import net.minecraft.world.World;
  *
  * @author jk-5
  */
-public class BlockCommandBlockOverride extends BlockCommandBlock {
+public class BlockCommandBlockOverride extends BlockCommandBlock implements INailedBlock{
 
     @Override
     public TileEntity createNewTileEntity(World world, int meta) {
@@ -21,11 +22,13 @@ public class BlockCommandBlockOverride extends BlockCommandBlock {
         return new TileEntityCommandBlock();
     }
 
-    public static Block getReplacementBlock(){
+    @Override
+    public Block getReplacementBlock(){
         return Blocks.command_block;
     }
 
-    public static int getReplacementMetadata(){
+    @Override
+    public int getReplacementMetadata(){
         return 0;
     }
 }
