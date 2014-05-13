@@ -1,6 +1,5 @@
 package jk_5.nailed.network;
 
-import com.jcraft.jogg.Packet;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelDuplexHandler;
@@ -13,7 +12,6 @@ import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.sign.Sign;
 import jk_5.nailed.api.map.sign.SignCommandHandler;
 import jk_5.nailed.api.player.Player;
-import jk_5.nailed.blocks.NailedBlock;
 import jk_5.nailed.network.packets.CustomBulkChunkPacket;
 import jk_5.nailed.network.packets.CustomChunkPacket;
 import jk_5.nailed.util.ChatColor;

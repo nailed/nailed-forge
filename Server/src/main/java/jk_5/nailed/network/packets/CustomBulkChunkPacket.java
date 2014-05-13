@@ -29,7 +29,7 @@ public class CustomBulkChunkPacket extends Packet {
         return;
     }
 
-    public void writePacketData(PacketBuffer buffer){
+    public void writePacketData(PacketBuffer buffer) throws IOException {
         return;
     }
 

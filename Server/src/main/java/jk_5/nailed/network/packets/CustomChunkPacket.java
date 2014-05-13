@@ -29,12 +29,11 @@ public class CustomChunkPacket extends Packet{
         return;
     }
 
-    public void processPacket(INetHandler handler)
-    {
+    public void processPacket(INetHandler handler){
         return;
     }
 
-    public void writePacketData(PacketBuffer buffer){
+    public void writePacketData(PacketBuffer buffer) throws IOException{
         return;
     }
 
