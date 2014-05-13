@@ -20,7 +20,7 @@ public class CustomBulkChunkPacket extends Packet {
         this.chunks = chunks;
     }
 
-    public void readPacketData(PacketBuffer buffer) throws IOException {
+    public void readPacketData(PacketBuffer buffer) {
         return;
     }
 
@@ -29,7 +29,7 @@ public class CustomBulkChunkPacket extends Packet {
         return;
     }
 
-    public void writePacketData(PacketBuffer buffer) throws IOException {
+    public void writePacketData(PacketBuffer buffer) {
         return;
     }
 

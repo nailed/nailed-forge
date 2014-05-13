@@ -25,7 +25,7 @@ public class CustomChunkPacket extends Packet{
         this.i = i;
     }
 
-    public void readPacketData(PacketBuffer buffer) throws IOException{
+    public void readPacketData(PacketBuffer buffer){
         return;
     }
 
@@ -33,7 +33,7 @@ public class CustomChunkPacket extends Packet{
         return;
     }
 
-    public void writePacketData(PacketBuffer buffer) throws IOException{
+    public void writePacketData(PacketBuffer buffer){
         return;
     }
 

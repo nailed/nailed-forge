@@ -20,6 +20,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
+import net.minecraft.network.play.client.C09PacketHeldItemChange;
 import net.minecraft.network.play.client.C12PacketUpdateSign;
 import net.minecraft.network.play.server.*;
 import net.minecraft.util.ChatComponentText;
@@ -60,6 +62,8 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
             EntityPlayerMP player = ((NetHandlerPlayServer) manager.getNetHandler()).playerEntity;
             SignCommandHandler handler = NailedAPI.getMapLoader().getMap(player.worldObj).getSignCommandHandler();
             handler.onSignAdded(packet.field_149590_d, packet.field_149593_a, packet.field_149591_b, packet.field_149592_c);
+        } else if (msg instanceof C08PacketPlayerBlockPlacement){
+
         }
         ctx.fireChannelRead(msg);
     }
