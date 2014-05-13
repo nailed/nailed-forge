@@ -1,23 +1,38 @@
 package jk_5.nailed.network;
 
+import com.jcraft.jogg.Packet;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.block.INailedBlock;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.sign.Sign;
 import jk_5.nailed.api.map.sign.SignCommandHandler;
 import jk_5.nailed.api.player.Player;
+import jk_5.nailed.blocks.NailedBlock;
+import jk_5.nailed.network.packets.CustomBulkChunkPacket;
+import jk_5.nailed.network.packets.CustomChunkPacket;
 import jk_5.nailed.util.ChatColor;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.NetworkManager;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.C12PacketUpdateSign;
 import net.minecraft.network.play.server.*;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.NibbleArray;
+import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
+
+import java.util.concurrent.Semaphore;
+import java.util.zip.Deflater;
 
 /**
  * No description given
@@ -33,7 +48,7 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
     }
 
     /**
-     * Adapt inbound packets
+     * Adapt inbound CustomChunkPacket
      *
      * @param ctx ChannelHandlerContext
      * @param msg The inbound packet
@@ -52,7 +67,7 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
     }
 
     /**
-     * Adapt outbound packets
+     * Adapt outbound CustomChunkPacket
      *
      * @param ctx ChannelHandlerContext
      * @param msg The outbound packet
@@ -108,25 +123,169 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
                     return;
                 }
             }
-        } else if(msg instanceof S21PacketChunkData){
-            if(!NailedAPI.getPlayerRegistry().getPlayer(player).isClient()){
+        } else if(msg instanceof CustomChunkPacket){
+            Player nPlayer = NailedAPI.getPlayerRegistry().getPlayer(player);
 
-                ctx.write(msg, promise);
-                return;
-            }
-        } else if(msg instanceof S26PacketMapChunkBulk){
-            if(!NailedAPI.getPlayerRegistry().getPlayer(player).isClient()){
+            CustomChunkPacket ccPacket = ((CustomChunkPacket) msg);
+            Chunk chunk = ccPacket.chunk;
+            boolean groundUpCont = ccPacket.groundUpCont;
+            ByteBuf buf = Unpooled.buffer();
+            PacketBuffer buffer = new PacketBuffer(buf);
+            buffer.writeVarIntToBuffer(38); // 38 = S26
+            buffer.writeVarIntToBuffer(chunk.xPosition);
+            buffer.writeVarIntToBuffer(chunk.zPosition);
+            buffer.writeBoolean(groundUpCont);
+            Extracted extracted = extractData(chunk, ccPacket.groundUpCont, ccPacket.i, nPlayer.isClient());
+            buffer.writeShort(extracted.bitmask & 65535);
+            buffer.writeShort(extracted.addBitmap & 65535);
 
-                ctx.write(msg, promise);
-                return;
+            Semaphore deflateGate = new Semaphore(1);
+            Deflater deflater = new Deflater(-1);
+            byte[] deflated;
+            int length = 0;
+            try{
+                deflater.setInput(extracted.aBlock, 0, extracted.aBlock.length);
+                deflater.finish();
+                deflated = new byte[extracted.aBlock.length];
+                length = deflater.deflate(deflated);
             }
-        }/* else if(msg instanceof CustomChunkPacket){
+            finally{
+                deflater.end();
+            }
+            buffer.writeInt(length);
+            buffer.writeBytes(deflated, 0, length);
+
+            ctx.write(buf, promise);
+            return;
+        } else if(msg instanceof CustomBulkChunkPacket) {
             ByteBuf buf = Unpooled.buffer();
             PacketBuffer buffer = new PacketBuffer(buf);
             buffer.writeVarIntToBuffer(33); //33 = S21. 38 = S26
 
             //buffer.writeIets, zoals je gewend bent en gebeurt in S21 en S26
-        }*/
+        }
         ctx.write(msg, promise);
+    }
+
+    public Extracted extractData(Chunk chunk, boolean groundUpCont, int bitmap, boolean isClient) {
+        int j = 0;
+        ExtendedBlockStorage[] aExtendedBlockStorage = chunk.getBlockStorageArray();
+        ExtendedBlockStorage[] aextendedblockstorage = new ExtendedBlockStorage[aExtendedBlockStorage.length];
+        System.arraycopy(aExtendedBlockStorage, 0, aextendedblockstorage, 0, aExtendedBlockStorage.length);
+        int k = 0;
+        MinecraftPacketAdapter.Extracted extracted = new MinecraftPacketAdapter.Extracted();
+        byte[] abyte = new byte[196864];
+
+        if (groundUpCont) {
+            chunk.sendUpdates = true;
+        }
+        if (isClient){
+            for (ExtendedBlockStorage extendedBlockStorage : aextendedblockstorage) {
+                if (extendedBlockStorage != null) {
+                    for (int x = 0; x < 16; ++x) {
+                        for (int y = 0; y < 16; ++y) {
+                            for (int z = 0; z < 16; ++z) {
+                                Block block = extendedBlockStorage.getBlockByExtId(x, y, z);
+                                if (block instanceof INailedBlock) {
+                                    extendedBlockStorage.func_150818_a(x, y, z, ((INailedBlock) block).getReplacementBlock());
+                                    extendedBlockStorage.setExtBlockMetadata(x, y, z, ((INailedBlock) block).getReplacementMetadata());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        int l;
+
+        for (l = 0; l < aextendedblockstorage.length; ++l)
+        {
+            if (aextendedblockstorage[l] != null && (!groundUpCont || !aextendedblockstorage[l].isEmpty()) && (bitmap & 1 << l) != 0)
+            {
+                extracted.bitmask |= 1 << l;
+
+                if (aextendedblockstorage[l].getBlockMSBArray() != null)
+                {
+                    extracted.addBitmap |= 1 << l;
+                    ++k;
+                }
+            }
+        }
+
+        for (l = 0; l < aextendedblockstorage.length; ++l)
+        {
+            if (aextendedblockstorage[l] != null && (!groundUpCont || !aextendedblockstorage[l].isEmpty()) && (bitmap & 1 << l) != 0)
+            {
+                byte[] abyte1 = aextendedblockstorage[l].getBlockLSBArray();
+                System.arraycopy(abyte1, 0, abyte, j, abyte1.length);
+                j += abyte1.length;
+            }
+        }
+
+        NibbleArray nibblearray;
+
+        for (l = 0; l < aextendedblockstorage.length; ++l)
+        {
+            if (aextendedblockstorage[l] != null && (!groundUpCont || !aextendedblockstorage[l].isEmpty()) && (bitmap & 1 << l) != 0)
+            {
+                nibblearray = aextendedblockstorage[l].getMetadataArray();
+                System.arraycopy(nibblearray.data, 0, abyte, j, nibblearray.data.length);
+                j += nibblearray.data.length;
+            }
+        }
+
+        for (l = 0; l < aextendedblockstorage.length; ++l)
+        {
+            if (aextendedblockstorage[l] != null && (!groundUpCont || !aextendedblockstorage[l].isEmpty()) && (bitmap & 1 << l) != 0)
+            {
+                nibblearray = aextendedblockstorage[l].getBlocklightArray();
+                System.arraycopy(nibblearray.data, 0, abyte, j, nibblearray.data.length);
+                j += nibblearray.data.length;
+            }
+        }
+
+        if (!chunk.worldObj.provider.hasNoSky)
+        {
+            for (l = 0; l < aextendedblockstorage.length; ++l)
+            {
+                if (aextendedblockstorage[l] != null && (!groundUpCont || !aextendedblockstorage[l].isEmpty()) && (bitmap & 1 << l) != 0)
+                {
+                    nibblearray = aextendedblockstorage[l].getSkylightArray();
+                    System.arraycopy(nibblearray.data, 0, abyte, j, nibblearray.data.length);
+                    j += nibblearray.data.length;
+                }
+            }
+        }
+
+        if (k > 0)
+        {
+            for (l = 0; l < aextendedblockstorage.length; ++l)
+            {
+                if (aextendedblockstorage[l] != null && (!groundUpCont || !aextendedblockstorage[l].isEmpty()) && aextendedblockstorage[l].getBlockMSBArray() != null && (bitmap & 1 << l) != 0)
+                {
+                    nibblearray = aextendedblockstorage[l].getBlockMSBArray();
+                    System.arraycopy(nibblearray.data, 0, abyte, j, nibblearray.data.length);
+                    j += nibblearray.data.length;
+                }
+            }
+        }
+
+        if (groundUpCont)
+        {
+            byte[] abyte2 = chunk.getBiomeArray();
+            System.arraycopy(abyte2, 0, abyte, j, abyte2.length);
+            j += abyte2.length;
+        }
+
+        extracted.aBlock = new byte[j];
+        System.arraycopy(abyte, 0, extracted.aBlock, 0, j);
+        return extracted;
+    }
+
+    public static class Extracted{
+        public byte[] aBlock;
+        public int bitmask;
+        public int addBitmap;
     }
 }
