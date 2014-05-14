@@ -48,7 +48,7 @@ public class NailedTeleporter implements Teleporter {
         }
         World destWorld = destination.getWorld();
         if(destWorld.isRemote) return false;
-        options = options.clone(); //We don't want to accidently modify the options object passed in, so we clone it.
+        options = options.reMake(); //We don't want to accidently modify the options object passed in, so we clone it.
         Location location = options.getLocation();
         if(!TeleportEventFactory.isLinkPermitted(current, destination, entity, options)){
             return false;
@@ -57,7 +57,7 @@ public class NailedTeleporter implements Teleporter {
             location = new Location(destWorld.getSpawnPoint());
             options.setLocation(location);
         }
-        TeleportEvent.TeleportEventAlter event = new TeleportEvent.TeleportEventAlter(current, destination, entity, options.clone());
+        TeleportEvent.TeleportEventAlter event = new TeleportEvent.TeleportEventAlter(current, destination, entity, options.reMake());
         MinecraftForge.EVENT_BUS.post(event);
         if(event.location != null){
             location = event.location;

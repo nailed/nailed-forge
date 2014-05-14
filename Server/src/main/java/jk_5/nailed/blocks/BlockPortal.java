@@ -149,7 +149,7 @@ public class BlockPortal extends NailedBlock {
             world.setBlockToAir(x, y, z);
             return;
         }
-        TeleportOptions options = container.getDestination().clone();
+        TeleportOptions options = container.getDestination().reMake();
         options.setMaintainMomentum(true);
         options.setSound("nailed:teleport.portal");
         NailedAPI.getTeleporter().teleportEntity(entity, options);

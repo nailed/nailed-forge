@@ -31,9 +31,7 @@ public class TeleportOptions {
         this.location = new Location(location);
     }
 
-    @Override
-    @SuppressWarnings("CloneDoesntDeclareCloneNotSupportedException")
-    public TeleportOptions clone(){
+    public TeleportOptions reMake(){
         return new TeleportOptions(this.location, this.destination, this.maintainMomentum, this.spawnParticles, this.clearInventory, this.sound);
     }
 
