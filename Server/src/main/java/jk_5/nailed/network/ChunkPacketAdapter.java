@@ -18,12 +18,26 @@ public class ChunkPacketAdapter {
     public static S21PacketChunkData.Extracted adaptChunk(Chunk chunk, boolean bool, int i){
         NailedLog.info("Serializing chunk " + chunk.toString());
         int j = 0;
-        ExtendedBlockStorage[] aextendedblockstorage = chunk.getBlockStorageArray();
+        ExtendedBlockStorage[] aExtendedBlockStorage = chunk.getBlockStorageArray();
+        ExtendedBlockStorage[] aextendedblockstorage = new ExtendedBlockStorage[aExtendedBlockStorage.length];
 
-        System.arraycopy(chunk.getBlockStorageArray(),0,aextendedblockstorage,0,chunk.getBlockStorageArray().length);
         int k = 0;
         S21PacketChunkData.Extracted extracted = new S21PacketChunkData.Extracted();
         byte[] abyte = new byte[196864];
+
+        int l;
+
+        for( l = 0; l < aExtendedBlockStorage.length; ++l){
+            ExtendedBlockStorage array = aExtendedBlockStorage[l];
+            ExtendedBlockStorage pExtendedBlockStorage = new ExtendedBlockStorage(array.getYLocation(), true);
+
+            pExtendedBlockStorage.setBlockLSBArray(array.getBlockLSBArray());
+            pExtendedBlockStorage.setBlocklightArray(array.getBlocklightArray());
+            pExtendedBlockStorage.setBlockMetadataArray(array.getMetadataArray());
+            pExtendedBlockStorage.setBlockMSBArray(array.getBlockMSBArray());
+            pExtendedBlockStorage.setSkylightArray(array.getSkylightArray());
+            aextendedblockstorage[l] = pExtendedBlockStorage;
+        }
 
         for( ExtendedBlockStorage extendedBlockStorage : aextendedblockstorage){
             if (extendedBlockStorage != null){
@@ -45,8 +59,6 @@ public class ChunkPacketAdapter {
         {
             chunk.sendUpdates = true;
         }
-
-        int l;
 
         for (l = 0; l < aextendedblockstorage.length; ++l)
         {

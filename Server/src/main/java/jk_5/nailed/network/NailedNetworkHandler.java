@@ -7,6 +7,7 @@ import cpw.mods.fml.common.network.handshake.NetworkDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
+import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.map.script.ScriptPacketHandler;
 import jk_5.nailed.network.handlers.*;
 import net.minecraft.entity.player.EntityPlayer;
@@ -66,6 +67,7 @@ public class NailedNetworkHandler {
     }
 
     public static void vanillaHandshake(NetworkDispatcher dispatcher, EntityPlayerMP player){
+        NailedAPI.getPlayerRegistry().getPlayer(player).setNailed(false);
         ChannelPipeline pipe = dispatcher.manager.channel().pipeline();
         pipe.addAfter("encoder", "NailedPacketAdapter", new MinecraftPacketAdapter(player));
     }

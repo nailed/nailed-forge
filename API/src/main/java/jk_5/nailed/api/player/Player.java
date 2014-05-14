@@ -72,5 +72,6 @@ public interface Player extends PossibleWinner {
     public int getNumPlayersVisible();
     public void setPlayersVisible(List<Player> list);
     public void replacePlayerVisible(Player player, List<Player> players, Random random);
-    public boolean isClient();
+    public boolean isNailed();
+    public void setNailed(boolean isNailed);
 }

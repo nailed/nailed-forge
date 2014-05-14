@@ -139,7 +139,7 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
             buffer.writeVarIntToBuffer(chunk.xPosition);
             buffer.writeVarIntToBuffer(chunk.zPosition);
             buffer.writeBoolean(groundUpCont);
-            Extracted extracted = extractData(chunk, ccPacket.groundUpCont, ccPacket.i, nPlayer.isClient());
+            Extracted extracted = extractData(chunk, ccPacket.groundUpCont, ccPacket.i, nPlayer.isNailed());
             buffer.writeShort(extracted.bitmask & 65535);
             buffer.writeShort(extracted.addBitmap & 65535);
 
@@ -180,7 +180,7 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
             int k;
             for(k = 0; k < i; ++k){
                 Chunk chunk = (Chunk) chunks.get(k);
-                Extracted extracted = extractData(chunk, true, 65535, nplayer.isClient());
+                Extracted extracted = extractData(chunk, true, 65535, nplayer.isNailed());
                 j += extracted.aBlock.length;
                 xArray[k] = chunk.xPosition;
                 zArray[k] = chunk.zPosition;
@@ -218,7 +218,7 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
                 buffer.writeShort((short) (bitmaskArray[k] & 65535));
                 buffer.writeShort((short) (addBitmapArray[k] & 65535));
             }
-            
+
             ctx.write(buf, promise);
 
             //buffer.writeIets, zoals je gewend bent en gebeurt in S21 en S26
@@ -226,7 +226,7 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
         ctx.write(msg, promise);
     }
 
-    public Extracted extractData(Chunk chunk, boolean groundUpCont, int bitmap, boolean isClient) {
+    public Extracted extractData(Chunk chunk, boolean groundUpCont, int bitmap, boolean isNailed) {
         int j = 0;
         ExtendedBlockStorage[] aExtendedBlockStorage = chunk.getBlockStorageArray();
         ExtendedBlockStorage[] aextendedblockstorage = new ExtendedBlockStorage[aExtendedBlockStorage.length];
@@ -241,7 +241,7 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
 
         int l;
 
-        if (!isClient){
+        if (!isNailed){
             for( l = 0; l < aExtendedBlockStorage.length; ++l){
                 ExtendedBlockStorage array = aExtendedBlockStorage[l];
                 ExtendedBlockStorage pExtendedBlockStorage = new ExtendedBlockStorage(array.getYLocation(), true);
