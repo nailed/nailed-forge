@@ -67,7 +67,7 @@ public class NailedNetworkHandler {
     }
 
     public static void vanillaHandshake(NetworkDispatcher dispatcher, EntityPlayerMP player){
-        NailedAPI.getPlayerRegistry().getPlayer(player).setNailed(false);
+        NailedAPI.getPlayerRegistry().getOrCreatePlayer(player.getGameProfile()).setNailed(false);
         ChannelPipeline pipe = dispatcher.manager.channel().pipeline();
         pipe.addAfter("encoder", "NailedPacketAdapter", new MinecraftPacketAdapter(player));
     }
