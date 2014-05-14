@@ -58,7 +58,7 @@ public interface Player extends PossibleWinner {
     public NetHandlerPlayServer getNetHandler();
     public void sendTimeUpdate(String argument);
     public boolean isEditModeEnabled();
-    public void setEditModeEnabled(boolean editModeEnabled);
+    public void setEditModeEnabled(boolean editModeEnabled) throws IncompatibleClientException;
     public NailedWebUser getWebUser();
     public void setWebUser(NailedWebUser webUser);
     public void teleportToLobby();
@@ -72,6 +72,6 @@ public interface Player extends PossibleWinner {
     public int getNumPlayersVisible();
     public void setPlayersVisible(List<Player> list);
     public void replacePlayerVisible(Player player, List<Player> players, Random random);
-    public boolean isNailed();
-    public void setNailed(boolean isNailed);
+    public PlayerClient getClient();
+    public void setClient(PlayerClient client);
 }

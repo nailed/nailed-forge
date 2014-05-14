@@ -5,6 +5,8 @@ import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import jk_5.nailed.api.player.IncompatibleClientException;
+import jk_5.nailed.api.player.PlayerClient;
 import jk_5.nailed.api.Gamemode;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
@@ -59,7 +61,7 @@ public class NailedPlayer implements Player {
     private int maxHealth = 20;
     private int minHealth = 0;
     private List<Player> playersVisible = Lists.newArrayList();
-    private boolean isNailed = true;
+    private PlayerClient playerClient = PlayerClient.VANILLA; // standard = vanilla, no problems with idconflicts;
 
     private NailedWebUser webUser;
 
@@ -142,9 +144,7 @@ public class NailedPlayer implements Player {
     public void onLogin() {
         this.online = true;
         this.netHandler = this.getEntity().playerNetServerHandler;
-        if(this.editModeEnabled){
-            this.sendEditModePacket();
-        }
+        this.editModeEnabled = false;
         if(!(!this.webUser.isAuthenticated() && IpcManager.instance().isConnected())){
             JoinMessageSender.onPlayerJoin(this);
         }
@@ -214,7 +214,8 @@ public class NailedPlayer implements Player {
     }
 
     @Override
-    public void setEditModeEnabled(boolean editModeEnabled){
+    public void setEditModeEnabled(boolean editModeEnabled) throws IncompatibleClientException{
+        if(this.playerClient != PlayerClient.NAILED) throw new IncompatibleClientException("Edit mode on non-nailed client", this);
         this.editModeEnabled = editModeEnabled;
         IChatComponent component = new ChatComponentText("Edit mode is " + (this.editModeEnabled ? "enabled" : "disabled"));
         component.getChatStyle().setColor(EnumChatFormatting.GREEN);
@@ -332,6 +333,11 @@ public class NailedPlayer implements Player {
         this.playersVisible.add(players.get(random.nextInt() % players.size()));
     }
 
+    @Override
+    public PlayerClient getClient() {
+        return this.playerClient;
+    }
+
     public void removePlayerVisible(Player player){
         if (this.playersVisible.contains(player)) this.playersVisible.remove(player);
     }
@@ -344,11 +350,7 @@ public class NailedPlayer implements Player {
         if (list != null) this.playersVisible = list;
     }
 
-    public boolean isNailed(){
-        return this.isNailed;
-    }
-
-    public void setNailed(boolean isNailed){
-        this.isNailed = isNailed;
+    public void setClient(PlayerClient client){
+        this.playerClient = client;
     }
 }

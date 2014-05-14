@@ -12,6 +12,7 @@ import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.sign.Sign;
 import jk_5.nailed.api.map.sign.SignCommandHandler;
 import jk_5.nailed.api.player.Player;
+import jk_5.nailed.api.player.PlayerClient;
 import jk_5.nailed.network.packets.CustomBulkChunkPacket;
 import jk_5.nailed.network.packets.CustomChunkPacket;
 import jk_5.nailed.util.ChatColor;
@@ -139,7 +140,7 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
             buffer.writeVarIntToBuffer(chunk.xPosition);
             buffer.writeVarIntToBuffer(chunk.zPosition);
             buffer.writeBoolean(groundUpCont);
-            Extracted extracted = extractData(chunk, ccPacket.groundUpCont, ccPacket.i, nPlayer.isNailed());
+            Extracted extracted = extractData(chunk, ccPacket.groundUpCont, ccPacket.i, nPlayer.getClient() == PlayerClient.NAILED);
             buffer.writeShort(extracted.bitmask & 65535);
             buffer.writeShort(extracted.addBitmap & 65535);
 
@@ -180,7 +181,7 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
             int k;
             for(k = 0; k < i; ++k){
                 Chunk chunk = (Chunk) chunks.get(k);
-                Extracted extracted = extractData(chunk, true, 65535, nplayer.isNailed());
+                Extracted extracted = extractData(chunk, true, 65535, nplayer.getClient() == PlayerClient.NAILED);
                 j += extracted.aBlock.length;
                 xArray[k] = chunk.xPosition;
                 zArray[k] = chunk.zPosition;
