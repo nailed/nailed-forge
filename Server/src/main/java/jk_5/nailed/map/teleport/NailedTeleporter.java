@@ -93,8 +93,7 @@ public class NailedTeleporter implements Teleporter {
             if(changingworlds){
                 Player nplayer = NailedAPI.getPlayerRegistry().getPlayer(player);
                 if(nplayer.getClient() != PlayerClient.NAILED || nplayer.getClient() != PlayerClient.FORGE) {
-                    player.dimension = 1;
-                    player.playerNetServerHandler.sendPacket(new S07PacketRespawn(player.dimension, player.worldObj.difficultySetting, destWorld.getWorldInfo().getTerrainType(), player.theItemInWorldManager.getGameType()));
+                    player.playerNetServerHandler.sendPacket(new S07PacketRespawn(1, player.worldObj.difficultySetting, destWorld.getWorldInfo().getTerrainType(), player.theItemInWorldManager.getGameType()));
                 }
                 player.dimension = (nplayer.getClient() != PlayerClient.NAILED && nplayer.getClient() != PlayerClient.FORGE) ? 0 : dimension;
                 player.playerNetServerHandler.sendPacket(new S07PacketRespawn(player.dimension, player.worldObj.difficultySetting, destWorld.getWorldInfo().getTerrainType(), player.theItemInWorldManager.getGameType()));
