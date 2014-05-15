@@ -13,18 +13,22 @@ import jk_5.nailed.api.map.sign.Sign;
 import jk_5.nailed.api.map.sign.SignCommandHandler;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.api.player.PlayerClient;
+import jk_5.nailed.blocks.BlockStat;
+import jk_5.nailed.blocks.NailedBlock;
+import jk_5.nailed.blocks.NailedBlocks;
 import jk_5.nailed.network.packets.CustomBulkChunkPacket;
 import jk_5.nailed.network.packets.CustomChunkPacket;
 import jk_5.nailed.util.ChatColor;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
-import net.minecraft.network.play.client.C09PacketHeldItemChange;
-import net.minecraft.network.play.client.C12PacketUpdateSign;
+import net.minecraft.network.play.client.*;
 import net.minecraft.network.play.server.*;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
@@ -66,7 +70,14 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
             SignCommandHandler handler = NailedAPI.getMapLoader().getMap(player.worldObj).getSignCommandHandler();
             handler.onSignAdded(packet.field_149590_d, packet.field_149593_a, packet.field_149591_b, packet.field_149592_c);
         } else if (msg instanceof C08PacketPlayerBlockPlacement){
-
+            C08PacketPlayerBlockPlacement blockPlacement = (C08PacketPlayerBlockPlacement) msg;
+            blockPlacement.field_149580_e = tryReplaceforServer(blockPlacement.func_149574_g());
+        } else if (msg instanceof C0EPacketClickWindow){
+            C0EPacketClickWindow clickWindow = (C0EPacketClickWindow) msg;
+            clickWindow.field_149551_e = tryReplaceforClient(clickWindow.func_149546_g());
+        } else if (msg instanceof C10PacketCreativeInventoryAction) {
+            C10PacketCreativeInventoryAction inventoryAction = (C10PacketCreativeInventoryAction) msg;
+            inventoryAction.field_149628_b = tryReplaceforServer(inventoryAction.func_149625_d());
         }
         ctx.fireChannelRead(msg);
     }
@@ -115,12 +126,12 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
                 ctx.write(sign.getUpdatePacket(), promise);
                 return;
             }
-        } else if(msg instanceof S38PacketPlayerListItem){
+        } else if(msg instanceof S38PacketPlayerListItem) {
             S38PacketPlayerListItem playerList = (S38PacketPlayerListItem) msg;
             Player pPlayer = NailedAPI.getPlayerRegistry().getPlayerByUsername(playerList.field_149126_a);
-            if (playerList.field_149124_b){
+            if (playerList.field_149124_b) {
                 Player nPlayer = NailedAPI.getPlayerRegistry().getPlayer(player);
-                if(!nPlayer.getPlayersVisible().contains(pPlayer)){
+                if (!nPlayer.getPlayersVisible().contains(pPlayer)) {
                     return;
                 } else {
                     msg = new S38PacketPlayerListItem(pPlayer.getChatPrefix(), playerList.field_149124_b, playerList.field_149125_c);
@@ -128,6 +139,24 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
                     return;
                 }
             }
+        } else if(msg instanceof S2FPacketSetSlot) {
+            S2FPacketSetSlot setSlot = (S2FPacketSetSlot) msg;
+            if (NailedAPI.getPlayerRegistry().getPlayer(player).getClient() != PlayerClient.NAILED) {
+                setSlot.field_149178_c = tryReplaceforClient(setSlot.field_149178_c);
+            }
+            ctx.write(setSlot, promise);
+            return;
+        } else if(msg instanceof S30PacketWindowItems){
+            S30PacketWindowItems windowItems = (S30PacketWindowItems) msg;
+            if(NailedAPI.getPlayerRegistry().getPlayer(player).getClient() != PlayerClient.NAILED) {
+                ItemStack[] array = windowItems.func_148910_d();
+                for( ItemStack itemStack : array){
+                    itemStack = tryReplaceforClient(itemStack);
+                }
+                windowItems.field_148913_b = array;
+            }
+            ctx.write(windowItems, promise);
+            return;
         } else if(msg instanceof CustomChunkPacket){
             Player nPlayer = NailedAPI.getPlayerRegistry().getPlayer(player);
 
@@ -356,9 +385,62 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
         return extracted;
     }
 
-    public NBTBase fixNBTforPlayer(NBTBase tag, boolean isClient){
-        if (isClient) return tag;
-        return tag;
+    public ItemStack tryReplaceforClient(ItemStack stack){
+        if(stack.field_151002_e instanceof ItemBlock && ((ItemBlock) stack.field_151002_e).field_150939_a instanceof INailedBlock){
+            Item item = stack.field_151002_e;
+            if( item instanceof ItemBlock && ((ItemBlock) item).field_150939_a instanceof INailedBlock){
+                INailedBlock nailedBlock = (INailedBlock) ((ItemBlock) item).field_150939_a;
+                ItemBlock newItem = new ItemBlock(nailedBlock.getReplacementBlock());
+                ItemStack newItemStack = new ItemStack(newItem, stack.stackSize, nailedBlock.getReplacementMetadata());
+                newItemStack.setStackDisplayName(((Block)nailedBlock).getUnlocalizedName());
+                return newItemStack;
+            }
+        }
+        return stack;
+    }
+
+    public ItemStack tryReplaceforServer(ItemStack stack){
+        String name = stack.getDisplayName();
+        ItemStack newItemStack;
+        switch(name){
+            case "elevator":
+                newItemStack = new ItemStack(NailedBlocks.stat, stack.stackSize, 2);
+                break;
+            case "statModifier":
+                newItemStack = new ItemStack(NailedBlocks.stat, stack.stackSize, 1);
+                break;
+            case "statEmitter":
+                newItemStack = new ItemStack(NailedBlocks.stat, stack.stackSize, 0);
+                break;
+            case "invisibleWall":
+                newItemStack = new ItemStack(NailedBlocks.invisibleWall, stack.stackSize, 0);
+                break;
+            case "invisibleBlock":
+                newItemStack = new ItemStack(NailedBlocks.invisibleWall, stack.stackSize, 1);
+                break;
+            case "light":
+            case "invisibleLight":
+                newItemStack = new ItemStack(NailedBlocks.light, stack.stackSize, 0);
+                break;
+            case "invisibleRedstone":
+                newItemStack = new ItemStack(NailedBlocks.invisibleWall, stack.stackSize, 3);
+                break;
+            case "sky":
+                newItemStack = new ItemStack(NailedBlocks.invisibleWall, stack.stackSize, 4);
+                break;
+            case "portalCrystal":
+                newItemStack = new ItemStack(NailedBlocks.portalCrystal, stack.stackSize);
+                break;
+            case "portalController":
+                newItemStack = new ItemStack(NailedBlocks.portalController, stack.stackSize);
+                break;
+            case "portal":
+                newItemStack = new ItemStack(NailedBlocks.portal, stack.stackSize);
+                break;
+            default:
+                newItemStack = stack;
+        }
+        return newItemStack;
     }
 
     public static class Extracted{
