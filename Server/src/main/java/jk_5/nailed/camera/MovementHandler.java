@@ -1,10 +1,9 @@
 package jk_5.nailed.camera;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import jk_5.nailed.api.camera.IMovement;
-import jk_5.nailed.api.camera.IMovementHandler;
 import jk_5.nailed.api.player.Player;
-import jk_5.nailed.map.Location;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,9 +11,9 @@ import java.util.List;
 /**
  * Created by matthias on 15-5-14.
  */
-public class MovementHandler implements IMovementHandler{
+public class MovementHandler implements jk_5.nailed.api.camera.MovementHandler {
     private HashMap<Player, IMovement> movements = Maps.newHashMap();
-    private List<Player> players;
+    private List<Player> players = Lists.newArrayList();
 
     public void addPlayerMovement(Player player, IMovement movement){
         if(movement == null || player == null) return;
@@ -38,7 +37,8 @@ public class MovementHandler implements IMovementHandler{
     public void updatePlayerLocations(){
         for(int i = players.size() - 1; i >=0; --i){
             Player player = players.get(i);
-            player.setLocation(movements.get(player).getNextLocation());
+            player.setLocation(movements.get(player).getCurrentLocation());
+            movements.get(player).tick();
             if (movements.get(player).isDone()) {
                 movements.remove(player);
                 players.remove(player);

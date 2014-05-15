@@ -1,5 +1,6 @@
 package jk_5.nailed.api;
 
+import jk_5.nailed.api.camera.MovementHandler;
 import jk_5.nailed.api.concurrent.scheduler.Scheduler;
 import jk_5.nailed.api.map.MapLoader;
 import jk_5.nailed.api.map.MappackLoader;
@@ -22,4 +23,5 @@ public class NailedAPI {
     @Getter @Setter private static Scheduler scheduler;
     @Getter @Setter private static Teleporter teleporter;
     @Getter @Setter private static ZoneRegistry zoneRegistry;
+    @Getter @Setter private static MovementHandler movementHandler;
 }

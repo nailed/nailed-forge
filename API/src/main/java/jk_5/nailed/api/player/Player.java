@@ -2,6 +2,7 @@ package jk_5.nailed.api.player;
 
 import com.mojang.authlib.GameProfile;
 import jk_5.nailed.api.Gamemode;
+import jk_5.nailed.api.camera.IMovement;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.PossibleWinner;
 import jk_5.nailed.api.map.team.Team;
@@ -75,4 +76,5 @@ public interface Player extends PossibleWinner {
     public void replacePlayerVisible(Player player, List<Player> players, Random random);
     public PlayerClient getClient();
     public void setClient(PlayerClient client);
+    public void setMoving(IMovement movement);
 }

@@ -7,6 +7,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import jk_5.nailed.api.Gamemode;
 import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.camera.IMovement;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.Mappack;
 import jk_5.nailed.api.map.MappackMetadata;
@@ -15,6 +16,7 @@ import jk_5.nailed.api.player.IncompatibleClientException;
 import jk_5.nailed.api.player.NailedWebUser;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.api.player.PlayerClient;
+import jk_5.nailed.camera.MovementHandler;
 import jk_5.nailed.chat.joinmessage.JoinMessageSender;
 import jk_5.nailed.ipc.IpcManager;
 import jk_5.nailed.map.Location;
@@ -361,5 +363,11 @@ public class NailedPlayer implements Player {
 
     public void setClient(PlayerClient client){
         this.playerClient = client;
+    }
+
+    public void setMoving(IMovement movement){
+        this.getEntity().isAirBorne = true;
+        this.setGameMode(Gamemode.CREATIVE);
+        NailedAPI.getMovementHandler().addPlayerMovement(this, movement);
     }
 }

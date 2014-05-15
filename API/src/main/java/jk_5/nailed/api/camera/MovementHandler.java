@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by matthias on 15-5-14.
  */
-public interface IMovementHandler {
+public interface MovementHandler {
     public List<Player> getPlayers();
     public void updatePlayerLocations();
     public void removePlayerMovement(Player player);

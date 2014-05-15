@@ -13,6 +13,7 @@ import jk_5.nailed.achievement.NailedAchievements;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.events.RegisterZoneEvent;
 import jk_5.nailed.blocks.NailedBlocks;
+import jk_5.nailed.camera.MovementHandler;
 import jk_5.nailed.chat.joinmessage.JoinMessageSender;
 import jk_5.nailed.ipc.IpcEventListener;
 import jk_5.nailed.ipc.IpcManager;
@@ -82,6 +83,7 @@ public class NailedServer {
         NailedAPI.setScheduler(new NailedScheduler());
         NailedAPI.setTeleporter(new NailedTeleporter());
         NailedAPI.setZoneRegistry(new NailedZoneRegistry());
+        NailedAPI.setMovementHandler(new MovementHandler());
 
         FMLCommonHandler.instance().bus().register(NailedAPI.getScheduler());
 

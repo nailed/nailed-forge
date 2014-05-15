@@ -14,4 +14,5 @@ public interface IMovement {
     public Location getCurrentLocation();
     public Location getNextLocation();
     public boolean isDone();
+    public void tick();
 }
