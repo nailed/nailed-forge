@@ -10,6 +10,8 @@ import javax.annotation.Nullable;
 
 @Nullable
 public interface IMovement {
+    public Location getLastLocation();
+    public Location getCurrentLocation();
     public Location getNextLocation();
     public boolean isDone();
 }
