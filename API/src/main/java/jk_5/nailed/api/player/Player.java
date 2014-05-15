@@ -48,6 +48,7 @@ public interface Player extends PossibleWinner {
     public void onRespawn();
     public void teleportToMap(Map map);
     public Location getLocation();
+    public void setLocation(Location location);
     public Gamemode getGameMode();
     public void setGameMode(Gamemode mode);
     public boolean hasPermission(String node);

@@ -176,6 +176,15 @@ public class NailedPlayer implements Player {
         return new Location(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
     }
 
+    public void setLocation(Location l){
+        EntityPlayer player = this.getEntity();
+        player.posX = l.getX();
+        player.posY = l.getY();
+        player.posZ = l.getZ();
+        player.cameraPitch = l.getPitch();
+        player.cameraYaw = l.getYaw();
+    }
+
     public Gamemode getGameMode(){
         return Gamemode.fromId(this.getEntity().theItemInWorldManager.getGameType().getID());
     }
