@@ -69,15 +69,6 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
             EntityPlayerMP player = ((NetHandlerPlayServer) manager.getNetHandler()).playerEntity;
             SignCommandHandler handler = NailedAPI.getMapLoader().getMap(player.worldObj).getSignCommandHandler();
             handler.onSignAdded(packet.field_149590_d, packet.field_149593_a, packet.field_149591_b, packet.field_149592_c);
-        } else if (msg instanceof C08PacketPlayerBlockPlacement){
-            C08PacketPlayerBlockPlacement blockPlacement = (C08PacketPlayerBlockPlacement) msg;
-            blockPlacement.field_149580_e = tryReplaceforServer(blockPlacement.func_149574_g());
-        } else if (msg instanceof C0EPacketClickWindow){
-            C0EPacketClickWindow clickWindow = (C0EPacketClickWindow) msg;
-            clickWindow.field_149551_e = tryReplaceforClient(clickWindow.func_149546_g());
-        } else if (msg instanceof C10PacketCreativeInventoryAction) {
-            C10PacketCreativeInventoryAction inventoryAction = (C10PacketCreativeInventoryAction) msg;
-            inventoryAction.field_149628_b = tryReplaceforServer(inventoryAction.func_149625_d());
         }
         ctx.fireChannelRead(msg);
     }
@@ -395,50 +386,6 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
             return newItemStack;
         }
         return stack;
-    }
-
-    public ItemStack tryReplaceforServer(ItemStack stack){
-        String name = stack.getDisplayName();
-        ItemStack newItemStack;
-        switch(name){
-            case "elevator":
-                newItemStack = new ItemStack(NailedBlocks.stat, stack.stackSize, 2);
-                break;
-            case "statModifier":
-                newItemStack = new ItemStack(NailedBlocks.stat, stack.stackSize, 1);
-                break;
-            case "statEmitter":
-                newItemStack = new ItemStack(NailedBlocks.stat, stack.stackSize, 0);
-                break;
-            case "invisibleWall":
-                newItemStack = new ItemStack(NailedBlocks.invisibleWall, stack.stackSize, 0);
-                break;
-            case "invisibleBlock":
-                newItemStack = new ItemStack(NailedBlocks.invisibleWall, stack.stackSize, 1);
-                break;
-            case "light":
-            case "invisibleLight":
-                newItemStack = new ItemStack(NailedBlocks.light, stack.stackSize, 0);
-                break;
-            case "invisibleRedstone":
-                newItemStack = new ItemStack(NailedBlocks.invisibleWall, stack.stackSize, 3);
-                break;
-            case "sky":
-                newItemStack = new ItemStack(NailedBlocks.invisibleWall, stack.stackSize, 4);
-                break;
-            case "portalCrystal":
-                newItemStack = new ItemStack(NailedBlocks.portalCrystal, stack.stackSize);
-                break;
-            case "portalController":
-                newItemStack = new ItemStack(NailedBlocks.portalController, stack.stackSize);
-                break;
-            case "portal":
-                newItemStack = new ItemStack(NailedBlocks.portal, stack.stackSize);
-                break;
-            default:
-                newItemStack = stack;
-        }
-        return newItemStack;
     }
 
     public static class Extracted{
