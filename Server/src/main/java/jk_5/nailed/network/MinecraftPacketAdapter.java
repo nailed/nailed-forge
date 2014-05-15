@@ -388,13 +388,11 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
     public ItemStack tryReplaceforClient(ItemStack stack){
         if(stack.field_151002_e instanceof ItemBlock && ((ItemBlock) stack.field_151002_e).field_150939_a instanceof INailedBlock){
             Item item = stack.field_151002_e;
-            if( item instanceof ItemBlock && ((ItemBlock) item).field_150939_a instanceof INailedBlock){
-                INailedBlock nailedBlock = (INailedBlock) ((ItemBlock) item).field_150939_a;
-                ItemBlock newItem = new ItemBlock(nailedBlock.getReplacementBlock());
-                ItemStack newItemStack = new ItemStack(newItem, stack.stackSize, nailedBlock.getReplacementMetadata());
-                newItemStack.setStackDisplayName(((Block)nailedBlock).getUnlocalizedName());
-                return newItemStack;
-            }
+            INailedBlock nailedBlock = (INailedBlock) ((ItemBlock) item).field_150939_a;
+            ItemBlock newItem = new ItemBlock(nailedBlock.getReplacementBlock());
+            ItemStack newItemStack = new ItemStack(newItem, stack.stackSize, nailedBlock.getReplacementMetadata());
+            newItemStack.setStackDisplayName(((Block)nailedBlock).getUnlocalizedName());
+            return newItemStack;
         }
         return stack;
     }
