@@ -141,8 +141,8 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
             S30PacketWindowItems windowItems = (S30PacketWindowItems) msg;
             if(NailedAPI.getPlayerRegistry().getPlayer(player).getClient() != PlayerClient.NAILED) {
                 ItemStack[] array = windowItems.func_148910_d();
-                for( ItemStack itemStack : array){
-                    itemStack = tryReplaceforClient(itemStack);
+                for(int f = 0; f < array.length; ++f){
+                    array[f] = tryReplaceforClient(array[f]);
                 }
                 windowItems.field_148913_b = array;
             }
@@ -195,12 +195,12 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
             int[] bitmaskArray = new int[i];
             int[] addBitmapArray = new int[i];
             byte[][] chunkdata = new byte[i][];
-            boolean groundUpCont = !chunks.isEmpty() && ((Chunk)chunks.get(0)).worldObj.provider.hasNoSky;
+            boolean groundUpCont = !chunks.isEmpty() && chunks.get(0).worldObj.provider.hasNoSky;
 
             int j = 0;
             int k;
             for(k = 0; k < i; ++k){
-                Chunk chunk = (Chunk) chunks.get(k);
+                Chunk chunk = chunks.get(k);
                 Extracted extracted = extractData(chunk, true, 65535, nplayer.getClient() == PlayerClient.NAILED);
                 j += extracted.aBlock.length;
                 xArray[k] = chunk.xPosition;
