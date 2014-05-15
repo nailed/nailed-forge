@@ -13,9 +13,6 @@ import jk_5.nailed.api.map.sign.Sign;
 import jk_5.nailed.api.map.sign.SignCommandHandler;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.api.player.PlayerClient;
-import jk_5.nailed.blocks.BlockStat;
-import jk_5.nailed.blocks.NailedBlock;
-import jk_5.nailed.blocks.NailedBlocks;
 import jk_5.nailed.network.packets.CustomBulkChunkPacket;
 import jk_5.nailed.network.packets.CustomChunkPacket;
 import jk_5.nailed.util.ChatColor;
@@ -24,11 +21,10 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.client.*;
+import net.minecraft.network.play.client.C12PacketUpdateSign;
 import net.minecraft.network.play.server.*;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
@@ -55,7 +51,7 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
     }
 
     /**
-     * Adapt inbound CustomChunkPacket
+     * Adapt inbound packets
      *
      * @param ctx ChannelHandlerContext
      * @param msg The inbound packet
@@ -74,7 +70,7 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
     }
 
     /**
-     * Adapt outbound CustomChunkPacket
+     * Adapt outbound packets
      *
      * @param ctx ChannelHandlerContext
      * @param msg The outbound packet
