@@ -29,6 +29,7 @@ public class ChunkPacketAdapter {
 
         for( l = 0; l < aExtendedBlockStorage.length; ++l){
             ExtendedBlockStorage array = aExtendedBlockStorage[l];
+            if(array == null) continue;
             ExtendedBlockStorage pExtendedBlockStorage = new ExtendedBlockStorage(array.getYLocation(), true);
 
             pExtendedBlockStorage.setBlockLSBArray(array.getBlockLSBArray());

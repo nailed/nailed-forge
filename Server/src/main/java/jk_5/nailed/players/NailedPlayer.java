@@ -5,16 +5,16 @@ import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import jk_5.nailed.api.player.IncompatibleClientException;
-import jk_5.nailed.api.player.PlayerClient;
 import jk_5.nailed.api.Gamemode;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.Mappack;
 import jk_5.nailed.api.map.MappackMetadata;
 import jk_5.nailed.api.map.team.Team;
+import jk_5.nailed.api.player.IncompatibleClientException;
 import jk_5.nailed.api.player.NailedWebUser;
 import jk_5.nailed.api.player.Player;
+import jk_5.nailed.api.player.PlayerClient;
 import jk_5.nailed.chat.joinmessage.JoinMessageSender;
 import jk_5.nailed.ipc.IpcManager;
 import jk_5.nailed.map.Location;
@@ -215,7 +215,7 @@ public class NailedPlayer implements Player {
 
     @Override
     public void setEditModeEnabled(boolean editModeEnabled) throws IncompatibleClientException{
-        if(this.playerClient != PlayerClient.NAILED) throw new IncompatibleClientException("Edit mode on non-nailed client", this);
+        //if(this.playerClient != PlayerClient.NAILED) throw new IncompatibleClientException("Edit mode on non-nailed client", this);
         this.editModeEnabled = editModeEnabled;
         IChatComponent component = new ChatComponentText("Edit mode is " + (this.editModeEnabled ? "enabled" : "disabled"));
         component.getChatStyle().setColor(EnumChatFormatting.GREEN);

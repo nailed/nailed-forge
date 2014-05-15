@@ -21,11 +21,11 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.NetHandlerPlayServer;
-import net.minecraft.network.NetworkManager;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.C12PacketUpdateSign;
-import net.minecraft.network.play.server.*;
+import net.minecraft.network.play.server.S02PacketChat;
+import net.minecraft.network.play.server.S33PacketUpdateSign;
+import net.minecraft.network.play.server.S38PacketPlayerListItem;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
@@ -61,11 +61,16 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception{
         if(msg instanceof C12PacketUpdateSign){
             C12PacketUpdateSign packet = (C12PacketUpdateSign) msg;
-            NetworkManager manager = ctx.pipeline().get(NetworkManager.class);
-            EntityPlayerMP player = ((NetHandlerPlayServer) manager.getNetHandler()).playerEntity;
             SignCommandHandler handler = NailedAPI.getMapLoader().getMap(player.worldObj).getSignCommandHandler();
             handler.onSignAdded(packet.field_149590_d, packet.field_149593_a, packet.field_149591_b, packet.field_149592_c);
-        }
+        }/*else if(msg instanceof C0CPacketInput){
+            C0CPacketInput packet = (C0CPacketInput) msg;
+            if(packet.func_149618_e()){ //Jump
+                ElevatorHelper.onJump(player);
+            }else if(packet.func_149617_f()){ //Sneak
+                ElevatorHelper.onSneak(player);
+            }
+        }*/
         ctx.fireChannelRead(msg);
     }
 
@@ -79,9 +84,6 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
      */
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception{
-        NetworkManager manager = (NetworkManager) ctx.pipeline().get("packet_handler");
-        NetHandlerPlayServer handler = (NetHandlerPlayServer) manager.getNetHandler();
-        EntityPlayerMP player = handler.playerEntity;
         if(msg instanceof S02PacketChat){
             S02PacketChat packet = (S02PacketChat) msg;
             IChatComponent component = packet.field_148919_a;
@@ -126,7 +128,7 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
                     return;
                 }
             }
-        } else if(msg instanceof S2FPacketSetSlot) {
+        }/* else if(msg instanceof S2FPacketSetSlot) {
             S2FPacketSetSlot setSlot = (S2FPacketSetSlot) msg;
             if (NailedAPI.getPlayerRegistry().getPlayer(player).getClient() != PlayerClient.NAILED) {
                 setSlot.field_149178_c = tryReplaceforClient(setSlot.field_149178_c);
@@ -136,7 +138,7 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
         } else if(msg instanceof S30PacketWindowItems){
             S30PacketWindowItems windowItems = (S30PacketWindowItems) msg;
             if(NailedAPI.getPlayerRegistry().getPlayer(player).getClient() != PlayerClient.NAILED) {
-                ItemStack[] array = windowItems.func_148910_d();
+                ItemStack[] array = windowItems.field_148913_b;
                 for(int f = 0; f < array.length; ++f){
                     array[f] = tryReplaceforClient(array[f]);
                 }
@@ -144,7 +146,7 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
             }
             ctx.write(windowItems, promise);
             return;
-        } else if(msg instanceof CustomChunkPacket){
+        } */else if(msg instanceof CustomChunkPacket){
             Player nPlayer = NailedAPI.getPlayerRegistry().getPlayer(player);
 
             CustomChunkPacket ccPacket = ((CustomChunkPacket) msg);
@@ -237,8 +239,6 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
             }
 
             ctx.write(buf, promise);
-
-            //buffer.writeIets, zoals je gewend bent en gebeurt in S21 en S26
         }
         ctx.write(msg, promise);
     }
@@ -373,6 +373,7 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
     }
 
     public ItemStack tryReplaceforClient(ItemStack stack){
+        if(stack == null) return null;
         if(stack.field_151002_e instanceof ItemBlock && ((ItemBlock) stack.field_151002_e).field_150939_a instanceof INailedBlock){
             Item item = stack.field_151002_e;
             INailedBlock nailedBlock = (INailedBlock) ((ItemBlock) item).field_150939_a;
