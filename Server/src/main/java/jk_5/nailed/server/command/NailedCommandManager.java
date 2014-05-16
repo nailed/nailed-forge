@@ -66,6 +66,8 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
         this.registerCommand(new CommandGamerule());
         this.registerCommand(new CommandDifficulty());
         this.registerCommand(new CommandZone());
+        this.registerCommand(new CommandWayPoint());
+        this.registerCommand(new CommandMove());
 
         this.registerCommand(new CommandKill());
         this.registerCommand(new CommandWeather());
