@@ -10,7 +10,7 @@ import net.minecraft.util.{EnumChatFormatting, ChatComponentText}
 import net.minecraft.client.Minecraft
 import jk_5.nailed.client.map.NailedWorldProvider
 import jk_5.nailed.client.map.edit.MapEditManager
-import jk_5.nailed.client.render.{TimeUpdateRenderer, NotificationRenderer}
+import jk_5.nailed.client.render.TimeUpdateRenderer
 import jk_5.nailed.client.blocks.tileentity.{NailedTileEntity, IGuiTileEntity}
 import jk_5.nailed.client.particle.ParticleHelper
 import jk_5.nailed.client.achievement.NailedAchievements
@@ -49,12 +49,6 @@ object MapEditHandler extends SimpleChannelInboundHandler[NailedPacket.EditMode]
     if(msg.enable){
       MapEditManager.instance.readData(msg.buffer)
     }
-  }
-}
-
-object NotificationHandler extends SimpleChannelInboundHandler[NailedPacket.Notification] {
-  override def channelRead0(ctx: ChannelHandlerContext, msg: NailedPacket.Notification){
-    NotificationRenderer.addNotification(msg.message, msg.icon, msg.color)
   }
 }
 

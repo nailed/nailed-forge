@@ -16,7 +16,6 @@ import jk_5.nailed.api.player.IncompatibleClientException;
 import jk_5.nailed.api.player.NailedWebUser;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.api.player.PlayerClient;
-import jk_5.nailed.camera.MovementHandler;
 import jk_5.nailed.chat.joinmessage.JoinMessageSender;
 import jk_5.nailed.ipc.IpcManager;
 import jk_5.nailed.map.Location;
@@ -38,7 +37,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.WorldSettings;
 import net.minecraftforge.permissions.api.PermissionsManager;
 
@@ -70,21 +68,6 @@ public class NailedPlayer implements Player {
     public NailedPlayer(GameProfile gameProfile){
         this.gameProfile = gameProfile;
         this.webUser = new WebUser(null, this.getUsername(), this.getUsername(), "", false);
-    }
-
-    public void sendNotification(String message){
-        this.sendNotification(message, null);
-    }
-
-    public void sendNotification(String message, ResourceLocation icon){
-        this.sendNotification(message, icon, 0xFFFFFF);
-    }
-
-    public void sendNotification(String message, ResourceLocation icon, int iconColor){
-        EntityPlayerMP entity = this.getEntity();
-        if(entity != null){
-            NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.Notification(message, icon, iconColor), entity);
-        }
     }
 
     public void sendChat(String message){

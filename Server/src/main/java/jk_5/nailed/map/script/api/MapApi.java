@@ -76,7 +76,7 @@ public class MapApi implements ILuaAPI {
     @Override
     public String[] getMethodNames(){
         return new String[]{
-                "sendNotification",
+                "--UNUSED--",
                 "sendChatComponent",
                 "sendChat",
                 "watchUnready",
@@ -110,13 +110,6 @@ public class MapApi implements ILuaAPI {
     @Override
     public Object[] callMethod(ILuaContext context, int method, Object[] arguments) throws Exception{
         switch(method){
-            case 0: //sendNotification
-                if(arguments.length == 1 && arguments[0] instanceof String){
-                    this.map.broadcastNotification((String) arguments[0]);
-                }else{
-                    throw new Exception("Expected 1 string argument");
-                }
-                break;
             case 1: //sendChatComponent
                 if(arguments.length == 1 && arguments[0] instanceof String){
                     try{

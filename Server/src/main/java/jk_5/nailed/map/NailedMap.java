@@ -275,11 +275,6 @@ public class NailedMap implements Map {
     }
 
     @Override
-    public void broadcastNotification(String msg){
-        NailedNetworkHandler.sendPacketToAllPlayersInDimension(new NailedPacket.Notification(msg, null, 0xFFFFFF), this.getID());
-    }
-
-    @Override
     public void broadcastPacket(Packet packet){
         MinecraftServer.getServer().getConfigurationManager().sendPacketToAllPlayersInDimension(packet, this.getID());
     }

@@ -1,12 +1,12 @@
 package jk_5.nailed.ipc;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
 import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.events.PlayerJoinEvent;
-import jk_5.nailed.api.events.PlayerLeaveEvent;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.ipc.packet.*;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 
@@ -21,13 +21,13 @@ import java.net.InetSocketAddress;
 public class IpcEventListener {
 
     @SubscribeEvent
-    public void onPlayerJoin(PlayerJoinEvent event){
-        IpcManager.instance().sendPacket(new PacketPlayerJoin(event.player, ((InetSocketAddress) event.player.getNetHandler().netManager.channel().remoteAddress()).getAddress().getHostAddress()));
+    public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event){
+        IpcManager.instance().sendPacket(new PacketPlayerJoin(event.player.getGameProfile(), ((InetSocketAddress) ((EntityPlayerMP) event.player).playerNetServerHandler.netManager.channel().remoteAddress()).getAddress().getHostAddress()));
     }
 
     @SubscribeEvent
-    public void onPlayerJoin(PlayerLeaveEvent event){
-        IpcManager.instance().sendPacket(new PacketPlayerLeave(event.player));
+    public void onPlayerJoin(PlayerEvent.PlayerLoggedOutEvent event){
+        IpcManager.instance().sendPacket(new PacketPlayerLeave(event.player.getGameProfile()));
     }
 
     @SubscribeEvent

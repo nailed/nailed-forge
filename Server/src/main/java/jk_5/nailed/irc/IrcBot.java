@@ -2,11 +2,11 @@ package jk_5.nailed.irc;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonObject;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.NailedServer;
-import jk_5.nailed.api.events.PlayerJoinEvent;
-import jk_5.nailed.api.events.PlayerLeaveEvent;
 import jk_5.nailed.util.Utils;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.server.MinecraftServer;
@@ -72,6 +72,7 @@ public class IrcBot extends PircBot {
         this.setVerbose(false);
 
         MinecraftForge.EVENT_BUS.register(this);
+        FMLCommonHandler.instance().bus().register(this);
     }
 
     @SubscribeEvent
@@ -82,14 +83,14 @@ public class IrcBot extends PircBot {
 
     @SubscribeEvent
     @SuppressWarnings("unused")
-    public void onPlayerJoin(PlayerJoinEvent event){
-        this.sendMessage(this.channel, "* " + event.player.getUsername() + " has joined the game");
+    public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event){
+        this.sendMessage(this.channel, "* " + event.player.getGameProfile().getName() + " has joined the game");
     }
 
     @SubscribeEvent
     @SuppressWarnings("unused")
-    public void onPlayerJoin(PlayerLeaveEvent event){
-        this.sendMessage(this.channel, "* " + event.player.getUsername() + " has left the game");
+    public void onPlayerJoin(PlayerEvent.PlayerLoggedOutEvent event){
+        this.sendMessage(this.channel, "* " + event.player.getGameProfile().getName() + " has left the game");
     }
 
     public void connect(){

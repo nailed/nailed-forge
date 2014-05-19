@@ -15,7 +15,7 @@ import jk_5.nailed.map.script.ScriptPacket;
 public class NailedPacketCodec extends FMLIndexedMessageToMessageCodec<NailedPacket> {
 
     public NailedPacketCodec(){
-        this.addDiscriminator(0, NailedPacket.Notification.class);
+        //0
         this.addDiscriminator(1, NailedPacket.MovementEvent.class);
         this.addDiscriminator(2, NailedPacket.GuiReturnDataPacket.class);
         this.addDiscriminator(3, NailedPacket.GuiOpen.class);

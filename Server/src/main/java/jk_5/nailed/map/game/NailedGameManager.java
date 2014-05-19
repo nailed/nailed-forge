@@ -16,6 +16,7 @@ import jk_5.nailed.map.stat.types.StatTypeGameloopStopped;
 import jk_5.nailed.map.stat.types.StatTypeIsWinner;
 import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.network.NailedPacket;
+import jk_5.nailed.util.ChatColor;
 
 /**
  * No description given
@@ -50,7 +51,9 @@ public class NailedGameManager implements GameManager {
         }
         StatTypeManager.instance().getStatType(StatTypeGameHasWinner.class).onWin(this.map);
         StatTypeManager.instance().getStatType(StatTypeIsWinner.class).onWinnerSet(this.map, winner);
-        this.map.broadcastNotification("Winner is " + winner.getWinnerColoredName());
+        this.map.broadcastChatMessage(ChatColor.GRAY + "------------------------------------------");
+        this.map.broadcastChatMessage(ChatColor.GOLD + "Winner is " + winner.getWinnerColoredName());
+        this.map.broadcastChatMessage(ChatColor.GRAY + "------------------------------------------");
     }
 
     public void startGame(){

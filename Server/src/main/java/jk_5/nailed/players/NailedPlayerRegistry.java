@@ -9,15 +9,11 @@ import cpw.mods.fml.common.gameevent.PlayerEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.events.PlayerJoinEvent;
-import jk_5.nailed.api.events.PlayerLeaveEvent;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.Mappack;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.api.player.PlayerRegistry;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
@@ -72,7 +68,6 @@ public class NailedPlayerRegistry implements PlayerRegistry {
         return p;
     }
 
-    @SuppressWarnings("unused")
     @SubscribeEvent
     public void formatPlayerName(net.minecraftforge.event.entity.player.PlayerEvent.NameFormat event){
         if(FMLCommonHandler.instance().getEffectiveSide().isClient()) return;
@@ -82,32 +77,19 @@ public class NailedPlayerRegistry implements PlayerRegistry {
     }
 
     @SubscribeEvent
-    @SuppressWarnings("unused")
     public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event){
         Player player = this.getOrCreatePlayer(event.player);
         NailedLog.info("Player {} logged in in world {}", player.getUsername(), player.getCurrentMap().getSaveFileName());
         player.onLogin();
-        MinecraftForge.EVENT_BUS.post(new PlayerJoinEvent(player));
-        for(Player p : this.players){
-            if(p == player) continue;
-            p.sendNotification(player.getUsername() + " joined");
-        }
     }
 
     @SubscribeEvent
-    @SuppressWarnings("unused")
     public void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event){
         Player player = this.getPlayer(event.player);
         player.onLogout();
-        MinecraftForge.EVENT_BUS.post(new PlayerLeaveEvent(player));
-        for(Player p : this.players){
-            if(p == player) continue;
-            p.sendNotification(player.getUsername() + " left");
-        }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    @SuppressWarnings("unused")
     public void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event){
         Player p = this.getPlayer(event.player);
         Map oldMap = p.getCurrentMap();
@@ -120,7 +102,6 @@ public class NailedPlayerRegistry implements PlayerRegistry {
     }
 
     @SubscribeEvent
-    @SuppressWarnings("unused")
     public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event){
         Player p = this.getPlayer(event.player);
         NailedLog.info("Player {} respawned", p.getUsername());

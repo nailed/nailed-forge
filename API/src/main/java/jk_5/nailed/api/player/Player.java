@@ -12,7 +12,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.Packet;
 import net.minecraft.util.IChatComponent;
-import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
 import java.util.Random;
@@ -30,9 +29,6 @@ public interface Player extends PossibleWinner {
     public boolean isOnline();
     public int getFps();
     public void setFps(int fps);
-    public void sendNotification(String message);
-    public void sendNotification(String message, ResourceLocation icon);
-    public void sendNotification(String message, ResourceLocation icon, int iconColor);
     public void sendChat(String message);
     public void sendChat(IChatComponent message);
     public void sendPacket(Packet packet);

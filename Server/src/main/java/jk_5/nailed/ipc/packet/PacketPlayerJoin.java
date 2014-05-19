@@ -1,7 +1,7 @@
 package jk_5.nailed.ipc.packet;
 
+import com.mojang.authlib.GameProfile;
 import io.netty.buffer.ByteBuf;
-import jk_5.nailed.api.player.Player;
 import jk_5.nailed.ipc.PacketUtils;
 
 /**
@@ -11,22 +11,22 @@ import jk_5.nailed.ipc.PacketUtils;
  */
 public class PacketPlayerJoin extends IpcPacket {
 
-    private Player player;
+    private GameProfile profile;
     private String ip;
 
     public PacketPlayerJoin() {
 
     }
 
-    public PacketPlayerJoin(Player player, String ip) {
-        this.player = player;
+    public PacketPlayerJoin(GameProfile profile, String ip) {
+        this.profile = profile;
         this.ip = ip;
     }
 
     @Override
     public void encode(ByteBuf buffer){
-        PacketUtils.writeString(this.player.getGameProfile().getId(), buffer);
-        PacketUtils.writeString(this.player.getUsername(), buffer);
+        PacketUtils.writeString(this.profile.getId(), buffer);
+        PacketUtils.writeString(this.profile.getName(), buffer);
         PacketUtils.writeString(this.ip, buffer);
     }
 

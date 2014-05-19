@@ -18,7 +18,6 @@ object ClientNetworkHandler {
 
     val pipeline = channel.pipeline
     val targetName = channel.findChannelHandlerNameForType(classOf[NailedPacketCodec])
-    pipeline.addAfter(targetName, "NotificationHandler", NotificationHandler)
     pipeline.addAfter(targetName, "OpenGuiHandler", OpenGuiHandler)
     pipeline.addAfter(targetName, "TileEntityDataHandler", TileEntityDataHandler)
     pipeline.addAfter(targetName, "TimeUpdateHandler", TimeUpdateHandler)

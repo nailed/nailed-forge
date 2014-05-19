@@ -23,10 +23,6 @@ public class CommandCB extends NailedCommand {
             String msg = Joiner.on(' ').join(args);
             msg = msg.substring(msg.indexOf(' ') + 1);
             map.broadcastChatMessage(new ChatComponentText(msg));
-        }else if(args[0].equals("notify")){
-            String msg = Joiner.on(' ').join(args);
-            msg = msg.substring(msg.indexOf(' ') + 1);
-            map.broadcastNotification(msg);
         }
     }
 }

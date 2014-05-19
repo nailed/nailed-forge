@@ -50,7 +50,6 @@ object NailedClient {
 
     NailedLog.info("Registering event handlers")
     MinecraftForge.EVENT_BUS.register(TimeUpdateRenderer)
-    MinecraftForge.EVENT_BUS.register(new NotificationRenderer())
     MinecraftForge.EVENT_BUS.register(MapEditManager.instance())
     MinecraftForge.EVENT_BUS.register(StencilSkyRenderer)
     MinecraftForge.EVENT_BUS.register(TeamInformationRenderer)

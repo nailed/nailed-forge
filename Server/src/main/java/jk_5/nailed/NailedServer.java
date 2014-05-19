@@ -33,7 +33,10 @@ import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.permissions.NailedPermissionFactory;
 import jk_5.nailed.permissions.PermissionEventHandler;
 import jk_5.nailed.permissions.zone.NailedZoneRegistry;
-import jk_5.nailed.permissions.zone.types.*;
+import jk_5.nailed.permissions.zone.types.CircleZoneType;
+import jk_5.nailed.permissions.zone.types.CubeZoneType;
+import jk_5.nailed.permissions.zone.types.SphereZoneType;
+import jk_5.nailed.permissions.zone.types.SquareZoneType;
 import jk_5.nailed.players.NailedPlayerRegistry;
 import jk_5.nailed.scheduler.NailedScheduler;
 import jk_5.nailed.scheduler.SchedulerCrashCallable;
@@ -140,6 +143,7 @@ public class NailedServer {
         NailedNetworkHandler.registerChannel();
 
         NailedLog.info("Registering event handlers");
+        IpcEventListener ipcEventListener = new IpcEventListener();
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(NailedAPI.getPlayerRegistry());
         MinecraftForge.EVENT_BUS.register(NailedAPI.getMapLoader());
@@ -150,12 +154,13 @@ public class NailedServer {
         MinecraftForge.EVENT_BUS.register(new TeleportEventListenerEffect());
         MinecraftForge.EVENT_BUS.register(new TeleportEventListenerMotion());
         MinecraftForge.EVENT_BUS.register(new PermissionEventHandler());
-        MinecraftForge.EVENT_BUS.register(new IpcEventListener());
+        MinecraftForge.EVENT_BUS.register(ipcEventListener);
         MinecraftForge.EVENT_BUS.register(new LoggingCommandListener());
         FMLCommonHandler.instance().bus().register(NailedAPI.getPlayerRegistry());
         FMLCommonHandler.instance().bus().register(NailedAPI.getMapLoader());
         FMLCommonHandler.instance().bus().register(new InvSeeTicker());
         FMLCommonHandler.instance().bus().register(new MotdManager());
+        FMLCommonHandler.instance().bus().register(ipcEventListener);
 
         FMLCommonHandler.instance().registerCrashCallable(new SchedulerCrashCallable());
 

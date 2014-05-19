@@ -38,7 +38,6 @@ public interface Map {
     public String getSaveFileName();
     public File getSaveFolder();
     public TeleportOptions getSpawnTeleport();
-    public void broadcastNotification(String message);
     public void broadcastChatMessage(String message);
     public void broadcastChatMessage(IChatComponent component);
     public Location getRandomSpawnpoint();

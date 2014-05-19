@@ -174,4 +174,10 @@ class NailedWorld private (world: WeakReference[World]) extends LocalWorld {
     case Some(theWorld) => theWorld.getBlock(pt.getBlockX, pt.getBlockY, pt.getBlockZ)
     case _ => Blocks.air
   }
+
+  //TODO:
+
+  override def equals(obj: scala.Any) = false
+
+  override def hashCode() = 0
 }
