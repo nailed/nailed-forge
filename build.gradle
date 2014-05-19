@@ -33,9 +33,6 @@ version = '2.0-SNAPSHOT'
 nailed {
     minecraftVersion = '1.7.2'
 
-    versionName = 'Nailed-1.7.2'
-    mainClass = 'net.minecraft.launchwrapper.Launch'
-
     loadingMavenUrl = 'http://maven.reening.nl/'
 
     deploy artifact: 'nailedClient', project: 'Client', load: true, reobf: true, coremod: 'jk_5.nailed.client.coremod.NailedFMLPlugin'
@@ -52,13 +49,13 @@ nailed {
 
     deployHost = 'maven.reening.nl'
     deployUsername = 'maven'
-
-    if(project.hasProperty("deploymaven")){
-        deployPassword = project.deploymaven.password
-    }
+    if(project.hasProperty("deploymaven")) deployPassword = project.deploymaven.password
 }
 
 createLauncherProfile {
+    versionName = 'Nailed-1.7.2'
+    mainClass = 'net.minecraft.launchwrapper.Launch'
+
     dependency "jk_5.nailed:Nailed-Updater:0.1", "http://maven.reening.nl/"
 
     tweaker 'jk_5.nailed.updater.UpdatingTweaker'

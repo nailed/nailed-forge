@@ -18,6 +18,7 @@ dependencies {
 
     runtime project(":CrashReporter")
     runtime project(":QuakeCraft")
+    runtime project(":WorldEdit")
 }
 
 /*rootProject.tasks.reobf {

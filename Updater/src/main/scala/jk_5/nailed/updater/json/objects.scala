@@ -71,7 +71,6 @@ object LibraryList {
 
 class LibraryList {
 
-  var versionName: String = null
   var mainClass: String = null
   var libraries = new util.ArrayList[Library]()
   var tweakers = new util.ArrayList[String]()
