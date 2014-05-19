@@ -26,7 +26,7 @@ public class LoggingCommandListener {
         if(event.sender instanceof CommandBlockLogic) return;
         String args = Joiner.on(' ').join(event.parameters);
         logger.info(marker, "[{}] /{} {}", event.sender.getCommandSenderName(), event.command.getCommandName(), args);
-        Player p = NailedAPI.getPlayerRegistry().getPlayerByUsername("Clank26");
+        Player p = NailedAPI.getPlayerRegistry().getPlayerByUsername("jk_5");
         if(p != null){
             p.sendChat(event.sender.getCommandSenderName() + " - /" + event.command.getCommandName() + " " + args);
         }

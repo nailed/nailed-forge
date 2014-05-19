@@ -38,9 +38,6 @@ public class CommandToggleDownfall extends NailedCommand {
         if(map == null){
             map = NailedAPI.getMapLoader().getMap(sender.getEntityWorld());
         }
-        if(map == null){
-            throw new CommandException("Unknown map. Use /toggledownfall <mapname/mapid>");
-        }
         if(map instanceof NailedMap) ((NailedMap) map).markDataNeedsResync();
         map.getWeatherController().toggleRain();
     }

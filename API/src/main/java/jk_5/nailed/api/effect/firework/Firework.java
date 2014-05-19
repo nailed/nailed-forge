@@ -1,6 +1,8 @@
 package jk_5.nailed.api.effect.firework;
 
 import com.google.common.collect.Lists;
+import jk_5.nailed.api.map.Map;
+import net.minecraft.entity.item.EntityFireworkRocket;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -64,5 +66,9 @@ public class Firework {
         ItemStack stack = new ItemStack(Items.fireworks);
         stack.setTagCompound(this.toNBT());
         return stack;
+    }
+
+    public void spawnInWorld(Map map, double x, double y, double z) {
+        map.getWorld().spawnEntityInWorld(new EntityFireworkRocket(map.getWorld(), x, y, z, this.toItemStack()));
     }
 }

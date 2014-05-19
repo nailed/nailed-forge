@@ -12,7 +12,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -62,6 +61,6 @@ public class CommandTeam extends NailedCommand {
                 return CommandBase.getListOfStringsFromIterableMatchingLastWord(strings, teams);
             }
         }
-        return Arrays.asList();
+        return null;
     }
 }

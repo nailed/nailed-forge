@@ -36,7 +36,7 @@ public class CommandSetWinner extends NailedCommand {
             Player player = NailedAPI.getPlayerRegistry().getPlayerByUsername(args[0]);
             if(player.getCurrentMap() != map) throw new CommandException("Player " + args[0] + " is not in this map");
         }
-        if(winner == null) throw new CommandException(args[0] + " is not a player or team");
+        if(winner == null) throw new CommandException(args[0] + " is not a player nor team");
 
         map.getGameManager().setWinner(map.getTeamManager().getTeam(args[0]));
 
@@ -49,10 +49,13 @@ public class CommandSetWinner extends NailedCommand {
     public List addTabCompletionOptions(ICommandSender sender, String[] args){
         if(args.length != 1) return Arrays.asList();
         Map map = NailedAPI.getMapLoader().getMap(sender.getEntityWorld());
-        List<String> teams = Lists.newArrayList();
+        List<String> suggestions = Lists.newArrayList();
         for(Team team : map.getTeamManager().getTeams()){
-            teams.add(team.getTeamId());
+            suggestions.add(team.getTeamId());
         }
-        return CommandBase.getListOfStringsFromIterableMatchingLastWord(args, teams);
+        for(Player player : map.getPlayers()){
+            suggestions.add(player.getUsername());
+        }
+        return CommandBase.getListOfStringsFromIterableMatchingLastWord(args, suggestions);
     }
 }

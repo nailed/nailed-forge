@@ -42,7 +42,6 @@ public interface Map {
     public void broadcastChatMessage(IChatComponent component);
     public Location getRandomSpawnpoint();
     public void unloadAndRemove();
-    public void reloadFromMappack();
     public void onPlayerJoined(Player player);
     public void onPlayerLeft(Player player);
     public void initMapServer();

@@ -1,10 +1,13 @@
 package jk_5.nailed.server.command;
 
 import jk_5.nailed.api.map.Map;
+import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.EnumDifficulty;
+
+import java.util.List;
 
 /**
  * No description given
@@ -40,5 +43,14 @@ public class CommandDifficulty extends NailedCommand {
             map.getWorld().setAllowedSpawnTypes(newDifficulty != EnumDifficulty.PEACEFUL, true);
             sender.addChatMessage(new ChatComponentText("Successfully changed difficulty"));
         }else throw new WrongUsageException("commands.difficulty.usage");
+    }
+
+    @Override
+    public List addTabCompletionOptions(ICommandSender var1, String[] args) {
+        if(args.length == 1){
+            return CommandBase.getListOfStringsMatchingLastWord(args, "peaceful", "easy", "normal", "hard");
+        }else{
+            return null;
+        }
     }
 }

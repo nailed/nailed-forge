@@ -1,6 +1,7 @@
 package jk_5.nailed.map.game;
 
 import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.concurrent.scheduler.NailedRunnable;
 import jk_5.nailed.api.map.GameManager;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.Mappack;
@@ -9,6 +10,7 @@ import jk_5.nailed.api.map.scoreboard.DisplayType;
 import jk_5.nailed.api.map.teleport.TeleportOptions;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.map.NailedMap;
+import jk_5.nailed.map.script.ServerMachine;
 import jk_5.nailed.map.stat.StatTypeManager;
 import jk_5.nailed.map.stat.types.StatTypeGameHasWinner;
 import jk_5.nailed.map.stat.types.StatTypeGameloopRunning;
@@ -57,7 +59,20 @@ public class NailedGameManager implements GameManager {
     }
 
     public void startGame(){
-        ((NailedMap) this.map).getMachine().queueEvent("game_start");
+        NailedMap map = (NailedMap) this.map;
+        final ServerMachine machine = map.getMachine();
+        if(!machine.getVM().isOn()){
+            machine.turnOn();
+            machine.terminalChanged = true; //Force an update
+            map.mounted = map.getMappack() == null; //Also force a remount of the mappack data, if we have a mappack
+            map.mappackMount = null;
+        }
+        NailedAPI.getScheduler().runTaskLater(new NailedRunnable() {
+            @Override
+            public void run() {
+                machine.queueEvent("game_start");
+            }
+        }, 2);
     }
 
     public void stopGame(){

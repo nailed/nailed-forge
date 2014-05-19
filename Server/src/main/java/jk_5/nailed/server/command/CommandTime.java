@@ -9,6 +9,8 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 
+import java.util.List;
+
 /**
  * No description given
  *
@@ -54,6 +56,17 @@ public class CommandTime extends NailedCommand {
             IChatComponent component = new ChatComponentText("Current time in " + map.getSaveFileName() + ": " + map.getWorld().getWorldTime());
             component.getChatStyle().setColor(EnumChatFormatting.GREEN);
             sender.addChatMessage(component);
+        }
+    }
+
+    @Override
+    public List addTabCompletionOptions(ICommandSender sender, String[] args) {
+        if(args.length == 1){
+            return CommandBase.getListOfStringsMatchingLastWord(args, "set");
+        }else if(args.length == 2){
+            return CommandBase.getListOfStringsMatchingLastWord(args, "day", "night");
+        }else{
+            return null;
         }
     }
 }

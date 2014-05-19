@@ -73,4 +73,5 @@ public interface Player extends PossibleWinner {
     public PlayerClient getClient();
     public void setClient(PlayerClient client);
     public void setMoving(IMovement movement);
+    public void kick(String reason);
 }

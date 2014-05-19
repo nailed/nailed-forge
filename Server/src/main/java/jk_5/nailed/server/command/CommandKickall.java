@@ -1,13 +1,11 @@
 package jk_5.nailed.server.command;
 
 import com.google.common.base.Joiner;
+import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.player.Player;
 import jk_5.nailed.util.ChatColor;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
-
-import java.util.List;
 
 /**
  * No description given
@@ -22,9 +20,9 @@ public class CommandKickall extends NailedCommand {
 
     @Override
     public void processCommandWithMap(ICommandSender sender, Map map, String[] args){
-        String reason = Joiner.on(" ").join(args);
-        for(EntityPlayerMP player : (List<EntityPlayerMP>) MinecraftServer.getServer().getConfigurationManager().playerEntityList){
-            player.playerNetServerHandler.kickPlayerFromServer("[" + ChatColor.GREEN + "Nailed" + ChatColor.RESET + "] " + reason); //Kick player
+        String reason = "[" + ChatColor.GREEN + "Nailed" + ChatColor.RESET + "] " + Joiner.on(" ").join(args);
+        for(Player player : NailedAPI.getPlayerRegistry().getOnlinePlayers()){
+            player.kick(reason);
         }
     }
 }

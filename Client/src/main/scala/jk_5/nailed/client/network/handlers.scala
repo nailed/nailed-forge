@@ -13,7 +13,6 @@ import jk_5.nailed.client.map.edit.MapEditManager
 import jk_5.nailed.client.render.TimeUpdateRenderer
 import jk_5.nailed.client.blocks.tileentity.{NailedTileEntity, IGuiTileEntity}
 import jk_5.nailed.client.particle.ParticleHelper
-import jk_5.nailed.client.achievement.NailedAchievements
 import jk_5.nailed.client.gui.{GuiCreateAccount, GuiLogin, GuiTerminal}
 import jk_5.nailed.client.scripting.ClientMachine
 import jk_5.nailed.client.NailedClient
@@ -74,12 +73,6 @@ object ParticleHandler extends SimpleChannelInboundHandler[NailedPacket.Particle
       val f2 = world.rand.nextFloat - world.rand.nextFloat
       ParticleHelper.spawnParticle(msg.name, msg.x + f, msg.y + f1, msg.z + f2, 0, 0, 0)
     })
-  }
-}
-
-object RegisterAchievementHandler extends SimpleChannelInboundHandler[NailedPacket.RegisterAchievement] {
-  override def channelRead0(ctx: ChannelHandlerContext, msg: NailedPacket.RegisterAchievement){
-    NailedAchievements.register(msg.enable)
   }
 }
 

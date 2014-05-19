@@ -25,7 +25,6 @@ object ClientNetworkHandler {
     pipeline.addAfter(targetName, "ParticleHandler", ParticleHandler)
     pipeline.addAfter(targetName, "TerminalGuiHandler", TerminalGuiHandler)
     pipeline.addAfter(targetName, "MapEditHandler", MapEditHandler)
-    pipeline.addAfter(targetName, "RegisterAchievementHandler", RegisterAchievementHandler)
     pipeline.addAfter(targetName, "ClientUpdateHandler", ClientUpdateHandler)
     pipeline.addAfter(targetName, "DisplayLoginHandler", DisplayLoginHandler)
     pipeline.addAfter(targetName, "LoginResponseHandler", LoginResponseHandler)

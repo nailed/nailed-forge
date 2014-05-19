@@ -242,23 +242,6 @@ public abstract class NailedPacket {
     }
 
     @NoArgsConstructor
-    @AllArgsConstructor
-    public static class RegisterAchievement extends NailedPacket {
-
-        public boolean enable;
-
-        @Override
-        public void encode(ByteBuf buffer){
-            buffer.writeBoolean(this.enable);
-        }
-
-        @Override
-        public void decode(ByteBuf buffer){
-            this.enable = buffer.readBoolean();
-        }
-    }
-
-    @NoArgsConstructor
     public static class CheckClientUpdates extends NailedPacket {
 
         @Override

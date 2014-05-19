@@ -134,18 +134,6 @@ public class NailedMap implements Map {
     }
 
     @Override
-    public void reloadFromMappack(){
-        throw new RuntimeException("Not supported");
-        /*for(Player player : this.getPlayers()){
-            player.getEntity().playerNetServerHandler.kickPlayerFromServer("[" + ChatColor.GREEN + "Nailed" + ChatColor.RESET + "] Reloading the map you were in");
-        }
-        this.unloadAndRemove();
-        this.mappack.prepareWorld(this.getSaveFolder());
-        DimensionManager.registerDimension(this.getID(), NailedServer.getProviderID());
-        DimensionManager.initDimension(this.getID());*/
-    }
-
-    @Override
     public void onPlayerJoined(Player player) {
         NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.TimeUpdate(""), player.getEntity());
         this.scoreboardManager.onPlayerJoinedMap(player);

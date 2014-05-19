@@ -353,4 +353,9 @@ public class NailedPlayer implements Player {
         this.setGameMode(Gamemode.CREATIVE);
         NailedAPI.getMovementHandler().addPlayerMovement(this, movement);
     }
+
+    @Override
+    public void kick(String reason) {
+        this.netHandler.kickPlayerFromServer(reason);
+    }
 }

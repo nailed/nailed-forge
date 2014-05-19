@@ -22,10 +22,12 @@ public class CommandTerminal extends NailedCommand {
     public void processCommandPlayer(Player sender, Map map, String[] args){
         ServerMachine machine = ((NailedMap) map).getMachine();
         NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.OpenTerminalGui(machine.getInstanceId(), machine.getTerminal().getWidth(), machine.getTerminal().getHeight()), sender.getEntity());
-        machine.turnOn();
-        machine.terminalChanged = true; //Force an update
-        NailedMap nm = (NailedMap) map;
-        nm.mounted = map.getMappack() == null; //Also force a remount of the mappack data, if we have a mappack
-        nm.mappackMount = null;
+        if(!machine.isOn()){
+            machine.turnOn();
+            machine.terminalChanged = true; //Force an update
+            NailedMap nm = (NailedMap) map;
+            nm.mounted = map.getMappack() == null; //Also force a remount of the mappack data, if we have a mappack
+            nm.mappackMount = null;
+        }
     }
 }

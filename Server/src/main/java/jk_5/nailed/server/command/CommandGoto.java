@@ -9,7 +9,6 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -40,7 +39,7 @@ public class CommandGoto extends NailedCommand {
 
     @Override
     public List addTabCompletionOptions(ICommandSender sender, String[] strings){
-        if(strings.length != 1) return Arrays.asList();
+        if(strings.length != 1) return null;
         List<String> ret = Lists.newArrayList();
         for(Map map : NailedAPI.getMapLoader().getMaps()){
             ret.add(map.getSaveFileName());
