@@ -33,7 +33,7 @@ public abstract class NailedCommand implements ICommand {
 
     @Override
     public final List getCommandAliases(){
-        return null;
+        return this.getAliases();
     }
 
     @Nullable
