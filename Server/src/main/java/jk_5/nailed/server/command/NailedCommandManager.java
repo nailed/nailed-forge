@@ -3,6 +3,8 @@ package jk_5.nailed.server.command;
 import com.google.common.collect.Maps;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
+import jk_5.nailed.api.command.Command;
+import jk_5.nailed.api.command.CommandRegistry;
 import net.minecraft.command.*;
 import net.minecraft.command.CommandToggleDownfall;
 import net.minecraft.command.server.*;
@@ -25,7 +27,7 @@ import java.util.Map;
  *
  * @author jk-5
  */
-public class NailedCommandManager extends CommandHandler implements IAdminCommand {
+public class NailedCommandManager extends CommandHandler implements IAdminCommand, CommandRegistry {
 
     private static final String commandWarningsPerm = "minecraft.commandWarnings";
     private static final Logger logger = LogManager.getLogger();
@@ -252,5 +254,10 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
             }
             return -1;
         }
+    }
+
+    @Override
+    public void registerCommand(Command command) {
+
     }
 }

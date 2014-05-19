@@ -12,6 +12,11 @@ import jk_5.nailed.achievement.AchievementEventListener;
 import jk_5.nailed.achievement.NailedAchievements;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.events.RegisterZoneEvent;
+import jk_5.nailed.api.plugin.DefaultPluginManager;
+import jk_5.nailed.api.plugin.Plugin;
+import jk_5.nailed.api.plugin.PluginManager;
+import jk_5.nailed.api.plugin.internal.InternalPluginLoader;
+import jk_5.nailed.api.plugin.java.JavaPluginLoader;
 import jk_5.nailed.blocks.NailedBlocks;
 import jk_5.nailed.camera.MovementHandler;
 import jk_5.nailed.chat.joinmessage.JoinMessageSender;
@@ -73,12 +78,17 @@ public class NailedServer {
     private static IrcBot ircBot;
     private static NailedPermissionFactory permissionFactory;
 
+    private static PluginManager pluginManager = new DefaultPluginManager();
+
     public static final String COMMANDBLOCK_PERMISSION = "minecraft.commandBlock.edit";
 
     public NailedServer(){
         if(FMLLaunchHandler.side().isClient()){
             throw new RuntimeException("Nailed-Server is server-only, don\'t use it on the client!");
         }
+
+        NailedCommandManager commandManager = new NailedCommandManager();
+        MinecraftServer.getServer().commandManager = commandManager;
 
         NailedAPI.setMapLoader(new NailedMapLoader());
         NailedAPI.setMappackLoader(new NailedMappackLoader());
@@ -87,10 +97,11 @@ public class NailedServer {
         NailedAPI.setTeleporter(new NailedTeleporter());
         NailedAPI.setZoneRegistry(new NailedZoneRegistry());
         NailedAPI.setMovementHandler(new MovementHandler());
+        NailedAPI.setCommandRegistry(commandManager);
 
         FMLCommonHandler.instance().bus().register(NailedAPI.getScheduler());
 
-        MinecraftServer.getServer().commandManager = new NailedCommandManager();
+        this.loadPlugins();
     }
 
     @EventHandler
@@ -251,5 +262,26 @@ public class NailedServer {
 
     public static int getProviderID() {
         return NailedServer.providerID;
+    }
+
+    public void loadPlugins(){
+        pluginManager.registerLoader(JavaPluginLoader.class);
+        pluginManager.registerLoader(InternalPluginLoader.class);
+
+        File pluginFolder = new File("plugins");
+
+        if(pluginFolder.exists()){
+            Plugin[] plugins = pluginManager.loadPlugins(pluginFolder);
+            for(Plugin plugin : plugins){
+                try{
+                    plugin.getLogger().info("Loading plugin " + plugin.getName()); //TODO: replace .getName() with .getMetadata().getName()
+                    plugin.onLoad();
+                }catch(Throwable ex){
+                    NailedLog.warn(ex.getMessage() + " initializing " + plugin.getName(), ex);
+                }
+            }
+        }else{
+            pluginFolder.mkdir();
+        }
     }
 }

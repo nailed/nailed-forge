@@ -6,4 +6,5 @@ dependencies {
     compile rootProject
     compile project(":Common")
     compile 'org.projectlombok:lombok:1.12.6'
+    compile 'jk_5:EventBus:1.0'
 }
