@@ -1,6 +1,6 @@
 Todo:
 - Add transformer obf mappings
-- Zone protection (partially implemented, permissions have to be added)
+- World and zone specific permissions
 - Add a lot of chat commands - When nailed-web is stable and running
 - Skinsync - Scrap this?
 - Native cypher - Difficult to do
@@ -12,21 +12,3 @@ Bugs:
 - PULSE_OFF pulses on enable
 - Teamwon stat type doesn't work
 - NailedPlayer.netHandler is null sometimes
-
-Command permission levels:  (See http://minecraft.gamepedia.com/Server.properties#Minecraft_server_properties)
-0. Everybody
-1. Ops can only bypass spawn protection
-2. OP & Commandblock (clear, difficulty)
-3. OP Only (kick, ban etc)
-4. Permission for /stop
-
-Op permission level is configurable
-Command block permission level is 2
-
-LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
-Configuration config = ctx.getConfiguration();
-LoggerConfig loggerConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
-loggerConfig.setLevel(Level.ALL);
-ctx.updateLoggers();
-
-http://stackoverflow.com/questions/2937406/how-to-bundle-a-native-library-and-a-jni-library-inside-a-jar

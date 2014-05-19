@@ -114,8 +114,8 @@ class NailedWorld private (world: WeakReference[World]) extends LocalWorld {
   }
 
   override def getBiome(pt: Vector2D): BiomeType = this.world.get match {
-    case Some(theWorld) =>
-      NailedBiomeTypes.getFromBaseBiome(theWorld.getBiomeGenForCoords(pt.getBlockX, pt.getBlockZ))
+    case Some(theWorld) => BiomeType.UNKNOWN //TODO: replace this
+      //NailedBiomeTypes.getFromBaseBiome(theWorld.getBiomeGenForCoords(pt.getBlockX, pt.getBlockZ))
     case _ => BiomeType.UNKNOWN
   }
 
