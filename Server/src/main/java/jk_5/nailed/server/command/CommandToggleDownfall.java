@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.map.NailedMap;
-import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 
@@ -23,9 +22,13 @@ public class CommandToggleDownfall extends NailedCommand {
     }
 
     @Override
-    public void process(ICommandSender sender, String[] args){
-        Map map = null;
-        if(args.length > 0){
+    public void processCommandWithMap(ICommandSender sender, Map map, String[] args) {
+        if(args.length == 0){
+            if(map instanceof NailedMap){
+                ((NailedMap) map).markDataNeedsResync();
+            }
+            map.getWeatherController().toggleRain();
+        }else if(args.length == 1){
             map = NailedAPI.getMapLoader().getMap(args[0]);
             if(map == null) {
                 try{
@@ -34,21 +37,23 @@ public class CommandToggleDownfall extends NailedCommand {
                     throw new CommandException("That map does not exist");
                 }
             }
+            if(map == null){
+                throw new CommandException("That map does not exist");
+            }
+            if(map instanceof NailedMap){
+                ((NailedMap) map).markDataNeedsResync();
+            }
+            map.getWeatherController().toggleRain();
         }
-        if(map == null){
-            map = NailedAPI.getMapLoader().getMap(sender.getEntityWorld());
-        }
-        if(map instanceof NailedMap) ((NailedMap) map).markDataNeedsResync();
-        map.getWeatherController().toggleRain();
     }
 
     @Override
-    public List addTabCompletionOptions(ICommandSender sender, String[] strings){
-        if(strings.length != 1) return Arrays.asList();
+    public List<String> addAutocomplete(ICommandSender sender, String[] args){
+        if(args.length != 1) return Arrays.asList();
         List<String> ret = Lists.newArrayList();
         for(Map map : NailedAPI.getMapLoader().getMaps()){
             ret.add(map.getSaveFileName());
         }
-        return CommandBase.getListOfStringsFromIterableMatchingLastWord(strings, ret);
+        return getOptions(args, ret);
     }
 }

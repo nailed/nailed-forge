@@ -13,7 +13,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentTranslation;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -32,19 +31,7 @@ public class CommandTP extends NailedCommand {
     }
 
     @Override
-    public List addTabCompletionOptions(ICommandSender par1ICommandSender, String[] args){
-        if(args.length == 1) return CommandBase.getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getConfigurationManager().getAllUsernames());
-        if(args.length == 2) return CommandBase.getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getConfigurationManager().getAllUsernames());
-        return null;
-    }
-
-    @Override
-    public void processCommandPlayer(Player sender, Map map, String[] args){
-        super.processCommandPlayer(sender, map, args);
-    }
-
-    @Override
-    public void process(ICommandSender sender, String[] args){
+    public void processCommandWithMap(ICommandSender sender, Map map, String[] args) {
         List<Pair<Entity, TeleportOptions>> options = Lists.newArrayList();
         try{
             if(args.length == 1){
@@ -125,6 +112,15 @@ public class CommandTP extends NailedCommand {
         }catch(CommandException e){
             sender.addChatMessage(new ChatComponentTranslation(e.getMessage()));
             sender.addChatMessage(new ChatComponentTranslation(this.getCommandUsage(sender)));
+        }
+    }
+
+    @Override
+    public List<String> addAutocomplete(ICommandSender par1ICommandSender, String[] args){
+        if(args.length == 1 || args.length == 2){
+            return getUsernameOptions(args);
+        }else{
+            return null;
         }
     }
 

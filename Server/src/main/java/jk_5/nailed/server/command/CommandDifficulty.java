@@ -1,7 +1,6 @@
 package jk_5.nailed.server.command;
 
 import jk_5.nailed.api.map.Map;
-import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.util.ChatComponentText;
@@ -46,9 +45,9 @@ public class CommandDifficulty extends NailedCommand {
     }
 
     @Override
-    public List addTabCompletionOptions(ICommandSender var1, String[] args) {
+    public List<String> addAutocomplete(ICommandSender var1, String[] args) {
         if(args.length == 1){
-            return CommandBase.getListOfStringsMatchingLastWord(args, "peaceful", "easy", "normal", "hard");
+            return getOptions(args, "peaceful", "easy", "normal", "hard");
         }else{
             return null;
         }

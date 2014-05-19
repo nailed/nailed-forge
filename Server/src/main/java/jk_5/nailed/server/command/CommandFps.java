@@ -1,6 +1,7 @@
 package jk_5.nailed.server.command;
 
 import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.player.Player;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
@@ -17,7 +18,7 @@ public class CommandFps extends NailedCommand {
     }
 
     @Override
-    public void process(ICommandSender sender, String[] args){
+    public void processCommandWithMap(ICommandSender sender, Map map, String[] args) {
         if (args.length > 0){
             Player player = NailedAPI.getPlayerRegistry().getPlayerByUsername(args[0]);
             sender.addChatMessage(new ChatComponentText(player.getUsername() + ": " + player.getFps() + " FPS"));

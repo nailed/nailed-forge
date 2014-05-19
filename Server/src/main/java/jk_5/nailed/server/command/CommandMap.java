@@ -5,7 +5,6 @@ import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.concurrent.Callback;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.Mappack;
-import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -71,21 +70,22 @@ public class CommandMap extends NailedCommand {
     }
 
     @Override
-    public List addTabCompletionOptions(ICommandSender sender, String[] strings){
-        if(strings.length == 1) return CommandBase.getListOfStringsMatchingLastWord(strings, "create", "remove");
-        else if(strings.length == 2){
-            if(strings[0].equalsIgnoreCase("create")){
+    public List<String> addAutocomplete(ICommandSender sender, String[] args){
+        if(args.length == 1){
+            return getOptions(args, "create", "remove");
+        }else if(args.length == 2){
+            if(args[0].equalsIgnoreCase("create")){
                 List<String> ret = Lists.newArrayList();
                 for(Mappack mappack : NailedAPI.getMappackLoader().getMappacks()){
                     ret.add(mappack.getMappackID());
                 }
-                return CommandBase.getListOfStringsFromIterableMatchingLastWord(strings, ret);
-            }else if(strings[0].equalsIgnoreCase("remove")){
+                return getOptions(args, ret);
+            }else if(args[0].equalsIgnoreCase("remove")){
                 List<String> ret = Lists.newArrayList();
                 for(Map map : NailedAPI.getMapLoader().getMaps()){
                     ret.add(map.getSaveFileName());
                 }
-                return CommandBase.getListOfStringsFromIterableMatchingLastWord(strings, ret);
+                return getOptions(args, ret);
             }
         }
         return Arrays.asList();

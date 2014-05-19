@@ -4,18 +4,19 @@ import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.map.Location;
-import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.util.HashMap;
-import java.util.Set;
 
 /**
  * Created by matthias on 16-5-14.
  */
 public class CommandWayPoint extends NailedCommand {
-    public CommandWayPoint(){super("waypoint");}
+
+    public CommandWayPoint(){
+        super("waypoint");
+    }
 
     @Override
     public void processCommandPlayer(Player player, Map map, String[] args){

@@ -60,11 +60,11 @@ public class CommandTime extends NailedCommand {
     }
 
     @Override
-    public List addTabCompletionOptions(ICommandSender sender, String[] args) {
+    public List<String> addAutocomplete(ICommandSender sender, String[] args) {
         if(args.length == 1){
-            return CommandBase.getListOfStringsMatchingLastWord(args, "set");
+            return getOptions(args, "set");
         }else if(args.length == 2){
-            return CommandBase.getListOfStringsMatchingLastWord(args, "day", "night");
+            return getOptions(args, "day", "night");
         }else{
             return null;
         }

@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.player.Player;
-import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -38,12 +37,12 @@ public class CommandGoto extends NailedCommand {
     }
 
     @Override
-    public List addTabCompletionOptions(ICommandSender sender, String[] strings){
-        if(strings.length != 1) return null;
+    public List<String> addAutocomplete(ICommandSender sender, String[] args){
+        if(args.length != 1) return null;
         List<String> ret = Lists.newArrayList();
         for(Map map : NailedAPI.getMapLoader().getMaps()){
             ret.add(map.getSaveFileName());
         }
-        return CommandBase.getListOfStringsFromIterableMatchingLastWord(strings, ret);
+        return getOptions(args, ret);
     }
 }

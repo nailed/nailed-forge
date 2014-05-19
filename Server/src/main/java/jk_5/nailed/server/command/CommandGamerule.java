@@ -2,7 +2,6 @@ package jk_5.nailed.server.command;
 
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.util.Utils;
-import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.event.HoverEvent;
@@ -71,12 +70,12 @@ public class CommandGamerule extends NailedCommand {
     }
 
     @Override
-    public List addTabCompletionOptions(ICommandSender sender, String[] args){
+    public List<String> addAutocomplete(ICommandSender sender, String[] args){
         GameRules gameRules = sender.getEntityWorld().getGameRules();
         if(args.length == 1){
-            return CommandBase.getListOfStringsMatchingLastWord(args, gameRules.getRules());
+            return getOptions(args, gameRules.getRules());
         }else if(args.length == 2){
-            return CommandBase.getListOfStringsMatchingLastWord(args, "true", "false");
+            return getOptions(args, "true", "false");
         }
         return null;
     }

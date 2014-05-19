@@ -1,5 +1,6 @@
 package jk_5.nailed.server.command;
 
+import com.google.common.collect.Lists;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.player.Player;
@@ -9,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -25,27 +27,43 @@ public abstract class NailedCommand implements ICommand {
     }
 
     @Override
-    public String getCommandUsage(ICommandSender icommandsender){
+    public String getCommandUsage(ICommandSender sender){
         return "commands.nailed." + this.commandName + ".usage";
     }
 
     @Override
-    public List getCommandAliases(){
+    public final List getCommandAliases(){
+        return null;
+    }
+
+    @Nullable
+    public List<String> getAliases(){
         return null;
     }
 
     @Override
-    public boolean canCommandSenderUseCommand(ICommandSender var1){
+    public final boolean canCommandSenderUseCommand(ICommandSender var1){
         return true; //Permissions will be checked by the permissionsmanager using the commandevent
     }
 
     @Override
-    public List addTabCompletionOptions(ICommandSender var1, String[] var2){
+    public final List addTabCompletionOptions(ICommandSender var1, String[] var2){
+        return this.addAutocomplete(var1, var2);
+    }
+
+    @Nullable
+    public List<String> addAutocomplete(ICommandSender sender, String[] args){
         return null;
     }
 
+    /**
+     * If you need to use this, use our own matcher. See {@code NailedCommand.getPlayersList}
+     * @param args The arguments the user has entered
+     * @param index The argument index which should be checked whether it's an username index or not
+     * @return true if the specified index is an username index, false otherwise
+     */
     @Override
-    public boolean isUsernameIndex(String[] var1, int var2){
+    public final boolean isUsernameIndex(String[] args, int index){
         return false;
     }
 
@@ -66,16 +84,12 @@ public abstract class NailedCommand implements ICommand {
     }
 
     public void processCommandWithMap(ICommandSender sender, Map map, String[] args){
-        this.process(sender, args);
-    }
-
-    public void process(ICommandSender sender,String[] args){
         throw new CommandException("commands.nailed.error.notValid");
     }
 
     @Override
     public final int compareTo(@Nonnull Object o){
-        return this.compareTo((ICommand)o);
+        return this.compareTo((ICommand) o);
     }
 
     public final int compareTo(ICommand command){
@@ -138,7 +152,41 @@ public abstract class NailedCommand implements ICommand {
         return players;
     }
 
-    public String getCommandName() {
+    public static List<String> getOptions(String[] args, String... options){
+        String last = args[args.length - 1];
+        List<String> possible = Lists.newArrayList();
+        for(String o : options){
+            if(o.regionMatches(true, 0, last, 0, last.length())){
+                possible.add(o);
+            }
+        }
+        return possible;
+    }
+
+    public static List<String> getOptions(String[] args, Iterable<String> options){
+        String last = args[args.length - 1];
+        List<String> possible = Lists.newArrayList();
+        for(String o : options){
+            if(o.regionMatches(true, 0, last, 0, last.length())){
+                possible.add(o);
+            }
+        }
+        return possible;
+    }
+
+    public static List<String> getUsernameOptions(String[] args){
+        return getOptions(args, MinecraftServer.getServer().getAllUsernames());
+    }
+
+    public static List<String> getUsernameOptions(String[] args, Map map){
+        List<String> ret = Lists.newArrayList();
+        for(Player player : map.getPlayers()){
+            ret.add(player.getUsername());
+        }
+        return ret;
+    }
+
+    public final String getCommandName() {
         return this.commandName;
     }
 }

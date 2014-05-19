@@ -6,11 +6,9 @@ import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.team.Team;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.util.ChatColor;
-import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
-import net.minecraft.server.MinecraftServer;
 
 import java.util.List;
 
@@ -45,20 +43,21 @@ public class CommandTeam extends NailedCommand {
     }
 
     @Override
-    public List addTabCompletionOptions(ICommandSender iCommandSender, String[] strings){
-        Map map = NailedAPI.getMapLoader().getMap(iCommandSender.getEntityWorld());
-        if(strings.length == 1) return CommandBase.getListOfStringsMatchingLastWord(strings, "join");
-        else if(strings.length == 2){
-            if(strings[0].equalsIgnoreCase("join")){
-                return CommandBase.getListOfStringsMatchingLastWord(strings, MinecraftServer.getServer().getAllUsernames());
+    public List<String> addAutocomplete(ICommandSender sender, String[] args){
+        Map map = NailedAPI.getMapLoader().getMap(sender.getEntityWorld());
+        if(args.length == 1){
+            return getOptions(args, "join");
+        }else if(args.length == 2){
+            if(args[0].equalsIgnoreCase("join")){
+                return getUsernameOptions(args);
             }
-        }else if(strings.length == 3){
-            if(strings[0].equalsIgnoreCase("join")){
+        }else if(args.length == 3){
+            if(args[0].equalsIgnoreCase("join")){
                 List<String> teams = Lists.newArrayList();
                 for(Team team : map.getTeamManager().getTeams()){
                     teams.add(team.getTeamId());
                 }
-                return CommandBase.getListOfStringsFromIterableMatchingLastWord(strings, teams);
+                return getOptions(args, teams);
             }
         }
         return null;

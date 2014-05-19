@@ -4,15 +4,12 @@ import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.util.invsee.InventoryOtherPlayer;
-import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.network.play.server.S2DPacketOpenWindow;
-import net.minecraft.server.MinecraftServer;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -46,8 +43,11 @@ public class CommandInvsee extends NailedCommand {
     }
 
     @Override
-    public List addTabCompletionOptions(ICommandSender iCommandSender, String[] strings){
-        if(strings.length != 1) return Arrays.asList();
-        return CommandBase.getListOfStringsMatchingLastWord(strings, MinecraftServer.getServer().getAllUsernames());
+    public List<String> addAutocomplete(ICommandSender sender, String[] args){
+        if(args.length == 1){
+            return getUsernameOptions(args);
+        }else{
+            return null;
+        }
     }
 }

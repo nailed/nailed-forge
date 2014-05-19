@@ -4,12 +4,10 @@ import jk_5.nailed.api.Gamemode;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.player.Player;
-import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,7 +24,7 @@ public class CommandGamemode extends NailedCommand {
     }
 
     @Override
-    public List getCommandAliases(){
+    public List<String> getAliases(){
         return Arrays.asList("gm");
     }
 
@@ -83,16 +81,12 @@ public class CommandGamemode extends NailedCommand {
         }
     }
 
-    public List addTabCompletionOptions(ICommandSender sender, String[] args){
+    public List<String> addAutocomplete(ICommandSender sender, String[] args){
         if(args.length == 1){
-            return CommandBase.getListOfStringsMatchingLastWord(args, "survival", "creative", "adventure");
+            return getOptions(args, "survival", "creative", "adventure");
         }else if(args.length == 2){
-            return CommandBase.getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames());
+            return getUsernameOptions(args);
         }
         return null;
-    }
-
-    public boolean isUsernameIndex(String[] args, int index){
-        return index == 1;
     }
 }

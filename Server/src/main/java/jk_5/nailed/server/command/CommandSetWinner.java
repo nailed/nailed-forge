@@ -6,7 +6,6 @@ import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.PossibleWinner;
 import jk_5.nailed.api.map.team.Team;
 import jk_5.nailed.api.player.Player;
-import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -46,7 +45,7 @@ public class CommandSetWinner extends NailedCommand {
     }
 
     @Override
-    public List addTabCompletionOptions(ICommandSender sender, String[] args){
+    public List<String> addAutocomplete(ICommandSender sender, String[] args){
         if(args.length != 1) return Arrays.asList();
         Map map = NailedAPI.getMapLoader().getMap(sender.getEntityWorld());
         List<String> suggestions = Lists.newArrayList();
@@ -56,6 +55,6 @@ public class CommandSetWinner extends NailedCommand {
         for(Player player : map.getPlayers()){
             suggestions.add(player.getUsername());
         }
-        return CommandBase.getListOfStringsFromIterableMatchingLastWord(args, suggestions);
+        return getOptions(args, suggestions);
     }
 }

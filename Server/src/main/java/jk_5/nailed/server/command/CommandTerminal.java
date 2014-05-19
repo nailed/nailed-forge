@@ -7,6 +7,10 @@ import jk_5.nailed.map.script.ServerMachine;
 import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.network.NailedPacket;
 
+import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * No description given
  *
@@ -16,6 +20,12 @@ public class CommandTerminal extends NailedCommand {
 
     public CommandTerminal(){
         super("terminal");
+    }
+
+    @Nullable
+    @Override
+    public List<String> getAliases() {
+        return Arrays.asList("term");
     }
 
     @Override

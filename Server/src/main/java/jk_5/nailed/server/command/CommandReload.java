@@ -8,7 +8,6 @@ import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.MappackLoader;
 import jk_5.nailed.ipc.IpcManager;
 import jk_5.nailed.permissions.NailedPermissionFactory;
-import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
@@ -77,9 +76,9 @@ public class CommandReload extends NailedCommand {
     }
 
     @Override
-    public List addTabCompletionOptions(ICommandSender var1, String[] args) {
+    public List<String> addAutocomplete(ICommandSender sender, String[] args) {
         if(args.length == 1){
-            return CommandBase.getListOfStringsMatchingLastWord(args, "permissions", "mappacks", "ipc");
+            return getOptions(args, "permissions", "mappacks", "ipc");
         }else{
             return null;
         }

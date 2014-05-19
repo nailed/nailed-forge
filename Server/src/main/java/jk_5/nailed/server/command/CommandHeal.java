@@ -1,7 +1,6 @@
 package jk_5.nailed.server.command;
 
 import jk_5.nailed.api.map.Map;
-import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -50,9 +49,9 @@ public class CommandHeal extends NailedCommand {
     }
 
     @Override
-    public List addTabCompletionOptions(ICommandSender sender, String[] args) {
+    public List<String> addAutocomplete(ICommandSender sender, String[] args) {
         if(args.length == 1){
-            return CommandBase.getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames());
+            return getOptions(args, MinecraftServer.getServer().getAllUsernames());
         }else{
             return null;
         }
