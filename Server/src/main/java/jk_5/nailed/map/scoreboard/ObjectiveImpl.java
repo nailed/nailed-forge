@@ -6,6 +6,8 @@ import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.scoreboard.Objective;
 import jk_5.nailed.api.map.scoreboard.Score;
 import jk_5.nailed.api.player.Player;
+import jk_5.nailed.api.scripting.ILuaContext;
+import jk_5.nailed.api.scripting.ILuaObject;
 import net.minecraft.network.play.server.S3BPacketScoreboardObjective;
 import net.minecraft.network.play.server.S3CPacketUpdateScore;
 
@@ -17,7 +19,7 @@ import java.util.Set;
  *
  * {@inheritDoc}
  */
-public class ObjectiveImpl implements Objective {
+public class ObjectiveImpl implements Objective, ILuaObject {
 
     private final Map map;
     private final String id; //TODO: Max length of 16
@@ -131,5 +133,60 @@ public class ObjectiveImpl implements Objective {
     @Nonnull
     public String getDisplayName(){
         return displayName;
+    }
+
+    @Override
+    public String[] getMethodNames(){
+        return new String[]{
+                "getId",
+                "getDisplayName",
+                "setDisplayName",
+                "getScore",
+                "setScore",
+                "addScore",
+                "getType"
+        };
+    }
+
+    @Override
+    public Object[] callMethod(ILuaContext context, int method, Object[] arguments) throws Exception{
+        switch(method){
+            case 0: //getId
+                return new Object[]{this.getId()};
+            case 1: //getDisplayName
+                return new Object[]{this.getDisplayName()};
+            case 2: //setDisplayName
+                if(arguments.length == 1 && arguments[0] instanceof String){
+                    this.setDisplayName((String) arguments[0]);
+                }else{
+                    throw new Exception("Expected 1 string argument");
+                }
+                break;
+            case 3: //getScore
+                if(arguments.length == 1 && arguments[0] instanceof String){
+                    return new Object[]{this.getScore((String) arguments[0]).getValue()};
+                }else{
+                    throw new Exception("Expected 1 string argument");
+                }
+            case 4: //setScore
+                if(arguments.length == 2 && arguments[0] instanceof String && arguments[1] instanceof Double){
+                    int score = ((Double) arguments[1]).intValue();
+                    this.getScore((String) arguments[0]).setValue(score);
+                }else{
+                    throw new Exception("Expected 1 string and 1 int argument");
+                }
+                break;
+            case 5: //addScore
+                if(arguments.length == 2 && arguments[0] instanceof String && arguments[1] instanceof Double){
+                    int score = ((Double) arguments[1]).intValue();
+                    this.getScore((String) arguments[0]).addValue(score);
+                }else{
+                    throw new Exception("Expected 1 string and 1 int argument");
+                }
+                break;
+            case 6: //getType
+                return new Object[]{"objective"};
+        }
+        return new Object[0];
     }
 }

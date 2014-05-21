@@ -28,8 +28,6 @@ import jk_5.nailed.map.script.Terminal;
 import jk_5.nailed.map.sign.SignCommandHandler;
 import jk_5.nailed.map.stat.StatManager;
 import jk_5.nailed.map.weather.WeatherController;
-import jk_5.nailed.network.NailedNetworkHandler;
-import jk_5.nailed.network.NailedPacket;
 import jk_5.nailed.permissions.zone.DefaultZoneManager;
 import jk_5.nailed.util.NailedFoodStats;
 import net.minecraft.network.Packet;
@@ -135,7 +133,7 @@ public class NailedMap implements Map {
 
     @Override
     public void onPlayerJoined(Player player) {
-        NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.TimeUpdate(""), player.getEntity());
+        player.sendTimeUpdate("");
         this.scoreboardManager.onPlayerJoinedMap(player);
         this.teamManager.onPlayerJoinedMap(player);
         this.players.add(player);

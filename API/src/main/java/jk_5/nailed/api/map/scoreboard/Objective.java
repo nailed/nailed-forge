@@ -1,6 +1,7 @@
 package jk_5.nailed.api.map.scoreboard;
 
 import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.scripting.ILuaObject;
 
 import javax.annotation.Nonnull;
 
@@ -11,7 +12,7 @@ import javax.annotation.Nonnull;
  *
  * @author jk-5
  */
-public interface Objective {
+public interface Objective extends ILuaObject {
 
     /**
      * Obtain the map that belongs to this Objective.

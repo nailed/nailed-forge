@@ -1,5 +1,7 @@
 package jk_5.nailed.api.scripting;
 
+import org.luaj.vm2.LuaValue;
+
 /**
  * An interface passed to machines and ILuaObjects' by machines, providing methods
  * that allow the api call to wait for events before returning, just like in lua.
@@ -27,7 +29,6 @@ public interface ILuaContext{
      */
     public Object[] pullEventRaw(String filter) throws InterruptedException;
 
-
     /**
      * Yield the current coroutine with some arguments until it is resumed. This method is exactly equivalent to coroutine.yield() in lua. Use pullEvent() if you wish to wait for events.
      * @param arguments An object array containing the arguments to pass to coroutine.yield()
@@ -36,4 +37,6 @@ public interface ILuaContext{
      * @see #pullEvent(String)
      */
     public Object[] yield(Object[] arguments) throws InterruptedException;
+
+    public LuaValue[] toValues(Object[] objects, int leaveEmpty);
 }

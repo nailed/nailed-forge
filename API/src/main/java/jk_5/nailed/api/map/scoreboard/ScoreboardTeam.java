@@ -1,6 +1,7 @@
 package jk_5.nailed.api.map.scoreboard;
 
 import jk_5.nailed.api.player.Player;
+import jk_5.nailed.api.scripting.ILuaObject;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
@@ -10,7 +11,7 @@ import java.util.Set;
  *
  * @author jk-5
  */
-public interface ScoreboardTeam {
+public interface ScoreboardTeam extends ILuaObject {
 
     @Nonnull public String getId();
     @Nonnull public String getDisplayName();

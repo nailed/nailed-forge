@@ -1,8 +1,10 @@
 package jk_5.nailed.players;
 
 import com.google.common.collect.Lists;
+import com.google.gson.JsonParseException;
 import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.common.network.ByteBufUtils;
+import cpw.mods.fml.relauncher.ReflectionHelper;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import jk_5.nailed.api.Gamemode;
@@ -16,6 +18,8 @@ import jk_5.nailed.api.player.IncompatibleClientException;
 import jk_5.nailed.api.player.NailedWebUser;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.api.player.PlayerClient;
+import jk_5.nailed.api.scripting.ILuaContext;
+import jk_5.nailed.api.scripting.ILuaObject;
 import jk_5.nailed.chat.joinmessage.JoinMessageSender;
 import jk_5.nailed.ipc.IpcManager;
 import jk_5.nailed.map.Location;
@@ -27,15 +31,21 @@ import jk_5.nailed.permissions.Group;
 import jk_5.nailed.permissions.NailedPermissionFactory;
 import jk_5.nailed.permissions.User;
 import jk_5.nailed.util.ChatColor;
+import jk_5.nailed.util.NailedFoodStats;
 import jk_5.nailed.web.auth.WebUser;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerCapabilities;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S2BPacketChangeGameState;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.FoodStats;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.WorldSettings;
 import net.minecraftforge.permissions.api.PermissionsManager;
@@ -48,7 +58,7 @@ import java.util.Random;
  *
  * @author jk-5
  */
-public class NailedPlayer implements Player {
+public class NailedPlayer implements Player, ILuaObject {
 
     private final GameProfile gameProfile;
     private Map currentMap;
@@ -141,7 +151,7 @@ public class NailedPlayer implements Player {
     }
 
     public void onChangedDimension() {
-        NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.TimeUpdate(""), this.getEntity());
+        this.sendTimeUpdate("");
         this.sendEditModePacket();
     }
 
@@ -204,7 +214,13 @@ public class NailedPlayer implements Player {
 
     @Override
     public void sendTimeUpdate(String msg){
-        NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.TimeUpdate(msg), this.getEntity());
+        if(this.playerClient == PlayerClient.NAILED){
+            NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.TimeUpdate(msg), this.getEntity());
+        }else{
+            if(!msg.isEmpty()){
+                this.sendChat(msg);
+            }
+        }
     }
 
     @Override
@@ -357,5 +373,228 @@ public class NailedPlayer implements Player {
     @Override
     public void kick(String reason) {
         this.netHandler.kickPlayerFromServer(reason);
+    }
+
+    @Override
+    public String[] getMethodNames() {
+        return new String[]{
+                "getUsername",
+                "getTeam",
+                "clearInventory",
+                "setSpawn",
+                "setGamemode",
+                "setHealth",
+                "setFood",
+                "setExperience",
+                "getType",
+                "freeze",
+                "sendChatComponent",
+                "sendChat",
+                "addPotionEffect",
+                "removePotionEffect",
+                "sendTimeUpdate",
+                "giveItem",
+                "setInventoryItem",
+                "setMinFood",
+                "setMinHealth",
+                "setMaxFood",
+                "setMaxHealth"
+        };
+    }
+
+    @Override
+    public Object[] callMethod(ILuaContext context, int method, Object[] arguments) throws Exception {
+        switch(method){
+            case 0: //getUsername
+                return new Object[]{this.getUsername()};
+            case 1: //getTeam
+                return new Object[]{this.getTeam()};
+            case 2: //clearInventory
+                return new Object[]{this.getEntity().inventory.clearInventory(null, -1)};
+            case 3: //setSpawn
+                if(arguments.length == 3 && arguments[0] instanceof Double && arguments[1] instanceof Double && arguments[2] instanceof Double){
+                    Spawnpoint spawn = new Spawnpoint(((Double) arguments[0]).intValue(), ((Double) arguments[1]).intValue(), ((Double) arguments[2]).intValue());
+                    this.setSpawnpoint(spawn);
+                }else if(arguments.length == 5 && arguments[0] instanceof Double && arguments[1] instanceof Double && arguments[2] instanceof Double && arguments[3] instanceof Double && arguments[4] instanceof Double){
+                    Spawnpoint spawn = new Spawnpoint(((Double) arguments[0]).intValue(), ((Double) arguments[1]).intValue(), ((Double) arguments[2]).intValue(), ((Double) arguments[3]).floatValue(), ((Double) arguments[4]).floatValue());
+                    this.setSpawnpoint(spawn);
+                }else{
+                    throw new Exception("Expected 3 int arguments, and 2 optional float arguments");
+                }
+                break;
+            case 4: //setGamemode
+                if(arguments.length == 1 && arguments[0] instanceof Double){
+                    this.setGameMode(Gamemode.fromId(((Double) arguments[0]).intValue()));
+                }else{
+                    throw new Exception("Expected 3 int arguments, and 2 optional float arguments");
+                }
+                break;
+            case 5: //setHealth
+                if(arguments.length == 1 && arguments[0] instanceof Double){
+                    EntityPlayerMP entity = this.getEntity();
+                    float newHealth = ((Double) arguments[0]).floatValue();
+                    if(newHealth > 0) entity.deathTime = 0;
+                    entity.setHealth(newHealth);
+                }else{
+                    throw new Exception("Expected 1 int argument");
+                }
+                break;
+            case 6: //setFood
+                if(arguments.length == 1 && arguments[0] instanceof Double){
+                    FoodStats foodStats = this.getEntity().getFoodStats();
+                    foodStats.addStats(((Double) arguments[0]).intValue() - foodStats.getFoodLevel(), 0);
+                }else{
+                    throw new Exception("Expected 1 int argument");
+                }
+                break;
+            case 7: //setExperience
+                if(arguments.length == 1 && arguments[0] instanceof Double){
+                    this.getEntity().experienceLevel = ((Double) arguments[0]).intValue();
+                }else{
+                    throw new Exception("Expected 1 int argument");
+                }
+                break;
+            case 8: //getType
+                return new Object[]{"player"};
+            case 9: //freeze
+                if(arguments.length == 1 && arguments[0] instanceof Boolean){
+                    boolean doFreeze = (Boolean) arguments[0];
+                    EntityPlayerMP entity = this.getEntity();
+                    ReflectionHelper.setPrivateValue(PlayerCapabilities.class, entity.capabilities, doFreeze ? 0f : 0.1f, "walkSpeed");
+                    ReflectionHelper.setPrivateValue(PlayerCapabilities.class, entity.capabilities, doFreeze ? 0f : 0.05f, "flySpeed");
+                    entity.sendPlayerAbilities();
+                }else{
+                    throw new Exception("Expected 1 boolean argument");
+                }
+                break;
+            case 10: //sendChatComponent
+                if(arguments.length == 1 && arguments[0] instanceof String){
+                    try{
+                        IChatComponent comp = IChatComponent.Serializer.func_150699_a((String) arguments[0]);
+                        this.sendChat(comp);
+                    }catch(JsonParseException e){
+                        e.printStackTrace();
+                        throw new Exception("Chat message is not of json format");
+                    }
+                }else{
+                    throw new Exception("Expected 1 string argument");
+                }
+                break;
+            case 11: //sendChat
+                if(arguments.length == 1 && arguments[0] instanceof String){
+                    this.sendChat((String) arguments[0]);
+                }else{
+                    throw new Exception("Expected 1 string argument");
+                }
+                break;
+            case 12: //addPotionEffect
+                EntityPlayerMP entity = this.getEntity();
+                if(arguments.length == 2 && arguments[0] instanceof Double && arguments[1] instanceof Double){
+                    int id = ((Double) arguments[0]).intValue();
+                    int duration = ((Double) arguments[1]).intValue();
+                    entity.addPotionEffect(new PotionEffect(id, duration, 0, true));
+                }else if(arguments.length == 3 && arguments[0] instanceof Double && arguments[1] instanceof Double && arguments[2] instanceof Double){
+                    int id = ((Double) arguments[0]).intValue();
+                    int duration = ((Double) arguments[1]).intValue();
+                    int amplifier = ((Double) arguments[2]).intValue();
+                    entity.addPotionEffect(new PotionEffect(id, duration, amplifier, true));
+                }else{
+                    throw new Exception("Expected 2 or 3 int arguments");
+                }
+                break;
+            case 13: //removePotionEffect
+                if(arguments.length == 1 && arguments[0] instanceof Double){
+                    this.getEntity().removePotionEffect(((Double) arguments[0]).intValue());
+                }else{
+                    throw new Exception("Expected 1 int argument");
+                }
+                break;
+            case 14: //sendTimeUpdate
+                if(arguments.length == 1 && arguments[0] instanceof String){
+                    this.sendTimeUpdate((String) arguments[0]);
+                }else{
+                    throw new Exception("Expected 1 int argument");
+                }
+                break;
+            case 15: //giveItem
+                if(arguments.length == 2 && arguments[0] instanceof String && arguments[1] instanceof Double){
+                    int amount = ((Double) arguments[1]).intValue();
+                    String item = (String) arguments[0];
+                    Object i = Item.itemRegistry.getObject(item);
+                    if(i == null){
+                        throw new Exception("Unknown item " + item);
+                    }
+                    ItemStack stack = new ItemStack((Item) i, amount);
+                    this.getEntity().inventory.addItemStackToInventory(stack);
+                }else if(arguments.length == 3 && arguments[0] instanceof String && arguments[1] instanceof Double && arguments[2] instanceof Double){
+                    int meta = ((Double) arguments[2]).intValue();
+                    int amount = ((Double) arguments[1]).intValue();
+                    String item = (String) arguments[0];
+                    Object i = Item.itemRegistry.getObject(item);
+                    if(i == null){
+                        throw new Exception("Unknown item " + item);
+                    }
+                    ItemStack stack = new ItemStack((Item) i, amount, meta);
+                    this.getEntity().inventory.addItemStackToInventory(stack);
+                }else{
+                    throw new Exception("Expected 1 string and 1 or 2 int arguments");
+                }
+                break;
+            case 16: //setInventoryItem
+                if(arguments.length == 3 && arguments[0] instanceof Double && arguments[1] instanceof String && arguments[2] instanceof Double && arguments[3] instanceof Double){
+                    int amount = ((Double) arguments[2]).intValue();
+                    String item = (String) arguments[1];
+                    int slot = ((Double) arguments[0]).intValue();
+                    Object i = Item.itemRegistry.getObject(item);
+                    if(i == null){
+                        throw new Exception("Unknown item " + item);
+                    }
+                    ItemStack stack = new ItemStack((Item) i, amount);
+                    this.getEntity().inventory.setInventorySlotContents(slot, stack);
+                }else if(arguments.length == 4 && arguments[0] instanceof Double && arguments[1] instanceof String && arguments[2] instanceof Double && arguments[3] instanceof Double){
+                    int meta = ((Double) arguments[3]).intValue();
+                    int amount = ((Double) arguments[2]).intValue();
+                    String item = (String) arguments[1];
+                    int slot = ((Double) arguments[0]).intValue();
+                    Object i = Item.itemRegistry.getObject(item);
+                    if(i == null){
+                        throw new Exception("Unknown item " + item);
+                    }
+                    ItemStack stack = new ItemStack((Item) i, amount, meta);
+                    this.getEntity().inventory.setInventorySlotContents(slot, stack);
+                }else{
+                    throw new Exception("Expected 1 int, 1 string and then 1 or 2 int arguments");
+                }
+                break;
+            case 17: // setMinFood
+                if(arguments.length == 1 && arguments[0] instanceof Double){
+                    ((NailedFoodStats) this.getEntity().getFoodStats()).setMinFoodLevel(((Double)arguments[0]).intValue());
+                }else{
+                    throw new Exception("Expected 1 int argument");
+                }
+                break;
+            case 18: // setMinHealth
+                if(arguments.length == 1 && arguments[0] instanceof Double){
+                    this.setMinHealth(((Double)arguments[0]).intValue());
+                }else{
+                    throw new Exception("Expected 1 int argument");
+                }
+                break;
+            case 19: // setMaxFood
+                if(arguments.length == 1 && arguments[0] instanceof Double){
+                    ((NailedFoodStats) this.getEntity().getFoodStats()).setMaxFoodLevel(((Double) arguments[0]).intValue());
+                }else{
+                    throw new Exception("Expected 1 int argument");
+                }
+                break;
+            case 20: // setMaxHealth
+                if(arguments.length == 1 && arguments[0] instanceof Double){
+                    this.setMaxHealth(((Double) arguments[0]).intValue());
+                }else{
+                    throw new Exception("Expected 1 int argument");
+                }
+                break;
+        }
+        return null;
     }
 }

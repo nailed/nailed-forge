@@ -16,7 +16,6 @@ import jk_5.nailed.api.events.MapRemovedEvent;
 import jk_5.nailed.api.map.*;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.map.gen.NailedWorldProvider;
-import jk_5.nailed.map.script.api.MapApi;
 import jk_5.nailed.players.TeamUndefined;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChunkCoordinates;
@@ -237,7 +236,7 @@ public class NailedMapLoader implements MapLoader {
                 Player dest = NailedAPI.getPlayerRegistry().getPlayer((EntityPlayer) event.entity);
                 if(map instanceof NailedMap){
                     NailedMap m = (NailedMap) map;
-                    m.getMachine().queueEvent("player_hit_player", MapApi.wrapPlayer(m.getMachine().getApiEnvironment(), src), MapApi.wrapPlayer(m.getMachine().getApiEnvironment(), dest), event.ammount);
+                    m.getMachine().queueEvent("player_hit_player", src, dest, event.ammount);
                 }
                 if(map.getMappack() != null){
                     if(!map.getMappack().getMappackMetadata().isPvpEnabled()){
@@ -273,9 +272,9 @@ public class NailedMapLoader implements MapLoader {
             NailedMap m = (NailedMap) map;
             if(event.source instanceof EntityDamageSource && event.source.getEntity() instanceof EntityPlayer){
                 Player source = NailedAPI.getPlayerRegistry().getPlayer((EntityPlayer) event.source.getEntity());
-                m.getMachine().queueEvent("player_kill_player", MapApi.wrapPlayer(m.getMachine().getApiEnvironment(), source), MapApi.wrapPlayer(m.getMachine().getApiEnvironment(), player), event.source.damageType);
+                m.getMachine().queueEvent("player_kill_player", source, player, event.source.damageType);
             }else{
-                m.getMachine().queueEvent("player_die", MapApi.wrapPlayer(m.getMachine().getApiEnvironment(), player), event.source.damageType);
+                m.getMachine().queueEvent("player_die", player, event.source.damageType);
             }
         }
         if(!player.getCurrentMap().getGameManager().isGameRunning()) return;
@@ -286,7 +285,7 @@ public class NailedMapLoader implements MapLoader {
             if(mappack != null && mappack.getMappackMetadata().isChoosingRandomSpawnpointAtRespawn()){
                 List<Location> spawnpoints = mappack.getMappackMetadata().getRandomSpawnpoints();
                 Location chosen = spawnpoints.get(this.randomSpawnpointSelector.nextInt(spawnpoints.size()));
-                player.getEntity().setSpawnChunk(chosen.toChunkCoordinates(), true); //FIXME
+                player.getEntity().setSpawnChunk(chosen.toChunkCoordinates(), true); //FIXME - Do this in ServerConfigurationManager.respawnPlayer
             }
         }else{
             if(player.getTeam().shouldOverrideDefaultSpawnpoint()){

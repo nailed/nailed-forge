@@ -16,8 +16,6 @@ import jk_5.nailed.map.stat.types.StatTypeGameHasWinner;
 import jk_5.nailed.map.stat.types.StatTypeGameloopRunning;
 import jk_5.nailed.map.stat.types.StatTypeGameloopStopped;
 import jk_5.nailed.map.stat.types.StatTypeIsWinner;
-import jk_5.nailed.network.NailedNetworkHandler;
-import jk_5.nailed.network.NailedPacket;
 import jk_5.nailed.util.ChatColor;
 
 /**
@@ -40,7 +38,9 @@ public class NailedGameManager implements GameManager {
 
     @Override
     public void setCountdownMessage(String message){
-        NailedNetworkHandler.sendPacketToAllPlayersInDimension(new NailedPacket.TimeUpdate(message), this.map.getID());
+        for(Player player : map.getPlayers()){
+            player.sendTimeUpdate(message);
+        }
     }
 
     @Override

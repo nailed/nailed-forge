@@ -1,15 +1,21 @@
 package jk_5.nailed.players;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.scoreboard.ScoreboardTeam;
 import jk_5.nailed.api.map.team.Team;
 import jk_5.nailed.api.player.Player;
+import jk_5.nailed.api.scripting.ILuaContext;
+import jk_5.nailed.api.scripting.ILuaObject;
 import jk_5.nailed.map.Location;
 import jk_5.nailed.util.ChatColor;
+import jk_5.nailed.util.NailedFoodStats;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
+import org.luaj.vm2.LuaClosure;
+import org.luaj.vm2.LuaValue;
 
 import java.util.List;
 
@@ -18,7 +24,7 @@ import java.util.List;
  *
  * @author jk-5
  */
-public class NailedTeam implements Team {
+public class NailedTeam implements Team, ILuaObject {
 
     private final Map map;
     private final String teamId;
@@ -218,5 +224,99 @@ public class NailedTeam implements Team {
 
     public void setTeamSpeakChannelID(int teamSpeakChannelID) {
         this.teamSpeakChannelID = teamSpeakChannelID;
+    }
+
+    @Override
+    public String[] getMethodNames(){
+        return new String[]{
+                "getName",
+                "getPlayers",
+                "forEachPlayer",
+                "setSpawn",
+                "getType",
+                "getID",
+                "setMinFood",
+                "setMinHealth",
+                "setMaxFood",
+                "setMaxHealth"
+        };
+    }
+
+    @Override
+    public Object[] callMethod(ILuaContext context, int method, Object[] arguments) throws Exception{
+        switch(method){
+            case 0: //getName
+                return new Object[]{this.getName()};
+            case 1: //getPlayers
+                List<Player> players = this.getMembers();
+                java.util.Map<Integer, ILuaObject> table = Maps.newHashMap();
+                for(int i = 0; i < players.size(); i++){
+                    table.put(i + 1, players.get(i));
+                }
+                return new Object[]{table};
+            case 2: //forEachPlayer
+                if(arguments.length == 1 && arguments[0] instanceof LuaClosure){
+                    LuaClosure closure = (LuaClosure) arguments[0];
+                    List<Player> players1 = this.getMembers();
+                    for(int i = 0; i < players1.size(); i++){
+                        closure.invoke(LuaValue.varargsOf(context.toValues(new Object[]{players1.get(i)}, 0)));
+                    }
+                }else{
+                    throw new Exception("Excpected 1 function as argument");
+                }
+                break;
+            case 3: //setSpawn
+                if(arguments.length == 3 && arguments[0] instanceof Double && arguments[1] instanceof Double && arguments[2] instanceof Double){
+                    Location spawn = new Location((Double) arguments[0], (Double) arguments[1], (Double) arguments[2]);
+                    this.setSpawnpoint(spawn);
+                }else if(arguments.length == 5 && arguments[0] instanceof Double && arguments[1] instanceof Double && arguments[2] instanceof Double && arguments[3] instanceof Double && arguments[4] instanceof Double){
+                    Location spawn = new Location((Double) arguments[0], (Double) arguments[1], (Double) arguments[2], ((Double) arguments[3]).floatValue(), ((Double) arguments[4]).floatValue());
+                    this.setSpawnpoint(spawn);
+                }else{
+                    throw new Exception("Expected 3 int arguments, and 2 optional float arguments");
+                }
+                break;
+            case 4: //getType
+                return new Object[]{"team"};
+            case 5: //getID
+                return new Object[]{this.getTeamId()};
+            case 6: // setMinFood
+                if(arguments.length == 1 && arguments[0] instanceof Double){
+                    for(Player player : this.getMembers()) {
+                        ((NailedFoodStats) player.getEntity().getFoodStats()).setMinFoodLevel(((Double) arguments[0]).intValue());
+                    }
+                }else{
+                    throw new Exception("Expected 1 int argument");
+                }
+                break;
+            case 7: // setMinHealth
+                if(arguments.length == 1 && arguments[0] instanceof Double){
+                    for(Player player : this.getMembers()) {
+                        player.setMinHealth(((Double) arguments[0]).intValue());
+                    }
+                }else{
+                    throw new Exception("Expected 1 int argument");
+                }
+                break;
+            case 8: // setMaxFood
+                if(arguments.length == 1 && arguments[0] instanceof Double){
+                    for(Player player : this.getMembers()) {
+                        ((NailedFoodStats) player.getEntity().getFoodStats()).setMaxFoodLevel(((Double) arguments[0]).intValue());
+                    }
+                }else{
+                    throw new Exception("Expected 1 int argument");
+                }
+                break;
+            case 9: // setMaxHealth
+                if(arguments.length == 1 && arguments[0] instanceof Double){
+                    for(Player player : this.getMembers()) {
+                        player.setMaxHealth(((Double) arguments[0]).intValue());
+                    }
+                }else{
+                    throw new Exception("Expected 1 int argument");
+                }
+                break;
+        }
+        return null;
     }
 }

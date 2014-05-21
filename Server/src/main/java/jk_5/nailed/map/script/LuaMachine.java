@@ -238,10 +238,12 @@ public class LuaMachine {
                                     return results;
                                 }
 
+                                @Override
                                 public Object[] pullEventRaw(String filter) throws InterruptedException {
                                     return yield(new Object[]{filter});
                                 }
 
+                                @Override
                                 public Object[] yield(Object[] yieldArgs) throws InterruptedException{
                                     try{
                                         LuaValue[] yieldValues = LuaMachine.this.toValues(yieldArgs, 0);
@@ -251,6 +253,11 @@ public class LuaMachine {
                                         throw new InterruptedException();//FIXME: is this correct?
                                     }
                                     //Maybe here?
+                                }
+
+                                @Override
+                                public LuaValue[] toValues(Object[] objects, int leaveEmpty) {
+                                    return LuaMachine.this.toValues(objects, leaveEmpty);
                                 }
                             }, method, arguments);
                         }catch (InterruptedException e){
