@@ -5,9 +5,6 @@ Todo:
 - Skinsync - Scrap this?
 - Native cypher - Difficult to do
 
-Lua:
-- map.getPlayers() doesn't return dead players
-
 Bugs:
 - PULSE_OFF pulses on enable
 - Teamwon stat type doesn't work
