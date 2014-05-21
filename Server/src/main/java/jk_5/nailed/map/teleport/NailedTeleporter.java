@@ -6,8 +6,6 @@ import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.teleport.TeleportEvent;
 import jk_5.nailed.api.map.teleport.TeleportOptions;
 import jk_5.nailed.api.map.teleport.Teleporter;
-import jk_5.nailed.api.player.Player;
-import jk_5.nailed.api.player.PlayerClient;
 import jk_5.nailed.map.Location;
 import jk_5.nailed.map.gen.NailedWorldProvider;
 import net.minecraft.block.Block;
@@ -91,12 +89,9 @@ public class NailedTeleporter implements Teleporter {
             EntityPlayerMP player = (EntityPlayerMP) entity;
             player.closeScreen();
             if(changingworlds){
-                Player nplayer = NailedAPI.getPlayerRegistry().getPlayer(player);
-                if(nplayer.getClient() != PlayerClient.NAILED && nplayer.getClient() != PlayerClient.FORGE) {
-                    player.playerNetServerHandler.sendPacket(new S07PacketRespawn(1, player.worldObj.difficultySetting, destWorld.getWorldInfo().getTerrainType(), player.theItemInWorldManager.getGameType()));
-                }
-                player.playerNetServerHandler.sendPacket(new S07PacketRespawn(0, player.worldObj.difficultySetting, destWorld.getWorldInfo().getTerrainType(), player.theItemInWorldManager.getGameType()));
-                if (destWorld.provider instanceof NailedWorldProvider) {
+                player.dimension = dimension;
+                player.playerNetServerHandler.sendPacket(new S07PacketRespawn(player.dimension, player.worldObj.difficultySetting, destWorld.getWorldInfo().getTerrainType(), player.theItemInWorldManager.getGameType()));
+                if(destWorld.provider instanceof NailedWorldProvider){
                     ((NailedWorldProvider) destWorld.provider).sendMapData(player);
                 }
                 ((WorldServer) entity.worldObj).getPlayerManager().removePlayer(player);
