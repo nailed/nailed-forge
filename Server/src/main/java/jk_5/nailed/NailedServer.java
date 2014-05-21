@@ -7,7 +7,9 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.network.NetworkCheckHandler;
 import cpw.mods.fml.relauncher.FMLLaunchHandler;
+import cpw.mods.fml.relauncher.Side;
 import jk_5.nailed.achievement.AchievementEventListener;
 import jk_5.nailed.achievement.NailedAchievements;
 import jk_5.nailed.api.NailedAPI;
@@ -62,6 +64,7 @@ import org.apache.commons.io.IOUtils;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * No description given
@@ -283,5 +286,10 @@ public class NailedServer {
         }else{
             pluginFolder.mkdir();
         }
+    }
+
+    @NetworkCheckHandler
+    public boolean accepts(Map<String, String> mods, Side side){
+        return true;
     }
 }

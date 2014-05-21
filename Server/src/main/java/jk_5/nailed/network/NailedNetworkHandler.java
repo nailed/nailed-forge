@@ -1,5 +1,7 @@
 package jk_5.nailed.network;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.MapMaker;
 import cpw.mods.fml.common.network.FMLEmbeddedChannel;
 import cpw.mods.fml.common.network.FMLOutboundHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
@@ -7,7 +9,9 @@ import cpw.mods.fml.common.network.handshake.NetworkDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
+import jk_5.nailed.NailedLog;
 import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.player.Player;
 import jk_5.nailed.api.player.PlayerClient;
 import jk_5.nailed.map.script.ScriptPacketHandler;
 import jk_5.nailed.network.handlers.*;
@@ -15,6 +19,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.Packet;
+
+import java.util.Map;
 
 /**
  * No description given
@@ -24,6 +30,7 @@ import net.minecraft.network.Packet;
 public class NailedNetworkHandler {
 
     private static FMLEmbeddedChannel channel;
+    private static Map<NetworkDispatcher, Map<String, String>> clientMods = new MapMaker().weakKeys().makeMap();
 
     public static void registerChannel(){
         channel = NetworkRegistry.INSTANCE.newChannel("nailed", new NailedPacketCodec()).get(Side.SERVER);
@@ -67,9 +74,43 @@ public class NailedNetworkHandler {
         return channel;
     }
 
-    public static void vanillaHandshake(NetworkDispatcher dispatcher, EntityPlayerMP player){
-        NailedAPI.getPlayerRegistry().getOrCreatePlayer(player.getGameProfile()).setClient(PlayerClient.VANILLA);
+    @SuppressWarnings("unused")
+    //Called from NetworkDispatcher.completeServerSideConnection
+    public static void onConnected(NetworkDispatcher dispatcher, String connectionType){
+        EntityPlayerMP playerEnt = ((NetHandlerPlayServer) dispatcher.manager.getNetHandler()).playerEntity;
+        Player player = NailedAPI.getPlayerRegistry().getOrCreatePlayer(playerEnt.getGameProfile());
+        Map<String, String> mods = clientMods.get(dispatcher);
+        try{
+            if(connectionType.equals("VANILLA")){
+                player.setClient(PlayerClient.VANILLA);
+            }else{
+                if(mods == null){
+                    dispatcher.rejectHandshake("Not a vanilla client but no modlist was sent? Wtf are you?");
+                    return;
+                }
+                if(mods.containsKey("Nailed")){
+                    player.setClient(PlayerClient.NAILED);
+                }else if(mods.containsKey("Forge")){
+                    player.setClient(PlayerClient.FORGE);
+                }else if(mods.containsKey("FML")){
+                    player.setClient(PlayerClient.FML);
+                }else{
+                    dispatcher.rejectHandshake("Unsupported client. Use FML, Forge or the Nailed client");
+                    return;
+                }
+            }
+        }finally{
+            clientMods.remove(dispatcher);
+        }
+        NailedLog.info("{} client connected", player.getClient().name());
         ChannelPipeline pipe = dispatcher.manager.channel().pipeline();
-        pipe.addAfter("encoder", "NailedPacketAdapter", new MinecraftPacketAdapter(player));
+        pipe.addAfter("encoder", "NailedPacketAdapter", new MinecraftPacketAdapter(playerEnt));
+    }
+
+    @SuppressWarnings("unused")
+    //Called from FMLHandshakeServerState.HELLO.accept Under FMLLog.info("Client attempting to join with %d mods : %s"
+    public static void onClientModList(ChannelHandlerContext ctx, Map<String, String> mods){
+        NailedLog.info("Received client modlist: {}", Joiner.on(',').withKeyValueSeparator(":").join(mods));
+        clientMods.put(ctx.channel().attr(NetworkDispatcher.FML_DISPATCHER).get(), mods);
     }
 }
