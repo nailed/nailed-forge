@@ -19,6 +19,7 @@ import net.minecraft.network.play.server.S07PacketRespawn;
 import net.minecraft.network.play.server.S1DPacketEntityEffect;
 import net.minecraft.network.play.server.S1FPacketSetExperience;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
@@ -173,5 +174,10 @@ public class NailedTeleporter implements Teleporter {
             world.onEntityRemoved(entity);
         }
         entity.isDead = false;
+    }
+
+    @Override
+    public EntityPlayerMP respawnPlayer(EntityPlayerMP player, int dimension, boolean finishedEnd) {
+        return MinecraftServer.getServer().getConfigurationManager().respawnPlayer(player, dimension, finishedEnd);
     }
 }

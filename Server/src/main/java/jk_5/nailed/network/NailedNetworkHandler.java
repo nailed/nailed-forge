@@ -11,6 +11,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.concurrent.scheduler.NailedRunnable;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.api.player.PlayerClient;
 import jk_5.nailed.map.script.ScriptPacketHandler;
@@ -20,6 +21,8 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.Packet;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
@@ -31,6 +34,23 @@ public class NailedNetworkHandler {
 
     private static FMLEmbeddedChannel channel;
     private static Map<NetworkDispatcher, Map<String, String>> clientMods = new MapMaker().weakKeys().makeMap();
+
+    private static final Class<?> connType;
+    private static final Method acceptVanillaMethod;
+    private static final Object vanillaConnType;
+
+    static {
+        try{
+            connType = Class.forName("cpw.mods.fml.common.network.handshake.NetworkDispatcher$ConnectionType");
+            acceptVanillaMethod = NetworkDispatcher.class.getDeclaredMethod("completeServerSideConnection", connType);
+            acceptVanillaMethod.setAccessible(true);
+            Field vanillaField = connType.getDeclaredField("VANILLA");
+            vanillaField.setAccessible(true);
+            vanillaConnType = vanillaField.get(null);
+        }catch(Exception e){
+            throw new RuntimeException(e);
+        }
+    }
 
     public static void registerChannel(){
         channel = NetworkRegistry.INSTANCE.newChannel("nailed", new NailedPacketCodec()).get(Side.SERVER);
@@ -112,5 +132,20 @@ public class NailedNetworkHandler {
     public static void onClientModList(ChannelHandlerContext ctx, Map<String, String> mods){
         NailedLog.info("Received client modlist: {}", Joiner.on(',').withKeyValueSeparator(":").join(mods));
         clientMods.put(ctx.channel().attr(NetworkDispatcher.FML_DISPATCHER).get(), mods);
+    }
+
+    @SuppressWarnings("unused")
+    //Called from NetworkDispatcher$VanillaTimeoutWaiter.handlerAdded
+    public static void acceptVanilla(final NetworkDispatcher dispatcher){
+        NailedAPI.getScheduler().runTask(new NailedRunnable() {
+            @Override
+            public void run() {
+                try {
+                    acceptVanillaMethod.invoke(dispatcher, vanillaConnType);
+                } catch (Exception e) {
+                    NailedLog.error("Error while accepting vanilla connection", e);
+                }
+            }
+        });
     }
 }

@@ -46,8 +46,7 @@ public class VanillaSupportTransformer implements IClassTransformer {
         //Inject a line that accepts the connection
         InsnList list = new InsnList();
         list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-        list.add(new FieldInsnNode(Opcodes.GETSTATIC, "cpw/mods/fml/common/network/handshake/NetworkDispatcher$ConnectionType", "VANILLA", "Lcpw/mods/fml/common/network/handshake/NetworkDispatcher$ConnectionType;"));
-        list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "cpw/mods/fml/common/network/handshake/NetworkDispatcher", "completeServerSideConnection", "(Lcpw/mods/fml/common/network/handshake/NetworkDispatcher$ConnectionType;)V"));
+        list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "jk_5/nailed/network/NailedNetworkHandler", "acceptVanilla", "(Lcpw/mods/fml/common/network/handshake/NetworkDispatcher;)V"));
         mnode.instructions.insert(mnode.instructions.get(offset), list);
 
         //Inject a connection finished hook

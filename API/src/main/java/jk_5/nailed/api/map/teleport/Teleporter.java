@@ -1,6 +1,7 @@
 package jk_5.nailed.api.map.teleport;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayerMP;
 
 import javax.annotation.Nonnull;
 
@@ -19,4 +20,13 @@ public interface Teleporter {
      * @return true if the Entity was teleported successfully. false if it has been canceled or errored.
      */
     public boolean teleportEntity(@Nonnull Entity entity, @Nonnull TeleportOptions options);
+
+    /**
+     * Teleport the given player entity in the specified dimension
+     *
+     * @param player The player to respawn.
+     * @param dimension The dimension the player has died in
+     * @return the new player entity for this player
+     */
+    public EntityPlayerMP respawnPlayer(EntityPlayerMP player, int dimension, boolean finishedEnd);
 }

@@ -64,7 +64,7 @@ public class JsonMappackMetadata implements MappackMetadata {
         this.postGameAction = json.has("postGameAction") ? PostGameAction.fromType(json.get("postGameAction").getAsString()) : PostGameAction.NOTHING;
         this.minFoodLevel = json.has("minFoodLevel") ? json.get("minFoodLevel").getAsInt() : 0;
         this.maxFoodLevel = json.has("maxFoodLevel") ? json.get("maxFoodLevel").getAsInt() : -1;
-        this.minHealth = json.has("minHealth") ? json.get("minHealth").getAsInt() : 5;
+        this.minHealth = json.has("minHealth") ? json.get("minHealth").getAsInt() : 0;
         this.maxHealth = json.has("maxHealth") ? json.get("maxHealth").getAsInt() : 20;
 
         if(json.has("spawns")){
