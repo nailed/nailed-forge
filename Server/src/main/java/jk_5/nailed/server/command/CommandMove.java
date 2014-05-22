@@ -27,7 +27,7 @@ public class CommandMove extends NailedCommand {
             System.arraycopy(args, 3, locs, 0, args.length - 2);
 
             for (String loc : locs) {
-                Location nLocation = NailedAPI.getMovementHandler().getLocation(loc);
+                Location nLocation = player.getCurrentMap().getLocationHandler().getLocation(loc);
                 if (nLocation != null) tempLocations.add(nLocation);
             }
 
@@ -41,8 +41,8 @@ public class CommandMove extends NailedCommand {
         } else if(args[1].equals("linear")){
             Player nPlayer = NailedAPI.getPlayerRegistry().getPlayerByUsername(args[0]);
             int time = Integer.parseInt(args[2]) * 20;
-            Location startLocation = NailedAPI.getMovementHandler().getLocation(args[3]);
-            Location endLocation = NailedAPI.getMovementHandler().getLocation(args[4]);
+            Location startLocation = nPlayer.getCurrentMap().getLocationHandler().getLocation(args[3]);
+            Location endLocation = nPlayer.getCurrentMap().getLocationHandler().getLocation(args[4]);
 
             NailedAPI.getMovementHandler().addPlayerMovement(nPlayer, new LinearMovement(startLocation, endLocation, time, false));
         } else throw new WrongUsageException(this.getCommandUsage(player.getEntity()));

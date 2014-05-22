@@ -39,7 +39,7 @@ public class CommandWayPoint extends NailedCommand {
                     if(args[4].startsWith("~")){
                         z = Double.parseDouble((args[4].split("~"))[0]) + sender.posZ;
                     }else z = sender.posZ;
-                    NailedAPI.getMovementHandler().addLocation(args[1], new Location(x, y, z));
+                    player.getCurrentMap().getLocationHandler().addLocation(args[1], new Location(x, y, z));
                 } else if(args.length == 7) { // add <name> x y z pitch yaw
                     double x;
                     double y;
@@ -61,17 +61,17 @@ public class CommandWayPoint extends NailedCommand {
                     if(args[6].startsWith("~")){
                         yaw = Float.parseFloat((args[6].split("~"))[0]) + sender.cameraYaw;
                     }else yaw = sender.cameraYaw;
-                    NailedAPI.getMovementHandler().addLocation(args[1], new Location(x, y, z, pitch, yaw));
+                    player.getCurrentMap().getLocationHandler().addLocation(args[1], new Location(x, y, z, pitch, yaw));
                 }
             }
         }else if(args[0].equals("remove")){
             if(args.length != 2) throw new WrongUsageException(this.getCommandUsage(sender)); // remove <name>
-            NailedAPI.getMovementHandler().removeLocation(args[1]);
+            player.getCurrentMap().getLocationHandler().removeLocation(args[1]);
         }else if(args[0].equals("set")){
             if(args.length != 2) throw new WrongUsageException(this.getCommandUsage(sender)); // set <name>
-            NailedAPI.getMovementHandler().addLocation(args[1], player.getLocation());
+            player.getCurrentMap().getLocationHandler().addLocation(args[1], player.getLocation());
         }else if(args[0].equals("list")) {
-            HashMap<String, Location> locations = NailedAPI.getMovementHandler().getLocations();
+            HashMap<String, Location> locations = player.getCurrentMap().getLocationHandler().getLocations();
             String keys = locations.keySet().toString();
             player.sendChat(keys);
         }else{
