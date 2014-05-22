@@ -11,7 +11,10 @@ import jk_5.nailed.NailedLog;
 import jk_5.nailed.NailedServer;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.concurrent.scheduler.NailedRunnable;
-import jk_5.nailed.api.map.*;
+import jk_5.nailed.api.map.GameManager;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.Mappack;
+import jk_5.nailed.api.map.MappackMetadata;
 import jk_5.nailed.api.map.teleport.TeleportOptions;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.api.scripting.IMount;
@@ -60,7 +63,6 @@ public class NailedMap implements Map {
     private DefaultZoneManager zoneManager;
     private List<Player> players = Lists.newArrayList();
     private LocationHandler locationHandler;
-    private String name = "not a mappack, no name specified";
 
     private ServerMachine machine;
     public IMount mappackMount;
@@ -84,7 +86,6 @@ public class NailedMap implements Map {
 
         if(this.mappack == null){
             this.mounted = true; //Don't try to mount anything when we don't have a mappack
-            this.name = mappack.getMappackID() + " " + String.valueOf(id);
         }
     }
 
@@ -365,8 +366,4 @@ public class NailedMap implements Map {
     public float getInfoBarProgress(){ return 1;}
 
     public jk_5.nailed.api.map.LocationHandler getLocationHandler(){ return this.locationHandler; }
-
-    public String getName(){
-        return this.name;
-    }
 }
