@@ -17,7 +17,6 @@ import jk_5.nailed.util.ChatColor;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.WorldSettings;
-import scala.util.parsing.json.JSONObject;
 
 import java.util.EnumSet;
 import java.util.HashMap;

@@ -60,6 +60,7 @@ public class NailedMap implements Map {
     private DefaultZoneManager zoneManager;
     private List<Player> players = Lists.newArrayList();
     private LocationHandler locationHandler;
+    private String name = "not a mappack, no name specified";
 
     private ServerMachine machine;
     public IMount mappackMount;
@@ -83,6 +84,7 @@ public class NailedMap implements Map {
 
         if(this.mappack == null){
             this.mounted = true; //Don't try to mount anything when we don't have a mappack
+            this.name = mappack.getMappackID() + " " + String.valueOf(id);
         }
     }
 
@@ -363,4 +365,8 @@ public class NailedMap implements Map {
     public float getInfoBarProgress(){ return 1;}
 
     public jk_5.nailed.api.map.LocationHandler getLocationHandler(){ return this.locationHandler; }
+
+    public String getName(){
+        return this.name;
+    }
 }

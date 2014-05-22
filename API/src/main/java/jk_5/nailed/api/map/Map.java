@@ -59,4 +59,5 @@ public interface Map {
     public ChatComponentText getInfoBar();
     public float getInfoBarProgress();
     public LocationHandler getLocationHandler();
+    public String getName();
 }
