@@ -8,7 +8,6 @@ import jk_5.nailed.api.map.PossibleWinner;
 import jk_5.nailed.api.map.team.Team;
 import jk_5.nailed.api.scripting.ILuaObject;
 import jk_5.nailed.map.Location;
-import jk_5.nailed.map.Spawnpoint;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.Packet;
@@ -50,8 +49,8 @@ public interface Player extends PossibleWinner, ILuaObject {
     public Gamemode getGameMode();
     public void setGameMode(Gamemode mode);
     public boolean hasPermission(String node);
-    public void setSpawnpoint(Spawnpoint spawnpoint);
-    public Spawnpoint getSpawnpoint();
+    public void setSpawnpoint(Location spawnpoint);
+    public Location getSpawnpoint();
     public void setPdaID(int id);
     public int getPdaID();
     public NetHandlerPlayServer getNetHandler();

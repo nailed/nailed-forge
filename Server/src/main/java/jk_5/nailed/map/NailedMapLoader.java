@@ -16,7 +16,6 @@ import jk_5.nailed.api.events.MapRemovedEvent;
 import jk_5.nailed.api.map.*;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.map.gen.NailedWorldProvider;
-import jk_5.nailed.players.TeamUndefined;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.EntityDamageSource;
@@ -275,22 +274,6 @@ public class NailedMapLoader implements MapLoader {
                 m.getMachine().queueEvent("player_kill_player", source, player, event.source.damageType);
             }else{
                 m.getMachine().queueEvent("player_die", player, event.source.damageType);
-            }
-        }
-        if(!player.getCurrentMap().getGameManager().isGameRunning()) return;
-        if(player.getSpawnpoint() != null){
-            player.getEntity().setSpawnChunk(player.getSpawnpoint(), true);
-        }else if(player.getTeam() instanceof TeamUndefined){
-            Mappack mappack = map.getMappack();
-            if(mappack != null && mappack.getMappackMetadata().isChoosingRandomSpawnpointAtRespawn()){
-                List<Location> spawnpoints = mappack.getMappackMetadata().getRandomSpawnpoints();
-                Location chosen = spawnpoints.get(this.randomSpawnpointSelector.nextInt(spawnpoints.size()));
-                player.getEntity().setSpawnChunk(chosen.toChunkCoordinates(), true); //FIXME - Do this in ServerConfigurationManager.respawnPlayer
-            }
-        }else{
-            if(player.getTeam().shouldOverrideDefaultSpawnpoint()){
-                Location coords = player.getTeam().getSpawnpoint();
-                player.getEntity().setSpawnChunk(coords.toChunkCoordinates(), true); //FIXME
             }
         }
     }

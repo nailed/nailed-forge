@@ -24,7 +24,6 @@ import jk_5.nailed.chat.joinmessage.JoinMessageSender;
 import jk_5.nailed.ipc.IpcManager;
 import jk_5.nailed.map.Location;
 import jk_5.nailed.map.NailedMap;
-import jk_5.nailed.map.Spawnpoint;
 import jk_5.nailed.network.NailedNetworkHandler;
 import jk_5.nailed.network.NailedPacket;
 import jk_5.nailed.permissions.Group;
@@ -64,7 +63,7 @@ public class NailedPlayer implements Player, ILuaObject {
     private Map currentMap;
     private boolean online = false;
     private int fps;
-    private Spawnpoint spawnpoint;
+    private Location spawnpoint;
     private int pdaID = -1;
     private NetHandlerPlayServer netHandler;
     private boolean editModeEnabled = false;
@@ -269,7 +268,7 @@ public class NailedPlayer implements Player, ILuaObject {
     }
 
     @Override
-    public Spawnpoint getSpawnpoint() {
+    public Location getSpawnpoint() {
         return this.spawnpoint;
     }
 
@@ -304,7 +303,7 @@ public class NailedPlayer implements Player, ILuaObject {
     }
 
     @Override
-    public void setSpawnpoint(Spawnpoint spawnpoint) {
+    public void setSpawnpoint(Location spawnpoint) {
         this.spawnpoint = spawnpoint;
     }
 
@@ -413,10 +412,10 @@ public class NailedPlayer implements Player, ILuaObject {
                 return new Object[]{this.getEntity().inventory.clearInventory(null, -1)};
             case 3: //setSpawn
                 if(arguments.length == 3 && arguments[0] instanceof Double && arguments[1] instanceof Double && arguments[2] instanceof Double){
-                    Spawnpoint spawn = new Spawnpoint(((Double) arguments[0]).intValue(), ((Double) arguments[1]).intValue(), ((Double) arguments[2]).intValue());
+                    Location spawn = new Location(((Double) arguments[0]).intValue(), ((Double) arguments[1]).intValue(), ((Double) arguments[2]).intValue());
                     this.setSpawnpoint(spawn);
                 }else if(arguments.length == 5 && arguments[0] instanceof Double && arguments[1] instanceof Double && arguments[2] instanceof Double && arguments[3] instanceof Double && arguments[4] instanceof Double){
-                    Spawnpoint spawn = new Spawnpoint(((Double) arguments[0]).intValue(), ((Double) arguments[1]).intValue(), ((Double) arguments[2]).intValue(), ((Double) arguments[3]).floatValue(), ((Double) arguments[4]).floatValue());
+                    Location spawn = new Location(((Double) arguments[0]).intValue(), ((Double) arguments[1]).intValue(), ((Double) arguments[2]).intValue(), ((Double) arguments[3]).floatValue(), ((Double) arguments[4]).floatValue());
                     this.setSpawnpoint(spawn);
                 }else{
                     throw new Exception("Expected 3 int arguments, and 2 optional float arguments");

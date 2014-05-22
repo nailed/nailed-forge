@@ -1,8 +1,10 @@
 package jk_5.nailed.map.teleport;
 
 import com.google.common.base.Preconditions;
+import cpw.mods.fml.common.FMLCommonHandler;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.Mappack;
 import jk_5.nailed.api.map.teleport.TeleportEvent;
 import jk_5.nailed.api.map.teleport.TeleportOptions;
 import jk_5.nailed.api.map.teleport.Teleporter;
@@ -10,26 +12,28 @@ import jk_5.nailed.api.player.Player;
 import jk_5.nailed.api.player.PlayerClient;
 import jk_5.nailed.map.Location;
 import jk_5.nailed.map.gen.NailedWorldProvider;
+import jk_5.nailed.players.TeamUndefined;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.play.server.S05PacketSpawnPosition;
 import net.minecraft.network.play.server.S07PacketRespawn;
 import net.minecraft.network.play.server.S1DPacketEntityEffect;
 import net.minecraft.network.play.server.S1FPacketSetExperience;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.management.ItemInWorldManager;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.demo.DemoWorldManager;
 import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
-/**
- * {@inheritDoc}
- */
 public class NailedTeleporter implements Teleporter {
 
     /**
@@ -177,7 +181,76 @@ public class NailedTeleporter implements Teleporter {
     }
 
     @Override
-    public EntityPlayerMP respawnPlayer(EntityPlayerMP player, int dimension, boolean finishedEnd) {
-        return MinecraftServer.getServer().getConfigurationManager().respawnPlayer(player, dimension, finishedEnd);
+    public EntityPlayerMP respawnPlayer(EntityPlayerMP entity, int dimension, boolean finishedEnd) {
+        MinecraftServer server = MinecraftServer.getServer();
+        Player player = NailedAPI.getPlayerRegistry().getPlayer(entity);
+        Map destMap = NailedAPI.getMapLoader().getMap(dimension);
+        Map currentMap = NailedAPI.getMapLoader().getMap(entity.getServerForPlayer());
+        if(destMap == null){
+            destMap = NailedAPI.getMapLoader().getLobby();
+        }
+
+        currentMap.getWorld().getEntityTracker().removePlayerFromTrackers(entity);
+        currentMap.getWorld().getEntityTracker().removeEntityFromAllTrackingPlayers(entity);
+        currentMap.getWorld().getPlayerManager().removePlayer(entity);
+        server.getConfigurationManager().playerEntityList.remove(entity);
+        server.worldServerForDimension(entity.dimension).removePlayerEntityDangerously(entity); //Force the entity to be removed from it's current dimension
+
+        Location pos;
+        Mappack mappack = destMap.getMappack();
+        if(mappack == null){
+            pos = new Location(0, 64, 0);
+        }else{
+            pos = mappack.getMappackMetadata().getSpawnPoint();
+        }
+        if(destMap.getGameManager().isGameRunning()){
+            if(player.getSpawnpoint() != null){
+                pos = player.getSpawnpoint();
+            }else if(player.getTeam() instanceof TeamUndefined){
+                if(mappack != null && mappack.getMappackMetadata().isChoosingRandomSpawnpointAtRespawn()){
+                    List<Location> spawnpoints = mappack.getMappackMetadata().getRandomSpawnpoints();
+                    pos = spawnpoints.get(NailedAPI.getMapLoader().getRandomSpawnpointSelector().nextInt(spawnpoints.size()));
+                }
+            }else{
+                if(player.getTeam().shouldOverrideDefaultSpawnpoint()){
+                    pos = player.getTeam().getSpawnpoint();
+                }
+            }
+        }
+
+        entity.dimension = dimension;
+
+        ItemInWorldManager worldManager = server.isDemo() ? new DemoWorldManager(destMap.getWorld()) : new ItemInWorldManager(destMap.getWorld());
+
+        EntityPlayerMP newPlayer = new EntityPlayerMP(server, destMap.getWorld(), player.getGameProfile(), worldManager);
+        newPlayer.playerNetServerHandler = entity.playerNetServerHandler;
+        newPlayer.clonePlayer(entity, finishedEnd);
+        newPlayer.dimension = dimension;
+        newPlayer.setEntityId(entity.getEntityId());
+
+        worldManager.setGameType(entity.theItemInWorldManager.getGameType());
+        worldManager.initializeGameType(destMap.getWorld().getWorldInfo().getGameType());
+
+        newPlayer.setLocationAndAngles(pos.getX(), pos.getY(), pos.getZ(), pos.getYaw(), pos.getPitch());
+        destMap.getWorld().theChunkProviderServer.loadChunk((int) newPlayer.posX >> 4, (int) newPlayer.posZ >> 4);
+
+        if(player.getClient() == PlayerClient.NAILED || player.getClient() == PlayerClient.FORGE){
+            player.sendPacket(new S07PacketRespawn(newPlayer.dimension, destMap.getWorld().difficultySetting, destMap.getWorld().getWorldInfo().getTerrainType(), worldManager.getGameType()));
+        }else{
+            player.sendPacket(new S07PacketRespawn(0, destMap.getWorld().difficultySetting, destMap.getWorld().getWorldInfo().getTerrainType(), worldManager.getGameType()));
+        }
+        player.getNetHandler().setPlayerLocation(pos.getX(), pos.getY(), pos.getZ(), pos.getYaw(), pos.getPitch());
+        player.sendPacket(new S05PacketSpawnPosition(pos.getBlockX(), pos.getBlockY(), pos.getBlockZ()));
+        player.sendPacket(new S1FPacketSetExperience(newPlayer.experience, newPlayer.experienceTotal, newPlayer.experienceLevel));
+        server.getConfigurationManager().updateTimeAndWeatherForPlayer(newPlayer, destMap.getWorld());
+        destMap.getWorld().getPlayerManager().addPlayer(newPlayer);
+        destMap.getWorld().spawnEntityInWorld(newPlayer);
+        //noinspection unchecked
+        server.getConfigurationManager().playerEntityList.add(newPlayer);
+        newPlayer.addSelfToInternalCraftingInventory();
+        newPlayer.setHealth(newPlayer.getHealth());
+
+        FMLCommonHandler.instance().firePlayerRespawnEvent(newPlayer);
+        return newPlayer;
     }
 }
