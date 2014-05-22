@@ -1,6 +1,6 @@
 package jk_5.nailed.ipc.packet;
 
-import io.netty.buffer.ByteBuf;
+import io.netty.buffer.*;
 
 /**
  * No description given

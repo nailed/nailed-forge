@@ -1,13 +1,10 @@
 package jk_5.nailed.permissions;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import net.minecraftforge.permissions.api.PermissionsManager;
-import net.minecraftforge.permissions.api.RegisteredPermValue;
-import net.minecraftforge.permissions.api.UnregisterredPermissionException;
+import java.util.*;
 
-import java.util.List;
-import java.util.Map;
+import com.google.common.collect.*;
+
+import net.minecraftforge.permissions.api.*;
 
 /**
  * No description given
@@ -20,19 +17,22 @@ public class Group {
     private final List<Group> inheritions = Lists.newArrayList();
     private final String name;
 
-    @GroupOption("prefix") private String prefix = "";
-    @GroupOption("suffix") private String suffix = "";
-    @GroupOption("default") private boolean isDefault = false;
+    @GroupOption("prefix")
+    private String prefix = "";
+    @GroupOption("suffix")
+    private String suffix = "";
+    @GroupOption("default")
+    private boolean isDefault = false;
 
     public Group(String name) {
         this.name = name;
     }
 
-    public RegisteredPermValue hasPermission(String node){
+    public RegisteredPermValue hasPermission(String node) {
         return this.hasPermission(node, ((NailedPermissionFactory) PermissionsManager.getPermFactory()).getPerms().get(node));
     }
 
-    RegisteredPermValue hasPermission(String node, RegisteredPermValue def){
+    RegisteredPermValue hasPermission(String node, RegisteredPermValue def) {
         if(def == null){
             throw new UnregisterredPermissionException(node);
         }

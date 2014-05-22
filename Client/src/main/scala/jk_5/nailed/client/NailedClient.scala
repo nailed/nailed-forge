@@ -5,7 +5,6 @@ import cpw.mods.fml.relauncher.FMLLaunchHandler
 import cpw.mods.fml.common.Mod.EventHandler
 import cpw.mods.fml.common.event.{FMLInitializationEvent, FMLPreInitializationEvent}
 import jk_5.nailed.NailedLog
-import jk_5.nailed.client.achievement.NailedAchievements
 import jk_5.nailed.client.network.ClientNetworkHandler
 import net.minecraftforge.common.{DimensionManager, MinecraftForge}
 import jk_5.nailed.client.render._
@@ -28,7 +27,7 @@ object Constants {
   final val MODID = "Nailed"
 }
 
-@Mod(modid = Constants.MODID, version = "0.1", useMetadata = true, certificateFingerprint = "87401ecb3314a1a18fb267281b2432975a7e2e84", guiFactory = "jk_5.nailed.client.config.NailedConfigGuiFactory", modLanguage = "scala")
+@Mod(modid = Constants.MODID, version = "0.1", useMetadata = true, certificateFingerprint = "87401ecb3314a1a18fb267281b2432975a7e2e84", modLanguage = "scala")
 object NailedClient {
   if(FMLLaunchHandler.side.isServer){
     throw new RuntimeException("Nailed-Client is client-only, don\'t use it on the server!")
@@ -41,9 +40,6 @@ object NailedClient {
   @EventHandler def preInit(event: FMLPreInitializationEvent){
     val cfg = event.getSuggestedConfigurationFile
     if(cfg.exists()) cfg.delete()
-
-    NailedLog.info("Loading achievements")
-    NailedAchievements.addAchievements()
 
     NailedLog.info("Registering network handlers")
     ClientNetworkHandler.registerChannel()
@@ -77,8 +73,6 @@ object NailedClient {
   }
 
   @Mod.EventHandler def init(event: FMLInitializationEvent){
-    NailedLog.info("Registering achievements")
-    NailedAchievements.init()
     fixedWidthFontRenderer = new FixedWidthFontRenderer
   }
 }

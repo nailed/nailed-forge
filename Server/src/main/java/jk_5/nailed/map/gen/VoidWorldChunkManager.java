@@ -1,31 +1,30 @@
 package jk_5.nailed.map.gen;
 
-import jk_5.nailed.NailedLog;
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.map.Map;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.world.ChunkPosition;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.WorldChunkManager;
+import java.util.*;
 
-import java.util.List;
-import java.util.Random;
+import net.minecraft.init.*;
+import net.minecraft.util.*;
+import net.minecraft.world.*;
+import net.minecraft.world.biome.*;
+
+import jk_5.nailed.*;
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.map.Map;
 
 public class VoidWorldChunkManager extends WorldChunkManager {
 
     private World world;
-    
-    public VoidWorldChunkManager(World world){
+
+    public VoidWorldChunkManager(World world) {
         super(world);
         this.world = world;
     }
 
     @Override
-    public ChunkPosition findBiomePosition(int x, int z, int range, List biomes, Random rand){
+    public ChunkPosition findBiomePosition(int x, int z, int range, List biomes, Random rand) {
         ChunkPosition ret = super.findBiomePosition(x, z, range, biomes, rand);
-        if (x == 0 && z == 0 && !world.getWorldInfo().isInitialized()){
-            if (ret == null){
+        if(x == 0 && z == 0 && !world.getWorldInfo().isInitialized()){
+            if(ret == null){
                 ret = new ChunkPosition(0, 0, 0);
             }
             Map map = NailedAPI.getMapLoader().getMap(this.world);

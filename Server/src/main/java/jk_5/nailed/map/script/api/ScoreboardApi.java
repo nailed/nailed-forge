@@ -1,16 +1,13 @@
 package jk_5.nailed.map.script.api;
 
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.map.scoreboard.DisplayType;
-import jk_5.nailed.api.map.scoreboard.Objective;
-import jk_5.nailed.api.map.scoreboard.ScoreboardManager;
-import jk_5.nailed.api.map.scoreboard.ScoreboardTeam;
-import jk_5.nailed.api.scripting.ILuaAPI;
-import jk_5.nailed.api.scripting.ILuaContext;
-import jk_5.nailed.map.script.IAPIEnvironment;
-import org.luaj.vm2.LuaFunction;
+import java.util.*;
 
-import java.util.HashMap;
+import org.luaj.vm2.*;
+
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.map.scoreboard.*;
+import jk_5.nailed.api.scripting.*;
+import jk_5.nailed.map.script.*;
 
 /**
  * No description given
@@ -28,27 +25,27 @@ public class ScoreboardApi implements ILuaAPI {
     }
 
     @Override
-    public String[] getNames(){
+    public String[] getNames() {
         return new String[]{"scoreboard"};
     }
 
     @Override
-    public void startup(){
+    public void startup() {
         this.manager = NailedAPI.getMapLoader().getMap(env.getMachine().getMachine().getWorld()).getScoreboardManager();
     }
 
     @Override
-    public void advance(double paramDouble){
+    public void advance(double paramDouble) {
 
     }
 
     @Override
-    public void shutdown(){
+    public void shutdown() {
 
     }
 
     @Override
-    public String[] getMethodNames(){
+    public String[] getMethodNames() {
         return new String[]{
                 "getObjective",
                 "getTeam",
@@ -57,7 +54,7 @@ public class ScoreboardApi implements ILuaAPI {
     }
 
     @Override
-    public Object[] callMethod(ILuaContext context, int method, Object[] arguments) throws Exception{
+    public Object[] callMethod(ILuaContext context, int method, Object[] arguments) throws Exception {
         switch(method){
             case 0: //getObjective
                 if(arguments.length == 1 && arguments[0] instanceof String){
@@ -79,7 +76,7 @@ public class ScoreboardApi implements ILuaAPI {
                         //noinspection unchecked
                         HashMap<String, LuaFunction> obj = (HashMap<String, LuaFunction>) arguments[0];
                         String type = obj.get("getType").call().checkjstring();
-                        if(type.equals("objective")){
+                        if("objective".equals(type)){
                             String id = obj.get("getId").call().checkjstring();
                             Objective objective = this.manager.getObjective(id);
                             if(objective == null){
@@ -87,11 +84,11 @@ public class ScoreboardApi implements ILuaAPI {
                             }
                             DisplayType typ;
                             String inType = (String) arguments[1];
-                            if(inType.equalsIgnoreCase("list")){
+                            if("list".equalsIgnoreCase(inType)){
                                 typ = DisplayType.PLAYER_LIST;
-                            }else if(inType.equalsIgnoreCase("belowName")){
+                            }else if("belowName".equalsIgnoreCase(inType)){
                                 typ = DisplayType.BELOW_NAME;
-                            }else if(inType.equalsIgnoreCase("sidebar")){
+                            }else if("sidebar".equalsIgnoreCase(inType)){
                                 typ = DisplayType.SIDEBAR;
                             }else{
                                 throw new Exception("Unknown display type: " + inType);

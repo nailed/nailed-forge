@@ -1,14 +1,14 @@
 package jk_5.nailed.coremod.transformers;
 
-import jk_5.nailed.coremod.NailedFMLPlugin;
-import jk_5.nailed.coremod.asm.ASMHelper;
-import jk_5.nailed.coremod.asm.Mapping;
-import net.minecraft.launchwrapper.IClassTransformer;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Opcodes;
+import java.util.*;
+
+import org.objectweb.asm.*;
 import org.objectweb.asm.tree.*;
 
-import java.util.Map;
+import net.minecraft.launchwrapper.*;
+
+import jk_5.nailed.coremod.*;
+import jk_5.nailed.coremod.asm.*;
 
 /**
  * No description given
@@ -20,14 +20,16 @@ public class MinecraftServerTransformer implements IClassTransformer {
     private static final String MAP_CLASS = "jk_5/nailed/map/LobbyMap";
 
     @Override
-    public byte[] transform(String name, String transformedName, byte[] bytes){
+    public byte[] transform(String name, String transformedName, byte[] bytes) {
         if(transformedName.equals(TransformerData.minecraftServerDeobfuscated.get("className"))){
             if(NailedFMLPlugin.obfuscated){
                 return transformMinecraftServer(bytes, TransformerData.minecraftServerObfuscated);
             }else{
                 return transformMinecraftServer(bytes, TransformerData.minecraftServerDeobfuscated);
             }
-        }else return bytes;
+        }else{
+            return bytes;
+        }
     }
 
     public byte[] transformMinecraftServer(byte[] bytes, Map<String, String> data) {
@@ -39,11 +41,15 @@ public class MinecraftServerTransformer implements IClassTransformer {
         int offset = 0;
         int numOfNews = 0;
         while(numOfNews != 9){
-            while(mnode.instructions.get(offset).getOpcode() != Opcodes.NEW) offset ++;
-            offset ++;
-            numOfNews ++;
+            while(mnode.instructions.get(offset).getOpcode() != Opcodes.NEW){
+                offset++;
+            }
+            offset++;
+            numOfNews++;
         }
-        while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKESPECIAL) offset ++;
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKESPECIAL){
+            offset++;
+        }
 
         /*
          *  Inject:
@@ -61,10 +67,16 @@ public class MinecraftServerTransformer implements IClassTransformer {
         mnode.instructions.insertBefore(mnode.instructions.get(offset - 4), list);
 
         //Hack the this.anvilConverterForAnvilFile = new AnvilSaveConverter(par1File); to use the file we created above
-        while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKESPECIAL) offset ++;
-        while(mnode.instructions.get(offset).getOpcode() != Opcodes.ALOAD) offset ++;
-        offset ++;
-        while(mnode.instructions.get(offset).getOpcode() != Opcodes.ALOAD) offset ++;
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKESPECIAL){
+            offset++;
+        }
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.ALOAD){
+            offset++;
+        }
+        offset++;
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.ALOAD){
+            offset++;
+        }
         VarInsnNode varNode = (VarInsnNode) mnode.instructions.get(offset);
         varNode.var = 5;
 
@@ -73,8 +85,12 @@ public class MinecraftServerTransformer implements IClassTransformer {
         offset = 0;
         list.clear();
 
-        while(mnode.instructions.get(offset).getOpcode() != Opcodes.LDC) offset ++;
-        while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKEVIRTUAL) offset ++;
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.LDC){
+            offset++;
+        }
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKEVIRTUAL){
+            offset++;
+        }
 
         //Inject: LobbyMap localLobbyMap = new LobbyMap();
         list.add(new TypeInsnNode(Opcodes.NEW, MAP_CLASS));
@@ -86,8 +102,12 @@ public class MinecraftServerTransformer implements IClassTransformer {
 
         //Modify ISaveHandler isavehandler = this.anvilConverterForAnvilFile.getSaveLoader(par2Str, true);
         //Let it use localLobbyMap.getSaveFileName() instead of par2Str
-        while(mnode.instructions.get(offset).getOpcode() != Opcodes.GETFIELD) offset ++;
-        while(mnode.instructions.get(offset).getOpcode() != Opcodes.ALOAD) offset ++;
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.GETFIELD){
+            offset++;
+        }
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.ALOAD){
+            offset++;
+        }
         mnode.instructions.remove(mnode.instructions.get(offset));
 
         list.clear();
@@ -111,13 +131,19 @@ public class MinecraftServerTransformer implements IClassTransformer {
                     list.clear();
                 }
             }
-            offset ++;
+            offset++;
         }
 
-        while(mnode.instructions.get(offset).getOpcode() != Opcodes.IF_ICMPGE) offset ++;
-        while(mnode.instructions.get(offset).getOpcode() != Opcodes.ILOAD) offset ++;
-        offset ++;
-        while(mnode.instructions.get(offset).getOpcode() != Opcodes.ILOAD) offset ++;
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.IF_ICMPGE){
+            offset++;
+        }
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.ILOAD){
+            offset++;
+        }
+        offset++;
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.ILOAD){
+            offset++;
+        }
 
         //Modify the end and nether world names from DIM_-1 and DIM_1 to their nailed names (map_-1 and map_1)
         //First we get the name from the mappack
@@ -132,8 +158,12 @@ public class MinecraftServerTransformer implements IClassTransformer {
         list.clear();
 
         //Now we find the ALOAD 2 and replace it by ALOAD 17
-        while(mnode.instructions.get(offset).getOpcode() != Opcodes.GOTO) offset ++;
-        while(mnode.instructions.get(offset).getOpcode() != Opcodes.DUP) offset ++;
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.GOTO){
+            offset++;
+        }
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.DUP){
+            offset++;
+        }
         offset += 3; //ALOAD 2
         VarInsnNode vnode = (VarInsnNode) mnode.instructions.get(offset);
         vnode.var = 17;

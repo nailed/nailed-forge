@@ -1,70 +1,52 @@
 package jk_5.nailed;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.event.*;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.network.NetworkCheckHandler;
-import cpw.mods.fml.relauncher.FMLLaunchHandler;
-import cpw.mods.fml.relauncher.Side;
-import jk_5.nailed.achievement.AchievementEventListener;
-import jk_5.nailed.achievement.NailedAchievements;
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.events.RegisterZoneEvent;
-import jk_5.nailed.api.plugin.DefaultPluginManager;
-import jk_5.nailed.api.plugin.Plugin;
-import jk_5.nailed.api.plugin.PluginManager;
-import jk_5.nailed.api.plugin.internal.InternalPluginLoader;
-import jk_5.nailed.api.plugin.java.JavaPluginLoader;
-import jk_5.nailed.blocks.NailedBlocks;
-import jk_5.nailed.camera.MovementHandler;
-import jk_5.nailed.chat.joinmessage.JoinMessageSender;
-import jk_5.nailed.ipc.IpcEventListener;
-import jk_5.nailed.ipc.IpcManager;
-import jk_5.nailed.irc.IrcBot;
-import jk_5.nailed.item.NailedItems;
-import jk_5.nailed.map.NailedMapLoader;
-import jk_5.nailed.map.gen.NailedWorldProvider;
-import jk_5.nailed.map.mappack.NailedMappackLoader;
-import jk_5.nailed.map.stat.RegisterStatTypeEvent;
-import jk_5.nailed.map.stat.StatEventHandler;
-import jk_5.nailed.map.stat.StatTypeManager;
-import jk_5.nailed.map.teleport.NailedTeleporter;
-import jk_5.nailed.map.teleport.TeleportEventListenerEffect;
-import jk_5.nailed.map.teleport.TeleportEventListenerForge;
-import jk_5.nailed.map.teleport.TeleportEventListenerMotion;
-import jk_5.nailed.network.NailedNetworkHandler;
-import jk_5.nailed.permissions.NailedPermissionFactory;
-import jk_5.nailed.permissions.PermissionEventHandler;
-import jk_5.nailed.permissions.zone.NailedZoneRegistry;
-import jk_5.nailed.permissions.zone.types.CircleZoneType;
-import jk_5.nailed.permissions.zone.types.CubeZoneType;
-import jk_5.nailed.permissions.zone.types.SphereZoneType;
-import jk_5.nailed.permissions.zone.types.SquareZoneType;
-import jk_5.nailed.players.NailedPlayerRegistry;
-import jk_5.nailed.scheduler.NailedScheduler;
-import jk_5.nailed.scheduler.SchedulerCrashCallable;
-import jk_5.nailed.server.command.LoggingCommandListener;
-import jk_5.nailed.server.command.NailedCommandManager;
-import jk_5.nailed.util.MotdManager;
-import jk_5.nailed.util.NailedFoodStats;
-import jk_5.nailed.util.invsee.InvSeeTicker;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.permissions.api.PermissionsManager;
-import net.minecraftforge.permissions.api.RegisteredPermValue;
-import org.apache.commons.io.IOUtils;
-
 import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
+import java.text.*;
+import java.util.*;
+
+import com.google.gson.*;
+
+import org.apache.commons.io.*;
+
+import net.minecraft.entity.player.*;
+import net.minecraft.server.*;
+
+import cpw.mods.fml.common.*;
+import cpw.mods.fml.common.Mod.*;
+import cpw.mods.fml.common.event.*;
+import cpw.mods.fml.common.eventhandler.*;
+import cpw.mods.fml.common.network.*;
+import cpw.mods.fml.relauncher.*;
+
+import net.minecraftforge.common.*;
+import net.minecraftforge.event.entity.*;
+import net.minecraftforge.permissions.api.*;
+
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.events.*;
+import jk_5.nailed.api.plugin.*;
+import jk_5.nailed.api.plugin.internal.*;
+import jk_5.nailed.api.plugin.java.*;
+import jk_5.nailed.blocks.*;
+import jk_5.nailed.camera.*;
+import jk_5.nailed.chat.joinmessage.*;
+import jk_5.nailed.ipc.*;
+import jk_5.nailed.irc.*;
+import jk_5.nailed.item.*;
+import jk_5.nailed.map.*;
+import jk_5.nailed.map.gen.*;
+import jk_5.nailed.map.mappack.*;
+import jk_5.nailed.map.stat.*;
+import jk_5.nailed.map.teleport.*;
+import jk_5.nailed.network.*;
+import jk_5.nailed.permissions.*;
+import jk_5.nailed.permissions.zone.*;
+import jk_5.nailed.permissions.zone.types.*;
+import jk_5.nailed.players.*;
+import jk_5.nailed.scheduler.*;
+import jk_5.nailed.server.command.*;
+import jk_5.nailed.util.*;
+import jk_5.nailed.util.invsee.*;
 
 /**
  * No description given
@@ -73,6 +55,8 @@ import java.util.Map;
  */
 @Mod(modid = NailedServer.modid, version = "0.1", useMetadata = true, certificateFingerprint = "87401ecb3314a1a18fb267281b2432975a7e2e84")
 public class NailedServer {
+
+    public static final String COMMANDBLOCK_PERMISSION = "minecraft.commandBlock.edit";
 
     protected static final String modid = "Nailed";
     private static JsonObject config;
@@ -83,9 +67,7 @@ public class NailedServer {
 
     private static PluginManager pluginManager = new DefaultPluginManager();
 
-    public static final String COMMANDBLOCK_PERMISSION = "minecraft.commandBlock.edit";
-
-    public NailedServer(){
+    public NailedServer() {
         if(FMLLaunchHandler.side().isClient()){
             throw new RuntimeException("Nailed-Server is server-only, don\'t use it on the client!");
         }
@@ -108,7 +90,7 @@ public class NailedServer {
     }
 
     @EventHandler
-    public void preInit(FMLPreInitializationEvent event){
+    public void preInit(FMLPreInitializationEvent event) {
         File configDir = new File(event.getModConfigurationDirectory(), "nailed");
         configDir.mkdirs();
 
@@ -123,7 +105,7 @@ public class NailedServer {
                 IOUtils.copy(is, pw);
             }catch(Exception e){
                 NailedLog.fatal("Error while creating default config file", e);
-            }finally {
+            }finally{
                 IOUtils.closeQuietly(is);
                 IOUtils.closeQuietly(pw);
             }
@@ -131,12 +113,12 @@ public class NailedServer {
 
         NailedLog.info("Creating config file");
         FileReader fr = null;
-        try {
+        try{
             fr = new FileReader(configFile);
             config = (JsonObject) new JsonParser().parse(fr);
-        } catch (FileNotFoundException e) {
+        }catch(FileNotFoundException e){
             e.printStackTrace();
-        }finally {
+        }finally{
             IOUtils.closeQuietly(fr);
         }
 
@@ -149,9 +131,6 @@ public class NailedServer {
 
         NailedLog.info("Loading join message");
         JoinMessageSender.readConfig(configDir);
-        
-        NailedLog.info("Loading achievements");
-        NailedAchievements.addAchievements();
 
         NailedLog.info("Initializing network pipeline");
         NailedNetworkHandler.registerChannel();
@@ -162,7 +141,6 @@ public class NailedServer {
         MinecraftForge.EVENT_BUS.register(NailedAPI.getPlayerRegistry());
         MinecraftForge.EVENT_BUS.register(NailedAPI.getMapLoader());
         MinecraftForge.EVENT_BUS.register(NailedAPI.getMappackLoader());
-        MinecraftForge.EVENT_BUS.register(new AchievementEventListener());
         MinecraftForge.EVENT_BUS.register(new StatEventHandler());
         MinecraftForge.EVENT_BUS.register(new TeleportEventListenerForge());
         MinecraftForge.EVENT_BUS.register(new TeleportEventListenerEffect());
@@ -204,11 +182,8 @@ public class NailedServer {
     }
 
     @EventHandler
-    public void init(FMLInitializationEvent event){
+    public void init(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.post(new RegisterStatTypeEvent(StatTypeManager.instance().getStatTypes()));
-
-        NailedLog.info("Registering achievements");
-        NailedAchievements.init();
 
         NailedLog.info("Registering permissions");
         JoinMessageSender.registerPermissions();
@@ -219,7 +194,7 @@ public class NailedServer {
     }
 
     @EventHandler
-    public void postInit(FMLPostInitializationEvent event){
+    public void postInit(FMLPostInitializationEvent event) {
         NailedLog.info("Loading the mappacks");
         NailedAPI.getMappackLoader().loadMappacks(null);
 
@@ -227,14 +202,14 @@ public class NailedServer {
     }
 
     @EventHandler
-    public void serverAboutToStart(FMLServerAboutToStartEvent event){
+    public void serverAboutToStart(FMLServerAboutToStartEvent event) {
         IpcManager.instance().start();
 
         NailedAPI.getZoneRegistry().lockZones();
     }
 
     @EventHandler
-    public void serverStarted(FMLServerStartedEvent event){
+    public void serverStarted(FMLServerStartedEvent event) {
         PermissionsManager.addPermissionsToFactory();
 
         NailedLog.info("Reading permission config");
@@ -244,7 +219,7 @@ public class NailedServer {
     }
 
     @SubscribeEvent
-    public void onPlayerJoin(EntityJoinWorldEvent event){
+    public void onPlayerJoin(EntityJoinWorldEvent event) {
         if(event.entity instanceof EntityPlayer){
             EntityPlayer player = (EntityPlayer) event.entity;
             player.foodStats = new NailedFoodStats();
@@ -252,7 +227,7 @@ public class NailedServer {
     }
 
     @SubscribeEvent
-    public void onZoneRegistry(RegisterZoneEvent event){
+    public void onZoneRegistry(RegisterZoneEvent event) {
         event.registerZoneType("Square", new SquareZoneType());
         event.registerZoneType("Cube", new CubeZoneType());
         event.registerZoneType("Circle", new CircleZoneType());
@@ -267,7 +242,7 @@ public class NailedServer {
         return NailedServer.providerID;
     }
 
-    public void loadPlugins(){
+    public void loadPlugins() {
         pluginManager.registerLoader(JavaPluginLoader.class);
         pluginManager.registerLoader(InternalPluginLoader.class);
 
@@ -289,7 +264,7 @@ public class NailedServer {
     }
 
     @NetworkCheckHandler
-    public boolean accepts(Map<String, String> mods, Side side){
+    public boolean accepts(Map<String, String> mods, Side side) {
         return true;
     }
 }

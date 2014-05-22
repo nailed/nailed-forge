@@ -1,12 +1,12 @@
 package jk_5.nailed.server.command;
 
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.teleport.TeleportOptions;
-import jk_5.nailed.api.player.Player;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.command.WrongUsageException;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.command.*;
+import net.minecraft.entity.player.*;
+
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.map.*;
+import jk_5.nailed.api.map.teleport.*;
+import jk_5.nailed.api.player.*;
 
 /**
  * No description given
@@ -15,12 +15,12 @@ import net.minecraft.entity.player.EntityPlayerMP;
  */
 public class CommandRandomSpawnpoint extends NailedCommand {
 
-    public CommandRandomSpawnpoint(){
+    public CommandRandomSpawnpoint() {
         super("randomspawnpoint");
     }
 
     @Override
-    public void processCommandPlayer(Player sender, Map map, String[] args){
+    public void processCommandPlayer(Player sender, Map map, String[] args) {
         if(args.length == 0){
             TeleportOptions options = new TeleportOptions();
             options.setLocation(map.getRandomSpawnpoint());
@@ -31,7 +31,7 @@ public class CommandRandomSpawnpoint extends NailedCommand {
     }
 
     @Override
-    public void processCommandWithMap(ICommandSender sender, Map map, String[] args){
+    public void processCommandWithMap(ICommandSender sender, Map map, String[] args) {
         if(args.length == 1){
             EntityPlayerMP[] players = getPlayersList(sender, args[0]);
             for(EntityPlayerMP player : players){
@@ -39,6 +39,8 @@ public class CommandRandomSpawnpoint extends NailedCommand {
                 options.setLocation(map.getRandomSpawnpoint());
                 NailedAPI.getTeleporter().teleportEntity(player, options);
             }
-        }else throw new WrongUsageException(this.getCommandUsage(sender));
+        }else{
+            throw new WrongUsageException(this.getCommandUsage(sender));
+        }
     }
 }

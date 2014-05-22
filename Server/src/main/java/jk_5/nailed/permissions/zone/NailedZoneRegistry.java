@@ -1,14 +1,14 @@
 package jk_5.nailed.permissions.zone;
 
-import com.google.common.collect.Maps;
-import jk_5.nailed.api.events.RegisterZoneEvent;
-import jk_5.nailed.api.zone.IZoneType;
-import jk_5.nailed.api.zone.ZoneRegistry;
-import net.minecraftforge.common.MinecraftForge;
+import java.util.*;
+import javax.annotation.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Map;
+import com.google.common.collect.*;
+
+import net.minecraftforge.common.*;
+
+import jk_5.nailed.api.events.*;
+import jk_5.nailed.api.zone.*;
 
 /**
  * No description given

@@ -1,11 +1,12 @@
 package jk_5.nailed.map.scoreboard;
 
-import com.google.common.base.Preconditions;
-import jk_5.nailed.api.map.scoreboard.Objective;
-import jk_5.nailed.api.map.scoreboard.Score;
-import net.minecraft.network.play.server.S3CPacketUpdateScore;
+import javax.annotation.*;
 
-import javax.annotation.Nonnull;
+import com.google.common.base.*;
+
+import net.minecraft.network.play.server.*;
+
+import jk_5.nailed.api.map.scoreboard.*;
 
 /**
  * No description given
@@ -18,7 +19,7 @@ public class ScoreImpl implements Score {
     private final String name;
     private int value = 0;
 
-    public ScoreImpl(@Nonnull Objective owner, @Nonnull String name){
+    public ScoreImpl(@Nonnull Objective owner, @Nonnull String name) {
         Preconditions.checkNotNull(owner, "owner");
         Preconditions.checkNotNull(name, "name");
         Preconditions.checkArgument(name.length() <= 16, "name may not be longer than 16");
@@ -28,19 +29,19 @@ public class ScoreImpl implements Score {
     }
 
     @Override
-    public void setValue(int value){
+    public void setValue(int value) {
         this.value = value;
         this.update();
     }
 
     @Override
-    public void addValue(int value){
+    public void addValue(int value) {
         this.value += value;
         this.update();
     }
 
     @Override
-    public void update(){
+    public void update() {
         S3CPacketUpdateScore p = new S3CPacketUpdateScore();
         p.field_149329_a = this.name;
         p.field_149327_b = this.owner.getId();
@@ -51,7 +52,7 @@ public class ScoreImpl implements Score {
 
     @Override
     @Nonnull
-    public String getName(){
+    public String getName() {
         return name;
     }
 

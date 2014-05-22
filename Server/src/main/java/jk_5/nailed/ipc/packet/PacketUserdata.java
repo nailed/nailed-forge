@@ -1,11 +1,12 @@
 package jk_5.nailed.ipc.packet;
 
-import io.netty.buffer.ByteBuf;
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.player.Player;
-import jk_5.nailed.chat.joinmessage.JoinMessageSender;
-import jk_5.nailed.ipc.PacketUtils;
-import jk_5.nailed.web.auth.WebUser;
+import io.netty.buffer.*;
+
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.player.*;
+import jk_5.nailed.chat.joinmessage.*;
+import jk_5.nailed.ipc.*;
+import jk_5.nailed.web.auth.*;
 
 /**
  * No description given
@@ -31,12 +32,12 @@ public class PacketUserdata extends IpcPacket {
     }
 
     @Override
-    public void encode(ByteBuf buffer){
+    public void encode(ByteBuf buffer) {
 
     }
 
     @Override
-    public void decode(ByteBuf buffer){
+    public void decode(ByteBuf buffer) {
         this.id = PacketUtils.readString(buffer);
         this.username = PacketUtils.readString(buffer);
         this.fullname = PacketUtils.readString(buffer);
@@ -44,9 +45,11 @@ public class PacketUserdata extends IpcPacket {
     }
 
     @Override
-    public void processPacket(){
+    public void processPacket() {
         Player p = NailedAPI.getPlayerRegistry().getPlayerByUsername(this.username);
-        if(p == null) return;
+        if(p == null){
+            return;
+        }
         p.setWebUser(new WebUser(id, username, fullname, email, true));
         JoinMessageSender.onPlayerJoin(p);
     }

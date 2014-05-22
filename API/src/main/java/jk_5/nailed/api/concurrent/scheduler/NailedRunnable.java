@@ -1,6 +1,6 @@
 package jk_5.nailed.api.concurrent.scheduler;
 
-import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.*;
 
 /**
  * This class is provided as an easy way to handle scheduling tasks.
@@ -25,7 +25,7 @@ public abstract class NailedRunnable implements Runnable {
      *
      * @return a Task that contains the id number
      * @throws IllegalArgumentException if plugin is null
-     * @throws IllegalStateException if this was already scheduled
+     * @throws IllegalStateException    if this was already scheduled
      * @see Scheduler#runTask(NailedRunnable)
      */
     public synchronized Task runTask() throws IllegalArgumentException, IllegalStateException {
@@ -36,15 +36,15 @@ public abstract class NailedRunnable implements Runnable {
     /**
      * <b>Asynchronous tasks should never access any API in Nailed. Great care
      * should be taken to assure the thread-safety of asynchronous tasks.</b>
-     * <p>
+     * <p/>
      * Schedules this in the Nailed scheduler to run asynchronously.
      *
      * @return a Task that contains the id number
      * @throws IllegalArgumentException if plugin is null
-     * @throws IllegalStateException if this was already scheduled
+     * @throws IllegalStateException    if this was already scheduled
      * @see Scheduler#runTaskAsynchronously(NailedRunnable)
      */
-    public synchronized Task runTaskAsynchronously() throws IllegalArgumentException, IllegalStateException  {
+    public synchronized Task runTaskAsynchronously() throws IllegalArgumentException, IllegalStateException {
         checkState();
         return setupId(NailedAPI.getScheduler().runTaskAsynchronously(this));
     }
@@ -55,10 +55,10 @@ public abstract class NailedRunnable implements Runnable {
      * @param delay the ticks to wait before running the task
      * @return a Task that contains the id number
      * @throws IllegalArgumentException if plugin is null
-     * @throws IllegalStateException if this was already scheduled
+     * @throws IllegalStateException    if this was already scheduled
      * @see Scheduler#runTaskLater(NailedRunnable, long)
      */
-    public synchronized Task runTaskLater(long delay) throws IllegalArgumentException, IllegalStateException  {
+    public synchronized Task runTaskLater(long delay) throws IllegalArgumentException, IllegalStateException {
         checkState();
         return setupId(NailedAPI.getScheduler().runTaskLater(this, delay));
     }
@@ -66,17 +66,17 @@ public abstract class NailedRunnable implements Runnable {
     /**
      * <b>Asynchronous tasks should never access any API in Nailed. Great care
      * should be taken to assure the thread-safety of asynchronous tasks.</b>
-     * <p>
+     * <p/>
      * Schedules this to run asynchronously after the specified number of
      * server ticks.
      *
      * @param delay the ticks to wait before running the task
      * @return a Task that contains the id number
      * @throws IllegalArgumentException if plugin is null
-     * @throws IllegalStateException if this was already scheduled
+     * @throws IllegalStateException    if this was already scheduled
      * @see Scheduler#runTaskLaterAsynchronously(NailedRunnable, long)
      */
-    public synchronized Task runTaskLaterAsynchronously(long delay) throws IllegalArgumentException, IllegalStateException  {
+    public synchronized Task runTaskLaterAsynchronously(long delay) throws IllegalArgumentException, IllegalStateException {
         checkState();
         return setupId(NailedAPI.getScheduler().runTaskLaterAsynchronously(this, delay));
     }
@@ -85,14 +85,14 @@ public abstract class NailedRunnable implements Runnable {
      * Schedules this to repeatedly run until cancelled, starting after the
      * specified number of server ticks.
      *
-     * @param delay the ticks to wait before running the task
+     * @param delay  the ticks to wait before running the task
      * @param period the ticks to wait between runs
      * @return a Task that contains the id number
      * @throws IllegalArgumentException if plugin is null
-     * @throws IllegalStateException if this was already scheduled
+     * @throws IllegalStateException    if this was already scheduled
      * @see Scheduler#runTaskTimer(NailedRunnable, long, long)
      */
-    public synchronized Task runTaskTimer(long delay, long period) throws IllegalArgumentException, IllegalStateException  {
+    public synchronized Task runTaskTimer(long delay, long period) throws IllegalArgumentException, IllegalStateException {
         checkState();
         return setupId(NailedAPI.getScheduler().runTaskTimer(this, delay, period));
     }
@@ -100,19 +100,19 @@ public abstract class NailedRunnable implements Runnable {
     /**
      * <b>Asynchronous tasks should never access any API in Nailed. Great care
      * should be taken to assure the thread-safety of asynchronous tasks.</b>
-     * <p>
+     * <p/>
      * Schedules this to repeatedly run asynchronously until cancelled,
      * starting after the specified number of server ticks.
      *
-     * @param delay the ticks to wait before running the task for the first
-     *     time
+     * @param delay  the ticks to wait before running the task for the first
+     *               time
      * @param period the ticks to wait between runs
      * @return a Task that contains the id number
      * @throws IllegalArgumentException if plugin is null
-     * @throws IllegalStateException if this was already scheduled
+     * @throws IllegalStateException    if this was already scheduled
      * @see Scheduler#runTaskTimerAsynchronously(NailedRunnable, long, long)
      */
-    public synchronized Task runTaskTimerAsynchronously(long delay, long period) throws IllegalArgumentException, IllegalStateException  {
+    public synchronized Task runTaskTimerAsynchronously(long delay, long period) throws IllegalArgumentException, IllegalStateException {
         checkState();
         return setupId(NailedAPI.getScheduler().runTaskTimerAsynchronously(this, delay, period));
     }

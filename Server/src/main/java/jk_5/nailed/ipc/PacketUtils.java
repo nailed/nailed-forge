@@ -1,16 +1,20 @@
 package jk_5.nailed.ipc;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.util.CharsetUtil;
+import io.netty.buffer.*;
+import io.netty.util.*;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-public class PacketUtils {
+public final class PacketUtils {
 
-    public static int readVarInt(ByteBuf input){
+    private PacketUtils(){
+
+    }
+
+    public static int readVarInt(ByteBuf input) {
         int out = 0;
         int bytes = 0;
         byte in;
@@ -27,12 +31,12 @@ public class PacketUtils {
         return out;
     }
 
-    public static void writeVarInt(int value, ByteBuf output){
+    public static void writeVarInt(int value, ByteBuf output) {
         int part;
         while(true){
             part = value & 0x7F;
             value >>>= 7;
-            if (value != 0){
+            if(value != 0){
                 part |= 0x80;
             }
             output.writeByte(part);
@@ -42,7 +46,7 @@ public class PacketUtils {
         }
     }
 
-    public static int varIntSize(int varint){
+    public static int varIntSize(int varint) {
         if((varint & 0xFFFFFF80) == 0){
             return 1;
         }
@@ -58,14 +62,14 @@ public class PacketUtils {
         return 5;
     }
 
-    public static String readString(ByteBuf buffer){
+    public static String readString(ByteBuf buffer) {
         int len = readVarInt(buffer);
         String str = buffer.toString(buffer.readerIndex(), len, CharsetUtil.UTF_8);
         buffer.readerIndex(buffer.readerIndex() + len);
         return str;
     }
 
-    public static void writeString(String string, ByteBuf buffer){
+    public static void writeString(String string, ByteBuf buffer) {
         byte[] bytes = string.getBytes(CharsetUtil.UTF_8);
         writeVarInt(bytes.length, buffer);
         buffer.writeBytes(bytes);

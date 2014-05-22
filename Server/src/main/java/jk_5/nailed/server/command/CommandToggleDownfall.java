@@ -1,14 +1,14 @@
 package jk_5.nailed.server.command;
 
-import com.google.common.collect.Lists;
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.map.NailedMap;
-import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommandSender;
+import java.util.*;
 
-import java.util.Arrays;
-import java.util.List;
+import com.google.common.collect.*;
+
+import net.minecraft.command.*;
+
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.map.*;
 
 /**
  * No description given
@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class CommandToggleDownfall extends NailedCommand {
 
-    public CommandToggleDownfall(){
+    public CommandToggleDownfall() {
         super("toggledownfall");
     }
 
@@ -30,7 +30,7 @@ public class CommandToggleDownfall extends NailedCommand {
             map.getWeatherController().toggleRain();
         }else if(args.length == 1){
             map = NailedAPI.getMapLoader().getMap(args[0]);
-            if(map == null) {
+            if(map == null){
                 try{
                     map = NailedAPI.getMapLoader().getMap(Integer.parseInt(args[0]));
                 }catch(NumberFormatException e){
@@ -48,8 +48,10 @@ public class CommandToggleDownfall extends NailedCommand {
     }
 
     @Override
-    public List<String> addAutocomplete(ICommandSender sender, String[] args){
-        if(args.length != 1) return Arrays.asList();
+    public List<String> addAutocomplete(ICommandSender sender, String[] args) {
+        if(args.length != 1){
+            return Arrays.asList();
+        }
         List<String> ret = Lists.newArrayList();
         for(Map map : NailedAPI.getMapLoader().getMaps()){
             ret.add(map.getSaveFileName());

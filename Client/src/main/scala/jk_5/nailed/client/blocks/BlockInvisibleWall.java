@@ -1,21 +1,18 @@
 package jk_5.nailed.client.blocks;
 
-import jk_5.nailed.client.blocks.tileentity.TileEntitySky;
-import net.minecraft.block.material.Material;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import java.util.*;
 
-import java.util.List;
-import java.util.Random;
+import net.minecraft.block.material.*;
+import net.minecraft.creativetab.*;
+import net.minecraft.init.*;
+import net.minecraft.item.*;
+import net.minecraft.tileentity.*;
+import net.minecraft.util.*;
+import net.minecraft.world.*;
+
+import net.minecraftforge.common.util.*;
+
+import jk_5.nailed.client.blocks.tileentity.*;
 
 /**
  * No description given
@@ -69,7 +66,9 @@ public class BlockInvisibleWall extends BlockMulti {
     @Override
     public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z){
         int meta = world.getBlockMetadata(x, y, z);
-        if(meta == 1 || meta == 3) return null;
+        if(meta == 1 || meta == 3){
+            return null;
+        }
         return super.getCollisionBoundingBoxFromPool(world, x, y, z);
     }
 

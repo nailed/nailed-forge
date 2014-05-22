@@ -1,11 +1,10 @@
 package jk_5.nailed.api.map;
 
-import jk_5.nailed.api.concurrent.Callback;
+import java.io.*;
+import java.util.*;
+import javax.annotation.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.io.File;
-import java.util.List;
+import jk_5.nailed.api.concurrent.*;
 
 /**
  * No description given
@@ -14,10 +13,13 @@ import java.util.List;
  */
 public interface MappackLoader {
 
-    @Nonnull public File getMappackFolder();
-    @Nonnull public List<Mappack> getMappacks();
-    @Nullable public Mappack getMappack(@Nonnull String mappackID);
-    public void loadMappacks(@Nullable Callback<MappackLoader> callback);
-    public void registerMappack(@Nonnull Mappack mappack);
-    public void registerReloadListener(@Nonnull MappackReloadListener listener);
+    @Nonnull
+    File getMappackFolder();
+    @Nonnull
+    List<Mappack> getMappacks();
+    @Nullable
+    Mappack getMappack(@Nonnull String mappackID);
+    void loadMappacks(@Nullable Callback<MappackLoader> callback);
+    void registerMappack(@Nonnull Mappack mappack);
+    void registerReloadListener(@Nonnull MappackReloadListener listener);
 }

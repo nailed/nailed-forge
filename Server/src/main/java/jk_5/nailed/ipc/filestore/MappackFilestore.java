@@ -1,18 +1,15 @@
 package jk_5.nailed.ipc.filestore;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import com.ning.http.client.AsyncHttpClient;
-import jk_5.nailed.api.concurrent.Callback;
-import org.apache.commons.io.FileUtils;
+import java.io.*;
+import java.util.*;
+import java.util.concurrent.atomic.*;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
+import com.google.common.collect.*;
+import com.ning.http.client.*;
+
+import org.apache.commons.io.*;
+
+import jk_5.nailed.api.concurrent.*;
 
 /**
  * No description given
@@ -28,7 +25,7 @@ public class MappackFilestore {
     public List<MappackFile> files = Lists.newArrayList();
     public Map<String, MappackFile> paths = Maps.newHashMap();
 
-    public void requestMissingFiles(final Callback<Void> callback){
+    public void requestMissingFiles(final Callback<Void> callback) {
         final Set<MappackFile> downloading = Sets.newHashSet();
         for(MappackFile file : files){
             if(!file.isAvailable()){
@@ -37,14 +34,19 @@ public class MappackFilestore {
         }
 
         if(downloading.size() == 0){
-            if(callback != null) callback.callback(null);
+            if(callback != null){
+                callback.callback(null);
+            }
         }else{
             Callback<MappackFile> loadCB = new Callback<MappackFile>() {
                 private final AtomicInteger downloadsLeft = new AtomicInteger(downloading.size());
+
                 @Override
                 public void callback(MappackFile obj) {
                     if(downloadsLeft.decrementAndGet() == 0){
-                        if(callback != null) callback.callback(null);
+                        if(callback != null){
+                            callback.callback(null);
+                        }
                     }
                 }
             };
@@ -62,11 +64,12 @@ public class MappackFilestore {
             dest.getParentFile().mkdirs();
             try{
                 FileUtils.copyFile(file.getLocation(), dest);
-            }catch(IOException ignored){}
+            }catch(IOException ignored){
+            }
         }
     }
 
-    public void refresh(){
+    public void refresh() {
         this.paths.clear();
         for(MappackFile file : this.files){
             this.paths.put(file.path, file);

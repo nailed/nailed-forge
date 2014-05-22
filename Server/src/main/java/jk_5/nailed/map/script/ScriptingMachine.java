@@ -1,18 +1,18 @@
 package jk_5.nailed.map.script;
 
-import com.google.common.collect.Lists;
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.events.RegisterLuaApiEvent;
-import jk_5.nailed.api.scripting.ILuaAPI;
-import jk_5.nailed.api.scripting.IMount;
-import jk_5.nailed.api.scripting.IWritableMount;
-import jk_5.nailed.map.script.api.*;
-import net.minecraftforge.common.MinecraftForge;
-import org.apache.commons.io.IOUtils;
+import java.io.*;
+import java.util.*;
 
-import java.io.File;
-import java.io.InputStream;
-import java.util.List;
+import com.google.common.collect.*;
+
+import org.apache.commons.io.*;
+
+import net.minecraftforge.common.*;
+
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.events.*;
+import jk_5.nailed.api.scripting.*;
+import jk_5.nailed.map.script.api.*;
 
 /**
  * No description given
@@ -21,11 +21,10 @@ import java.util.List;
  */
 public class ScriptingMachine {
 
+    private static IMount romMount = null;
     private static final String ALLOWED_CHARS = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_'abcdefghijklmnopqrstuvwxyz{|}~⌂ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜø£Ø×ƒáíóúñÑªº¿®¬½¼¡«»";
 
     private boolean isUnloaded = false;
-
-    private static IMount romMount = null;
 
     private final int id;
     private final IMachine machine;
@@ -39,7 +38,7 @@ public class ScriptingMachine {
     private Terminal terminal;
     private FileSystem fileSystem = null;
 
-    public ScriptingMachine(IMachine machine, Terminal terminal, int id){
+    public ScriptingMachine(IMachine machine, Terminal terminal, int id) {
         ScriptThread.start();
 
         this.id = id;
@@ -49,27 +48,27 @@ public class ScriptingMachine {
         createAPIs();
     }
 
-    public void turnOn(){
+    public void turnOn() {
         if(this.state == MachineState.OFF){
             this.startupRequested = true;
         }
     }
 
-    public void shutdown(){
+    public void shutdown() {
         stopScriptingMachine(false);
     }
 
-    public void reboot(){
+    public void reboot() {
         stopScriptingMachine(true);
     }
 
-    public boolean isOn(){
+    public boolean isOn() {
         synchronized(this){
             return this.state == MachineState.RUNNING || this.isUnloaded;
         }
     }
 
-    public void abort(boolean hard){
+    public void abort(boolean hard) {
         synchronized(this){
             if(this.state == MachineState.RUNNING){
                 if(hard){
@@ -81,13 +80,13 @@ public class ScriptingMachine {
         }
     }
 
-    public void destroy(){
+    public void destroy() {
         synchronized(this){
             shutdown();
         }
     }
 
-    public void unload(){
+    public void unload() {
         synchronized(this){
             if(isOn()){
                 this.isUnloaded = true;
@@ -96,11 +95,11 @@ public class ScriptingMachine {
         }
     }
 
-    public int getID(){
+    public int getID() {
         return this.id;
     }
 
-    public void advance(double _dt){
+    public void advance(double dT) {
         synchronized(this){
             if(this.ticksSinceStart >= 0){
                 this.ticksSinceStart += 1;
@@ -112,7 +111,7 @@ public class ScriptingMachine {
             if(this.state == MachineState.RUNNING){
                 synchronized(this.apis){
                     for(ILuaAPI api : this.apis){
-                        api.advance(_dt);
+                        api.advance(dT);
                     }
                 }
             }
@@ -126,13 +125,13 @@ public class ScriptingMachine {
         }
     }
 
-    public boolean isBlinking(){
+    public boolean isBlinking() {
         synchronized(this.terminal){
             return isOn() && this.blinking;
         }
     }
 
-    private boolean initFileSystem(){
+    private boolean initFileSystem() {
         int id = this.getID();
         try{
             ServerMachine machine = (ServerMachine) this.machine;
@@ -158,11 +157,11 @@ public class ScriptingMachine {
         return false;
     }
 
-    public void addAPI(ILuaAPI api){
+    public void addAPI(ILuaAPI api) {
         this.apis.add(api);
     }
 
-    private void createAPIs(){
+    private void createAPIs() {
         this.apis.add(new TermApi(this.apiEnvironment));
         this.apis.add(new FileSystemApi(this.apiEnvironment));
         this.apis.add(new OSApi(this.apiEnvironment));
@@ -172,7 +171,7 @@ public class ScriptingMachine {
         MinecraftForge.EVENT_BUS.post(new RegisterLuaApiEvent(NailedAPI.getMapLoader().getMap(this.apiEnvironment.getMachine().getMachine().getWorld()), this.apis));
     }
 
-    private void initLua(){
+    private void initLua() {
         LuaMachine machine = new LuaMachine();
 
         for(ILuaAPI api : this.apis){
@@ -212,7 +211,7 @@ public class ScriptingMachine {
         }
     }
 
-    private void startScriptingMachine(){
+    private void startScriptingMachine() {
         synchronized(this){
             if(this.state != MachineState.OFF){
                 return;
@@ -222,14 +221,14 @@ public class ScriptingMachine {
         }
 
         ScriptThread.queueTask(new ScriptThread.Task() {
-            
+
             @Override
-            public ScriptingMachine getOwner(){
+            public ScriptingMachine getOwner() {
                 return ScriptingMachine.this;
             }
 
             @Override
-            public void execute(){
+            public void execute() {
                 synchronized(this){
                     if(ScriptingMachine.this.state != MachineState.STARTING){
                         return;
@@ -277,7 +276,7 @@ public class ScriptingMachine {
         }, this);
     }
 
-    private void stopScriptingMachine(final boolean reboot){
+    private void stopScriptingMachine(final boolean reboot) {
         synchronized(this){
             if(this.state != MachineState.RUNNING){
                 return;
@@ -288,12 +287,12 @@ public class ScriptingMachine {
         ScriptThread.queueTask(new ScriptThread.Task() {
 
             @Override
-            public ScriptingMachine getOwner(){
+            public ScriptingMachine getOwner() {
                 return ScriptingMachine.this;
             }
 
             @Override
-            public void execute(){
+            public void execute() {
                 synchronized(this){
                     if(ScriptingMachine.this.state != MachineState.STOPPING){
                         return;
@@ -334,7 +333,7 @@ public class ScriptingMachine {
         }, this);
     }
 
-    public void queueEvent(final String event, final Object... arguments){
+    public void queueEvent(final String event, final Object... arguments) {
         synchronized(this){
             if(this.state != MachineState.RUNNING){
                 return;
@@ -343,11 +342,11 @@ public class ScriptingMachine {
 
         ScriptThread.queueTask(new ScriptThread.Task() {
 
-            public ScriptingMachine getOwner(){
+            public ScriptingMachine getOwner() {
                 return ScriptingMachine.this;
             }
 
-            public void execute(){
+            public void execute() {
                 synchronized(this){
                     if(ScriptingMachine.this.state != MachineState.RUNNING){
                         return;
@@ -384,42 +383,42 @@ public class ScriptingMachine {
 
         private ScriptingMachine machine;
 
-        public APIEnvironment(ScriptingMachine machine){
+        public APIEnvironment(ScriptingMachine machine) {
             this.machine = machine;
         }
 
         @Override
-        public ScriptingMachine getMachine(){
+        public ScriptingMachine getMachine() {
             return this.machine;
         }
 
         @Override
-        public int getMachineID(){
+        public int getMachineID() {
             return this.machine.getID();
         }
 
         @Override
-        public Terminal getTerminal(){
+        public Terminal getTerminal() {
             return this.machine.terminal;
         }
 
         @Override
-        public FileSystem getFileSystem(){
+        public FileSystem getFileSystem() {
             return this.machine.fileSystem;
         }
 
         @Override
-        public void queueEvent(String event, Object... args){
+        public void queueEvent(String event, Object... args) {
             this.machine.queueEvent(event, args);
         }
 
         @Override
-        public void shutdown(){
+        public void shutdown() {
             this.machine.shutdown();
         }
 
         @Override
-        public void reboot(){
+        public void reboot() {
             this.machine.reboot();
         }
     }

@@ -1,8 +1,10 @@
 package jk_5.nailed.api.events;
 
-import cpw.mods.fml.common.eventhandler.Event;
-import jk_5.nailed.api.map.Map;
-import lombok.RequiredArgsConstructor;
+import cpw.mods.fml.common.eventhandler.*;
+
+import jk_5.nailed.api.map.*;
+
+import lombok.*;
 
 /**
  * No description given
@@ -11,5 +13,6 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 public class MapRemovedEvent extends Event {
+
     public final Map map;
 }

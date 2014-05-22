@@ -1,23 +1,17 @@
 package jk_5.nailed.map.script;
 
-import com.google.common.collect.Maps;
-import jk_5.nailed.NailedLog;
-import jk_5.nailed.api.scripting.ILuaAPI;
-import jk_5.nailed.api.scripting.ILuaContext;
-import jk_5.nailed.api.scripting.ILuaObject;
-import jk_5.nailed.map.script.api.EventApi;
-import org.luaj.vm2.*;
-import org.luaj.vm2.lib.OneArgFunction;
-import org.luaj.vm2.lib.VarArgFunction;
-import org.luaj.vm2.lib.ZeroArgFunction;
-import org.luaj.vm2.lib.jse.JsePlatform;
+import java.io.*;
+import java.util.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.List;
-import java.util.Map;
+import com.google.common.collect.*;
+
+import org.luaj.vm2.*;
+import org.luaj.vm2.lib.*;
+import org.luaj.vm2.lib.jse.*;
+
+import jk_5.nailed.*;
+import jk_5.nailed.api.scripting.*;
+import jk_5.nailed.map.script.api.*;
 
 /**
  * No description given
@@ -25,6 +19,9 @@ import java.util.Map;
  * @author jk-5
  */
 public class LuaMachine {
+
+    private static Map<LuaTable, Map> processing;
+    private static List<LuaValue> tree;
 
     private LuaValue luaGlobals;
     private LuaValue luaMainRoutine = null;
@@ -40,12 +37,10 @@ public class LuaMachine {
     private String eventFilter = null;
 
     private Map<Map, LuaValue> processingValue;
-    private static Map<LuaTable, Map> processing;
-    private static List<LuaValue> tree;
 
     private EventApi eventApi;
 
-    public LuaMachine(){
+    public LuaMachine() {
         this.luaGlobals = JsePlatform.debugGlobals();
         this.luaLoadString = this.luaGlobals.get("loadstring");
         this.luaAssert = this.luaGlobals.get("assert");
@@ -58,11 +53,11 @@ public class LuaMachine {
 
         coroutine.set("create", new OneArgFunction() {
             @Override
-            public LuaValue call(LuaValue luaValue){
+            public LuaValue call(LuaValue luaValue) {
                 final LuaThread thread = nativeCreateCoroutine.call(luaValue).checkthread();
                 debugSetHook.invoke(new LuaValue[]{thread, new ZeroArgFunction() {
                     @Override
-                    public LuaValue call(){
+                    public LuaValue call() {
                         String hardAbortMessage = LuaMachine.this.hardAbortMessage;
                         if(hardAbortMessage != null){
                             LuaThread.yield(LuaValue.NIL);
@@ -93,7 +88,7 @@ public class LuaMachine {
         this.luaGlobals.set("newproxy", LuaValue.NIL);
     }
 
-    public void addAPI(ILuaAPI api){
+    public void addAPI(ILuaAPI api) {
         LuaTable table = wrapLuaObject(api);
         String[] names = api.getNames();
         for(String name : names){
@@ -104,7 +99,7 @@ public class LuaMachine {
         }
     }
 
-    public void loadBios(InputStream inputStream){
+    public void loadBios(InputStream inputStream) {
         if(this.luaMainRoutine != null){
             return;
         }
@@ -136,10 +131,12 @@ public class LuaMachine {
         }
     }
 
-    public void handleEvent(String eventName, Object... args){
-        if(this.luaMainRoutine == null) return;
+    public void handleEvent(String eventName, Object... args) {
+        if(this.luaMainRoutine == null){
+            return;
+        }
         this.eventApi.onEvent(eventName, args);
-        if(this.eventFilter != null && eventName != null && !eventName.equals(this.eventFilter) && !eventName.equals("terminate")){
+        if(this.eventFilter != null && eventName != null && !eventName.equals(this.eventFilter) && !"terminate".equals(eventName)){
             return;
         }
         try{
@@ -169,7 +166,7 @@ public class LuaMachine {
             }
 
             LuaThread mainThread = (LuaThread) this.luaMainRoutine;
-            if(mainThread.getStatus().equals("dead")){
+            if("dead".equals(mainThread.getStatus())){
                 this.luaMainRoutine = null;
             }
         }catch(LuaError e){
@@ -182,20 +179,20 @@ public class LuaMachine {
         }
     }
 
-    public void abortSoft(String message){
+    public void abortSoft(String message) {
         this.softAbortMessage = message;
     }
 
-    public void abortHard(String message){
+    public void abortHard(String message) {
         this.softAbortMessage = message;
         this.hardAbortMessage = message;
     }
 
-    public boolean isFinished(){
+    public boolean isFinished() {
         return this.luaMainRoutine == null;
     }
 
-    public void unload(){
+    public void unload() {
         if(this.luaMainRoutine != null){
             LuaThread mainThread = (LuaThread) this.luaMainRoutine;
             mainThread.abandon();
@@ -203,7 +200,7 @@ public class LuaMachine {
         }
     }
 
-    private void tryAbort() throws LuaError{
+    private void tryAbort() throws LuaError {
         String abortMsg = this.softAbortMessage;
         if(abortMsg != null){
             this.softAbortMessage = null;
@@ -212,27 +209,27 @@ public class LuaMachine {
         }
     }
 
-    private LuaTable wrapLuaObject(ILuaObject object){
+    private LuaTable wrapLuaObject(ILuaObject object) {
         LuaTable table = new LuaTable();
         String[] methods = object.getMethodNames();
-        for (int i = 0; i < methods.length; i++){
-            if (methods[i] != null){
+        for(int i = 0; i < methods.length; i++){
+            if(methods[i] != null){
                 final int method = i;
                 final ILuaObject apiObject = object;
-                table.set(methods[i], new VarArgFunction(){
+                table.set(methods[i], new VarArgFunction() {
 
                     @Override
-                    public Varargs invoke(Varargs _args){
+                    public Varargs invoke(Varargs args) {
                         LuaMachine.this.tryAbort();
-                        Object[] arguments = LuaMachine.toObjects(_args, 1);
+                        Object[] arguments = LuaMachine.toObjects(args, 1);
                         Object[] results = null;
                         try{
-                            results = apiObject.callMethod(new ILuaContext(){
+                            results = apiObject.callMethod(new ILuaContext() {
 
                                 @Override
                                 public Object[] pullEvent(String filter) throws Exception {
                                     Object[] results = pullEventRaw(filter);
-                                    if (results.length >= 1 && results[0].equals("terminate")){
+                                    if(results.length >= 1 && "terminate".equals(results[0])){
                                         throw new Exception("Terminated");
                                     }
                                     return results;
@@ -244,13 +241,13 @@ public class LuaMachine {
                                 }
 
                                 @Override
-                                public Object[] yield(Object[] yieldArgs) throws InterruptedException{
+                                public Object[] yield(Object[] yieldArgs) throws InterruptedException {
                                     try{
                                         LuaValue[] yieldValues = LuaMachine.this.toValues(yieldArgs, 0);
                                         Varargs results = LuaMachine.this.luaCoroutineYield.invoke(LuaValue.varargsOf(yieldValues));
                                         return LuaMachine.toObjects(results, 1);
                                     }catch(OrphanedThread e){
-                                        throw new InterruptedException();//FIXME: is this correct?
+                                        throw new InterruptedException(); //FIXME: is this correct?
                                     }
                                     //Maybe here?
                                 }
@@ -260,9 +257,9 @@ public class LuaMachine {
                                     return LuaMachine.this.toValues(objects, leaveEmpty);
                                 }
                             }, method, arguments);
-                        }catch (InterruptedException e){
+                        }catch(InterruptedException e){
                             throw new OrphanedThread();
-                        }catch (Throwable t){
+                        }catch(Throwable t){
                             throw new LuaError(t.getMessage());
                         }
                         return LuaValue.varargsOf(LuaMachine.this.toValues(results, 0));
@@ -283,7 +280,7 @@ public class LuaMachine {
             boolean b = (Boolean) object;
             return LuaValue.valueOf(b);
         }else if(object instanceof String){
-            String s = (String)object;
+            String s = (String) object;
             return LuaValue.valueOf(s);
         }else if(object instanceof Map){
             boolean clearProcessing = false;
@@ -308,7 +305,7 @@ public class LuaMachine {
                 }
                 return table;
             }finally{
-                if (clearProcessing){
+                if(clearProcessing){
                     this.processingValue = null;
                 }
             }
@@ -319,27 +316,29 @@ public class LuaMachine {
         return LuaValue.NIL;
     }
 
-    public LuaValue[] toValues(Object[] objects, int leaveEmpty){
+    public LuaValue[] toValues(Object[] objects, int leaveEmpty) {
         if(objects == null || objects.length == 0){
             return new LuaValue[leaveEmpty];
         }
         LuaValue[] values = new LuaValue[objects.length + leaveEmpty];
-        for (int i = 0; i < values.length; i++){
-            if (i < leaveEmpty) {
+        for(int i = 0; i < values.length; i++){
+            if(i < leaveEmpty){
                 values[i] = null;
             }else{
-                Object object = objects[(i - leaveEmpty)];
+                Object object = objects[i - leaveEmpty];
                 values[i] = toValue(object);
             }
         }
         return values;
     }
 
-    public static Object toObject(LuaValue value){
-        switch (value.type()){
-            case -1: case 0:
+    public static Object toObject(LuaValue value) {
+        switch(value.type()){
+            case -1:
+            case 0:
                 return null;
-            case -2: case 3:
+            case -2:
+            case 3:
                 return value.todouble();
             case 1:
                 return value.toboolean();
@@ -348,7 +347,7 @@ public class LuaMachine {
             case 5:
                 boolean clearProcessing = false;
                 try{
-                    if (processing == null){
+                    if(processing == null){
                         processing = Maps.newIdentityHashMap();
                         clearProcessing = true;
                     }else if(processing.containsKey(value)){
@@ -359,38 +358,44 @@ public class LuaMachine {
 
                     LuaValue k = LuaValue.NIL;
                     Varargs keyvalue;
-                    while (true){
+                    while(true){
                         keyvalue = value.next(k);
                         k = keyvalue.arg1();
-                        if(k.isnil()) break;
+                        if(k.isnil()){
+                            break;
+                        }
                         LuaValue v = keyvalue.arg(2);
                         Object key = toObject(k);
                         Object val = toObject(v);
-                        if (key != null && (val != null)) {
+                        if(key != null && (val != null)){
                             ret.put(key, val);
                         }
                     }
                     return ret;
                 }finally{
-                    if (clearProcessing){
+                    if(clearProcessing){
                         processing = null;
                     }
                 }
-            case 2: break;
+                //break;
+            //CHECKSTYLE.OFF: all
+            case 2:
+                break;
             case 6:
                 return value;
             default:
                 System.out.println("Type: " + value.type());
                 System.out.println("Class: " + value.getClass().getName());
+            //CHECKSTYLE.ON: all
         }
 
         return null;
     }
 
-    private static Object[] toObjects(Varargs values, int startIdx){
+    private static Object[] toObjects(Varargs values, int startIdx) {
         int count = values.narg();
         Object[] objects = new Object[count - startIdx + 1];
-        for (int n = startIdx; n <= count; n++){
+        for(int n = startIdx; n <= count; n++){
             int i = n - startIdx;
             LuaValue value = values.arg(n);
             objects[i] = toObject(value);

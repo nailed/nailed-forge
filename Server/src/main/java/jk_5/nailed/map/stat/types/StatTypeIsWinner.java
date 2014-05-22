@@ -1,13 +1,12 @@
 package jk_5.nailed.map.stat.types;
 
-import com.google.gson.JsonObject;
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.PossibleWinner;
-import jk_5.nailed.api.map.stat.IStatType;
-import jk_5.nailed.api.map.stat.Stat;
-import jk_5.nailed.api.player.Player;
-import jk_5.nailed.map.stat.DefaultStat;
+import com.google.gson.*;
+
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.map.*;
+import jk_5.nailed.api.map.stat.*;
+import jk_5.nailed.api.player.*;
+import jk_5.nailed.map.stat.*;
 
 /**
  * No description given

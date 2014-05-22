@@ -1,13 +1,13 @@
 package jk_5.nailed.map.script.api;
 
-import com.google.common.collect.Maps;
-import jk_5.nailed.api.scripting.ILuaAPI;
-import jk_5.nailed.api.scripting.ILuaContext;
-import jk_5.nailed.api.scripting.ILuaObject;
-import jk_5.nailed.map.script.*;
+import java.io.*;
+import java.util.*;
 
-import java.io.IOException;
-import java.util.Map;
+import com.google.common.collect.*;
+
+import jk_5.nailed.api.scripting.*;
+import jk_5.nailed.map.script.FileSystem;
+import jk_5.nailed.map.script.*;
 
 /**
  * No description given
@@ -19,32 +19,32 @@ public class FileSystemApi implements ILuaAPI {
     private IAPIEnvironment environment;
     private FileSystem fileSystem;
 
-    public FileSystemApi(IAPIEnvironment environment){
+    public FileSystemApi(IAPIEnvironment environment) {
         this.environment = environment;
         this.fileSystem = null;
     }
 
     @Override
-    public String[] getNames(){
+    public String[] getNames() {
         return new String[]{"fs"};
     }
 
     @Override
-    public void startup(){
+    public void startup() {
         this.fileSystem = this.environment.getFileSystem();
     }
 
     @Override
-    public void advance(double _dt){
+    public void advance(double dTime) {
     }
 
     @Override
-    public void shutdown(){
+    public void shutdown() {
         this.fileSystem = null;
     }
 
     @Override
-    public String[] getMethodNames(){
+    public String[] getMethodNames() {
         return new String[]{
                 "list",
                 "combine",
@@ -65,7 +65,7 @@ public class FileSystemApi implements ILuaAPI {
     }
 
     @Override
-    public Object[] callMethod(ILuaContext context, int method, Object[] args) throws Exception{
+    public Object[] callMethod(ILuaContext context, int method, Object[] args) throws Exception {
         switch(method){
             case 0: //list
                 if(args.length != 1 || args[0] == null || !(args[0] instanceof String)){
@@ -188,22 +188,22 @@ public class FileSystemApi implements ILuaAPI {
                 String path10 = (String) args[0];
                 String mode = (String) args[1];
                 try{
-                    if(mode.equals("r")){
+                    if("r".equals(mode)){
                         IMountedFileNormal reader = this.fileSystem.openForRead(path10);
                         return wrapBufferedReader(reader);
-                    }else if(mode.equals("w")){
+                    }else if("w".equals(mode)){
                         IMountedFileNormal writer = this.fileSystem.openForWrite(path10, false);
                         return wrapBufferedWriter(writer);
-                    }else if(mode.equals("a")){
+                    }else if("a".equals(mode)){
                         IMountedFileNormal writer = this.fileSystem.openForWrite(path10, true);
                         return wrapBufferedWriter(writer);
-                    }else if(mode.equals("rb")){
+                    }else if("rb".equals(mode)){
                         IMountedFileBinary reader = this.fileSystem.openForBinaryRead(path10);
                         return wrapInputStream(reader);
-                    }else if(mode.equals("wb")){
+                    }else if("wb".equals(mode)){
                         IMountedFileBinary writer = this.fileSystem.openForBinaryWrite(path10, false);
                         return wrapOutputStream(writer);
-                    }else if(mode.equals("ab")){
+                    }else if("ab".equals(mode)){
                         IMountedFileBinary writer = this.fileSystem.openForBinaryWrite(path10, true);
                         return wrapOutputStream(writer);
                     }
@@ -257,11 +257,11 @@ public class FileSystemApi implements ILuaAPI {
         return null;
     }
 
-    private static Object[] wrapBufferedReader(final IMountedFileNormal reader){
+    private static Object[] wrapBufferedReader(final IMountedFileNormal reader) {
         return new Object[]{new ILuaObject() {
 
             @Override
-            public String[] getMethodNames(){
+            public String[] getMethodNames() {
                 return new String[]{
                         "readLine",
                         "readAll",
@@ -270,7 +270,7 @@ public class FileSystemApi implements ILuaAPI {
             }
 
             @Override
-            public Object[] callMethod(ILuaContext context, int method, Object[] args) throws Exception{
+            public Object[] callMethod(ILuaContext context, int method, Object[] args) throws Exception {
                 switch(method){
                     case 0:
                         try{
@@ -311,11 +311,11 @@ public class FileSystemApi implements ILuaAPI {
         };
     }
 
-    private static Object[] wrapBufferedWriter(final IMountedFileNormal writer){
+    private static Object[] wrapBufferedWriter(final IMountedFileNormal writer) {
         return new Object[]{new ILuaObject() {
 
             @Override
-            public String[] getMethodNames(){
+            public String[] getMethodNames() {
                 return new String[]{
                         "write",
                         "writeLine",
@@ -325,7 +325,7 @@ public class FileSystemApi implements ILuaAPI {
             }
 
             @Override
-            public Object[] callMethod(ILuaContext context, int method, Object[] args) throws Exception{
+            public Object[] callMethod(ILuaContext context, int method, Object[] args) throws Exception {
                 switch(method){
                     case 0:
                         String text;
@@ -374,13 +374,13 @@ public class FileSystemApi implements ILuaAPI {
         };
     }
 
-    private static Object[] wrapInputStream(final IMountedFileBinary reader){
+    private static Object[] wrapInputStream(final IMountedFileBinary reader) {
         return new Object[]{new ILuaObject() {
 
             @Override
-            public String[] getMethodNames(){
+            public String[] getMethodNames() {
                 return new String[]{
-                        "read","close"
+                        "read", "close"
                 };
             }
 
@@ -410,11 +410,11 @@ public class FileSystemApi implements ILuaAPI {
         }};
     }
 
-    private static Object[] wrapOutputStream(final IMountedFileBinary writer){
+    private static Object[] wrapOutputStream(final IMountedFileBinary writer) {
         return new Object[]{new ILuaObject() {
 
             @Override
-            public String[] getMethodNames(){
+            public String[] getMethodNames() {
                 return new String[]{"write", "close", "flush"};
             }
 

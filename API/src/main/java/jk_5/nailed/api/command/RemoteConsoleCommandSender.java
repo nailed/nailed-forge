@@ -6,4 +6,5 @@ package jk_5.nailed.api.command;
  * @author jk-5
  */
 public interface RemoteConsoleCommandSender extends CommandSender {
+
 }

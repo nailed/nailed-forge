@@ -1,15 +1,13 @@
 package jk_5.nailed.item;
 
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.player.Player;
-import jk_5.nailed.map.script.MachineRegistry;
-import jk_5.nailed.map.script.ServerMachine;
-import jk_5.nailed.map.script.Terminal;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
+import net.minecraft.entity.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.item.*;
+import net.minecraft.world.*;
+
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.player.*;
+import jk_5.nailed.map.script.*;
 
 /**
  * No description given
@@ -18,13 +16,13 @@ import net.minecraft.world.World;
  */
 public class ItemPDA extends Item {
 
-    public ItemPDA(){
+    public ItemPDA() {
         this.setMaxStackSize(1);
         this.setHasSubtypes(false);
         this.setUnlocalizedName("nailed.pda");
     }
 
-    public ServerMachine getMachine(Player player){
+    public ServerMachine getMachine(Player player) {
         int instId = 666;
         World world = player.getCurrentMap().getWorld();
         ServerMachine machine = ServerMachine.REGISTRY.get(instId);
@@ -41,14 +39,14 @@ public class ItemPDA extends Item {
     }
 
     @Override
-    public void onUpdate(ItemStack item, World world, Entity entity, int slot, boolean selected){
+    public void onUpdate(ItemStack item, World world, Entity entity, int slot, boolean selected) {
         if(!world.isRemote && entity instanceof EntityPlayer){
             this.getMachine(NailedAPI.getPlayerRegistry().getPlayer((EntityPlayer) entity)).update();
         }
     }
 
     @Override
-    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player){
+    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
         ServerMachine machine = this.getMachine(NailedAPI.getPlayerRegistry().getPlayer(player));
         machine.turnOn();
         machine.terminalChanged = true;

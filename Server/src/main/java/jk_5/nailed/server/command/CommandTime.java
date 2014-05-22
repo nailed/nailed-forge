@@ -1,15 +1,12 @@
 package jk_5.nailed.server.command;
 
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.map.Map;
-import net.minecraft.command.CommandBase;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.command.NumberInvalidException;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
+import java.util.*;
 
-import java.util.List;
+import net.minecraft.command.*;
+import net.minecraft.util.*;
+
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.map.Map;
 
 /**
  * No description given
@@ -18,20 +15,24 @@ import java.util.List;
  */
 public class CommandTime extends NailedCommand {
 
-    public CommandTime(){
+    public CommandTime() {
         super("time");
     }
 
     @Override
-    public void processCommandWithMap(ICommandSender sender, Map map, String[] args){
+    public void processCommandWithMap(ICommandSender sender, Map map, String[] args) {
         boolean hasWorld = map.getWorld() != null;
         if(args.length > 0){
-            if(args[0].equals("set")){
+            if("set".equals(args[0])){
                 if(args.length > 1){
                     int target;
-                    if(args[1].equals("day")) target = 6000;
-                    else if(args[1].equals("night")) target = 18000;
-                    else target = CommandBase.parseIntBounded(sender, args[1], 0, 23999);
+                    if("day".equals(args[1])){
+                        target = 6000;
+                    }else if("night".equals(args[1])){
+                        target = 18000;
+                    }else{
+                        target = CommandBase.parseIntBounded(sender, args[1], 0, 23999);
+                    }
                     if(!hasWorld && args.length == 3){
                         map = NailedAPI.getMapLoader().getMap(CommandBase.parseInt(sender, args[2]));
                     }

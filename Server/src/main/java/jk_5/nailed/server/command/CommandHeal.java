@@ -1,17 +1,16 @@
 package jk_5.nailed.server.command;
 
-import jk_5.nailed.api.map.Map;
-import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
+import java.util.*;
 
-import java.util.List;
+import net.minecraft.command.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.server.*;
+
+import jk_5.nailed.api.map.Map;
 
 /**
  * Created by matthias on 5/8/14.
- *
+ * <p/>
  * heal command
  */
 public class CommandHeal extends NailedCommand {

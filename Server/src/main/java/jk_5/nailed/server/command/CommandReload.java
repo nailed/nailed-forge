@@ -1,21 +1,21 @@
 package jk_5.nailed.server.command;
 
-import io.netty.channel.ChannelFuture;
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.concurrent.Callback;
-import jk_5.nailed.api.concurrent.scheduler.NailedRunnable;
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.MappackLoader;
-import jk_5.nailed.ipc.IpcManager;
-import jk_5.nailed.permissions.NailedPermissionFactory;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
-import net.minecraftforge.permissions.api.PermBuilderFactory;
-import net.minecraftforge.permissions.api.PermissionsManager;
+import java.util.*;
 
-import java.util.List;
+import io.netty.channel.*;
+
+import net.minecraft.command.*;
+import net.minecraft.util.*;
+
+import net.minecraftforge.permissions.api.*;
+
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.concurrent.*;
+import jk_5.nailed.api.concurrent.scheduler.*;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.*;
+import jk_5.nailed.ipc.*;
+import jk_5.nailed.permissions.*;
 
 /**
  * No description given
@@ -34,7 +34,7 @@ public class CommandReload extends NailedCommand {
             this.printUsage(sender);
         }else{
             String rule = args[0];
-            if(rule.equals("permissions")){
+            if("permissions".equals(rule)){
                 PermBuilderFactory<?> factory = PermissionsManager.getPermFactory();
                 if(factory instanceof NailedPermissionFactory){
                     NailedPermissionFactory permFactory = (NailedPermissionFactory) factory;
@@ -43,7 +43,7 @@ public class CommandReload extends NailedCommand {
                     component.getChatStyle().setColor(EnumChatFormatting.GREEN);
                     sender.addChatMessage(component);
                 }
-            }else if(rule.equals("mappacks")) {
+            }else if("mappacks".equals(rule)){
                 NailedAPI.getMappackLoader().loadMappacks(new Callback<MappackLoader>() {
                     @Override
                     public void callback(MappackLoader obj) {
@@ -52,10 +52,10 @@ public class CommandReload extends NailedCommand {
                         sender.addChatMessage(component);
                     }
                 });
-            }else if(rule.equals("ipc")){
+            }else if("ipc".equals(rule)){
                 NailedAPI.getScheduler().runTaskAsynchronously(new NailedRunnable() {
                     @Override
-                    public void run(){
+                    public void run() {
                         ChannelFuture future = IpcManager.instance().close();
                         if(future != null){
                             future.syncUninterruptibly();
@@ -69,7 +69,7 @@ public class CommandReload extends NailedCommand {
         }
     }
 
-    private void printUsage(ICommandSender sender){
+    private void printUsage(ICommandSender sender) {
         IChatComponent comp = new ChatComponentText("Usage: /reload <permissions/mappacks>");
         comp.getChatStyle().setColor(EnumChatFormatting.RED);
         sender.addChatMessage(comp);

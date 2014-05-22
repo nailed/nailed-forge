@@ -1,8 +1,8 @@
 package jk_5.nailed.permissions.zone.types;
 
-import jk_5.nailed.api.zone.IZone;
+import javax.annotation.*;
 
-import javax.annotation.Nonnull;
+import jk_5.nailed.api.zone.*;
 
 /**
  * No description given

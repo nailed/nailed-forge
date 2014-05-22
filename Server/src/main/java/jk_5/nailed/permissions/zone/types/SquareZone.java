@@ -1,6 +1,6 @@
 package jk_5.nailed.permissions.zone.types;
 
-import com.google.common.base.Objects;
+import com.google.common.base.*;
 
 /**
  * Created by matthias on 9-5-14.
@@ -12,7 +12,7 @@ public class SquareZone extends AbstractZone {
     private int x2;
     private int z2;
 
-    public SquareZone(String name, int x1, int z1, int x2, int z2, boolean inverted){
+    public SquareZone(String name, int x1, int z1, int x2, int z2, boolean inverted) {
         super(name, inverted);
         this.x1 = x1;
         this.z1 = z1;
@@ -21,12 +21,12 @@ public class SquareZone extends AbstractZone {
     }
 
     @Override
-    public boolean isInZone(double x, double y, double z){
-        return ((x1 < x && x < x2 && z1 < z && z < z2) ^ inverted);
+    public boolean isInZone(double x, double y, double z) {
+        return (x1 < x && x < x2 && z1 < z && z < z2) ^ inverted;
     }
 
     @Override
-    public SquareZone reMake(){
+    public SquareZone reMake() {
         return new SquareZone(this.name, this.x1, this.z1, this.x2, this.z2, this.inverted);
     }
 

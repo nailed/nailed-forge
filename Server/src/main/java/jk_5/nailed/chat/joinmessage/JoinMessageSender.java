@@ -1,36 +1,35 @@
 package jk_5.nailed.chat.joinmessage;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import jk_5.nailed.NailedLog;
-import jk_5.nailed.api.player.Player;
-import jk_5.nailed.util.Utils;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
-import net.minecraftforge.permissions.api.PermissionsManager;
-import net.minecraftforge.permissions.api.RegisteredPermValue;
-import org.apache.commons.io.IOUtils;
+import java.io.*;
+import java.util.*;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.PrintWriter;
-import java.util.List;
-import java.util.Map;
+import com.google.common.collect.*;
+
+import org.apache.commons.io.*;
+
+import net.minecraft.util.*;
+
+import net.minecraftforge.permissions.api.*;
+
+import jk_5.nailed.*;
+import jk_5.nailed.api.player.*;
+import jk_5.nailed.util.*;
 
 /**
  * No description given
- * 
+ *
  * @author jk-5
  */
-public class JoinMessageSender {
-    
+public final class JoinMessageSender {
+
     private static final List<String> message = Lists.newArrayList();
     private static final Map<String, IReplacement> replacements = Maps.newHashMap();
 
-    public static void readConfig(File configDir){
+    private JoinMessageSender(){
+
+    }
+
+    public static void readConfig(File configDir) {
         replacements.clear();
         replacements.put("playername", new IReplacement.PlayerName());
         replacements.put("uptime", new IReplacement.Uptime());
@@ -57,7 +56,7 @@ public class JoinMessageSender {
             try{
                 configFile.createNewFile();
                 writer = new PrintWriter(configFile);
-                
+
                 writer.println("# This file contains the message that is sent to the player on login.");
                 writer.println("# Lines starting with a # are comments and are ignored.");
                 writer.println("# If you want to color the text, use & and a color code after that");
@@ -77,8 +76,8 @@ public class JoinMessageSender {
             readConfig(configDir);
         }
     }
-    
-    public static void onPlayerJoin(Player player){
+
+    public static void onPlayerJoin(Player player) {
         if(player.hasPermission("nailed.joinMessage")){
             for(String line : message){
                 player.sendChat(format(line, player));
@@ -86,16 +85,17 @@ public class JoinMessageSender {
         }
     }
 
-    public static void registerPermissions(){
+    public static void registerPermissions() {
         PermissionsManager.registerPermission("nailed.joinMessage", RegisteredPermValue.TRUE);
     }
 
-    private static IChatComponent format(String line, Player player){
+    private static IChatComponent format(String line, Player player) {
+        //CHECKSTYLE.OFF: ModifiedControlVariable
         IChatComponent component = new ChatComponentText("");
         line = Utils.formatColors(line);
         ChatStyle parentStyle = component.getChatStyle();
         parentStyle.setColor(EnumChatFormatting.WHITE);
-        char chars[] = line.toCharArray();
+        char[] chars = line.toCharArray();
         StringBuilder buffer = new StringBuilder("");
         EnumChatFormatting color = null;
         boolean bold = false;
@@ -121,7 +121,7 @@ public class JoinMessageSender {
                 comp.getChatStyle().setStrikethrough(strike);
                 comp.getChatStyle().setObfuscated(random);
                 component.appendSibling(comp);
-                i = endIndex;// - 1;
+                i = endIndex; // - 1;
             }else if(chars[i] == '\u00a7' && "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(chars[i + 1]) > -1){
                 //We found a legacy formatting code!
                 char colorCode = Character.toLowerCase(chars[i + 1]);
@@ -230,5 +230,6 @@ public class JoinMessageSender {
         }
         Utils.minifyChatComponent(component);
         return component;
+        //CHECKSTYLE.ON: ModifiedControlVariable
     }
 }

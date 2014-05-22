@@ -1,8 +1,8 @@
 package jk_5.nailed.ipc.handler;
 
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
-import jk_5.nailed.ipc.packet.IpcPacket;
+import io.netty.channel.*;
+
+import jk_5.nailed.ipc.packet.*;
 
 /**
  * No description given
@@ -12,7 +12,7 @@ import jk_5.nailed.ipc.packet.IpcPacket;
 public class PacketHandler extends SimpleChannelInboundHandler<IpcPacket> {
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, IpcPacket msg) throws Exception{
+    protected void channelRead0(ChannelHandlerContext ctx, IpcPacket msg) throws Exception {
         msg.processPacket();
     }
 }

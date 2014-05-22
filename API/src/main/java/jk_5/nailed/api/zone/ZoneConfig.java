@@ -1,6 +1,6 @@
 package jk_5.nailed.api.zone;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * No description given
@@ -10,6 +10,6 @@ import java.util.List;
 public interface ZoneConfig {
 
     @SuppressWarnings("CloneDoesntDeclareCloneNotSupportedException")
-    public ZoneConfig reMake();
-    public List<IZone> getZones();
+    ZoneConfig reMake();
+    List<IZone> getZones();
 }

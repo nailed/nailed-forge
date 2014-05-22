@@ -18,7 +18,7 @@ public class NailedASyncDebugger {
 
     final NailedASyncDebugger getNextHead(final int time) {
         NailedASyncDebugger next, current = this;
-        while (time > current.expiry && (next = current.next) != null) {
+        while(time > current.expiry && (next = current.next) != null){
             current = next;
         }
         return current;
@@ -29,7 +29,7 @@ public class NailedASyncDebugger {
     }
 
     StringBuilder debugTo(final StringBuilder string) {
-        for (NailedASyncDebugger next = this; next != null; next = next.next) {
+        for(NailedASyncDebugger next = this; next != null; next = next.next){
             string.append(next.clazz.getName()).append('@').append(next.expiry).append(',');
         }
         return string;

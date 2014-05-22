@@ -1,9 +1,9 @@
 package jk_5.nailed.map.script;
 
-import jk_5.nailed.api.scripting.IWritableMount;
-
 import java.io.*;
-import java.util.List;
+import java.util.*;
+
+import jk_5.nailed.api.scripting.*;
 
 /**
  * No description given
@@ -17,14 +17,14 @@ public class FileMount implements IWritableMount {
     private long capacity;
     private long usedSpace;
 
-    public FileMount(File rootPath, long capacity){
+    public FileMount(File rootPath, long capacity) {
         this.rootPath = rootPath;
         this.capacity = capacity;
         this.usedSpace = created() ? measureUsedSpace(rootPath) : MINIMUM_FILE_SIZE;
     }
 
     @Override
-    public boolean exists(String path) throws IOException{
+    public boolean exists(String path) throws IOException {
         if(!created()){
             return path.length() == 0;
         }
@@ -33,7 +33,7 @@ public class FileMount implements IWritableMount {
     }
 
     @Override
-    public boolean isDirectory(String path) throws IOException{
+    public boolean isDirectory(String path) throws IOException {
         if(!created()){
             return path.length() == 0;
         }
@@ -42,7 +42,7 @@ public class FileMount implements IWritableMount {
     }
 
     @Override
-    public void list(String path, List<String> contents) throws IOException{
+    public void list(String path, List<String> contents) throws IOException {
         if(!created()){
             if(path.length() != 0){
                 throw new IOException("Not a directory");
@@ -63,7 +63,7 @@ public class FileMount implements IWritableMount {
     }
 
     @Override
-    public long getSize(String path) throws IOException{
+    public long getSize(String path) throws IOException {
         if(!created()){
             if(path.length() == 0){
                 return 0L;
@@ -81,7 +81,7 @@ public class FileMount implements IWritableMount {
     }
 
     @Override
-    public InputStream openForRead(String path) throws IOException{
+    public InputStream openForRead(String path) throws IOException {
         if(created()){
             File file = getRealPath(path);
             if(file.exists() && !file.isDirectory()){
@@ -92,7 +92,7 @@ public class FileMount implements IWritableMount {
     }
 
     @Override
-    public void makeDirectory(String path) throws IOException{
+    public void makeDirectory(String path) throws IOException {
         create();
         File file = getRealPath(path);
         if(file.exists()){
@@ -113,7 +113,7 @@ public class FileMount implements IWritableMount {
     }
 
     @Override
-    public void delete(String path) throws IOException{
+    public void delete(String path) throws IOException {
         if(path.length() == 0){
             throw new IOException("Access denied");
         }
@@ -125,7 +125,7 @@ public class FileMount implements IWritableMount {
         }
     }
 
-    private void deleteRecursively(File file) throws IOException{
+    private void deleteRecursively(File file) throws IOException {
         if(file.isDirectory()){
             String[] children = file.list();
             for(int i = 0; i < children.length; i++){
@@ -143,7 +143,7 @@ public class FileMount implements IWritableMount {
     }
 
     @Override
-    public OutputStream openForWrite(String path) throws IOException{
+    public OutputStream openForWrite(String path) throws IOException {
         create();
         File file = getRealPath(path);
         if(file.exists() && file.isDirectory()){
@@ -163,7 +163,7 @@ public class FileMount implements IWritableMount {
     }
 
     @Override
-    public OutputStream openForAppend(String path) throws IOException{
+    public OutputStream openForAppend(String path) throws IOException {
         if(created()){
             File file = getRealPath(path);
             if(!file.exists()){
@@ -179,19 +179,19 @@ public class FileMount implements IWritableMount {
     }
 
     @Override
-    public long getRemainingSpace() throws IOException{
+    public long getRemainingSpace() throws IOException {
         return Math.max(this.capacity - this.usedSpace, 0L);
     }
 
-    private File getRealPath(String path) throws IOException{
+    private File getRealPath(String path) throws IOException {
         return new File(this.rootPath, path);
     }
 
-    private boolean created(){
+    private boolean created() {
         return this.rootPath.exists();
     }
 
-    private void create() throws IOException{
+    private void create() throws IOException {
         if(!this.rootPath.exists()){
             boolean success = this.rootPath.mkdirs();
             if(!success){
@@ -200,7 +200,7 @@ public class FileMount implements IWritableMount {
         }
     }
 
-    private long measureUsedSpace(File file){
+    private long measureUsedSpace(File file) {
         if(!file.exists()){
             return 0L;
         }
@@ -217,46 +217,47 @@ public class FileMount implements IWritableMount {
     }
 
     private class CountingOutputStream extends OutputStream {
-        private OutputStream m_innerStream;
-        private long m_ignoredBytesLeft;
 
-        public CountingOutputStream(OutputStream innerStream, long bytesToIgnore){
-            this.m_innerStream = innerStream;
-            this.m_ignoredBytesLeft = bytesToIgnore;
+        private OutputStream innerStream;
+        private long ignoringBytesLeft;
+
+        public CountingOutputStream(OutputStream innerStream, long bytesToIgnore) {
+            this.innerStream = innerStream;
+            this.ignoringBytesLeft = bytesToIgnore;
         }
 
         @Override
-        public void close() throws IOException{
-            this.m_innerStream.close();
+        public void close() throws IOException {
+            this.innerStream.close();
         }
 
         @Override
-        public void flush() throws IOException{
-            this.m_innerStream.flush();
+        public void flush() throws IOException {
+            this.innerStream.flush();
         }
 
         @Override
-        public void write(byte[] b) throws IOException{
+        public void write(byte[] b) throws IOException {
             count(b.length);
-            this.m_innerStream.write(b);
+            this.innerStream.write(b);
         }
 
         @Override
-        public void write(byte[] b, int off, int len) throws IOException{
+        public void write(byte[] b, int off, int len) throws IOException {
             count(len);
-            this.m_innerStream.write(b, off, len);
+            this.innerStream.write(b, off, len);
         }
 
-        public void write(int b) throws IOException{
+        public void write(int b) throws IOException {
             count(1L);
-            this.m_innerStream.write(b);
+            this.innerStream.write(b);
         }
 
-        private void count(long n) throws IOException{
-            this.m_ignoredBytesLeft -= n;
-            if(this.m_ignoredBytesLeft < 0L){
-                long newBytes = -this.m_ignoredBytesLeft;
-                this.m_ignoredBytesLeft = 0L;
+        private void count(long n) throws IOException {
+            this.ignoringBytesLeft -= n;
+            if(this.ignoringBytesLeft < 0L){
+                long newBytes = -this.ignoringBytesLeft;
+                this.ignoringBytesLeft = 0L;
 
                 long bytesLeft = FileMount.this.capacity - FileMount.this.usedSpace;
                 if(newBytes > bytesLeft){

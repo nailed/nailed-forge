@@ -7,8 +7,8 @@ package jk_5.nailed.api.player;
  */
 public interface NailedWebUser {
 
-    public String getUsername();
-    public String getFullName();
-    public String getEmail();
-    public boolean isAuthenticated();
+    String getUsername();
+    String getFullName();
+    String getEmail();
+    boolean isAuthenticated();
 }

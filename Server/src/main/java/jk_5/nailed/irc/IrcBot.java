@@ -1,25 +1,26 @@
 package jk_5.nailed.irc;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.gson.JsonObject;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent;
-import jk_5.nailed.NailedLog;
-import jk_5.nailed.NailedServer;
-import jk_5.nailed.util.Utils;
-import net.minecraft.event.HoverEvent;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.management.ServerConfigurationManager;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.ServerChatEvent;
-import org.jibble.pircbot.Colors;
-import org.jibble.pircbot.PircBot;
+import java.util.*;
 
-import java.util.Map;
+import com.google.common.collect.*;
+import com.google.gson.*;
+
+import org.jibble.pircbot.*;
+
+import net.minecraft.event.*;
+import net.minecraft.server.*;
+import net.minecraft.server.management.*;
+import net.minecraft.util.*;
+
+import cpw.mods.fml.common.*;
+import cpw.mods.fml.common.eventhandler.*;
+import cpw.mods.fml.common.gameevent.*;
+
+import net.minecraftforge.common.*;
+import net.minecraftforge.event.*;
+
+import jk_5.nailed.*;
+import jk_5.nailed.util.*;
 
 /**
  * No description given
@@ -28,17 +29,10 @@ import java.util.Map;
  */
 public class IrcBot extends PircBot {
 
-    private boolean enabled = false;
-    private final String host;
-    private final int port;
-    private String serverPassword;
-    private final String channel;
-    private String channelPassword;
-
     private static final Map<String, EnumChatFormatting> colors = ImmutableMap.<String, EnumChatFormatting>builder()
             .put(Colors.BLACK, EnumChatFormatting.WHITE)
             .put(Colors.BLUE, EnumChatFormatting.BLUE)
-            //.put(Colors.BOLD, EnumChatFormatting.BOLD)
+                    //.put(Colors.BOLD, EnumChatFormatting.BOLD)
             .put(Colors.BROWN, EnumChatFormatting.GOLD)
             .put(Colors.CYAN, EnumChatFormatting.AQUA)
             .put(Colors.DARK_BLUE, EnumChatFormatting.DARK_BLUE)
@@ -52,11 +46,18 @@ public class IrcBot extends PircBot {
             .put(Colors.PURPLE, EnumChatFormatting.DARK_PURPLE)
             .put(Colors.RED, EnumChatFormatting.RED)
             .put(Colors.TEAL, EnumChatFormatting.DARK_AQUA)
-            //.put(Colors.UNDERLINE, EnumChatFormatting.UNDERLINE)
+                    //.put(Colors.UNDERLINE, EnumChatFormatting.UNDERLINE)
             .put(Colors.WHITE, EnumChatFormatting.BLACK)
             .put(Colors.YELLOW, EnumChatFormatting.YELLOW).build();
 
-    public IrcBot(){
+    private boolean enabled = false;
+    private final String host;
+    private final int port;
+    private String serverPassword;
+    private final String channel;
+    private String channelPassword;
+
+    public IrcBot() {
         JsonObject cfg = NailedServer.getConfig().getAsJsonObject("irc");
         this.enabled = cfg.get("enabled").getAsBoolean();
         this.host = cfg.get("host").getAsString();
@@ -64,8 +65,12 @@ public class IrcBot extends PircBot {
         this.serverPassword = cfg.get("serverPassword").getAsString();
         this.channel = cfg.get("channel").getAsString();
         this.channelPassword = cfg.get("channelPassword").getAsString();
-        if(this.serverPassword.length() == 0) this.serverPassword = null;
-        if(this.channelPassword.length() == 0) this.channelPassword = null;
+        if(this.serverPassword.length() == 0){
+            this.serverPassword = null;
+        }
+        if(this.channelPassword.length() == 0){
+            this.channelPassword = null;
+        }
         this.setName("Nailed");
         this.setLogin("Nailed");
         this.setVersion("Nailed");
@@ -77,23 +82,23 @@ public class IrcBot extends PircBot {
 
     @SubscribeEvent
     @SuppressWarnings("unused")
-    public void onChat(ServerChatEvent event){
+    public void onChat(ServerChatEvent event) {
         this.sendMessage(this.channel, "<" + event.player.getGameProfile().getName() + "> " + event.message);
     }
 
     @SubscribeEvent
     @SuppressWarnings("unused")
-    public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event){
+    public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
         this.sendMessage(this.channel, "* " + event.player.getGameProfile().getName() + " has joined the game");
     }
 
     @SubscribeEvent
     @SuppressWarnings("unused")
-    public void onPlayerJoin(PlayerEvent.PlayerLoggedOutEvent event){
+    public void onPlayerJoin(PlayerEvent.PlayerLoggedOutEvent event) {
         this.sendMessage(this.channel, "* " + event.player.getGameProfile().getName() + " has left the game");
     }
 
-    public void connect(){
+    public void connect() {
         if(this.enabled){
             new ConnectThread().start();
         }
@@ -116,7 +121,7 @@ public class IrcBot extends PircBot {
     @Override
     protected void onMessage(String channel, String sender, String login, String hostname, String message) {
         ServerConfigurationManager configManager = MinecraftServer.getServer().getConfigurationManager();
-        if(message.equals("!list") || message.equals("!players")){
+        if("!list".equals(message) || "!players".equals(message)){
             this.sendMessage(channel, configManager.getCurrentPlayerCount() + " online players: " + configManager.getPlayerListAsString());
         }else{
             ChatComponentText component = new ChatComponentText("");
@@ -244,7 +249,9 @@ public class IrcBot extends PircBot {
 
     @Override
     protected void onTopic(String channel, String topic, String setBy, long date, boolean changed) {
-        if(!changed) return;
+        if(!changed){
+            return;
+        }
         ChatComponentText component = new ChatComponentText("");
         IChatComponent comp = new ChatComponentText("[" + channel + "]");
         comp.getChatStyle().setColor(EnumChatFormatting.GRAY);
@@ -255,6 +262,7 @@ public class IrcBot extends PircBot {
     }
 
     private class ConnectThread extends Thread {
+
         @Override
         public void run() {
             try{
@@ -267,7 +275,7 @@ public class IrcBot extends PircBot {
         }
     }
 
-    private void append(IChatComponent component, String message){
+    private void append(IChatComponent component, String message) {
         IChatComponent comp;
         String msg = "";
         EnumChatFormatting color = null;
@@ -349,7 +357,7 @@ public class IrcBot extends PircBot {
             component.appendSibling(comp);
         }
         //for(IChatComponent c : (List<IChatComponent>) component.getSiblings()){
-            //http(s)?://(([A-Za-z0-9]+)\.)+([A-Za-z0-9]{2,4})(/)?
+        //http(s)?://(([A-Za-z0-9]+)\.)+([A-Za-z0-9]{2,4})(/)?
         //}
     }
 

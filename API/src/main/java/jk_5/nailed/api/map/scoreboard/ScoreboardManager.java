@@ -1,9 +1,8 @@
 package jk_5.nailed.api.map.scoreboard;
 
-import jk_5.nailed.api.player.Player;
+import javax.annotation.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import jk_5.nailed.api.player.*;
 
 /**
  * No description given
@@ -12,21 +11,25 @@ import javax.annotation.Nullable;
  */
 public interface ScoreboardManager {
 
-    @Nonnull public Objective getOrCreateObjective(@Nonnull String name);
-    @Nullable public Objective getObjective(@Nonnull String name);
+    @Nonnull
+    Objective getOrCreateObjective(@Nonnull String name);
+    @Nullable
+    Objective getObjective(@Nonnull String name);
 
-    public void onPlayerJoinedMap(@Nonnull Player player);
-    public void onPlayerLeftMap(@Nonnull Player player);
+    void onPlayerJoinedMap(@Nonnull Player player);
+    void onPlayerLeftMap(@Nonnull Player player);
 
     /**
      * Displays the given objective at the given location
      * Pass null as the objective to clear the display at that slot
      *
-     * @param type The slot to display the objective
+     * @param type      The slot to display the objective
      * @param objective The objective to display
      */
-    public void setDisplay(@Nonnull DisplayType type, @Nullable Objective objective);
+    void setDisplay(@Nonnull DisplayType type, @Nullable Objective objective);
 
-    @Nonnull public ScoreboardTeam getOrCreateTeam(@Nonnull String id);
-    @Nullable public ScoreboardTeam getTeam(@Nonnull String id);
+    @Nonnull
+    ScoreboardTeam getOrCreateTeam(@Nonnull String id);
+    @Nullable
+    ScoreboardTeam getTeam(@Nonnull String id);
 }

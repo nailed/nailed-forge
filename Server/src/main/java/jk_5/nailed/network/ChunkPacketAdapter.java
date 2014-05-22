@@ -1,21 +1,25 @@
 package jk_5.nailed.network;
 
-import jk_5.nailed.NailedLog;
-import jk_5.nailed.blocks.NailedBlock;
-import net.minecraft.block.Block;
-import net.minecraft.network.play.server.S21PacketChunkData;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.NibbleArray;
-import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
+import net.minecraft.block.*;
+import net.minecraft.network.play.server.*;
+import net.minecraft.world.chunk.*;
+import net.minecraft.world.chunk.storage.*;
+
+import jk_5.nailed.*;
+import jk_5.nailed.blocks.*;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-public class ChunkPacketAdapter {
+public final class ChunkPacketAdapter {
 
-    public static S21PacketChunkData.Extracted adaptChunk(Chunk chunk, boolean bool, int i){
+    private ChunkPacketAdapter() {
+
+    }
+
+    public static S21PacketChunkData.Extracted adaptChunk(Chunk chunk, boolean bool, int i) {
         NailedLog.info("Serializing chunk " + chunk.toString());
         int j = 0;
         ExtendedBlockStorage[] aExtendedBlockStorage = chunk.getBlockStorageArray();
@@ -27,9 +31,11 @@ public class ChunkPacketAdapter {
 
         int l;
 
-        for( l = 0; l < aExtendedBlockStorage.length; ++l){
+        for(l = 0; l < aExtendedBlockStorage.length; ++l){
             ExtendedBlockStorage array = aExtendedBlockStorage[l];
-            if(array == null) continue;
+            if(array == null){
+                continue;
+            }
             ExtendedBlockStorage pExtendedBlockStorage = new ExtendedBlockStorage(array.getYLocation(), true);
 
             pExtendedBlockStorage.setBlockLSBArray(array.getBlockLSBArray());
@@ -40,13 +46,13 @@ public class ChunkPacketAdapter {
             aextendedblockstorage[l] = pExtendedBlockStorage;
         }
 
-        for( ExtendedBlockStorage extendedBlockStorage : aextendedblockstorage){
-            if (extendedBlockStorage != null){
-                for (int x = 0; x < 16; ++x){
-                    for (int y = 0; y < 16; ++y){
-                        for (int z = 0; z < 16; ++z){
+        for(ExtendedBlockStorage extendedBlockStorage : aextendedblockstorage){
+            if(extendedBlockStorage != null){
+                for(int x = 0; x < 16; ++x){
+                    for(int y = 0; y < 16; ++y){
+                        for(int z = 0; z < 16; ++z){
                             Block block = extendedBlockStorage.getBlockByExtId(x, y, z);
-                            if (block instanceof NailedBlock){
+                            if(block instanceof NailedBlock){
                                 extendedBlockStorage.func_150818_a(x, y, z, ((NailedBlock) block).getReplacementBlock());
                                 extendedBlockStorage.setExtBlockMetadata(x, y, z, ((NailedBlock) block).getReplacementMetadata());
                             }
@@ -56,29 +62,23 @@ public class ChunkPacketAdapter {
             }
         }
 
-        if (bool)
-        {
+        if(bool){
             chunk.sendUpdates = true;
         }
 
-        for (l = 0; l < aextendedblockstorage.length; ++l)
-        {
-            if (aextendedblockstorage[l] != null && (!bool || !aextendedblockstorage[l].isEmpty()) && (i & 1 << l) != 0)
-            {
+        for(l = 0; l < aextendedblockstorage.length; ++l){
+            if(aextendedblockstorage[l] != null && (!bool || !aextendedblockstorage[l].isEmpty()) && (i & 1 << l) != 0){
                 extracted.field_150280_b |= 1 << l;
 
-                if (aextendedblockstorage[l].getBlockMSBArray() != null)
-                {
+                if(aextendedblockstorage[l].getBlockMSBArray() != null){
                     extracted.field_150281_c |= 1 << l;
                     ++k;
                 }
             }
         }
 
-        for (l = 0; l < aextendedblockstorage.length; ++l)
-        {
-            if (aextendedblockstorage[l] != null && (!bool || !aextendedblockstorage[l].isEmpty()) && (i & 1 << l) != 0)
-            {
+        for(l = 0; l < aextendedblockstorage.length; ++l){
+            if(aextendedblockstorage[l] != null && (!bool || !aextendedblockstorage[l].isEmpty()) && (i & 1 << l) != 0){
                 byte[] abyte1 = aextendedblockstorage[l].getBlockLSBArray();
                 System.arraycopy(abyte1, 0, abyte, j, abyte1.length);
                 j += abyte1.length;
@@ -87,32 +87,25 @@ public class ChunkPacketAdapter {
 
         NibbleArray nibblearray;
 
-        for (l = 0; l < aextendedblockstorage.length; ++l)
-        {
-            if (aextendedblockstorage[l] != null && (!bool || !aextendedblockstorage[l].isEmpty()) && (i & 1 << l) != 0)
-            {
+        for(l = 0; l < aextendedblockstorage.length; ++l){
+            if(aextendedblockstorage[l] != null && (!bool || !aextendedblockstorage[l].isEmpty()) && (i & 1 << l) != 0){
                 nibblearray = aextendedblockstorage[l].getMetadataArray();
                 System.arraycopy(nibblearray.data, 0, abyte, j, nibblearray.data.length);
                 j += nibblearray.data.length;
             }
         }
 
-        for (l = 0; l < aextendedblockstorage.length; ++l)
-        {
-            if (aextendedblockstorage[l] != null && (!bool || !aextendedblockstorage[l].isEmpty()) && (i & 1 << l) != 0)
-            {
+        for(l = 0; l < aextendedblockstorage.length; ++l){
+            if(aextendedblockstorage[l] != null && (!bool || !aextendedblockstorage[l].isEmpty()) && (i & 1 << l) != 0){
                 nibblearray = aextendedblockstorage[l].getBlocklightArray();
                 System.arraycopy(nibblearray.data, 0, abyte, j, nibblearray.data.length);
                 j += nibblearray.data.length;
             }
         }
 
-        if (!chunk.worldObj.provider.hasNoSky)
-        {
-            for (l = 0; l < aextendedblockstorage.length; ++l)
-            {
-                if (aextendedblockstorage[l] != null && (!bool || !aextendedblockstorage[l].isEmpty()) && (i & 1 << l) != 0)
-                {
+        if(!chunk.worldObj.provider.hasNoSky){
+            for(l = 0; l < aextendedblockstorage.length; ++l){
+                if(aextendedblockstorage[l] != null && (!bool || !aextendedblockstorage[l].isEmpty()) && (i & 1 << l) != 0){
                     nibblearray = aextendedblockstorage[l].getSkylightArray();
                     System.arraycopy(nibblearray.data, 0, abyte, j, nibblearray.data.length);
                     j += nibblearray.data.length;
@@ -120,12 +113,9 @@ public class ChunkPacketAdapter {
             }
         }
 
-        if (k > 0)
-        {
-            for (l = 0; l < aextendedblockstorage.length; ++l)
-            {
-                if (aextendedblockstorage[l] != null && (!bool || !aextendedblockstorage[l].isEmpty()) && aextendedblockstorage[l].getBlockMSBArray() != null && (i & 1 << l) != 0)
-                {
+        if(k > 0){
+            for(l = 0; l < aextendedblockstorage.length; ++l){
+                if(aextendedblockstorage[l] != null && (!bool || !aextendedblockstorage[l].isEmpty()) && aextendedblockstorage[l].getBlockMSBArray() != null && (i & 1 << l) != 0){
                     nibblearray = aextendedblockstorage[l].getBlockMSBArray();
                     System.arraycopy(nibblearray.data, 0, abyte, j, nibblearray.data.length);
                     j += nibblearray.data.length;
@@ -133,8 +123,7 @@ public class ChunkPacketAdapter {
             }
         }
 
-        if (bool)
-        {
+        if(bool){
             byte[] abyte2 = chunk.getBiomeArray();
             System.arraycopy(abyte2, 0, abyte, j, abyte2.length);
             j += abyte2.length;

@@ -8,8 +8,9 @@ package net.minecraftforge.permissions.api;
 public class UnregisterredPermissionException extends RuntimeException {
 
     public final String node;
-    public UnregisterredPermissionException(String node){
-        super("Unregisterred Permission encountered! "+node);
+
+    public UnregisterredPermissionException(String node) {
+        super("Unregisterred Permission encountered! " + node);
         this.node = node;
     }
 }

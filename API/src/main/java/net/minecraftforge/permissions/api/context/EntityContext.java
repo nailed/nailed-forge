@@ -1,7 +1,8 @@
 package net.minecraftforge.permissions.api.context;
 
-import lombok.Getter;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.*;
+
+import lombok.*;
 
 /**
  * No description given
@@ -10,11 +11,14 @@ import net.minecraft.entity.Entity;
  */
 public class EntityContext implements ILocationContext, IRotationContext {
 
-    @Getter private final double x, y, z;
-    @Getter private final int dimensionId, entityId;
-    @Getter private final float yaw, pitch;
+    @Getter
+    private final double x, y, z;
+    @Getter
+    private final int dimensionId, entityId;
+    @Getter
+    private final float yaw, pitch;
 
-    public EntityContext(Entity entity){
+    public EntityContext(Entity entity) {
         this.dimensionId = entity.worldObj.provider.dimensionId;
         this.entityId = entity.getEntityId();
         this.x = entity.posX;

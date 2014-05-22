@@ -1,6 +1,6 @@
 package jk_5.nailed.map.script;
 
-import java.io.IOException;
+import java.io.*;
 
 /**
  * No description given
@@ -9,8 +9,8 @@ import java.io.IOException;
  */
 public interface IMountedFileNormal extends IMountedFile {
 
-    public String readLine() throws IOException;
-    public void write(String data, int paramInt1, int paramInt2, boolean append) throws IOException;
-    public void close() throws IOException;
-    public void flush() throws IOException;
+    String readLine() throws IOException;
+    void write(String data, int paramInt1, int paramInt2, boolean append) throws IOException;
+    void close() throws IOException;
+    void flush() throws IOException;
 }

@@ -1,7 +1,7 @@
 package jk_5.nailed.scheduler;
 
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.concurrent.scheduler.Task;
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.concurrent.scheduler.*;
 
 /**
  * No description given
@@ -59,7 +59,7 @@ class NailedTask implements Task, Runnable {
     }
 
     @Override
-    public void cancel(){
+    public void cancel() {
         NailedAPI.getScheduler().cancelTask(id);
     }
 
@@ -69,7 +69,7 @@ class NailedTask implements Task, Runnable {
      * @return false if it is a craft future task that has already begun execution, true otherwise
      */
     boolean cancel0() {
-        setPeriod(-2l);
+        setPeriod(-2L);
         return true;
     }
 

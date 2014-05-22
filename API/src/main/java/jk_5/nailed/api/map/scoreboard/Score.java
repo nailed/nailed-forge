@@ -1,6 +1,6 @@
 package jk_5.nailed.api.map.scoreboard;
 
-import javax.annotation.Nonnull;
+import javax.annotation.*;
 
 /**
  * No description given
@@ -9,9 +9,10 @@ import javax.annotation.Nonnull;
  */
 public interface Score {
 
-    @Nonnull public String getName();
-    public int getValue();
-    public void setValue(int value);
-    public void addValue(int value);
-    public void update();
+    @Nonnull
+    String getName();
+    int getValue();
+    void setValue(int value);
+    void addValue(int value);
+    void update();
 }

@@ -1,10 +1,11 @@
 package jk_5.nailed.server.command;
 
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.player.Player;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.command.*;
+import net.minecraft.util.*;
+
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.map.*;
+import jk_5.nailed.api.player.*;
 
 /**
  * No description given
@@ -13,13 +14,13 @@ import net.minecraft.util.ChatComponentText;
  */
 public class CommandFps extends NailedCommand {
 
-    public CommandFps(){
+    public CommandFps() {
         super("fps");
     }
 
     @Override
     public void processCommandWithMap(ICommandSender sender, Map map, String[] args) {
-        if (args.length > 0){
+        if(args.length > 0){
             Player player = NailedAPI.getPlayerRegistry().getPlayerByUsername(args[0]);
             sender.addChatMessage(new ChatComponentText(player.getUsername() + ": " + player.getFps() + " FPS"));
             return;
@@ -29,7 +30,7 @@ public class CommandFps extends NailedCommand {
         for(Player player : NailedAPI.getPlayerRegistry().getPlayers()){
             if(player.isOnline()){
                 sender.addChatMessage(new ChatComponentText(player.getUsername() + ": " + player.getFps() + " FPS"));
-                count ++;
+                count++;
                 total += player.getFps();
             }
         }

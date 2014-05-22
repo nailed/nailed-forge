@@ -7,11 +7,11 @@ package jk_5.nailed.map;
  */
 public class DiscardedMappackInitializationException extends MappackInitializationException {
 
-    public DiscardedMappackInitializationException(String message){
+    public DiscardedMappackInitializationException(String message) {
         super(message);
     }
 
-    public DiscardedMappackInitializationException(String message, Throwable cause){
+    public DiscardedMappackInitializationException(String message, Throwable cause) {
         super(message, cause);
     }
 }

@@ -1,38 +1,34 @@
 package jk_5.nailed.map.teleport;
 
-import com.google.common.base.Preconditions;
-import cpw.mods.fml.common.FMLCommonHandler;
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.Mappack;
-import jk_5.nailed.api.map.teleport.TeleportEvent;
-import jk_5.nailed.api.map.teleport.TeleportOptions;
-import jk_5.nailed.api.map.teleport.Teleporter;
-import jk_5.nailed.api.player.Player;
-import jk_5.nailed.api.player.PlayerClient;
-import jk_5.nailed.map.Location;
-import jk_5.nailed.map.gen.NailedWorldProvider;
-import jk_5.nailed.players.TeamUndefined;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.play.server.S05PacketSpawnPosition;
-import net.minecraft.network.play.server.S07PacketRespawn;
-import net.minecraft.network.play.server.S1DPacketEntityEffect;
-import net.minecraft.network.play.server.S1FPacketSetExperience;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.management.ItemInWorldManager;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.demo.DemoWorldManager;
-import net.minecraftforge.common.MinecraftForge;
+import java.util.*;
+import javax.annotation.*;
 
-import javax.annotation.Nonnull;
-import java.util.List;
+import com.google.common.base.*;
+
+import net.minecraft.entity.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.nbt.*;
+import net.minecraft.network.play.server.*;
+import net.minecraft.potion.*;
+import net.minecraft.server.*;
+import net.minecraft.server.management.*;
+import net.minecraft.world.*;
+import net.minecraft.world.chunk.*;
+import net.minecraft.world.demo.*;
+
+import cpw.mods.fml.common.*;
+
+import net.minecraftforge.common.*;
+
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.*;
+import jk_5.nailed.api.map.teleport.*;
+import jk_5.nailed.api.map.teleport.Teleporter;
+import jk_5.nailed.api.player.*;
+import jk_5.nailed.map.*;
+import jk_5.nailed.map.gen.*;
+import jk_5.nailed.players.*;
 
 public class NailedTeleporter implements Teleporter {
 
@@ -40,7 +36,7 @@ public class NailedTeleporter implements Teleporter {
      * {@inheritDoc}
      */
     @Override
-    public boolean teleportEntity(@Nonnull Entity entity, @Nonnull TeleportOptions options){
+    public boolean teleportEntity(@Nonnull Entity entity, @Nonnull TeleportOptions options) {
         Preconditions.checkNotNull(entity, "entity");
         Preconditions.checkNotNull(options, "options");
 
@@ -50,8 +46,10 @@ public class NailedTeleporter implements Teleporter {
             destination = current;
         }
         World destWorld = destination.getWorld();
-        if(destWorld.isRemote) return false;
-        options = options.reMake(); //We don't want to accidently modify the options object passed in, so we clone it.
+        if(destWorld.isRemote){
+            return false;
+        }
+        options = options.reMake(); //We don't want to accidently modify the options object passed in, so we copy it.
         Location location = options.getLocation();
         if(!TeleportEventFactory.isLinkPermitted(current, destination, entity, options)){
             return false;
@@ -69,7 +67,7 @@ public class NailedTeleporter implements Teleporter {
         return true;
     }
 
-    private static Entity teleportEntity(Map currentMap, Map destMap, Entity entity, Location location, TeleportOptions options){
+    private static Entity teleportEntity(Map currentMap, Map destMap, Entity entity, Location location, TeleportOptions options) {
         int dimension = destMap.getID();
         WorldServer destWorld = destMap.getWorld();
         if(!TeleportEventFactory.isLinkPermitted(currentMap, destMap, entity, options)){
@@ -118,7 +116,9 @@ public class NailedTeleporter implements Teleporter {
                 entity.writeToNBTOptional(entityNBT);
                 entity.isDead = true;
                 entity = EntityList.createEntityFromNBT(entityNBT, destWorld);
-                if(entity == null) return null;
+                if(entity == null){
+                    return null;
+                }
                 entity.dimension = destWorld.provider.dimensionId;
             }
             destWorld.spawnEntityInWorld(entity);
@@ -130,7 +130,9 @@ public class NailedTeleporter implements Teleporter {
         entity.setLocationAndAngles(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
         if(entity instanceof EntityPlayerMP){
             EntityPlayerMP player = (EntityPlayerMP) entity;
-            if(changingworlds) player.mcServer.getConfigurationManager().func_72375_a(player, destWorld);
+            if(changingworlds){
+                player.mcServer.getConfigurationManager().func_72375_a(player, destWorld);
+            }
             player.playerNetServerHandler.setPlayerLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
         }
         destWorld.updateEntityWithOptionalForce(entity, false);
@@ -161,7 +163,7 @@ public class NailedTeleporter implements Teleporter {
         return entity;
     }
 
-    private static void removeEntityFromWorld(World world, Entity entity){
+    private static void removeEntityFromWorld(World world, Entity entity) {
         if(entity instanceof EntityPlayer){
             EntityPlayer player = (EntityPlayer) entity;
             player.closeScreen();

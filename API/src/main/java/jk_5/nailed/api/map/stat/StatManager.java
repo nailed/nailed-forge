@@ -1,6 +1,6 @@
 package jk_5.nailed.api.map.stat;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * No description given
@@ -9,12 +9,12 @@ import java.util.List;
  */
 public interface StatManager {
 
-    public StatConfig getStats();
-    public List<IStatTileEntity> getStatTiles();
+    StatConfig getStats();
+    List<IStatTileEntity> getStatTiles();
 
-    public Stat getStat(String name);
-    public void registerStatTile(IStatTileEntity tile);
-    public void unloadStatTile(IStatTileEntity tile);
-    public void onStatEnable(Stat stat);
-    public void onStatDisable(Stat stat);
+    Stat getStat(String name);
+    void registerStatTile(IStatTileEntity tile);
+    void unloadStatTile(IStatTileEntity tile);
+    void onStatEnable(Stat stat);
+    void onStatDisable(Stat stat);
 }

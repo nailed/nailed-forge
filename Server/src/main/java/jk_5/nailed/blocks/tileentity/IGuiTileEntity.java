@@ -1,7 +1,8 @@
 package jk_5.nailed.blocks.tileentity;
 
-import io.netty.buffer.ByteBuf;
-import jk_5.nailed.api.player.Player;
+import io.netty.buffer.*;
+
+import jk_5.nailed.api.player.*;
 
 /**
  * No description given
@@ -10,7 +11,7 @@ import jk_5.nailed.api.player.Player;
  */
 public interface IGuiTileEntity {
 
-    public boolean canPlayerOpenGui(Player player);
+    boolean canPlayerOpenGui(Player player);
 
-    public void writeGuiData(ByteBuf buffer);
+    void writeGuiData(ByteBuf buffer);
 }

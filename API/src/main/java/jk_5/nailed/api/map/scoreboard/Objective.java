@@ -1,9 +1,9 @@
 package jk_5.nailed.api.map.scoreboard;
 
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.scripting.ILuaObject;
+import javax.annotation.*;
 
-import javax.annotation.Nonnull;
+import jk_5.nailed.api.map.*;
+import jk_5.nailed.api.scripting.*;
 
 /**
  * This represents an objective in the scoreboard system.
@@ -16,24 +16,27 @@ public interface Objective extends ILuaObject {
 
     /**
      * Obtain the map that belongs to this Objective.
+     *
      * @return The {@link Map} this Objective is valid for.
      */
     @Nonnull
-    public Map getMap();
+    Map getMap();
 
     /**
      * Get the unique id for this Objective.
+     *
      * @return The unique id for this objective. This id may be chosen upon creation in {@link ScoreboardManager#getOrCreateObjective(String)}.
      */
     @Nonnull
-    public String getId();
+    String getId();
 
     /**
      * Get the display name for this objective. Note that this may be formatted (color, bold, italic).
+     *
      * @return The displayName of this Objective.
      */
     @Nonnull
-    public String getDisplayName();
+    String getDisplayName();
 
     /**
      * Sets the displayName of this Objective.
@@ -42,7 +45,7 @@ public interface Objective extends ILuaObject {
      * @param displayName The new displayName for this objective.
      * @throws IllegalArgumentException When the displayName is longer than 32.
      */
-    public void setDisplayName(@Nonnull String displayName);
+    void setDisplayName(@Nonnull String displayName);
 
     /**
      * Gets the score object for the specified name, or creating one if it doesn't already exist.
@@ -53,11 +56,12 @@ public interface Objective extends ILuaObject {
      * @throws IllegalArgumentException When the name is longer than 16.
      */
     @Nonnull
-    public Score getScore(@Nonnull String name);
+    Score getScore(@Nonnull String name);
 
     /**
      * Removes the score from the objective.
+     *
      * @param score The score to remove.
      */
-    public void removeScore(@Nonnull Score score);
+    void removeScore(@Nonnull Score score);
 }

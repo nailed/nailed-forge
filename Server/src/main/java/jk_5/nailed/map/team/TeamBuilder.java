@@ -1,11 +1,11 @@
 package jk_5.nailed.map.team;
 
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.team.Team;
-import jk_5.nailed.players.NailedTeam;
-import jk_5.nailed.util.ChatColor;
+import javax.annotation.*;
 
-import javax.annotation.Nonnull;
+import jk_5.nailed.api.map.*;
+import jk_5.nailed.api.map.team.*;
+import jk_5.nailed.players.*;
+import jk_5.nailed.util.*;
 
 /**
  * No description given
@@ -22,7 +22,7 @@ public class TeamBuilder implements jk_5.nailed.api.map.team.TeamBuilder {
 
     @Override
     @Nonnull
-    public Team build(Map map){
+    public Team build(Map map) {
         Team team = new NailedTeam(map, this.internalName);
         team.setName(this.name);
         team.setColor(this.color);
@@ -32,31 +32,31 @@ public class TeamBuilder implements jk_5.nailed.api.map.team.TeamBuilder {
     }
 
     @Override
-    public TeamBuilder setName(@Nonnull String name){
+    public TeamBuilder setName(@Nonnull String name) {
         this.name = name;
         return this;
     }
 
     @Override
-    public TeamBuilder setInternalName(@Nonnull String internalName){
+    public TeamBuilder setInternalName(@Nonnull String internalName) {
         this.internalName = internalName;
         return this;
     }
 
     @Override
-    public TeamBuilder setColor(@Nonnull ChatColor color){
+    public TeamBuilder setColor(@Nonnull ChatColor color) {
         this.color = color;
         return this;
     }
 
     @Override
-    public TeamBuilder setFriendlyFire(boolean isFriendlyFire){
+    public TeamBuilder setFriendlyFire(boolean isFriendlyFire) {
         this.friendlyFire = isFriendlyFire;
         return this;
     }
 
     @Override
-    public TeamBuilder setSeeFriendlyInvisibles(boolean isSeeFriendlyInvisibles){
+    public TeamBuilder setSeeFriendlyInvisibles(boolean isSeeFriendlyInvisibles) {
         this.seeFriendlyInvisibles = isSeeFriendlyInvisibles;
         return this;
     }

@@ -1,20 +1,19 @@
 package jk_5.nailed.blocks;
 
-import jk_5.nailed.NailedLog;
-import jk_5.nailed.api.block.INailedBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockCommandBlock;
-import net.minecraft.init.Blocks;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityCommandBlock;
-import net.minecraft.world.World;
+import net.minecraft.block.*;
+import net.minecraft.init.*;
+import net.minecraft.tileentity.*;
+import net.minecraft.world.*;
+
+import jk_5.nailed.*;
+import jk_5.nailed.api.block.*;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-public class BlockCommandBlockOverride extends BlockCommandBlock implements INailedBlock{
+public class BlockCommandBlockOverride extends BlockCommandBlock implements INailedBlock {
 
     @Override
     public TileEntity createNewTileEntity(World world, int meta) {
@@ -23,12 +22,12 @@ public class BlockCommandBlockOverride extends BlockCommandBlock implements INai
     }
 
     @Override
-    public Block getReplacementBlock(){
+    public Block getReplacementBlock() {
         return Blocks.command_block;
     }
 
     @Override
-    public int getReplacementMetadata(){
+    public int getReplacementMetadata() {
         return 0;
     }
 }

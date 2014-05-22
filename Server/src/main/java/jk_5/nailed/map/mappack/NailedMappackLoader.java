@@ -1,27 +1,17 @@
 package jk_5.nailed.map.mappack;
 
-import com.google.common.collect.Lists;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import jk_5.nailed.NailedLog;
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.concurrent.Callback;
-import jk_5.nailed.api.concurrent.scheduler.NailedRunnable;
-import jk_5.nailed.api.map.Mappack;
-import jk_5.nailed.api.map.MappackLoader;
-import jk_5.nailed.api.map.MappackReloadListener;
-import jk_5.nailed.map.DiscardedMappackInitializationException;
-import jk_5.nailed.map.MappackInitializationException;
-import jk_5.nailed.players.NailedPlayer;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import java.io.*;
+import java.util.*;
+import javax.annotation.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.io.File;
-import java.util.List;
+import com.google.common.collect.*;
+
+import jk_5.nailed.*;
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.concurrent.*;
+import jk_5.nailed.api.concurrent.scheduler.*;
+import jk_5.nailed.api.map.*;
+import jk_5.nailed.map.*;
 
 /**
  * No description given
@@ -30,15 +20,15 @@ import java.util.List;
  */
 public class NailedMappackLoader implements MappackLoader {
 
+    public boolean loadASync = false;
+
     private final File mappackFolder = new File("mappacks");
     private final List<Mappack> mappacks = Lists.newArrayList();
     private final List<MappackReloadListener> listeners = Lists.newArrayList();
 
-    public boolean loadASync = false;
-
     @Override
     @Nullable
-    public Mappack getMappack(@Nonnull String mappackID){
+    public Mappack getMappack(@Nonnull String mappackID) {
         for(Mappack pack : this.mappacks){
             if(pack.getMappackID().equals(mappackID)){
                 return pack;
@@ -48,14 +38,18 @@ public class NailedMappackLoader implements MappackLoader {
     }
 
     @Override
-    public void loadMappacks(@Nullable final Callback<MappackLoader> callback){
+    public void loadMappacks(@Nullable final Callback<MappackLoader> callback) {
         NailedRunnable runnable = new NailedRunnable() {
             @Override
-            public void run(){
+            public void run() {
                 NailedLog.info("Loading mappacks...");
-                if(!mappackFolder.exists()) mappackFolder.mkdirs();
+                if(!mappackFolder.exists()){
+                    mappackFolder.mkdirs();
+                }
                 File[] list = mappackFolder.listFiles();
-                if(list == null) return;
+                if(list == null){
+                    return;
+                }
                 List<Mappack> newMappackList = Lists.newArrayList();
                 for(File file : list){
                     try{
@@ -66,10 +60,10 @@ public class NailedMappackLoader implements MappackLoader {
                             newMappackList.add(DirectoryMappack.create(file));
                             NailedLog.info("Successfully loaded mappack {}", file.getName());
                         }
-                    }catch (DiscardedMappackInitializationException e){
+                    }catch(DiscardedMappackInitializationException e){
                         //Discard!
                         NailedLog.warn("An error was thrown while loading mappack {}, skipping it!", file.getName());
-                    }catch (MappackInitializationException e){
+                    }catch(MappackInitializationException e){
                         NailedLog.error("Error while loading mappack {}, skipping it!", file.getName());
                         NailedLog.error("Exception: ", e);
                     }
@@ -80,7 +74,9 @@ public class NailedMappackLoader implements MappackLoader {
                     listener.onReload(NailedMappackLoader.this);
                 }
                 NailedLog.info("Successfully loaded {} mappacks!", newMappackList.size());
-                if(callback != null) callback.callback(NailedMappackLoader.this);
+                if(callback != null){
+                    callback.callback(NailedMappackLoader.this);
+                }
             }
         };
         if(this.loadASync){
@@ -91,24 +87,24 @@ public class NailedMappackLoader implements MappackLoader {
     }
 
     @Override
-    public void registerMappack(@Nonnull Mappack mappack){
+    public void registerMappack(@Nonnull Mappack mappack) {
         this.mappacks.add(mappack);
     }
 
     @Override
-    public void registerReloadListener(@Nonnull MappackReloadListener listener){
+    public void registerReloadListener(@Nonnull MappackReloadListener listener) {
         this.listeners.add(listener);
     }
 
     @Override
     @Nonnull
-    public File getMappackFolder(){
+    public File getMappackFolder() {
         return mappackFolder;
     }
 
     @Override
     @Nonnull
-    public List<Mappack> getMappacks(){
+    public List<Mappack> getMappacks() {
         return mappacks;
     }
 }

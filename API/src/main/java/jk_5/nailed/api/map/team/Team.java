@@ -1,14 +1,14 @@
 package jk_5.nailed.api.map.team;
 
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.PossibleWinner;
-import jk_5.nailed.api.map.scoreboard.ScoreboardTeam;
-import jk_5.nailed.api.player.Player;
-import jk_5.nailed.api.scripting.ILuaObject;
-import jk_5.nailed.map.Location;
-import jk_5.nailed.util.ChatColor;
+import java.util.*;
 
-import java.util.List;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.*;
+import jk_5.nailed.api.map.scoreboard.*;
+import jk_5.nailed.api.player.*;
+import jk_5.nailed.api.scripting.*;
+import jk_5.nailed.map.*;
+import jk_5.nailed.util.*;
 
 /**
  * No description given
@@ -17,34 +17,34 @@ import java.util.List;
  */
 public interface Team extends PossibleWinner, ILuaObject {
 
-    public Map getMap();
-    public String getTeamId();
+    Map getMap();
+    String getTeamId();
 
-    public String getName();
-    public void setName(String name);
-    public ChatColor getColor();
-    public void setColor(ChatColor color);
-    public Player getLeader();
-    public void setLeader(Player player);
-    public boolean isReady();
-    public void setReady(boolean ready);
-    public boolean isFriendlyFireEnabled();
-    public void setFriendlyFireEnabled(boolean enabled);
-    public boolean canSeeFriendlyInvisibles();
-    public void setSeeFriendlyInvisibles(boolean enabled);
-    public ScoreboardTeam getScoreboardTeam();
-    public void setScoreboardTeam(ScoreboardTeam team);
-    public Location getSpawnpoint();
-    public void setSpawnpoint(Location spawnpoint);
-    public String getColoredName();
+    String getName();
+    void setName(String name);
+    ChatColor getColor();
+    void setColor(ChatColor color);
+    Player getLeader();
+    void setLeader(Player player);
+    boolean isReady();
+    void setReady(boolean ready);
+    boolean isFriendlyFireEnabled();
+    void setFriendlyFireEnabled(boolean enabled);
+    boolean canSeeFriendlyInvisibles();
+    void setSeeFriendlyInvisibles(boolean enabled);
+    ScoreboardTeam getScoreboardTeam();
+    void setScoreboardTeam(ScoreboardTeam team);
+    Location getSpawnpoint();
+    void setSpawnpoint(Location spawnpoint);
+    String getColoredName();
 
-    public void onAddPlayer(Player player);
-    public void onRemovePlayer(Player player);
-    public void onWorldSet();
-    public void addPlayerToScoreboardTeam(Player player);
-    public void removePlayerFromScoreboardTeam(Player player);
+    void onAddPlayer(Player player);
+    void onRemovePlayer(Player player);
+    void onWorldSet();
+    void addPlayerToScoreboardTeam(Player player);
+    void removePlayerFromScoreboardTeam(Player player);
 
-    public boolean shouldOverrideDefaultSpawnpoint();
+    boolean shouldOverrideDefaultSpawnpoint();
 
-    public List<Player> getMembers();
+    List<Player> getMembers();
 }

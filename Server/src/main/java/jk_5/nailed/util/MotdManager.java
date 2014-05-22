@@ -1,14 +1,15 @@
 package jk_5.nailed.util;
 
-import com.google.common.collect.ImmutableList;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import net.minecraft.network.ServerStatusResponse;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatComponentText;
+import java.util.*;
 
-import java.util.List;
-import java.util.Random;
+import com.google.common.collect.*;
+
+import net.minecraft.network.*;
+import net.minecraft.server.*;
+import net.minecraft.util.*;
+
+import cpw.mods.fml.common.eventhandler.*;
+import cpw.mods.fml.common.gameevent.*;
 
 /**
  * No description given
@@ -44,7 +45,7 @@ public class MotdManager {
     private ChatComponentText motd;
 
     @SubscribeEvent
-    public void onEvent(TickEvent.ServerTickEvent event){
+    public void onEvent(TickEvent.ServerTickEvent event) {
         if(event.phase == TickEvent.Phase.START){
             if(this.motd == null){
                 this.motd = (ChatComponentText) data.func_151317_a();

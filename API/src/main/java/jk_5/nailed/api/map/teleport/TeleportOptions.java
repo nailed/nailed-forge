@@ -1,12 +1,10 @@
 package jk_5.nailed.api.map.teleport;
 
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.map.Location;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Builder;
+import jk_5.nailed.api.map.*;
+import jk_5.nailed.map.*;
+
+import lombok.*;
+import lombok.experimental.*;
 
 /**
  * No description given
@@ -26,16 +24,16 @@ public class TeleportOptions {
     private boolean clearInventory = false;
     private String sound = "nailed:teleport";
 
-    public TeleportOptions(Map destination, Location location){
+    public TeleportOptions(Map destination, Location location) {
         this.destination = destination;
         this.location = new Location(location);
     }
 
-    public TeleportOptions reMake(){
+    public TeleportOptions reMake() {
         return new TeleportOptions(this.location, this.destination, this.maintainMomentum, this.spawnParticles, this.clearInventory, this.sound);
     }
 
-    public int getDestinationID(){
+    public int getDestinationID() {
         return this.destination.getID();
     }
 }

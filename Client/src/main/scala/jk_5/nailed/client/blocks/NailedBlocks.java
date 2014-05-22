@@ -1,21 +1,20 @@
 package jk_5.nailed.client.blocks;
 
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
-import jk_5.nailed.client.blocks.tileentity.TileEntityPortalController;
-import jk_5.nailed.client.blocks.tileentity.TileEntitySky;
-import jk_5.nailed.client.blocks.tileentity.TileEntityStatEmitter;
-import jk_5.nailed.client.blocks.tileentity.TileEntityStatModifier;
-import jk_5.nailed.client.item.ItemBlockMulti;
-import jk_5.nailed.client.render.tileentity.TileEntitySkyRenderer$;
-import net.minecraft.item.ItemBlock;
+import net.minecraft.item.*;
+
+import cpw.mods.fml.client.registry.*;
+import cpw.mods.fml.common.registry.*;
+
+import jk_5.nailed.client.blocks.tileentity.*;
+import jk_5.nailed.client.item.*;
+import jk_5.nailed.client.render.tileentity.*;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-public class NailedBlocks {
+public final class NailedBlocks {
 
     public static BlockInvisibleWall invisibleWall;
     public static BlockPortalCrystal portalCrystal;
@@ -23,6 +22,10 @@ public class NailedBlocks {
     public static BlockStat stat;
     public static BlockPortal portal;
     public static BlockLight light;
+
+    private NailedBlocks(){
+
+    }
 
     public static void init(){
         invisibleWall = new BlockInvisibleWall();

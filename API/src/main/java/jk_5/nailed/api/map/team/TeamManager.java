@@ -1,8 +1,8 @@
 package jk_5.nailed.api.map.team;
 
-import jk_5.nailed.api.player.Player;
+import java.util.*;
 
-import java.util.List;
+import jk_5.nailed.api.player.*;
 
 /**
  * No description given
@@ -11,8 +11,8 @@ import java.util.List;
  */
 public interface TeamManager {
 
-    public Team getTeam(String team);
-    public Team getPlayerTeam(Player player);
-    public void setPlayerTeam(Player player, Team team);
-    public List<Team> getTeams();
+    Team getTeam(String team);
+    Team getPlayerTeam(Player player);
+    void setPlayerTeam(Player player, Team team);
+    List<Team> getTeams();
 }

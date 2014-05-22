@@ -1,7 +1,6 @@
 package jk_5.nailed.api.zone;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import javax.annotation.*;
 
 /**
  * No description given
@@ -9,7 +8,9 @@ import javax.annotation.Nullable;
  * @author jk-5
  */
 public interface ZoneRegistry {
+
     void lockZones();
     void registerZones();
-    @Nullable IZoneType getZoneType(@Nonnull String type);
+    @Nullable
+    IZoneType getZoneType(@Nonnull String type);
 }

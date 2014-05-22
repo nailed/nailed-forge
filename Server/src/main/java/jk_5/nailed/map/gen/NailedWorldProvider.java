@@ -1,20 +1,16 @@
 package jk_5.nailed.map.gen;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.Mappack;
-import jk_5.nailed.map.MappackContainingWorldProvider;
-import jk_5.nailed.map.NailedMap;
-import jk_5.nailed.network.NailedNetworkHandler;
-import jk_5.nailed.network.NailedPacket;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.world.WorldProvider;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.IChunkProvider;
+import io.netty.buffer.*;
+
+import net.minecraft.entity.player.*;
+import net.minecraft.util.*;
+import net.minecraft.world.*;
+import net.minecraft.world.chunk.*;
+
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.map.*;
+import jk_5.nailed.map.*;
+import jk_5.nailed.network.*;
 
 /**
  * No description given
@@ -27,28 +23,28 @@ public class NailedWorldProvider extends WorldProvider implements MappackContain
     private Map map;
 
     @Override
-    public void setDimension(int dim){
+    public void setDimension(int dim) {
         this.mapID = dim;
         super.setDimension(dim);
     }
 
     @Override
-    protected void registerWorldChunkManager(){
+    protected void registerWorldChunkManager() {
         this.map = NailedAPI.getMapLoader().getMap(this.dimensionId);
         this.worldChunkMgr = new VoidWorldChunkManager(this.worldObj);
     }
 
-    public void writeData(ByteBuf buffer){
+    public void writeData(ByteBuf buffer) {
 
     }
 
     @Override
-    public void calculateInitialWeather(){
+    public void calculateInitialWeather() {
         this.updateWeather();
     }
 
     @Override
-    public void updateWeather(){
+    public void updateWeather() {
         super.updateWeather();
 
         this.worldObj.rainingStrength = 0;
@@ -81,17 +77,17 @@ public class NailedWorldProvider extends WorldProvider implements MappackContain
     }
 
     @Override
-    public boolean canDoLightning(Chunk chunk){
+    public boolean canDoLightning(Chunk chunk) {
         this.map.getWeatherController().tick(this.worldObj, chunk);
         return false;
     }
 
-    private long getTimeUntilSunrise(){
+    private long getTimeUntilSunrise() {
         long dayinterval = 24000L;
         return dayinterval - this.getWorldTime() % dayinterval;
     }
 
-    public void resetRainAndThunder(){
+    public void resetRainAndThunder() {
         if(this.map instanceof NailedMap){
             ((NailedMap) this.map).markDataNeedsResync();
         }
@@ -99,32 +95,32 @@ public class NailedWorldProvider extends WorldProvider implements MappackContain
     }
 
     @Override
-    public IChunkProvider createChunkGenerator(){
+    public IChunkProvider createChunkGenerator() {
         return new VoidChunkProvider(this.worldObj);
     }
 
     @Override
-    public String getDimensionName(){
+    public String getDimensionName() {
         return "Nailed " + (this.hasMappack() ? this.getMappack().getMappackMetadata().getName() : "") + " " + this.mapID;
     }
 
     @Override
-    public String getSaveFolder(){
+    public String getSaveFolder() {
         return "../" + this.map.getSaveFileName();
     }
 
     @Override
-    public boolean hasMappack(){
+    public boolean hasMappack() {
         return this.map.getMappack() != null;
     }
 
     @Override
-    public Mappack getMappack(){
+    public Mappack getMappack() {
         return this.map.getMappack();
     }
 
     @Override
-    public ChunkCoordinates getRandomizedSpawnPoint(){
+    public ChunkCoordinates getRandomizedSpawnPoint() {
         if(this.hasMappack()){
             return this.map.getMappack().getMappackMetadata().getSpawnPoint().toChunkCoordinates();
         }else{
@@ -133,26 +129,26 @@ public class NailedWorldProvider extends WorldProvider implements MappackContain
     }
 
     @Override
-    public ChunkCoordinates getSpawnPoint(){
+    public ChunkCoordinates getSpawnPoint() {
         return this.getRandomizedSpawnPoint();
     }
 
     @Override
-    public int getRespawnDimension(EntityPlayerMP player){
+    public int getRespawnDimension(EntityPlayerMP player) {
         return player.dimension;
     }
 
-    public NailedPacket.MapData getMapDataPacket(){
+    public NailedPacket.MapData getMapDataPacket() {
         ByteBuf buffer = Unpooled.buffer();
         this.writeData(buffer);
         return new NailedPacket.MapData(this.mapID, buffer);
     }
 
-    public void broadcastMapData(){
+    public void broadcastMapData() {
         NailedNetworkHandler.sendPacketToAllPlayersInDimension(this.getMapDataPacket(), this.mapID);
     }
 
-    public void sendMapData(EntityPlayer player){
+    public void sendMapData(EntityPlayer player) {
         NailedNetworkHandler.sendPacketToPlayer(this.getMapDataPacket(), player);
     }
 }

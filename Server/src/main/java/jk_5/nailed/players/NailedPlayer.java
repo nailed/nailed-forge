@@ -1,56 +1,41 @@
 package jk_5.nailed.players;
 
-import com.google.common.collect.Lists;
-import com.google.gson.JsonParseException;
-import com.mojang.authlib.GameProfile;
-import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.relauncher.ReflectionHelper;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import jk_5.nailed.api.Gamemode;
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.camera.IMovement;
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.Mappack;
-import jk_5.nailed.api.map.MappackMetadata;
-import jk_5.nailed.api.map.team.Team;
-import jk_5.nailed.api.player.IncompatibleClientException;
-import jk_5.nailed.api.player.NailedWebUser;
-import jk_5.nailed.api.player.Player;
-import jk_5.nailed.api.player.PlayerClient;
-import jk_5.nailed.api.scripting.ILuaContext;
-import jk_5.nailed.api.scripting.ILuaObject;
-import jk_5.nailed.chat.joinmessage.JoinMessageSender;
-import jk_5.nailed.ipc.IpcManager;
-import jk_5.nailed.map.Location;
-import jk_5.nailed.map.NailedMap;
-import jk_5.nailed.network.NailedNetworkHandler;
-import jk_5.nailed.network.NailedPacket;
-import jk_5.nailed.permissions.Group;
-import jk_5.nailed.permissions.NailedPermissionFactory;
-import jk_5.nailed.permissions.User;
-import jk_5.nailed.util.ChatColor;
-import jk_5.nailed.util.NailedFoodStats;
-import jk_5.nailed.web.auth.WebUser;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.player.PlayerCapabilities;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.NetHandlerPlayServer;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S2BPacketChangeGameState;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.FoodStats;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.world.WorldSettings;
-import net.minecraftforge.permissions.api.PermissionsManager;
+import java.util.*;
 
-import java.util.List;
-import java.util.Random;
+import com.google.common.collect.*;
+import com.google.gson.*;
+import com.mojang.authlib.*;
+
+import io.netty.buffer.*;
+
+import net.minecraft.entity.player.*;
+import net.minecraft.item.*;
+import net.minecraft.network.*;
+import net.minecraft.network.play.server.*;
+import net.minecraft.potion.*;
+import net.minecraft.server.*;
+import net.minecraft.util.*;
+import net.minecraft.world.*;
+
+import cpw.mods.fml.common.network.*;
+import cpw.mods.fml.relauncher.*;
+
+import net.minecraftforge.permissions.api.*;
+
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.camera.*;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.*;
+import jk_5.nailed.api.map.team.*;
+import jk_5.nailed.api.player.*;
+import jk_5.nailed.api.scripting.*;
+import jk_5.nailed.chat.joinmessage.*;
+import jk_5.nailed.ipc.*;
+import jk_5.nailed.map.*;
+import jk_5.nailed.network.*;
+import jk_5.nailed.permissions.*;
+import jk_5.nailed.util.*;
+import jk_5.nailed.web.auth.*;
 
 /**
  * No description given
@@ -74,33 +59,35 @@ public class NailedPlayer implements Player, ILuaObject {
 
     private NailedWebUser webUser;
 
-    public NailedPlayer(GameProfile gameProfile){
+    public NailedPlayer(GameProfile gameProfile) {
         this.gameProfile = gameProfile;
         this.webUser = new WebUser(null, this.getUsername(), this.getUsername(), "", false);
     }
 
-    public void sendChat(String message){
+    public void sendChat(String message) {
         this.sendChat(new ChatComponentText(message));
     }
 
-    public void sendChat(IChatComponent message){
+    public void sendChat(IChatComponent message) {
         EntityPlayerMP entity = this.getEntity();
-        if(entity != null) this.getEntity().addChatComponentMessage(message);
+        if(entity != null){
+            this.getEntity().addChatComponentMessage(message);
+        }
     }
 
-    public void sendPacket(Packet packet){
+    public void sendPacket(Packet packet) {
         this.netHandler.sendPacket(packet);
     }
 
-    public EntityPlayerMP getEntity(){
+    public EntityPlayerMP getEntity() {
         return MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(this.getUsername());
     }
 
-    public boolean isOp(){
+    public boolean isOp() {
         return MinecraftServer.getServer().getConfigurationManager().isPlayerOpped(this.getUsername());
     }
 
-    public String getChatPrefix(){
+    public String getChatPrefix() {
         User info = this.getPermissionInfo();
         if(info != null){
             Group group = info.getMainGroup();
@@ -114,24 +101,26 @@ public class NailedPlayer implements Player, ILuaObject {
         }
     }
 
-    public Team getTeam(){
+    public Team getTeam() {
         return this.getCurrentMap().getTeamManager().getPlayerTeam(this);
     }
 
-    public void setTeam(Team team){
+    public void setTeam(Team team) {
         this.getCurrentMap().getTeamManager().setPlayerTeam(this, team);
     }
 
-    public String getUsername(){
+    public String getUsername() {
         return this.gameProfile.getName();
     }
 
-    public String getId(){
+    public String getId() {
         return this.gameProfile.getId();
     }
 
-    public Map getCurrentMap(){
-        if(this.currentMap == null) this.currentMap = NailedAPI.getMapLoader().getLobby();
+    public Map getCurrentMap() {
+        if(this.currentMap == null){
+            this.currentMap = NailedAPI.getMapLoader().getLobby();
+        }
         return this.currentMap;
     }
 
@@ -161,16 +150,16 @@ public class NailedPlayer implements Player, ILuaObject {
         }
     }
 
-    public void teleportToMap(Map map){
+    public void teleportToMap(Map map) {
         NailedAPI.getTeleporter().teleportEntity(this.getEntity(), map.getSpawnTeleport());
     }
 
-    public Location getLocation(){
+    public Location getLocation() {
         EntityPlayer player = this.getEntity();
         return new Location(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
     }
 
-    public void setLocation(Location l){
+    public void setLocation(Location l) {
         EntityPlayer player = this.getEntity();
         player.posX = l.getX();
         player.posY = l.getY();
@@ -179,27 +168,27 @@ public class NailedPlayer implements Player, ILuaObject {
         player.cameraYaw = l.getYaw();
     }
 
-    public Gamemode getGameMode(){
+    public Gamemode getGameMode() {
         return Gamemode.fromId(this.getEntity().theItemInWorldManager.getGameType().getID());
     }
 
-    public void setGameMode(Gamemode mode){
+    public void setGameMode(Gamemode mode) {
         EntityPlayerMP entity = this.getEntity();
         entity.theItemInWorldManager.setGameType(WorldSettings.GameType.getByID(mode.getId()));
         this.sendPacket(new S2BPacketChangeGameState(3, mode.getId()));
     }
 
     @Override
-    public String getWinnerName(){
+    public String getWinnerName() {
         return this.getChatPrefix();
     }
 
     @Override
-    public String getWinnerColoredName(){
+    public String getWinnerColoredName() {
         return this.getWinnerName();
     }
 
-    public User getPermissionInfo(){
+    public User getPermissionInfo() {
         if(PermissionsManager.getPermFactory() instanceof NailedPermissionFactory){
             return ((NailedPermissionFactory) PermissionsManager.getPermFactory()).getUserInfo(this.getUsername());
         }
@@ -207,12 +196,12 @@ public class NailedPlayer implements Player, ILuaObject {
     }
 
     @Override
-    public boolean hasPermission(String node){
+    public boolean hasPermission(String node) {
         return PermissionsManager.checkPerm(this.getEntity(), node);
     }
 
     @Override
-    public void sendTimeUpdate(String msg){
+    public void sendTimeUpdate(String msg) {
         if(this.playerClient == PlayerClient.NAILED){
             NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.TimeUpdate(msg), this.getEntity());
         }else{
@@ -223,7 +212,7 @@ public class NailedPlayer implements Player, ILuaObject {
     }
 
     @Override
-    public void setEditModeEnabled(boolean editModeEnabled) throws IncompatibleClientException{
+    public void setEditModeEnabled(boolean editModeEnabled) throws IncompatibleClientException {
         //if(this.playerClient != PlayerClient.NAILED) throw new IncompatibleClientException("Edit mode on non-nailed client", this);
         this.editModeEnabled = editModeEnabled;
         IChatComponent component = new ChatComponentText("Edit mode is " + (this.editModeEnabled ? "enabled" : "disabled"));
@@ -232,7 +221,7 @@ public class NailedPlayer implements Player, ILuaObject {
         this.sendEditModePacket();
     }
 
-    public void sendEditModePacket(){
+    public void sendEditModePacket() {
         if(this.editModeEnabled){
             ByteBuf buffer = Unpooled.buffer();
             Mappack mappack = this.currentMap.getMappack();
@@ -317,26 +306,38 @@ public class NailedPlayer implements Player, ILuaObject {
         this.webUser = webUser;
     }
 
-    public void teleportToLobby(){ this.teleportToMap(NailedAPI.getMapLoader().getLobby());}
+    public void teleportToLobby() {
+        this.teleportToMap(NailedAPI.getMapLoader().getLobby());
+    }
 
-    public void setMaxHealth(int max){ this.maxHealth = max; }
+    public void setMaxHealth(int max) {
+        this.maxHealth = max;
+    }
 
-    public int getMaxHealth(){ return this.maxHealth; }
+    public int getMaxHealth() {
+        return this.maxHealth;
+    }
 
-    public void setMinHealth(int min){ this.minHealth = min; }
+    public void setMinHealth(int min) {
+        this.minHealth = min;
+    }
 
-    public int getMinHealth(){ return this.minHealth; }
+    public int getMinHealth() {
+        return this.minHealth;
+    }
 
-    public List<Player> getPlayersVisible(){
+    public List<Player> getPlayersVisible() {
         return this.playersVisible;
     }
 
-    public void addPlayerVisible(Player player){
-        if (this.playersVisible.contains(player)) return;
+    public void addPlayerVisible(Player player) {
+        if(this.playersVisible.contains(player)){
+            return;
+        }
         this.playersVisible.add(player);
     }
 
-    public void replacePlayerVisible(Player player, List<Player> players, Random random){
+    public void replacePlayerVisible(Player player, List<Player> players, Random random) {
         players.removeAll(this.playersVisible);
         this.playersVisible.remove(player);
         this.playersVisible.add(players.get(random.nextInt() % players.size()));
@@ -347,23 +348,27 @@ public class NailedPlayer implements Player, ILuaObject {
         return this.playerClient;
     }
 
-    public void removePlayerVisible(Player player){
-        if (this.playersVisible.contains(player)) this.playersVisible.remove(player);
+    public void removePlayerVisible(Player player) {
+        if(this.playersVisible.contains(player)){
+            this.playersVisible.remove(player);
+        }
     }
 
-    public int getNumPlayersVisible(){
+    public int getNumPlayersVisible() {
         return this.playersVisible.size();
     }
 
-    public void setPlayersVisible(List<Player> list){
-        if (list != null) this.playersVisible = list;
+    public void setPlayersVisible(List<Player> list) {
+        if(list != null){
+            this.playersVisible = list;
+        }
     }
 
-    public void setClient(PlayerClient client){
+    public void setClient(PlayerClient client) {
         this.playerClient = client;
     }
 
-    public void setMoving(IMovement movement){
+    public void setMoving(IMovement movement) {
         this.getEntity().isAirBorne = true;
         this.setGameMode(Gamemode.CREATIVE);
         NailedAPI.getMovementHandler().addPlayerMovement(this, movement);
@@ -432,7 +437,9 @@ public class NailedPlayer implements Player, ILuaObject {
                 if(arguments.length == 1 && arguments[0] instanceof Double){
                     EntityPlayerMP entity = this.getEntity();
                     float newHealth = ((Double) arguments[0]).floatValue();
-                    if(newHealth > 0) entity.deathTime = 0;
+                    if(newHealth > 0){
+                        entity.deathTime = 0;
+                    }
                     entity.setHealth(newHealth);
                 }else{
                     throw new Exception("Expected 1 int argument");
@@ -567,14 +574,14 @@ public class NailedPlayer implements Player, ILuaObject {
                 break;
             case 17: // setMinFood
                 if(arguments.length == 1 && arguments[0] instanceof Double){
-                    ((NailedFoodStats) this.getEntity().getFoodStats()).setMinFoodLevel(((Double)arguments[0]).intValue());
+                    ((NailedFoodStats) this.getEntity().getFoodStats()).setMinFoodLevel(((Double) arguments[0]).intValue());
                 }else{
                     throw new Exception("Expected 1 int argument");
                 }
                 break;
             case 18: // setMinHealth
                 if(arguments.length == 1 && arguments[0] instanceof Double){
-                    this.setMinHealth(((Double)arguments[0]).intValue());
+                    this.setMinHealth(((Double) arguments[0]).intValue());
                 }else{
                     throw new Exception("Expected 1 int argument");
                 }

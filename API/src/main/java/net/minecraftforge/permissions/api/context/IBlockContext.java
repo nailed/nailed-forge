@@ -1,6 +1,6 @@
 package net.minecraftforge.permissions.api.context;
 
-import net.minecraft.block.Block;
+import net.minecraft.block.*;
 
 /**
  * No description given

@@ -1,17 +1,14 @@
 package jk_5.nailed.map.script.api;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import jk_5.nailed.api.scripting.ILuaAPI;
-import jk_5.nailed.api.scripting.ILuaContext;
-import jk_5.nailed.map.script.IAPIEnvironment;
-import org.luaj.vm2.LuaClosure;
-import org.luaj.vm2.LuaValue;
+import java.util.*;
+import java.util.concurrent.atomic.*;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
+import com.google.common.collect.*;
+
+import org.luaj.vm2.*;
+
+import jk_5.nailed.api.scripting.*;
+import jk_5.nailed.map.script.*;
 
 /**
  * No description given
@@ -33,29 +30,29 @@ public class EventApi implements ILuaAPI {
     }
 
     @Override
-    public String[] getNames(){
+    public String[] getNames() {
         return new String[]{"event", "eventbus"};
     }
 
     @Override
-    public void startup(){
+    public void startup() {
 
     }
 
     @Override
-    public void advance(double paramDouble){
+    public void advance(double paramDouble) {
 
     }
 
     @Override
-    public void shutdown(){
+    public void shutdown() {
         this.eventListeners.clear();
         this.idListenerMap.clear();
         this.idTypeMap.clear();
     }
 
     @Override
-    public String[] getMethodNames(){
+    public String[] getMethodNames() {
         return new String[]{
                 "addListener",
                 "removeListener"
@@ -63,7 +60,7 @@ public class EventApi implements ILuaAPI {
     }
 
     @Override
-    public Object[] callMethod(ILuaContext context, int method, Object[] arguments) throws Exception{
+    public Object[] callMethod(ILuaContext context, int method, Object[] arguments) throws Exception {
         switch(method){
             case 0: //addListener
                 if(arguments.length == 2 && arguments[0] instanceof String && arguments[1] instanceof LuaClosure){
@@ -89,7 +86,7 @@ public class EventApi implements ILuaAPI {
         return new Object[0];
     }
 
-    public void onEvent(String eventName, Object... args){
+    public void onEvent(String eventName, Object... args) {
         LuaValue[] eventArgs = this.env.getMachine().getLuaMachine().toValues(args, 0);
         Collection<LuaClosure> listeners = this.eventListeners.get(eventName);
         LuaClosure[] list = listeners.toArray(new LuaClosure[listeners.size()]);

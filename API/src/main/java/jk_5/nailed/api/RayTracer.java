@@ -1,38 +1,39 @@
 package jk_5.nailed.api;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
-import net.minecraft.world.World;
+import java.util.*;
+import javax.annotation.*;
 
-import javax.annotation.Nullable;
-import java.util.List;
+import net.minecraft.client.*;
+import net.minecraft.entity.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.util.*;
+import net.minecraft.world.*;
+
+import cpw.mods.fml.relauncher.*;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-public class RayTracer {
+public final class RayTracer {
 
-    public static MovingObjectPosition rayTraceBlocks(World world, EntityPlayer player){
+    private RayTracer() {
+
+    }
+
+    public static MovingObjectPosition rayTraceBlocks(World world, EntityPlayer player) {
         return rayTraceBlocks(world, player, getBlockReachDistance(player));
     }
 
-    public static MovingObjectPosition rayTraceBlocks(World world, EntityPlayer player, double reach){
+    public static MovingObjectPosition rayTraceBlocks(World world, EntityPlayer player, double reach) {
         Vec3 headVec = getCorrectedHeadVec(player);
         Vec3 lookVec = player.getLook(1);
         Vec3 endVec = headVec.addVector(lookVec.xCoord * reach, lookVec.yCoord * reach, lookVec.zCoord * reach);
         return world.rayTraceBlocks(headVec, endVec, true);
     }
 
-    public static Vec3 getCorrectedHeadVec(EntityPlayer player){
+    public static Vec3 getCorrectedHeadVec(EntityPlayer player) {
         Vec3 v = Vec3.createVectorHelper(player.posX, player.posY, player.posZ);
         if(player.worldObj.isRemote){
             v.yCoord += player.getEyeHeight() - player.getDefaultEyeHeight();
@@ -47,7 +48,7 @@ public class RayTracer {
 
     @SuppressWarnings("unchecked")
     @Nullable
-    public static MovingObjectPosition rayTrace(EntityPlayer player, Entity... skip){
+    public static MovingObjectPosition rayTrace(EntityPlayer player, Entity... skip) {
         MovingObjectPosition result;
 
         World world = player.worldObj;
@@ -58,39 +59,41 @@ public class RayTracer {
         Vec3 vec3 = world.getWorldVec3Pool().getVecFromPool(player.posX, player.posY + player.eyeHeight, player.posZ);
         Vec3 lookVec = player.getLook(1.0F);
         Vec3 vec32 = vec3.addVector(lookVec.xCoord * rangeLimit, lookVec.yCoord * rangeLimit, lookVec.zCoord * rangeLimit);
-        if (pointedBlock != null){
+        if(pointedBlock != null){
             d1 = pointedBlock.hitVec.distanceTo(vec3);
         }
         Entity pointedEntity = null;
         float f1 = 1.0F;
-        List<Entity> list = (List<Entity>) world.getEntitiesWithinAABBExcludingEntity(player, player.boundingBox.addCoord(lookVec.xCoord * rangeLimit, lookVec.yCoord * rangeLimit, lookVec.zCoord * rangeLimit).expand((double)f1, (double)f1, (double)f1));
+        List<Entity> list = (List<Entity>) world.getEntitiesWithinAABBExcludingEntity(player, player.boundingBox.addCoord(lookVec.xCoord * rangeLimit, lookVec.yCoord * rangeLimit, lookVec.zCoord * rangeLimit).expand((double) f1, (double) f1, (double) f1));
         double d2 = d1;
 
-        for (Entity entity : list){
+        for(Entity entity : list){
             boolean cont = false;
-            for (Entity s : skip) {
+            for(Entity s : skip){
                 if(s == entity){
                     cont = true;
                     break;
                 }
             }
-            if(cont) continue;
-            if (entity.canBeCollidedWith() && !entity.isDead){
+            if(cont){
+                continue;
+            }
+            if(entity.canBeCollidedWith() && !entity.isDead){
                 float f2 = entity.getCollisionBorderSize();
-                AxisAlignedBB axisalignedbb = entity.boundingBox.expand((double)f2, (double)f2, (double)f2);
+                AxisAlignedBB axisalignedbb = entity.boundingBox.expand((double) f2, (double) f2, (double) f2);
                 MovingObjectPosition movingobjectposition = axisalignedbb.calculateIntercept(vec3, vec32);
 
-                if (axisalignedbb.isVecInside(vec3)){
-                    if (0.0D < d2 || d2 == 0.0D){
+                if(axisalignedbb.isVecInside(vec3)){
+                    if(0.0D < d2 || d2 == 0.0D){
                         pointedEntity = entity;
                         d2 = 0.0D;
                     }
-                }else if (movingobjectposition != null){
+                }else if(movingobjectposition != null){
                     double d3 = vec3.distanceTo(movingobjectposition.hitVec);
 
-                    if (d3 < d2 || d2 == 0.0D){
-                        if (entity == entity.ridingEntity && !entity.canRiderInteract()){
-                            if (d2 == 0.0D){
+                    if(d3 < d2 || d2 == 0.0D){
+                        if(entity == entity.ridingEntity && !entity.canRiderInteract()){
+                            if(d2 == 0.0D){
                                 pointedEntity = entity;
                             }
                         }else{
@@ -101,23 +104,23 @@ public class RayTracer {
                 }
             }
         }
-        if (pointedEntity != null && (d2 < d1 || result == null)){
+        if(pointedEntity != null && (d2 < d1 || result == null)){
             result = new MovingObjectPosition(pointedEntity);
         }
         return result;
     }
 
-    public static double getBlockReachDistance(EntityPlayer player){
-        return player.worldObj.isRemote ? getBlockReachDistance_client() :
-                player instanceof EntityPlayerMP ? getBlockReachDistance_server((EntityPlayerMP) player) : 5D;
+    public static double getBlockReachDistance(EntityPlayer player) {
+        return player.worldObj.isRemote ? getBlockReachDistanceClient() :
+                player instanceof EntityPlayerMP ? getBlockReachDistanceServer((EntityPlayerMP) player) : 5D;
     }
 
-    private static double getBlockReachDistance_server(EntityPlayerMP player){
+    private static double getBlockReachDistanceServer(EntityPlayerMP player) {
         return player.theItemInWorldManager.getBlockReachDistance();
     }
 
     @SideOnly(Side.CLIENT)
-    private static double getBlockReachDistance_client(){
+    private static double getBlockReachDistanceClient() {
         return Minecraft.getMinecraft().playerController.getBlockReachDistance();
     }
 }

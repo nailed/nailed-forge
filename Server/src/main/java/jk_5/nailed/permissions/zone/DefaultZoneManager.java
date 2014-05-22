@@ -1,14 +1,13 @@
 package jk_5.nailed.permissions.zone;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Sets;
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.player.Player;
-import jk_5.nailed.api.zone.IZone;
-import jk_5.nailed.api.zone.ZoneConfig;
-import jk_5.nailed.api.zone.ZoneManager;
+import java.util.*;
 
-import java.util.Set;
+import com.google.common.base.*;
+import com.google.common.collect.*;
+
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.player.*;
+import jk_5.nailed.api.zone.*;
 
 /**
  * No description given
@@ -19,7 +18,7 @@ public class DefaultZoneManager implements ZoneManager {
 
     private final ZoneConfig zones;
 
-    public DefaultZoneManager(Map map){
+    public DefaultZoneManager(Map map) {
         if(map.getMappack() != null){
             Preconditions.checkNotNull(map.getMappack().getZoneConfig(), "ZoneConfig may not be null!");
             this.zones = map.getMappack().getZoneConfig().reMake();

@@ -1,22 +1,21 @@
 package jk_5.nailed.map.scoreboard;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Sets;
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.scoreboard.Objective;
-import jk_5.nailed.api.map.scoreboard.Score;
-import jk_5.nailed.api.player.Player;
-import jk_5.nailed.api.scripting.ILuaContext;
-import jk_5.nailed.api.scripting.ILuaObject;
-import net.minecraft.network.play.server.S3BPacketScoreboardObjective;
-import net.minecraft.network.play.server.S3CPacketUpdateScore;
+import java.util.*;
+import javax.annotation.*;
 
-import javax.annotation.Nonnull;
-import java.util.Set;
+import com.google.common.base.*;
+import com.google.common.collect.*;
+
+import net.minecraft.network.play.server.*;
+
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.scoreboard.*;
+import jk_5.nailed.api.player.*;
+import jk_5.nailed.api.scripting.*;
 
 /**
  * This is the Nailed-implementation of the NailedAPI class {@link Objective}
- *
+ * <p/>
  * {@inheritDoc}
  */
 public class ObjectiveImpl implements Objective, ILuaObject {
@@ -31,10 +30,10 @@ public class ObjectiveImpl implements Objective, ILuaObject {
      * Note that the id may not be bigger than 16
      *
      * @param map The map that this {@link ObjectiveImpl} is created for
-     * @param id The id of the objective (<= 16)
+     * @param id  The id of the objective (<= 16)
      * @throws IllegalArgumentException When id is bigger than 16
      */
-    public ObjectiveImpl(@Nonnull Map map, @Nonnull String id){
+    public ObjectiveImpl(@Nonnull Map map, @Nonnull String id) {
         Preconditions.checkNotNull(map, "map");
         Preconditions.checkNotNull(id, "id");
         Preconditions.checkArgument(id.length() <= 16, "id may not be longer than 16");
@@ -48,7 +47,7 @@ public class ObjectiveImpl implements Objective, ILuaObject {
      * {@inheritDoc}
      */
     @Override
-    public void setDisplayName(@Nonnull String displayName){
+    public void setDisplayName(@Nonnull String displayName) {
         Preconditions.checkNotNull(displayName, "displayName");
         Preconditions.checkArgument(displayName.length() <= 32, "displayName may not be longer than 32");
 
@@ -65,7 +64,7 @@ public class ObjectiveImpl implements Objective, ILuaObject {
      */
     @Override
     @Nonnull
-    public Score getScore(@Nonnull String name){
+    public Score getScore(@Nonnull String name) {
         Preconditions.checkNotNull(name, "name");
         for(Score score : this.scores){
             if(score.getName().equals(name)){
@@ -81,7 +80,7 @@ public class ObjectiveImpl implements Objective, ILuaObject {
      * {@inheritDoc}
      */
     @Override
-    public void removeScore(@Nonnull Score score){
+    public void removeScore(@Nonnull Score score) {
         Preconditions.checkNotNull(score, "score");
         if(this.scores.remove(score)){
             S3CPacketUpdateScore p = new S3CPacketUpdateScore();
@@ -96,7 +95,7 @@ public class ObjectiveImpl implements Objective, ILuaObject {
      *
      * @param player The player to send the Objective data to
      */
-    public void sendData(@Nonnull Player player){
+    public void sendData(@Nonnull Player player) {
         Preconditions.checkNotNull(player, "player");
         for(Score score : this.scores){
             S3CPacketUpdateScore p = new S3CPacketUpdateScore();
@@ -113,7 +112,7 @@ public class ObjectiveImpl implements Objective, ILuaObject {
      */
     @Override
     @Nonnull
-    public String getId(){
+    public String getId() {
         return id;
     }
 
@@ -122,7 +121,7 @@ public class ObjectiveImpl implements Objective, ILuaObject {
      */
     @Override
     @Nonnull
-    public Map getMap(){
+    public Map getMap() {
         return map;
     }
 
@@ -131,12 +130,12 @@ public class ObjectiveImpl implements Objective, ILuaObject {
      */
     @Override
     @Nonnull
-    public String getDisplayName(){
+    public String getDisplayName() {
         return displayName;
     }
 
     @Override
-    public String[] getMethodNames(){
+    public String[] getMethodNames() {
         return new String[]{
                 "getId",
                 "getDisplayName",
@@ -149,7 +148,7 @@ public class ObjectiveImpl implements Objective, ILuaObject {
     }
 
     @Override
-    public Object[] callMethod(ILuaContext context, int method, Object[] arguments) throws Exception{
+    public Object[] callMethod(ILuaContext context, int method, Object[] arguments) throws Exception {
         switch(method){
             case 0: //getId
                 return new Object[]{this.getId()};

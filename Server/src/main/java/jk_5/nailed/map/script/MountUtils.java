@@ -1,25 +1,28 @@
 package jk_5.nailed.map.script;
 
-import com.google.common.collect.Lists;
-import cpw.mods.fml.common.FMLCommonHandler;
-import jk_5.nailed.NailedLog;
-import jk_5.nailed.api.scripting.IMount;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.List;
+import com.google.common.collect.*;
+
+import cpw.mods.fml.common.*;
+
+import jk_5.nailed.*;
+import jk_5.nailed.api.scripting.*;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-public class MountUtils {
+public final class MountUtils {
 
-    public static IMount createResourceMount(Class modClass, String domain, String subPath){
+    private MountUtils(){
+
+    }
+
+    public static IMount createResourceMount(Class modClass, String domain, String subPath) {
         try{
             File jar = getLoadingJar(modClass);
             if(jar != null){
@@ -71,7 +74,7 @@ public class MountUtils {
         return null;
     }
 
-    private static File getLoadingJar(Class modClass){
+    private static File getLoadingJar(Class modClass) {
         String path = modClass.getProtectionDomain().getCodeSource().getLocation().getPath();
         int bangIndex = path.indexOf("!");
         if(bangIndex >= 0){
@@ -92,11 +95,11 @@ public class MountUtils {
         return file;
     }
 
-    private static File getBaseDir(){
+    private static File getBaseDir() {
         return FMLCommonHandler.instance().getMinecraftServerInstance().getFile(".");
     }
 
-    private static File getResourcePackDir(){
+    private static File getResourcePackDir() {
         return new File(getBaseDir(), "resourcepacks");
     }
 }

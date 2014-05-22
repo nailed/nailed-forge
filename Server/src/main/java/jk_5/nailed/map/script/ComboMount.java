@@ -1,13 +1,11 @@
 package jk_5.nailed.map.script;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import jk_5.nailed.api.scripting.IMount;
+import java.io.*;
+import java.util.*;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Set;
+import com.google.common.collect.*;
+
+import jk_5.nailed.api.scripting.*;
 
 /**
  * No description given
@@ -18,12 +16,12 @@ public class ComboMount implements IMount {
 
     private IMount[] parts;
 
-    public ComboMount(IMount[] parts){
+    public ComboMount(IMount[] parts) {
         this.parts = parts;
     }
 
     @Override
-    public boolean exists(String path) throws IOException{
+    public boolean exists(String path) throws IOException {
         for(int i = this.parts.length - 1; i >= 0; i--){
             IMount part = this.parts[i];
             if(part.exists(path)){
@@ -34,7 +32,7 @@ public class ComboMount implements IMount {
     }
 
     @Override
-    public boolean isDirectory(String path) throws IOException{
+    public boolean isDirectory(String path) throws IOException {
         for(int i = this.parts.length - 1; i >= 0; i--){
             IMount part = this.parts[i];
             if(part.isDirectory(path)){
@@ -45,7 +43,7 @@ public class ComboMount implements IMount {
     }
 
     @Override
-    public void list(String path, List<String> contents) throws IOException{
+    public void list(String path, List<String> contents) throws IOException {
         List<String> foundFiles = null;
         int foundDirs = 0;
         for(int i = this.parts.length - 1; i >= 0; i--){
@@ -74,7 +72,7 @@ public class ComboMount implements IMount {
     }
 
     @Override
-    public long getSize(String path) throws IOException{
+    public long getSize(String path) throws IOException {
         for(int i = this.parts.length - 1; i >= 0; i--){
             IMount part = this.parts[i];
             if(part.exists(path)){
@@ -85,7 +83,7 @@ public class ComboMount implements IMount {
     }
 
     @Override
-    public InputStream openForRead(String path) throws IOException{
+    public InputStream openForRead(String path) throws IOException {
         for(int i = this.parts.length - 1; i >= 0; i--){
             IMount part = this.parts[i];
             if((part.exists(path)) && (!part.isDirectory(path))){

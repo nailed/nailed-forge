@@ -1,41 +1,35 @@
 package jk_5.nailed.map.mappack;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import jk_5.nailed.api.concurrent.Callback;
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.MapBuilder;
-import jk_5.nailed.api.map.Mappack;
-import jk_5.nailed.api.map.MappackMetadata;
-import jk_5.nailed.api.scripting.IMount;
-import jk_5.nailed.api.zone.ZoneConfig;
-import jk_5.nailed.map.DiscardedMappackInitializationException;
-import jk_5.nailed.map.MappackInitializationException;
-import jk_5.nailed.map.script.ReadOnlyMount;
-import jk_5.nailed.map.stat.StatConfig;
-import jk_5.nailed.permissions.zone.DefaultZoneConfig;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.MinecraftException;
-import net.minecraft.world.WorldServer;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
+import java.io.*;
+import java.text.*;
+import java.util.*;
+import javax.annotation.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileReader;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import com.google.gson.*;
+
+import org.apache.commons.io.*;
+
+import net.minecraft.server.*;
+import net.minecraft.world.*;
+
+import jk_5.nailed.api.concurrent.*;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.*;
+import jk_5.nailed.api.scripting.*;
+import jk_5.nailed.api.zone.*;
+import jk_5.nailed.map.*;
+import jk_5.nailed.map.script.*;
+import jk_5.nailed.map.stat.*;
+import jk_5.nailed.permissions.zone.*;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-public class DirectoryMappack implements Mappack {
+public final class DirectoryMappack implements Mappack {
+
+    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH.mm.ss");
 
     private final String mappackID;
     private final File mappackFolder;
@@ -43,16 +37,16 @@ public class DirectoryMappack implements Mappack {
     private StatConfig statConfig = new StatConfig();
     private ZoneConfig zoneConfig = new DefaultZoneConfig();
 
-    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH.mm.ss");
-
-    private DirectoryMappack(File directory, JsonMappackMetadata metadata){
+    private DirectoryMappack(File directory, JsonMappackMetadata metadata) {
         this.mappackID = directory.getName();
         this.mappackFolder = directory;
         this.mappackMetadata = metadata;
-        if(metadata.name == null) metadata.name = this.mappackID;
+        if(metadata.name == null){
+            metadata.name = this.mappackID;
+        }
     }
 
-    public static DirectoryMappack create(File directory) throws MappackInitializationException{
+    public static DirectoryMappack create(File directory) throws MappackInitializationException {
         DirectoryMappack pack;
         StatConfig statConfig = new StatConfig();
         ZoneConfig zoneConfig = new DefaultZoneConfig();
@@ -100,7 +94,7 @@ public class DirectoryMappack implements Mappack {
     }
 
     @Override
-    public void prepareWorld(@Nonnull File destinationDir, @Nullable Callback<Void> callback){
+    public void prepareWorld(@Nonnull File destinationDir, @Nullable Callback<Void> callback) {
         File world = new File(this.mappackFolder, "world");
         if(world.isDirectory() && world.exists()){
             try{
@@ -109,17 +103,19 @@ public class DirectoryMappack implements Mappack {
                 throw new RuntimeException("Error while preparing mappack", e);
             }
         }
-        if(callback != null) callback.callback(null);
+        if(callback != null){
+            callback.callback(null);
+        }
     }
 
     @Override
     @Nonnull
-    public Map createMap(@Nonnull MapBuilder builder){
+    public Map createMap(@Nonnull MapBuilder builder) {
         return builder.build();
     }
 
     @Override
-    public boolean saveAsMappack(@Nonnull Map map){
+    public boolean saveAsMappack(@Nonnull Map map) {
         File worldDir = new File(this.mappackFolder, "world");
         if(worldDir.isDirectory() && worldDir.exists()){
             worldDir.renameTo(new File(this.mappackFolder, "world-backup-" + dateFormat.format(new Date())));
@@ -143,7 +139,7 @@ public class DirectoryMappack implements Mappack {
                 @Override
                 public boolean accept(File file) {
                     File parent = file.getParentFile();
-                    return file.getName().startsWith("level.dat") || (file.getName().equals("region") && file.isDirectory()) || (parent.getName().equals("region") && parent.isDirectory() && file.getName().endsWith(".mca"));
+                    return file.getName().startsWith("level.dat") || ("region".equals(file.getName()) && file.isDirectory()) || ("region".equals(parent.getName()) && parent.isDirectory() && file.getName().endsWith(".mca"));
                 }
             });
 
@@ -159,7 +155,7 @@ public class DirectoryMappack implements Mappack {
 
     @Override
     @Nullable
-    public IMount createMount(){
+    public IMount createMount() {
         return new ReadOnlyMount(new File(this.mappackFolder, "lua"));
     }
 

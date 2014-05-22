@@ -1,11 +1,11 @@
 package jk_5.nailed.ipc.packet;
 
-import io.netty.buffer.ByteBuf;
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.player.Player;
-import jk_5.nailed.ipc.PacketUtils;
-import jk_5.nailed.network.NailedNetworkHandler;
-import jk_5.nailed.network.NailedPacket;
+import io.netty.buffer.*;
+
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.player.*;
+import jk_5.nailed.ipc.*;
+import jk_5.nailed.network.*;
 
 /**
  * No description given
@@ -27,19 +27,21 @@ public class PacketLoginResponse extends IpcPacket {
     }
 
     @Override
-    public void encode(ByteBuf buffer){
+    public void encode(ByteBuf buffer) {
 
     }
 
     @Override
-    public void decode(ByteBuf buffer){
+    public void decode(ByteBuf buffer) {
         boolean hasPlayer = buffer.readBoolean();
-        if(hasPlayer) this.playerId = PacketUtils.readString(buffer);
+        if(hasPlayer){
+            this.playerId = PacketUtils.readString(buffer);
+        }
         this.state = buffer.readByte();
     }
 
     @Override
-    public void processPacket(){
+    public void processPacket() {
         Player player = NailedAPI.getPlayerRegistry().getPlayerById(this.playerId);
         NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.LoginResponse(this.state), player.getEntity());
     }

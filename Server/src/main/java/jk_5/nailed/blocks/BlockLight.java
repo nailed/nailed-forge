@@ -1,17 +1,15 @@
 package jk_5.nailed.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.world.EnumSkyBlock;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import java.util.*;
 
-import java.util.Random;
+import net.minecraft.block.*;
+import net.minecraft.block.material.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.init.*;
+import net.minecraft.util.*;
+import net.minecraft.world.*;
+
+import net.minecraftforge.common.util.*;
 
 /**
  * No description given
@@ -35,9 +33,9 @@ public class BlockLight extends NailedBlock {
             int meta = world.getBlockMetadata(x, y, z);
             int oldMeta = meta;
             if(entity.isSneaking()){
-                meta --;
+                meta--;
             }else{
-                meta ++;
+                meta++;
             }
             meta = Math.min(Math.max(meta, 0), 15);
             if(meta != oldMeta){
@@ -51,7 +49,7 @@ public class BlockLight extends NailedBlock {
     }
 
     @Override
-    public int getLightValue(IBlockAccess world, int x, int y, int z){
+    public int getLightValue(IBlockAccess world, int x, int y, int z) {
         return world.getBlockMetadata(x, y, z);
     }
 
@@ -61,42 +59,42 @@ public class BlockLight extends NailedBlock {
     }
 
     @Override
-    public int getRenderType(){
+    public int getRenderType() {
         return -1;
     }
 
     @Override
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z){
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
         return null;
     }
 
     @Override
-    public int getMobilityFlag(){
+    public int getMobilityFlag() {
         return 2;
     }
 
     @Override
-    public boolean renderAsNormalBlock(){
+    public boolean renderAsNormalBlock() {
         return false;
     }
 
     @Override
-    public boolean isOpaqueCube(){
+    public boolean isOpaqueCube() {
         return false;
     }
 
     @Override
-    public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side){
+    public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side) {
         return false;
     }
 
     @Override
-    public Block getReplacementBlock(){
+    public Block getReplacementBlock() {
         return Blocks.air;
     }
 
     @Override
-    public int getReplacementMetadata(){
+    public int getReplacementMetadata() {
         return 0;
     }
 }

@@ -16,7 +16,7 @@ public enum PostGameAction {
         this.type = type;
     }
 
-    public static PostGameAction fromType(String type){
+    public static PostGameAction fromType(String type) {
         for(PostGameAction a : PostGameAction.values()){
             if(a.type.equalsIgnoreCase(type)){
                 return a;

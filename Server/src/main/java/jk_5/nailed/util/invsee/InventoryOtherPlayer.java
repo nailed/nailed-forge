@@ -1,7 +1,7 @@
 package jk_5.nailed.util.invsee;
 
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.InventoryBasic;
+import net.minecraft.entity.player.*;
+import net.minecraft.inventory.*;
 
 /**
  * No description given
@@ -14,17 +14,17 @@ public class InventoryOtherPlayer extends InventoryBasic {
     private EntityPlayerMP viewer;
     private boolean allowUpdate;
 
-    public InventoryOtherPlayer(EntityPlayerMP owner, EntityPlayerMP viewer){
+    public InventoryOtherPlayer(EntityPlayerMP owner, EntityPlayerMP viewer) {
         super(owner.getCommandSenderName() + "\'s inventory", false, owner.inventory.mainInventory.length);
         this.owner = owner;
         this.viewer = viewer;
     }
 
     @Override
-    public void openInventory(){
+    public void openInventory() {
         InvSeeTicker.register(this);
         this.allowUpdate = false;
-        for (int id = 0; id < this.owner.inventory.mainInventory.length; ++id){
+        for(int id = 0; id < this.owner.inventory.mainInventory.length; ++id){
             this.setInventorySlotContents(id, this.owner.inventory.mainInventory[id]);
         }
         allowUpdate = true;
@@ -32,10 +32,10 @@ public class InventoryOtherPlayer extends InventoryBasic {
     }
 
     @Override
-    public void closeInventory(){
+    public void closeInventory() {
         InvSeeTicker.unregister(this);
         if(this.allowUpdate){
-            for (int id = 0; id < this.owner.inventory.mainInventory.length; ++id){
+            for(int id = 0; id < this.owner.inventory.mainInventory.length; ++id){
                 this.owner.inventory.mainInventory[id] = getStackInSlot(id);
             }
         }
@@ -44,18 +44,18 @@ public class InventoryOtherPlayer extends InventoryBasic {
     }
 
     @Override
-    public void markDirty(){
+    public void markDirty() {
         super.markDirty();
         if(this.allowUpdate){
-            for (int id = 0; id < this.owner.inventory.mainInventory.length; ++id){
+            for(int id = 0; id < this.owner.inventory.mainInventory.length; ++id){
                 this.owner.inventory.mainInventory[id] = this.getStackInSlot(id);
             }
         }
     }
 
-    public void update(){
+    public void update() {
         this.allowUpdate = false;
-        for (int id = 0; id < this.owner.inventory.mainInventory.length; ++id){
+        for(int id = 0; id < this.owner.inventory.mainInventory.length; ++id){
             setInventorySlotContents(id, this.owner.inventory.mainInventory[id]);
         }
         this.allowUpdate = true;

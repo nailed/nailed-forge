@@ -7,11 +7,11 @@ package jk_5.nailed.map.script;
  */
 public interface IAPIEnvironment {
 
-    public ScriptingMachine getMachine();
-    public int getMachineID();
-    public Terminal getTerminal();
-    public FileSystem getFileSystem();
-    public void queueEvent(String paramString, Object... paramArrayOfObject);
-    public void shutdown();
-    public void reboot();
+    ScriptingMachine getMachine();
+    int getMachineID();
+    Terminal getTerminal();
+    FileSystem getFileSystem();
+    void queueEvent(String paramString, Object... paramArrayOfObject);
+    void shutdown();
+    void reboot();
 }

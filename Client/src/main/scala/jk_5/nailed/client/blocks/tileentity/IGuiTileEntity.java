@@ -1,8 +1,8 @@
 package jk_5.nailed.client.blocks.tileentity;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import jk_5.nailed.client.gui.NailedGui;
+import cpw.mods.fml.relauncher.*;
+
+import jk_5.nailed.client.gui.*;
 
 /**
  * No description given
@@ -12,5 +12,5 @@ import jk_5.nailed.client.gui.NailedGui;
 public interface IGuiTileEntity {
 
     @SideOnly(Side.CLIENT)
-    public NailedGui getGui();
+    NailedGui getGui();
 }

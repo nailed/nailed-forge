@@ -1,15 +1,15 @@
 package jk_5.nailed.coremod.transformers;
 
-import com.google.common.collect.Maps;
+import java.util.*;
 
-import java.util.Map;
+import com.google.common.collect.*;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-public class TransformerData {
+public final class TransformerData {
 
     public static final Map<String, String> minecraftServerObfuscated = Maps.newHashMap();
     public static final Map<String, String> minecraftServerDeobfuscated = Maps.newHashMap();
@@ -33,5 +33,9 @@ public class TransformerData {
 
         worldServerMultiDeobfuscated.put("className", "net.minecraft.world.WorldServerMulti");
         worldServerMultiDeobfuscated.put("constructorSig", "(Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/world/storage/ISaveHandler;Ljava/lang/String;ILnet/minecraft/world/WorldSettings;Lnet/minecraft/world/WorldServer;Lnet/minecraft/profiler/Profiler;)V");
+    }
+
+    private TransformerData(){
+
     }
 }

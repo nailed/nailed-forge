@@ -1,39 +1,30 @@
 package jk_5.nailed.network;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelDuplexHandler;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelPromise;
-import jk_5.nailed.NailedLog;
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.block.INailedBlock;
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.sign.Sign;
-import jk_5.nailed.api.map.sign.SignCommandHandler;
-import jk_5.nailed.api.player.Player;
-import jk_5.nailed.api.player.PlayerClient;
-import jk_5.nailed.network.packets.CustomBulkChunkPacket;
-import jk_5.nailed.network.packets.CustomChunkPacket;
-import jk_5.nailed.util.ChatColor;
-import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.client.C12PacketUpdateSign;
-import net.minecraft.network.play.server.*;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.NibbleArray;
-import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.zip.*;
 
-import java.util.List;
-import java.util.concurrent.Semaphore;
-import java.util.zip.Deflater;
+import io.netty.buffer.*;
+import io.netty.channel.*;
+
+import net.minecraft.block.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.item.*;
+import net.minecraft.network.*;
+import net.minecraft.network.play.client.*;
+import net.minecraft.network.play.server.*;
+import net.minecraft.util.*;
+import net.minecraft.world.chunk.*;
+import net.minecraft.world.chunk.storage.*;
+
+import jk_5.nailed.*;
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.block.*;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.sign.*;
+import jk_5.nailed.api.player.*;
+import jk_5.nailed.network.packets.*;
+import jk_5.nailed.util.*;
 
 /**
  * No description given
@@ -56,7 +47,7 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
      * @throws Exception
      */
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception{
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         if(msg instanceof C12PacketUpdateSign){
             C12PacketUpdateSign packet = (C12PacketUpdateSign) msg;
             SignCommandHandler handler = NailedAPI.getMapLoader().getMap(player.worldObj).getSignCommandHandler();
@@ -75,13 +66,13 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
     /**
      * Adapt outbound packets
      *
-     * @param ctx ChannelHandlerContext
-     * @param msg The outbound packet
+     * @param ctx     ChannelHandlerContext
+     * @param msg     The outbound packet
      * @param promise The promise of the packet
      * @throws Exception
      */
     @Override
-    public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception{
+    public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
         if(msg instanceof S02PacketChat){
             S02PacketChat packet = (S02PacketChat) msg;
             IChatComponent component = packet.field_148919_a;
@@ -97,13 +88,15 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
                     EntityPlayerMP diedPlayer = ply.getEntity();
                     if(player.dimension == diedPlayer.dimension){
                         NailedLog.info("Sent death message for {} to {}", diedPlayer.getDisplayName().replace("%", "%%"), player.getDisplayName().replace("%", "%%"));
-                    }else return;
+                    }else{
+                        return;
+                    }
                 }
             }
         }else if(msg instanceof S33PacketUpdateSign){
             S33PacketUpdateSign signPacket = (S33PacketUpdateSign) msg;
             String[] lines = signPacket.field_149349_d;
-            if(lines[0].equalsIgnoreCase("$mappack")){
+            if("$mappack".equalsIgnoreCase(lines[0])){
                 Map map = NailedAPI.getMapLoader().getMap(player.worldObj);
                 Sign sign = map.getSignCommandHandler().getSign(signPacket.field_149352_a, signPacket.field_149350_b, signPacket.field_149351_c);
                 if(sign == null){
@@ -113,41 +106,43 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
                 ctx.write(sign.getUpdatePacket(), promise);
                 return;
             }
-        } else if(msg instanceof S38PacketPlayerListItem) {
+        }else if(msg instanceof S38PacketPlayerListItem){
             S38PacketPlayerListItem playerList = (S38PacketPlayerListItem) msg;
             Player pPlayer = NailedAPI.getPlayerRegistry().getPlayerByUsername(playerList.field_149126_a);
-            if (playerList.field_149124_b) {
+            if(playerList.field_149124_b){
                 Player nPlayer = NailedAPI.getPlayerRegistry().getPlayer(player);
-                if (!nPlayer.getPlayersVisible().contains(pPlayer)) {
+                if(!nPlayer.getPlayersVisible().contains(pPlayer)){
                     return;
-                } else {
+                }else{
                     msg = new S38PacketPlayerListItem(pPlayer.getChatPrefix(), playerList.field_149124_b, playerList.field_149125_c);
                     ctx.write(msg, promise);
                     return;
                 }
             }
-        } else if(msg instanceof S2FPacketSetSlot) {
+        }else if(msg instanceof S2FPacketSetSlot){
             S2FPacketSetSlot setSlot = (S2FPacketSetSlot) msg;
-            if (NailedAPI.getPlayerRegistry().getPlayer(player).getClient() != PlayerClient.NAILED && setSlot.field_149178_c != null) {
+            if(NailedAPI.getPlayerRegistry().getPlayer(player).getClient() != PlayerClient.NAILED && setSlot.field_149178_c != null){
                 setSlot.field_149178_c = tryReplaceforClient(setSlot.field_149178_c);
             }
             ctx.write(setSlot, promise);
             return;
-        } else if(msg instanceof S30PacketWindowItems){
+        }else if(msg instanceof S30PacketWindowItems){
             S30PacketWindowItems windowItems = (S30PacketWindowItems) msg;
-            if(NailedAPI.getPlayerRegistry().getPlayer(player).getClient() != PlayerClient.NAILED) {
+            if(NailedAPI.getPlayerRegistry().getPlayer(player).getClient() != PlayerClient.NAILED){
                 ItemStack[] array = windowItems.field_148913_b;
                 for(int f = 0; f < array.length; ++f){
-                    if(array[f] != null) array[f] = tryReplaceforClient(array[f]);
+                    if(array[f] != null){
+                        array[f] = tryReplaceforClient(array[f]);
+                    }
                 }
                 windowItems.field_148913_b = array;
             }
             ctx.write(windowItems, promise);
             return;
-        } else if(msg instanceof CustomChunkPacket){
+        }else if(msg instanceof CustomChunkPacket){
             Player nPlayer = NailedAPI.getPlayerRegistry().getPlayer(player);
 
-            CustomChunkPacket ccPacket = ((CustomChunkPacket) msg);
+            CustomChunkPacket ccPacket = (CustomChunkPacket) msg;
             Chunk chunk = ccPacket.chunk;
             boolean groundUpCont = ccPacket.groundUpCont;
             ByteBuf buf = Unpooled.buffer();
@@ -169,8 +164,7 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
                 deflater.finish();
                 deflated = new byte[extracted.aBlock.length];
                 length = deflater.deflate(deflated);
-            }
-            finally{
+            }finally{
                 deflater.end();
             }
             buffer.writeInt(length);
@@ -178,7 +172,7 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
 
             ctx.write(buf, promise);
             return;
-        } else if(msg instanceof CustomBulkChunkPacket) {
+        }else if(msg instanceof CustomBulkChunkPacket){
             Player nplayer = NailedAPI.getPlayerRegistry().getPlayer(player);
             ByteBuf buf = Unpooled.buffer();
             PacketBuffer buffer = new PacketBuffer(buf);
@@ -220,8 +214,7 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
                 deflater.finish();
                 deflated = new byte[data.length];
                 length = deflater.deflate(deflated);
-            }
-            finally{
+            }finally{
                 deflater.end();
             }
             buffer.writeShort(xArray.length);
@@ -250,14 +243,14 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
         MinecraftPacketAdapter.Extracted extracted = new MinecraftPacketAdapter.Extracted();
         byte[] abyte = new byte[196864];
 
-        if (groundUpCont) {
+        if(groundUpCont){
             chunk.sendUpdates = true;
         }
 
         int l;
 
-        if (!isNailed){
-            for( l = 0; l < aExtendedBlockStorage.length; ++l){
+        if(!isNailed){
+            for(l = 0; l < aExtendedBlockStorage.length; ++l){
                 ExtendedBlockStorage array = aExtendedBlockStorage[l];
                 ExtendedBlockStorage pExtendedBlockStorage = new ExtendedBlockStorage(array.getYLocation(), true);
 
@@ -269,13 +262,13 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
                 aextendedblockstorage[l] = pExtendedBlockStorage;
             }
 
-            for (ExtendedBlockStorage extendedBlockStorage : aextendedblockstorage) {
-                if (extendedBlockStorage != null) {
-                    for (int x = 0; x < 16; ++x) {
-                        for (int y = 0; y < 16; ++y) {
-                            for (int z = 0; z < 16; ++z) {
+            for(ExtendedBlockStorage extendedBlockStorage : aextendedblockstorage){
+                if(extendedBlockStorage != null){
+                    for(int x = 0; x < 16; ++x){
+                        for(int y = 0; y < 16; ++y){
+                            for(int z = 0; z < 16; ++z){
                                 Block block = extendedBlockStorage.getBlockByExtId(x, y, z);
-                                if (block instanceof INailedBlock) {
+                                if(block instanceof INailedBlock){
                                     extendedBlockStorage.func_150818_a(x, y, z, ((INailedBlock) block).getReplacementBlock());
                                     extendedBlockStorage.setExtBlockMetadata(x, y, z, ((INailedBlock) block).getReplacementMetadata());
                                 }
@@ -286,24 +279,19 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
             }
         }
 
-        for (l = 0; l < aextendedblockstorage.length; ++l)
-        {
-            if (aextendedblockstorage[l] != null && (!groundUpCont || !aextendedblockstorage[l].isEmpty()) && (bitmap & 1 << l) != 0)
-            {
+        for(l = 0; l < aextendedblockstorage.length; ++l){
+            if(aextendedblockstorage[l] != null && (!groundUpCont || !aextendedblockstorage[l].isEmpty()) && (bitmap & 1 << l) != 0){
                 extracted.bitmask |= 1 << l;
 
-                if (aextendedblockstorage[l].getBlockMSBArray() != null)
-                {
+                if(aextendedblockstorage[l].getBlockMSBArray() != null){
                     extracted.addBitmap |= 1 << l;
                     ++k;
                 }
             }
         }
 
-        for (l = 0; l < aextendedblockstorage.length; ++l)
-        {
-            if (aextendedblockstorage[l] != null && (!groundUpCont || !aextendedblockstorage[l].isEmpty()) && (bitmap & 1 << l) != 0)
-            {
+        for(l = 0; l < aextendedblockstorage.length; ++l){
+            if(aextendedblockstorage[l] != null && (!groundUpCont || !aextendedblockstorage[l].isEmpty()) && (bitmap & 1 << l) != 0){
                 byte[] abyte1 = aextendedblockstorage[l].getBlockLSBArray();
                 System.arraycopy(abyte1, 0, abyte, j, abyte1.length);
                 j += abyte1.length;
@@ -312,32 +300,25 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
 
         NibbleArray nibblearray;
 
-        for (l = 0; l < aextendedblockstorage.length; ++l)
-        {
-            if (aextendedblockstorage[l] != null && (!groundUpCont || !aextendedblockstorage[l].isEmpty()) && (bitmap & 1 << l) != 0)
-            {
+        for(l = 0; l < aextendedblockstorage.length; ++l){
+            if(aextendedblockstorage[l] != null && (!groundUpCont || !aextendedblockstorage[l].isEmpty()) && (bitmap & 1 << l) != 0){
                 nibblearray = aextendedblockstorage[l].getMetadataArray();
                 System.arraycopy(nibblearray.data, 0, abyte, j, nibblearray.data.length);
                 j += nibblearray.data.length;
             }
         }
 
-        for (l = 0; l < aextendedblockstorage.length; ++l)
-        {
-            if (aextendedblockstorage[l] != null && (!groundUpCont || !aextendedblockstorage[l].isEmpty()) && (bitmap & 1 << l) != 0)
-            {
+        for(l = 0; l < aextendedblockstorage.length; ++l){
+            if(aextendedblockstorage[l] != null && (!groundUpCont || !aextendedblockstorage[l].isEmpty()) && (bitmap & 1 << l) != 0){
                 nibblearray = aextendedblockstorage[l].getBlocklightArray();
                 System.arraycopy(nibblearray.data, 0, abyte, j, nibblearray.data.length);
                 j += nibblearray.data.length;
             }
         }
 
-        if (!chunk.worldObj.provider.hasNoSky)
-        {
-            for (l = 0; l < aextendedblockstorage.length; ++l)
-            {
-                if (aextendedblockstorage[l] != null && (!groundUpCont || !aextendedblockstorage[l].isEmpty()) && (bitmap & 1 << l) != 0)
-                {
+        if(!chunk.worldObj.provider.hasNoSky){
+            for(l = 0; l < aextendedblockstorage.length; ++l){
+                if(aextendedblockstorage[l] != null && (!groundUpCont || !aextendedblockstorage[l].isEmpty()) && (bitmap & 1 << l) != 0){
                     nibblearray = aextendedblockstorage[l].getSkylightArray();
                     System.arraycopy(nibblearray.data, 0, abyte, j, nibblearray.data.length);
                     j += nibblearray.data.length;
@@ -345,12 +326,9 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
             }
         }
 
-        if (k > 0)
-        {
-            for (l = 0; l < aextendedblockstorage.length; ++l)
-            {
-                if (aextendedblockstorage[l] != null && (!groundUpCont || !aextendedblockstorage[l].isEmpty()) && aextendedblockstorage[l].getBlockMSBArray() != null && (bitmap & 1 << l) != 0)
-                {
+        if(k > 0){
+            for(l = 0; l < aextendedblockstorage.length; ++l){
+                if(aextendedblockstorage[l] != null && (!groundUpCont || !aextendedblockstorage[l].isEmpty()) && aextendedblockstorage[l].getBlockMSBArray() != null && (bitmap & 1 << l) != 0){
                     nibblearray = aextendedblockstorage[l].getBlockMSBArray();
                     System.arraycopy(nibblearray.data, 0, abyte, j, nibblearray.data.length);
                     j += nibblearray.data.length;
@@ -358,8 +336,7 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
             }
         }
 
-        if (groundUpCont)
-        {
+        if(groundUpCont){
             byte[] abyte2 = chunk.getBiomeArray();
             System.arraycopy(abyte2, 0, abyte, j, abyte2.length);
             j += abyte2.length;
@@ -370,20 +347,23 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
         return extracted;
     }
 
-    public ItemStack tryReplaceforClient(ItemStack stack){
-        if(stack == null) return null;
+    public ItemStack tryReplaceforClient(ItemStack stack) {
+        if(stack == null){
+            return null;
+        }
         if(stack.field_151002_e instanceof ItemBlock && ((ItemBlock) stack.field_151002_e).field_150939_a instanceof INailedBlock){
             Item item = stack.field_151002_e;
             INailedBlock nailedBlock = (INailedBlock) ((ItemBlock) item).field_150939_a;
             ItemBlock newItem = new ItemBlock(nailedBlock.getReplacementBlock());
             ItemStack newItemStack = new ItemStack(newItem, stack.stackSize, nailedBlock.getReplacementMetadata());
-            newItemStack.setStackDisplayName(((Block)nailedBlock).getUnlocalizedName());
+            newItemStack.setStackDisplayName(((Block) nailedBlock).getUnlocalizedName());
             return newItemStack;
         }
         return stack;
     }
 
-    public static class Extracted{
+    public static class Extracted {
+
         public byte[] aBlock;
         public int bitmask;
         public int addBitmap;

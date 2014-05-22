@@ -1,22 +1,23 @@
 package jk_5.nailed.api.map;
 
-import cpw.mods.fml.common.gameevent.TickEvent;
-import jk_5.nailed.api.map.scoreboard.ScoreboardManager;
-import jk_5.nailed.api.map.sign.SignCommandHandler;
-import jk_5.nailed.api.map.stat.StatManager;
-import jk_5.nailed.api.map.team.TeamManager;
-import jk_5.nailed.api.map.teleport.TeleportOptions;
-import jk_5.nailed.api.player.Player;
-import jk_5.nailed.api.zone.ZoneManager;
-import jk_5.nailed.map.Location;
-import net.minecraft.network.Packet;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.world.WorldServer;
+import java.io.*;
+import java.util.*;
+import javax.annotation.*;
 
-import javax.annotation.Nullable;
-import java.io.File;
-import java.util.List;
+import net.minecraft.network.*;
+import net.minecraft.util.*;
+import net.minecraft.world.*;
+
+import cpw.mods.fml.common.gameevent.*;
+
+import jk_5.nailed.api.map.scoreboard.*;
+import jk_5.nailed.api.map.sign.*;
+import jk_5.nailed.api.map.stat.*;
+import jk_5.nailed.api.map.team.*;
+import jk_5.nailed.api.map.teleport.*;
+import jk_5.nailed.api.player.*;
+import jk_5.nailed.api.zone.*;
+import jk_5.nailed.map.*;
 
 /**
  * No description given
@@ -25,38 +26,39 @@ import java.util.List;
  */
 public interface Map {
 
-    public int getID();
-    @Nullable public Mappack getMappack();
-    public WorldServer getWorld();
-    public void setWorld(WorldServer world);
-    public boolean isLoaded();
-    public TeamManager getTeamManager();
-    public StatManager getStatManager();
-    public WeatherController getWeatherController();
-    public SignCommandHandler getSignCommandHandler();
-    public List<Player> getPlayers();
-    public int getAmountOfPlayers();
-    public String getSaveFileName();
-    public File getSaveFolder();
-    public TeleportOptions getSpawnTeleport();
-    public void broadcastChatMessage(String message);
-    public void broadcastChatMessage(IChatComponent component);
-    public Location getRandomSpawnpoint();
-    public void unloadAndRemove();
-    public void onPlayerJoined(Player player);
-    public void onPlayerLeft(Player player);
-    public void initMapServer();
-    public void onGameStarted();
-    public void onGameEnded();
-    public void onTick(TickEvent.ServerTickEvent event);
-    public GameManager getGameManager();
-    public ScoreboardManager getScoreboardManager();
-    public void broadcastPacket(Packet packet);
-    public int getMaxFoodLevel();
-    public int getMinFoodLevel();
-    public ZoneManager getZoneManager();
-    public void queueEvent(String event, Object... args);
-    public ChatComponentText getInfoBar();
-    public float getInfoBarProgress();
-    public LocationHandler getLocationHandler();
+    int getID();
+    @Nullable
+    Mappack getMappack();
+    WorldServer getWorld();
+    void setWorld(WorldServer world);
+    boolean isLoaded();
+    TeamManager getTeamManager();
+    StatManager getStatManager();
+    WeatherController getWeatherController();
+    SignCommandHandler getSignCommandHandler();
+    List<Player> getPlayers();
+    int getAmountOfPlayers();
+    String getSaveFileName();
+    File getSaveFolder();
+    TeleportOptions getSpawnTeleport();
+    void broadcastChatMessage(String message);
+    void broadcastChatMessage(IChatComponent component);
+    Location getRandomSpawnpoint();
+    void unloadAndRemove();
+    void onPlayerJoined(Player player);
+    void onPlayerLeft(Player player);
+    void initMapServer();
+    void onGameStarted();
+    void onGameEnded();
+    void onTick(TickEvent.ServerTickEvent event);
+    GameManager getGameManager();
+    ScoreboardManager getScoreboardManager();
+    void broadcastPacket(Packet packet);
+    int getMaxFoodLevel();
+    int getMinFoodLevel();
+    ZoneManager getZoneManager();
+    void queueEvent(String event, Object... args);
+    ChatComponentText getInfoBar();
+    float getInfoBarProgress();
+    LocationHandler getLocationHandler();
 }

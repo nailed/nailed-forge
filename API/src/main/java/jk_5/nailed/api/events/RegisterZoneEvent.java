@@ -1,9 +1,10 @@
 package jk_5.nailed.api.events;
 
-import cpw.mods.fml.common.eventhandler.Event;
-import jk_5.nailed.api.zone.IZoneType;
+import java.util.*;
 
-import java.util.Map;
+import cpw.mods.fml.common.eventhandler.*;
+
+import jk_5.nailed.api.zone.*;
 
 /**
  * No description given
@@ -18,7 +19,7 @@ public class RegisterZoneEvent extends Event {
         this.zones = zones;
     }
 
-    public void registerZoneType(String name, IZoneType type){
+    public void registerZoneType(String name, IZoneType type) {
         if(zones.containsKey(name)){
             throw new IllegalArgumentException("Zone type " + name + " already exists");
         }

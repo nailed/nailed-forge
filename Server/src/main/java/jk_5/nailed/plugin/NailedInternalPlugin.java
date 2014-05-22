@@ -1,6 +1,6 @@
 package jk_5.nailed.plugin;
 
-import jk_5.nailed.api.plugin.Plugin;
+import jk_5.nailed.api.plugin.*;
 
 /**
  * No description given

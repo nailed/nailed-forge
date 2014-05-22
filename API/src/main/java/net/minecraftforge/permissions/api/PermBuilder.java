@@ -1,6 +1,6 @@
 package net.minecraftforge.permissions.api;
 
-import net.minecraftforge.permissions.api.context.IContext;
+import net.minecraftforge.permissions.api.context.*;
 
 /**
  * No description given

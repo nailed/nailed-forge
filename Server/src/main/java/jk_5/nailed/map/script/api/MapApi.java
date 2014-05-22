@@ -1,33 +1,28 @@
 package jk_5.nailed.map.script.api;
 
-import com.google.common.collect.Maps;
-import com.google.gson.JsonParseException;
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.stat.IStatType;
-import jk_5.nailed.api.map.stat.Stat;
-import jk_5.nailed.api.map.team.Team;
-import jk_5.nailed.api.map.teleport.TeleportOptions;
-import jk_5.nailed.api.map.teleport.Teleporter;
-import jk_5.nailed.api.player.Player;
-import jk_5.nailed.api.scripting.ILuaAPI;
-import jk_5.nailed.api.scripting.ILuaContext;
-import jk_5.nailed.api.scripting.ILuaObject;
-import jk_5.nailed.map.Location;
-import jk_5.nailed.map.script.IAPIEnvironment;
-import jk_5.nailed.map.script.LuaMachine;
-import jk_5.nailed.map.stat.DefaultStat;
-import jk_5.nailed.map.stat.types.StatTypeModifiable;
-import jk_5.nailed.util.NailedFoodStats;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.world.EnumDifficulty;
-import net.minecraft.world.World;
-import org.luaj.vm2.LuaClosure;
-import org.luaj.vm2.LuaFunction;
-import org.luaj.vm2.LuaValue;
+import java.util.*;
 
-import java.util.HashMap;
-import java.util.List;
+import com.google.common.collect.*;
+import com.google.gson.*;
+
+import org.luaj.vm2.*;
+
+import net.minecraft.util.*;
+import net.minecraft.world.*;
+
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.stat.*;
+import jk_5.nailed.api.map.team.*;
+import jk_5.nailed.api.map.teleport.*;
+import jk_5.nailed.api.map.teleport.Teleporter;
+import jk_5.nailed.api.player.*;
+import jk_5.nailed.api.scripting.*;
+import jk_5.nailed.map.*;
+import jk_5.nailed.map.script.*;
+import jk_5.nailed.map.stat.*;
+import jk_5.nailed.map.stat.types.*;
+import jk_5.nailed.util.*;
 
 /**
  * No description given
@@ -45,27 +40,27 @@ public class MapApi implements ILuaAPI {
     }
 
     @Override
-    public String[] getNames(){
+    public String[] getNames() {
         return new String[]{"map"};
     }
 
     @Override
-    public void startup(){
+    public void startup() {
         this.map = NailedAPI.getMapLoader().getMap(env.getMachine().getMachine().getWorld());
     }
 
     @Override
-    public void advance(double paramDouble){
+    public void advance(double paramDouble) {
 
     }
 
     @Override
-    public void shutdown(){
+    public void shutdown() {
 
     }
 
     @Override
-    public String[] getMethodNames(){
+    public String[] getMethodNames() {
         return new String[]{
                 "sendChatComponent",
                 "sendChat",
@@ -98,7 +93,7 @@ public class MapApi implements ILuaAPI {
     }
 
     @Override
-    public Object[] callMethod(ILuaContext context, int method, Object[] arguments) throws Exception{
+    public Object[] callMethod(ILuaContext context, int method, Object[] arguments) throws Exception {
         switch(method){
             case 0: //sendChatComponent
                 if(arguments.length == 1 && arguments[0] instanceof String){
@@ -170,6 +165,7 @@ public class MapApi implements ILuaAPI {
                 }else{
                     throw new Exception("Excpected 1 function as argument");
                 }
+                break;
             case 8: //getTeam
                 if(arguments.length == 1 && arguments[0] instanceof String){
                     return new Object[]{this.map.getTeamManager().getTeam((String) arguments[0])};
@@ -206,7 +202,7 @@ public class MapApi implements ILuaAPI {
                     try{
                         HashMap<String, LuaFunction> obj = (HashMap<String, LuaFunction>) arguments[0];
                         String type = obj.get("getType").call().checkjstring();
-                        if(type.equals("player")){
+                        if("player".equals(type)){
                             String username = obj.get("getUsername").call().checkjstring();
                             Player player = NailedAPI.getPlayerRegistry().getPlayerByUsername(username);
                             if(player == null){
@@ -216,7 +212,7 @@ public class MapApi implements ILuaAPI {
                                 throw new Exception("Player " + username + " is not in this world");
                             }
                             this.map.getGameManager().setWinner(player);
-                        }else if(type.equals("team")){
+                        }else if("team".equals(type)){
                             String name = obj.get("getID").call().checkjstring();
                             Team team = this.map.getTeamManager().getTeam(name);
                             if(team == null){
@@ -291,7 +287,7 @@ public class MapApi implements ILuaAPI {
                 break;
             case 23: //setMaxFood
                 if(arguments.length == 1 && arguments[0] instanceof Double){
-                    for(Player player:this.map.getPlayers()){
+                    for(Player player : this.map.getPlayers()){
                         ((NailedFoodStats) player.getEntity().getFoodStats()).setMaxFoodLevel(((Double) arguments[0]).intValue());
                     }
                 }else{
@@ -300,7 +296,7 @@ public class MapApi implements ILuaAPI {
                 break;
             case 24: //setMinFood
                 if(arguments.length == 1 && arguments[0] instanceof Double){
-                    for(Player player:this.map.getPlayers()){
+                    for(Player player : this.map.getPlayers()){
                         ((NailedFoodStats) player.getEntity().getFoodStats()).setMinFoodLevel(((Double) arguments[0]).intValue());
                     }
                 }else{
@@ -309,8 +305,8 @@ public class MapApi implements ILuaAPI {
                 break;
             case 25:
                 if(arguments.length == 1 && arguments[0] instanceof Double){
-                    for(Player player:this.map.getPlayers()){
-                        player.setMaxHealth(((Double)arguments[0]).intValue());
+                    for(Player player : this.map.getPlayers()){
+                        player.setMaxHealth(((Double) arguments[0]).intValue());
                     }
                 }else{
                     throw new Exception("Expected 1 integer argument");
@@ -318,7 +314,7 @@ public class MapApi implements ILuaAPI {
                 break;
             case 26:
                 if(arguments.length == 1 && arguments[0] instanceof Double){
-                    for(Player player:this.map.getPlayers()){
+                    for(Player player : this.map.getPlayers()){
                         player.setMinHealth(((Double) arguments[0]).intValue());
                     }
                 }else{

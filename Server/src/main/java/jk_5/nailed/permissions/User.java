@@ -1,13 +1,10 @@
 package jk_5.nailed.permissions;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import net.minecraftforge.permissions.api.PermissionsManager;
-import net.minecraftforge.permissions.api.RegisteredPermValue;
-import net.minecraftforge.permissions.api.UnregisterredPermissionException;
+import java.util.*;
 
-import java.util.List;
-import java.util.Map;
+import com.google.common.collect.*;
+
+import net.minecraftforge.permissions.api.*;
 
 /**
  * No description given
@@ -24,15 +21,15 @@ public class User {
         this.name = name;
     }
 
-    public RegisteredPermValue getPermissionLevel(String node){
+    public RegisteredPermValue getPermissionLevel(String node) {
         return this.getPermissionLevel(node, ((NailedPermissionFactory) PermissionsManager.getPermFactory()).getPerms().get(node));
     }
 
-    public Group getMainGroup(){
+    public Group getMainGroup() {
         return this.groups.size() > 0 ? this.groups.get(this.groups.size() - 1) : null;
     }
 
-    private RegisteredPermValue getPermissionLevel(String node, RegisteredPermValue def){
+    private RegisteredPermValue getPermissionLevel(String node, RegisteredPermValue def) {
         if(def == null){
             throw new UnregisterredPermissionException(node);
         }
@@ -50,16 +47,24 @@ public class User {
         return def;
     }
 
-    public boolean hasPermission(String node){
+    public boolean hasPermission(String node) {
         RegisteredPermValue value = this.getPermissionLevel(node);
-        if(value == RegisteredPermValue.FALSE) return false;
-        if(value == RegisteredPermValue.TRUE) return true;
-        if(value == RegisteredPermValue.OP) return this.isOp();
-        if(value == RegisteredPermValue.NONOP) return !this.isOp();
+        if(value == RegisteredPermValue.FALSE){
+            return false;
+        }
+        if(value == RegisteredPermValue.TRUE){
+            return true;
+        }
+        if(value == RegisteredPermValue.OP){
+            return this.isOp();
+        }
+        if(value == RegisteredPermValue.NONOP){
+            return !this.isOp();
+        }
         return false;
     }
 
-    public boolean isOp(){
+    public boolean isOp() {
         return NailedPermissionFactory.isOp(this.name);
     }
 

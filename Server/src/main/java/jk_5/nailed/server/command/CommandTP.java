@@ -1,23 +1,22 @@
 package jk_5.nailed.server.command;
 
-import com.google.common.collect.Lists;
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.Mappack;
-import jk_5.nailed.api.map.teleport.TeleportOptions;
-import jk_5.nailed.api.player.Player;
-import jk_5.nailed.map.Location;
-import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.ChatComponentTranslation;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
+import java.util.*;
 
-import java.util.List;
+import com.google.common.collect.*;
+
+import org.apache.commons.lang3.tuple.*;
+
+import net.minecraft.command.*;
+import net.minecraft.entity.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.util.*;
+
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.*;
+import jk_5.nailed.api.map.teleport.*;
+import jk_5.nailed.api.player.*;
+import jk_5.nailed.map.*;
 
 /**
  * No description given
@@ -26,7 +25,7 @@ import java.util.List;
  */
 public class CommandTP extends NailedCommand {
 
-    public CommandTP(){
+    public CommandTP() {
         super("tp");
     }
 
@@ -116,7 +115,7 @@ public class CommandTP extends NailedCommand {
     }
 
     @Override
-    public List<String> addAutocomplete(ICommandSender par1ICommandSender, String[] args){
+    public List<String> addAutocomplete(ICommandSender par1ICommandSender, String[] args) {
         if(args.length == 1 || args.length == 2){
             return getUsernameOptions(args);
         }else{
@@ -124,7 +123,7 @@ public class CommandTP extends NailedCommand {
         }
     }
 
-    private static TeleportOptions getDestination(ICommandSender sender, String data){
+    private static TeleportOptions getDestination(ICommandSender sender, String data) {
         TeleportOptions dest = new TeleportOptions();
         Player p = NailedAPI.getPlayerRegistry().getPlayerByUsername(data);
         if(p != null){

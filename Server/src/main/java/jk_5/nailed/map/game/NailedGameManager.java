@@ -1,22 +1,16 @@
 package jk_5.nailed.map.game;
 
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.concurrent.scheduler.NailedRunnable;
-import jk_5.nailed.api.map.GameManager;
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.Mappack;
-import jk_5.nailed.api.map.PossibleWinner;
-import jk_5.nailed.api.map.scoreboard.DisplayType;
-import jk_5.nailed.api.map.teleport.TeleportOptions;
-import jk_5.nailed.api.player.Player;
-import jk_5.nailed.map.NailedMap;
-import jk_5.nailed.map.script.ServerMachine;
-import jk_5.nailed.map.stat.StatTypeManager;
-import jk_5.nailed.map.stat.types.StatTypeGameHasWinner;
-import jk_5.nailed.map.stat.types.StatTypeGameloopRunning;
-import jk_5.nailed.map.stat.types.StatTypeGameloopStopped;
-import jk_5.nailed.map.stat.types.StatTypeIsWinner;
-import jk_5.nailed.util.ChatColor;
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.concurrent.scheduler.*;
+import jk_5.nailed.api.map.*;
+import jk_5.nailed.api.map.scoreboard.*;
+import jk_5.nailed.api.map.teleport.*;
+import jk_5.nailed.api.player.*;
+import jk_5.nailed.map.*;
+import jk_5.nailed.map.script.*;
+import jk_5.nailed.map.stat.*;
+import jk_5.nailed.map.stat.types.*;
+import jk_5.nailed.util.*;
 
 /**
  * No description given
@@ -37,15 +31,17 @@ public class NailedGameManager implements GameManager {
     }
 
     @Override
-    public void setCountdownMessage(String message){
+    public void setCountdownMessage(String message) {
         for(Player player : map.getPlayers()){
             player.sendTimeUpdate(message);
         }
     }
 
     @Override
-    public void setWinner(PossibleWinner winner){
-        if(!this.gameRunning || this.winner != null) return;
+    public void setWinner(PossibleWinner winner) {
+        if(!this.gameRunning || this.winner != null){
+            return;
+        }
         this.winner = winner;
         if(this.winnerInterrupt){
             this.gameRunning = false;
@@ -58,7 +54,7 @@ public class NailedGameManager implements GameManager {
         this.map.broadcastChatMessage(ChatColor.GRAY + "------------------------------------------");
     }
 
-    public void startGame(){
+    public void startGame() {
         NailedMap map = (NailedMap) this.map;
         final ServerMachine machine = map.getMachine();
         if(!machine.getVM().isOn()){
@@ -75,18 +71,18 @@ public class NailedGameManager implements GameManager {
         }, 2);
     }
 
-    public void stopGame(){
+    public void stopGame() {
         ((NailedMap) this.map).getMachine().queueEvent("game_stop");
     }
 
     @Override
-    public void onStarted(){
+    public void onStarted() {
         this.gameRunning = true;
         StatTypeManager.instance().getStatType(StatTypeGameloopRunning.class).onStart(this.map);
     }
 
     @Override
-    public void onStopped(boolean finished){
+    public void onStopped(boolean finished) {
         this.gameRunning = false;
         StatTypeManager.instance().getStatType(StatTypeGameloopStopped.class).onEnd(this.map);
         StatTypeManager.instance().getStatType(StatTypeGameloopRunning.class).onEnd(this.map);

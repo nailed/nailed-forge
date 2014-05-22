@@ -1,20 +1,20 @@
 package jk_5.nailed.api.map;
 
-import jk_5.nailed.map.Location;
+import java.util.*;
+import javax.annotation.*;
 
-import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.List;
+import jk_5.nailed.map.*;
 
 /**
  * Created by matthias on 22-5-14.
  */
 public interface LocationHandler {
-    public void addLocation(String string, Location location);
-    public void addLocations(HashMap<String, Location> map);
-    public void removeLocation(String string);
-    public void removeLocations(List<String> list);
-    public HashMap<String, Location> getLocations();
+
+    void addLocation(String string, Location location);
+    void addLocations(HashMap<String, Location> map);
+    void removeLocation(String string);
+    void removeLocations(List<String> list);
+    HashMap<String, Location> getLocations();
     @Nullable
-    public Location getLocation(String string);
+    Location getLocation(String string);
 }

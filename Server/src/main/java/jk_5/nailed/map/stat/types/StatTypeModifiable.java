@@ -1,8 +1,8 @@
 package jk_5.nailed.map.stat.types;
 
-import com.google.gson.JsonObject;
-import jk_5.nailed.api.map.stat.IStatType;
-import jk_5.nailed.api.map.stat.Stat;
+import com.google.gson.*;
+
+import jk_5.nailed.api.map.stat.*;
 
 /**
  * No description given

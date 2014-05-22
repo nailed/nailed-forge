@@ -1,14 +1,19 @@
 package jk_5.nailed.map.script;
 
-import cpw.mods.fml.common.network.ByteBufUtils;
-import io.netty.buffer.ByteBuf;
+import io.netty.buffer.*;
+
+import cpw.mods.fml.common.network.*;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-public class VarargsCodec {
+public final class VarargsCodec {
+
+    private VarargsCodec(){
+
+    }
 
     public static void writeObjects(ByteBuf buffer, Object... data){
         if(data == null){

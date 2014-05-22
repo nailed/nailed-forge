@@ -1,16 +1,14 @@
 package jk_5.nailed.http;
 
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelInitializer;
-import io.netty.handler.codec.http.HttpClientCodec;
-import io.netty.handler.ssl.SslHandler;
-import io.netty.handler.timeout.ReadTimeoutHandler;
-import jk_5.nailed.api.concurrent.Callback;
+import java.util.concurrent.*;
+import javax.net.ssl.*;
 
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLEngine;
-import javax.net.ssl.TrustManager;
-import java.util.concurrent.TimeUnit;
+import io.netty.channel.*;
+import io.netty.handler.codec.http.*;
+import io.netty.handler.ssl.*;
+import io.netty.handler.timeout.*;
+
+import jk_5.nailed.api.concurrent.*;
 
 /**
  * No description given

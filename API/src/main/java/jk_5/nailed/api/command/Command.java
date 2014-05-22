@@ -1,12 +1,13 @@
 package jk_5.nailed.api.command;
 
-import com.google.common.collect.ImmutableList;
-import jk_5.nailed.api.plugin.Plugin;
-import org.apache.commons.lang3.Validate;
+import java.util.*;
+import javax.annotation.*;
 
-import javax.annotation.Nonnull;
-import java.util.Arrays;
-import java.util.List;
+import com.google.common.collect.*;
+
+import org.apache.commons.lang3.*;
+
+import jk_5.nailed.api.plugin.*;
 
 /**
  * No description given
@@ -33,8 +34,8 @@ public abstract class Command {
      * Executes the command, returning its success
      *
      * @param sender Source object which is executing this command
-     * @param alias The alias of the command used
-     * @param args All arguments passed to the command, split via ' '
+     * @param alias  The alias of the command used
+     * @param args   All arguments passed to the command, split via ' '
      */
     public abstract void execute(CommandSender sender, String alias, String[] args);
 
@@ -43,10 +44,10 @@ public abstract class Command {
      * options the player can tab through.
      *
      * @param sender Source object which is executing this command
-     * @param alias the alias being used
-     * @param args All arguments passed to the command, split via ' '
+     * @param alias  the alias being used
+     * @param args   All arguments passed to the command, split via ' '
      * @return a list of tab-completions for the specified arguments. This
-     *     will never be null. List may be immutable.
+     * will never be null. List may be immutable.
      * @throws IllegalArgumentException if sender, alias, or args is null
      */
     @Nonnull

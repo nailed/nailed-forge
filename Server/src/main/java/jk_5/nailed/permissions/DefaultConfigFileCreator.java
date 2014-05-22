@@ -1,19 +1,21 @@
 package jk_5.nailed.permissions;
 
-import org.apache.commons.io.IOUtils;
+import java.io.*;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.PrintWriter;
+import org.apache.commons.io.*;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-public class DefaultConfigFileCreator {
+public final class DefaultConfigFileCreator {
 
-    public static void createGroupConfig(File file){
+    private DefaultConfigFileCreator() {
+
+    }
+
+    public static void createGroupConfig(File file) {
         PrintWriter writer = null;
         try{
             writer = new PrintWriter(new FileWriter(file));

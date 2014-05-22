@@ -7,8 +7,8 @@ package jk_5.nailed.api.scripting;
  */
 public interface ILuaAPI extends ILuaObject {
 
-    public String[] getNames();
-    public void startup();
-    public void advance(double paramDouble);
-    public void shutdown();
+    String[] getNames();
+    void startup();
+    void advance(double paramDouble);
+    void shutdown();
 }

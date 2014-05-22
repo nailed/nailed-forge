@@ -1,10 +1,11 @@
 package jk_5.nailed.api.events;
 
-import cpw.mods.fml.common.eventhandler.Event;
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.scripting.ILuaAPI;
+import java.util.*;
 
-import java.util.List;
+import cpw.mods.fml.common.eventhandler.*;
+
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.scripting.*;
 
 /**
  * No description given
@@ -21,11 +22,11 @@ public class RegisterLuaApiEvent extends Event {
         this.apis = apis;
     }
 
-    public Map getMap(){
+    public Map getMap() {
         return this.map;
     }
 
-    public void registerApi(ILuaAPI api){
+    public void registerApi(ILuaAPI api) {
         this.apis.add(api);
     }
 }

@@ -1,11 +1,11 @@
 package jk_5.nailed.coremod.transformers;
 
-import jk_5.nailed.coremod.asm.ASMHelper;
-import jk_5.nailed.coremod.asm.Mapping;
-import net.minecraft.launchwrapper.IClassTransformer;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.*;
 import org.objectweb.asm.tree.*;
+
+import net.minecraft.launchwrapper.*;
+
+import jk_5.nailed.coremod.asm.*;
 
 /**
  * No description given
@@ -19,13 +19,13 @@ public class S21PacketChunkDataTransformer implements IClassTransformer {
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
-        if(name.equals("net.minecraft.network.play.server.S21PacketChunkData")){
+        if("net.minecraft.network.play.server.S21PacketChunkData".equals(name)){
             return transformClass(basicClass);
         }
         return basicClass;
     }
 
-    public byte[] transformClass(byte[] bytes){
+    public byte[] transformClass(byte[] bytes) {
         ClassNode cnode = ASMHelper.createClassNode(bytes);
         MethodNode mnode = ASMHelper.findMethod(hookMapping, cnode);
 

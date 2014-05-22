@@ -1,31 +1,30 @@
 package jk_5.nailed.client.map.edit;
 
-import com.google.common.collect.Lists;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import io.netty.buffer.ByteBuf;
-import jk_5.nailed.client.gui.GuiEditSpawnpoint;
-import jk_5.nailed.map.Location;
-import lombok.Getter;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
+import java.util.*;
 
-import java.util.List;
+import com.google.common.collect.*;
+
+import org.lwjgl.opengl.*;
+
+import io.netty.buffer.*;
+
+import net.minecraft.client.*;
+import net.minecraft.client.gui.*;
+import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.entity.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.util.*;
+
+import cpw.mods.fml.common.eventhandler.*;
+import cpw.mods.fml.common.gameevent.*;
+
+import net.minecraftforge.client.event.*;
+import net.minecraftforge.event.entity.player.*;
+
+import jk_5.nailed.client.gui.*;
+import jk_5.nailed.map.*;
+
+import lombok.*;
 
 /**
  * No description given
@@ -82,7 +81,9 @@ public class MapEditManager {
 
     @SubscribeEvent
     public void onRenderWorld(RenderWorldLastEvent event){
-        if(!this.enabled) return;
+        if(!this.enabled){
+            return;
+        }
 
         double dx = mc.thePlayer.prevPosX + (mc.thePlayer.posX - mc.thePlayer.prevPosX) * event.partialTicks;
         double dy = mc.thePlayer.prevPosY + (mc.thePlayer.posY - mc.thePlayer.prevPosY) * event.partialTicks;

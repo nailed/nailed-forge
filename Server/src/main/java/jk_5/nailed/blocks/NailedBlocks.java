@@ -1,29 +1,25 @@
 package jk_5.nailed.blocks;
 
-import cpw.mods.fml.common.registry.FMLControlledNamespacedRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.ReflectionHelper;
-import jk_5.nailed.blocks.tileentity.TileEntityPortalController;
-import jk_5.nailed.blocks.tileentity.TileEntityStatEmitter;
-import jk_5.nailed.blocks.tileentity.TileEntityStatModifier;
-import jk_5.nailed.item.ItemBlockMulti;
-import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraftforge.permissions.api.PermissionsManager;
-import net.minecraftforge.permissions.api.RegisteredPermValue;
+import java.lang.reflect.*;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import net.minecraft.block.*;
+import net.minecraft.init.*;
+import net.minecraft.item.*;
+
+import cpw.mods.fml.common.registry.*;
+import cpw.mods.fml.relauncher.*;
+
+import net.minecraftforge.permissions.api.*;
+
+import jk_5.nailed.blocks.tileentity.*;
+import jk_5.nailed.item.*;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-public class NailedBlocks {
+public final class NailedBlocks {
 
     public static BlockInvisibleWall invisibleWall;
     public static BlockPortalCrystal portalCrystal;
@@ -32,6 +28,10 @@ public class NailedBlocks {
     public static BlockPortal portal;
     public static BlockLight light;
     public static BlockCommandBlockOverride commandBlock;
+
+    private NailedBlocks(){
+
+    }
 
     public static void init() {
         invisibleWall = new BlockInvisibleWall();
@@ -49,7 +49,7 @@ public class NailedBlocks {
         registerBlock(stat, ItemBlockMulti.class);
         registerBlock(light);
 
-        replaceVanillaBlock(Block.getIdFromBlock(Blocks.command_block), "command_block", commandBlock,Blocks.command_block);
+        replaceVanillaBlock(Block.getIdFromBlock(Blocks.command_block), "command_block", commandBlock, Blocks.command_block);
 
         GameRegistry.registerTileEntity(TileEntityPortalController.class, "nailed.portalController");
         GameRegistry.registerTileEntity(TileEntityStatEmitter.class, "nailed.stat");
@@ -67,7 +67,7 @@ public class NailedBlocks {
     }
 
     public static void replaceVanillaBlock(int id, String name, Block block, Block vanilla) {
-        try {
+        try{
             ItemBlock ib = (ItemBlock) Item.getItemFromBlock(vanilla);
 
             //add block to registry
@@ -81,13 +81,13 @@ public class NailedBlocks {
             modifiers.setInt(f, f.getModifiers() & ~Modifier.FINAL);
             f.set(null, block);
 
-            if (ib != null) {
+            if(ib != null){
                 f = ReflectionHelper.findField(ItemBlock.class, "field_150939_a");
                 modifiers.setInt(f, f.getModifiers() & ~Modifier.FINAL);
                 f.set(ib, block);
             }
 
-        } catch (ReflectiveOperationException e) {
+        }catch(ReflectiveOperationException e){
             e.printStackTrace();
         }
     }

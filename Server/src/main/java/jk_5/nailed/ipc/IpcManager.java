@@ -1,19 +1,19 @@
 package jk_5.nailed.ipc;
 
-import com.google.gson.JsonObject;
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioSocketChannel;
-import jk_5.nailed.NailedServer;
-import jk_5.nailed.ipc.packet.IpcPacket;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.nio.channels.*;
 
-import java.nio.channels.UnresolvedAddressException;
+import com.google.gson.*;
+
+import org.apache.logging.log4j.*;
+
+import io.netty.bootstrap.*;
+import io.netty.channel.Channel;
+import io.netty.channel.*;
+import io.netty.channel.nio.*;
+import io.netty.channel.socket.nio.*;
+
+import jk_5.nailed.*;
+import jk_5.nailed.ipc.packet.*;
 
 /**
  * No description given
@@ -31,10 +31,6 @@ public class IpcManager {
     private final String host;
     private final int port;
 
-    public static void main(String[] args){
-        IpcManager.instance().start();
-    }
-
     public IpcManager() {
         if(NailedServer.getConfig() == null){
             this.enabled = true;
@@ -48,12 +44,18 @@ public class IpcManager {
         }
     }
 
-    public static IpcManager instance(){
+    public static void main(String[] args) {
+        IpcManager.instance().start();
+    }
+
+    public static IpcManager instance() {
         return instance;
     }
 
-    public void start(){
-        if(!this.enabled) return;
+    public void start() {
+        if(!this.enabled){
+            return;
+        }
         logger.info("Starting IPC client");
         final EventLoopGroup group = new NioEventLoopGroup();
         try{
@@ -61,11 +63,11 @@ public class IpcManager {
             bootstrap.handler(new Pipeline());
             this.channel = bootstrap.connect(this.host, this.port).addListener(new ChannelFutureListener() {
                 @Override
-                public void operationComplete(ChannelFuture future) throws Exception{
+                public void operationComplete(ChannelFuture future) throws Exception {
                     logger.info("Connected to the nailed-web server");
                 }
             }).channel();
-            this.channel.closeFuture().addListener(new ChannelFutureListener(){
+            this.channel.closeFuture().addListener(new ChannelFutureListener() {
                 @Override
                 public void operationComplete(ChannelFuture future) throws Exception {
                     logger.info("Connection closed");
@@ -77,21 +79,21 @@ public class IpcManager {
         }
     }
 
-    public ChannelFuture close(){
+    public ChannelFuture close() {
         if(this.channel != null && this.channel.isOpen()){
             return this.channel.close();
         }
         return null;
     }
 
-    public ChannelFuture sendPacket(IpcPacket packet){
+    public ChannelFuture sendPacket(IpcPacket packet) {
         if(this.enabled && this.channel.isOpen()){
             return channel.writeAndFlush(packet);
         }
         return null;
     }
 
-    public boolean isConnected(){
+    public boolean isConnected() {
         return this.enabled && this.channel.isOpen();
     }
 

@@ -1,7 +1,6 @@
 package jk_5.nailed.map.script;
 
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.*;
 
 /**
  * No description given
@@ -10,10 +9,10 @@ import io.netty.channel.SimpleChannelInboundHandler;
  */
 public abstract class ScriptPacketHandler<T> extends SimpleChannelInboundHandler<T> {
 
-    public static class QueueEventHandler extends ScriptPacketHandler<ScriptPacket.QueueEvent>{
+    public static class QueueEventHandler extends ScriptPacketHandler<ScriptPacket.QueueEvent> {
 
         @Override
-        protected void channelRead0(ChannelHandlerContext ctx, ScriptPacket.QueueEvent msg) throws Exception{
+        protected void channelRead0(ChannelHandlerContext ctx, ScriptPacket.QueueEvent msg) throws Exception {
             ServerMachine machine = ServerMachine.REGISTRY.get(msg.instanceId);
             if(machine != null){
                 machine.queueEvent(msg.eventName, msg.data);
@@ -21,10 +20,10 @@ public abstract class ScriptPacketHandler<T> extends SimpleChannelInboundHandler
         }
     }
 
-    public static class StateEventHandler extends ScriptPacketHandler<ScriptPacket.StateEvent>{
+    public static class StateEventHandler extends ScriptPacketHandler<ScriptPacket.StateEvent> {
 
         @Override
-        protected void channelRead0(ChannelHandlerContext ctx, ScriptPacket.StateEvent msg) throws Exception{
+        protected void channelRead0(ChannelHandlerContext ctx, ScriptPacket.StateEvent msg) throws Exception {
             ServerMachine machine = ServerMachine.REGISTRY.get(msg.instanceId);
             if(machine != null){
                 if(msg.operation == 0){

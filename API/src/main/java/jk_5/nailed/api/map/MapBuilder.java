@@ -1,6 +1,6 @@
 package jk_5.nailed.api.map;
 
-import java.io.File;
+import java.io.*;
 
 /**
  * No description given
@@ -9,9 +9,9 @@ import java.io.File;
  */
 public interface MapBuilder {
 
-    public int getID();
-    public Mappack getMappack();
-    public String getSaveFileName();
-    public File getSaveFolder();
-    public Map build();
+    int getID();
+    Mappack getMappack();
+    String getSaveFileName();
+    File getSaveFolder();
+    Map build();
 }

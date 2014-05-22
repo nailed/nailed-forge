@@ -1,27 +1,20 @@
 package jk_5.nailed.map.mappack;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import jk_5.nailed.api.WeatherType;
-import jk_5.nailed.api.map.MappackMetadata;
-import jk_5.nailed.api.map.PostGameAction;
-import jk_5.nailed.api.map.SpawnRules;
-import jk_5.nailed.api.map.team.TeamBuilder;
-import jk_5.nailed.api.zone.IZone;
-import jk_5.nailed.map.Location;
-import jk_5.nailed.util.ChatColor;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.world.EnumDifficulty;
-import net.minecraft.world.WorldSettings;
-
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.Map;
+
+import com.google.common.collect.*;
+import com.google.gson.*;
+
+import net.minecraft.util.*;
+import net.minecraft.world.*;
+
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.map.*;
+import jk_5.nailed.api.map.team.*;
+import jk_5.nailed.api.zone.*;
+import jk_5.nailed.map.*;
+import jk_5.nailed.util.*;
 
 /**
  * No description given
@@ -32,7 +25,6 @@ public class JsonMappackMetadata implements MappackMetadata {
 
     public String name;
     public Location spawnPoint;
-    private List<TeamBuilder> defaultTeams;
     public Map<String, String> gameruleConfig;
     public EnumDifficulty difficulty;
     public String gameType;
@@ -53,8 +45,9 @@ public class JsonMappackMetadata implements MappackMetadata {
     public List<IZone> zones;
     public List<ChatComponentText> infoBarItems;
     public HashMap<String, Location> locations;
+    private List<TeamBuilder> defaultTeams;
 
-    public JsonMappackMetadata(JsonObject json){
+    public JsonMappackMetadata(JsonObject json) {
         this.spawnPoint = json.has("spawnpoint") ? Location.readFrom(json.get("spawnpoint").getAsJsonObject()) : new Location(0, 64, 0, 0, 0);
         this.name = json.has("name") ? json.get("name").getAsString() : null;
         this.pvpEnabled = !json.has("pvpEnabled") || json.get("pvpEnabled").getAsBoolean();
@@ -120,7 +113,7 @@ public class JsonMappackMetadata implements MappackMetadata {
         this.locations = Maps.newHashMap();
         if(json.has("locations")){
             JsonArray array = json.getAsJsonArray("locations");
-            for( JsonElement element : array ){
+            for(JsonElement element : array){
                 if(element instanceof JsonObject){
                     this.locations.put(((JsonObject) element).get("name").getAsString(), Location.readFrom((JsonObject) element));
                 }
@@ -181,7 +174,9 @@ public class JsonMappackMetadata implements MappackMetadata {
     }
 
     @Override
-    public boolean isFallDamageDisabled() { return this.fallDamageDisabled; }
+    public boolean isFallDamageDisabled() {
+        return this.fallDamageDisabled;
+    }
 
     @Override
     public WorldSettings.GameType getGamemode() {
@@ -207,6 +202,7 @@ public class JsonMappackMetadata implements MappackMetadata {
     public EnumSet<WeatherType> getPermittedWeatherTypes() {
         return this.permittedWeatherTypes;
     }
+
     @Override
 
     public SpawnRules getSpawnRules() {
@@ -214,27 +210,37 @@ public class JsonMappackMetadata implements MappackMetadata {
     }
 
     @Override
-    public int getMinFoodLevel(){
+    public int getMinFoodLevel() {
         return this.minFoodLevel;
     }
 
     @Override
-    public int getMaxFoodLevel(){
+    public int getMaxFoodLevel() {
         return this.maxFoodLevel;
     }
 
     @Override
-    public int getMinHealth(){ return this.minHealth; }
+    public int getMinHealth() {
+        return this.minHealth;
+    }
 
     @Override
-    public int getMaxHealth(){ return this.maxHealth; }
+    public int getMaxHealth() {
+        return this.maxHealth;
+    }
 
     @Override
-    public PostGameAction getPostGameAction() { return this.postGameAction; }
+    public PostGameAction getPostGameAction() {
+        return this.postGameAction;
+    }
 
     @Override
-    public List<ChatComponentText> getInfoBarItems(){ return this.infoBarItems; }
+    public List<ChatComponentText> getInfoBarItems() {
+        return this.infoBarItems;
+    }
 
     @Override
-    public HashMap<String, Location> getLocations(){ return this.locations; }
+    public HashMap<String, Location> getLocations() {
+        return this.locations;
+    }
 }

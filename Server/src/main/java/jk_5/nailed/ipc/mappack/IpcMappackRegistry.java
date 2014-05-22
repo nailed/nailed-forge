@@ -1,25 +1,27 @@
 package jk_5.nailed.ipc.mappack;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.util.*;
 
-import java.util.List;
-import java.util.Map;
+import com.google.common.collect.*;
+
+import org.apache.logging.log4j.*;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-public class IpcMappackRegistry {
+public final class IpcMappackRegistry {
 
     private static final Map<String, IpcMappack> mappackIds = Maps.newHashMap();
     private static final List<IpcMappack> mappacks = Lists.newArrayList();
     private static final Logger logger = LogManager.getLogger();
 
-    public static void addMappack(final IpcMappack mappack){
+    private IpcMappackRegistry(){
+
+    }
+
+    public static void addMappack(final IpcMappack mappack) {
         if(mappackIds.containsKey(mappack.getMappackID())){
             mappacks.remove(mappackIds.remove(mappack.getMappackID()));
         }

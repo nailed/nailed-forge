@@ -1,12 +1,12 @@
 package jk_5.nailed.map.stat;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.stat.IStatTileEntity;
-import jk_5.nailed.api.map.stat.Stat;
+import java.util.*;
 
-import java.util.List;
+import com.google.common.base.*;
+import com.google.common.collect.*;
+
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.stat.*;
 
 /**
  * No description given
@@ -18,10 +18,10 @@ public class StatManager implements jk_5.nailed.api.map.stat.StatManager {
     private final jk_5.nailed.api.map.stat.StatConfig stats;
     private final List<IStatTileEntity> statTiles = Lists.newArrayList();
 
-    public StatManager(Map map){
+    public StatManager(Map map) {
         if(map.getMappack() != null){
             Preconditions.checkNotNull(map.getMappack().getStatConfig(), "StatConfig may not be null!");
-            this.stats = map.getMappack().getStatConfig().clone();
+            this.stats = map.getMappack().getStatConfig().copy();
         }else{
             this.stats = new StatConfig();
         }
@@ -33,26 +33,30 @@ public class StatManager implements jk_5.nailed.api.map.stat.StatManager {
     }
 
     @Override
-    public void registerStatTile(IStatTileEntity statTile){
+    public void registerStatTile(IStatTileEntity statTile) {
         this.statTiles.add(statTile);
     }
 
     @Override
-    public void unloadStatTile(IStatTileEntity statTile){
+    public void unloadStatTile(IStatTileEntity statTile) {
         this.statTiles.remove(statTile);
     }
 
     @Override
-    public void onStatEnable(Stat stat){
+    public void onStatEnable(Stat stat) {
         for(IStatTileEntity tile : this.statTiles){
-            if(tile.getStat() == stat) tile.enable();
+            if(tile.getStat() == stat){
+                tile.enable();
+            }
         }
     }
 
     @Override
-    public void onStatDisable(Stat stat){
+    public void onStatDisable(Stat stat) {
         for(IStatTileEntity tile : this.statTiles){
-            if(tile.getStat() == stat) tile.disable();
+            if(tile.getStat() == stat){
+                tile.disable();
+            }
         }
     }
 

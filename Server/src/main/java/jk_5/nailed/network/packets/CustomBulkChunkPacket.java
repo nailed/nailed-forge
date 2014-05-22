@@ -1,39 +1,34 @@
 package jk_5.nailed.network.packets;
 
-import net.minecraft.network.INetHandler;
-import net.minecraft.network.Packet;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.world.chunk.Chunk;
+import java.util.*;
 
-import java.io.IOException;
-import java.util.List;
+import net.minecraft.network.*;
+import net.minecraft.world.chunk.*;
 
 /**
  * Created by matthias on 13-5-14.
  */
 public class CustomBulkChunkPacket extends Packet {
+
     private List<Chunk> chunks;
 
-    public CustomBulkChunkPacket(){}
+    public CustomBulkChunkPacket() {
+    }
 
-    public CustomBulkChunkPacket(List<Chunk> chunks){
+    public CustomBulkChunkPacket(List<Chunk> chunks) {
         this.chunks = chunks;
     }
 
     public void readPacketData(PacketBuffer buffer) {
-        return;
     }
 
-    public void processPacket(INetHandler handler)
-    {
-        return;
+    public void processPacket(INetHandler handler) {
     }
 
     public void writePacketData(PacketBuffer buffer) {
-        return;
     }
 
-    public List<Chunk> getChunks(){
+    public List<Chunk> getChunks() {
         return this.chunks;
     }
 }

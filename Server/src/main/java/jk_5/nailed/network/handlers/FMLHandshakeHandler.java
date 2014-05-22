@@ -1,16 +1,15 @@
 package jk_5.nailed.network.handlers;
 
-import cpw.mods.fml.common.network.FMLEmbeddedChannel;
-import cpw.mods.fml.common.network.FMLOutboundHandler;
-import cpw.mods.fml.common.network.NetworkHandshakeEstablished;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.relauncher.Side;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
-import jk_5.nailed.NailedServer;
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.map.Map;
-import net.minecraftforge.common.network.ForgeMessage;
+import io.netty.channel.*;
+
+import cpw.mods.fml.common.network.*;
+import cpw.mods.fml.relauncher.*;
+
+import net.minecraftforge.common.network.*;
+
+import jk_5.nailed.*;
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.map.*;
 
 /**
  * No description given
@@ -20,7 +19,7 @@ import net.minecraftforge.common.network.ForgeMessage;
 public class FMLHandshakeHandler extends ChannelInboundHandlerAdapter {
 
     @Override
-    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception{
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         if(evt instanceof NetworkHandshakeEstablished){
             NetworkHandshakeEstablished event = (NetworkHandshakeEstablished) evt;
             FMLEmbeddedChannel channel = NetworkRegistry.INSTANCE.getChannel("FORGE", Side.SERVER);

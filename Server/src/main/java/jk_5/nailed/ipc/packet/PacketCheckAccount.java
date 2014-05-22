@@ -1,11 +1,11 @@
 package jk_5.nailed.ipc.packet;
 
-import io.netty.buffer.ByteBuf;
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.player.Player;
-import jk_5.nailed.ipc.PacketUtils;
-import jk_5.nailed.network.NailedNetworkHandler;
-import jk_5.nailed.network.NailedPacket;
+import io.netty.buffer.*;
+
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.player.*;
+import jk_5.nailed.ipc.*;
+import jk_5.nailed.network.*;
 
 /**
  * No description given
@@ -29,23 +29,25 @@ public class PacketCheckAccount extends IpcPacket {
     }
 
     @Override
-    public void encode(ByteBuf buffer){
+    public void encode(ByteBuf buffer) {
         PacketUtils.writeString(this.playerId, buffer);
         PacketUtils.writeString(this.data, buffer);
         buffer.writeByte(this.type);
     }
 
     @Override
-    public void decode(ByteBuf buffer){
+    public void decode(ByteBuf buffer) {
         this.playerId = PacketUtils.readString(buffer);
         this.data = PacketUtils.readString(buffer);
         this.type = buffer.readByte();
     }
 
     @Override
-    public void processPacket(){
+    public void processPacket() {
         Player player = NailedAPI.getPlayerRegistry().getPlayerById(this.playerId);
-        if(player == null) return;
+        if(player == null){
+            return;
+        }
         NailedPacket.FieldStatus res = new NailedPacket.FieldStatus();
         res.field = this.type;
         if(this.data.equals("used")){

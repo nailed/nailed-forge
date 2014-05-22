@@ -1,27 +1,30 @@
 package jk_5.nailed.http;
 
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoop;
-import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.http.*;
-import jk_5.nailed.api.concurrent.Callback;
-import org.apache.commons.lang3.Validate;
+import java.net.*;
 
-import java.net.URI;
+import org.apache.commons.lang3.*;
+
+import io.netty.bootstrap.*;
+import io.netty.channel.*;
+import io.netty.channel.socket.nio.*;
+import io.netty.handler.codec.http.*;
+
+import jk_5.nailed.api.concurrent.*;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-public class HttpClient {
+public final class HttpClient {
 
     public static int timeout = 5000;
 
-    public static void get(String url, EventLoop eventLoop, final Callback<String> callback){
+    private HttpClient(){
+
+    }
+
+    public static void get(String url, EventLoop eventLoop, final Callback<String> callback) {
         Validate.notNull(url, "url");
         Validate.notNull(eventLoop, "eventLoop");
         Validate.notNull(callback, "callback");
@@ -30,14 +33,16 @@ public class HttpClient {
 
         Validate.notNull(uri.getScheme(), "scheme");
         Validate.notNull(uri.getHost(), "host");
-        boolean ssl = uri.getScheme().equals("https");
+        boolean ssl = "https".equals(uri.getScheme());
         int port = uri.getPort();
         if(port == -1){
             if(ssl){
                 port = 443;
-            }else if(uri.getScheme().equals("http")){
+            }else if("http".equals(uri.getScheme())){
                 port = 80;
-            }else throw new IllegalArgumentException("Unknown scheme " + uri.getScheme());
+            }else{
+                throw new IllegalArgumentException("Unknown scheme " + uri.getScheme());
+            }
         }
 
         ChannelFutureListener future = new ChannelFutureListener() {

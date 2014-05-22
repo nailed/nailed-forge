@@ -1,9 +1,10 @@
 package jk_5.nailed.map.stat;
 
-import cpw.mods.fml.common.eventhandler.Event;
-import jk_5.nailed.api.map.stat.IStatType;
+import java.util.*;
 
-import java.util.Map;
+import cpw.mods.fml.common.eventhandler.*;
+
+import jk_5.nailed.api.map.stat.*;
 
 /**
  * No description given
@@ -18,8 +19,10 @@ public class RegisterStatTypeEvent extends Event {
         this.map = map;
     }
 
-    public boolean register(String name, IStatType type){
-        if(this.map.containsKey(name) || this.map.containsValue(type)) return false;
+    public boolean register(String name, IStatType type) {
+        if(this.map.containsKey(name) || this.map.containsValue(type)){
+            return false;
+        }
         this.map.put(name, type);
         return true;
     }

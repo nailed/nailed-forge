@@ -7,6 +7,6 @@ package jk_5.nailed.api.map;
  */
 public interface PossibleWinner {
 
-    public String getWinnerName();
-    public String getWinnerColoredName();
+    String getWinnerName();
+    String getWinnerColoredName();
 }

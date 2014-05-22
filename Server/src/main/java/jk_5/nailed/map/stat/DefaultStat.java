@@ -1,11 +1,12 @@
 package jk_5.nailed.map.stat;
 
-import com.google.common.collect.Maps;
-import jk_5.nailed.api.map.stat.IStatType;
-import jk_5.nailed.api.map.stat.Stat;
-import net.minecraftforge.common.MinecraftForge;
+import java.util.*;
 
-import java.util.Map;
+import com.google.common.collect.*;
+
+import net.minecraftforge.common.*;
+
+import jk_5.nailed.api.map.stat.*;
 
 /**
  * No description given
@@ -31,7 +32,7 @@ public class DefaultStat implements Stat {
     }
 
     @Override
-    public void setDefaultState(boolean defaultState){
+    public void setDefaultState(boolean defaultState) {
         this.enabled = defaultState;
     }
 
@@ -48,17 +49,17 @@ public class DefaultStat implements Stat {
     }
 
     @Override
-    public Stat clone() {
+    public Stat copy() {
         return new DefaultStat(this.name, this.type, this.enabled, this.storage);
     }
 
     @Override
-    public void store(String key, Object value){
+    public void store(String key, Object value) {
         this.storage.put(key, value);
     }
 
     @Override
-    public Object load(String key){
+    public Object load(String key) {
         return this.storage.get(key);
     }
 

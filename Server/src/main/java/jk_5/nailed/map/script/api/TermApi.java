@@ -1,9 +1,7 @@
 package jk_5.nailed.map.script.api;
 
-import jk_5.nailed.api.scripting.ILuaAPI;
-import jk_5.nailed.api.scripting.ILuaContext;
-import jk_5.nailed.map.script.IAPIEnvironment;
-import jk_5.nailed.map.script.Terminal;
+import jk_5.nailed.api.scripting.*;
+import jk_5.nailed.map.script.*;
 
 /**
  * No description given
@@ -14,31 +12,31 @@ public class TermApi implements ILuaAPI {
 
     private Terminal terminal;
 
-    public TermApi(IAPIEnvironment env){
+    public TermApi(IAPIEnvironment env) {
         this.terminal = env.getTerminal();
     }
 
     @Override
-    public String[] getNames(){
+    public String[] getNames() {
         return new String[]{"term"};
     }
 
     @Override
-    public void startup(){
+    public void startup() {
 
     }
 
     @Override
-    public void advance(double dt){
+    public void advance(double dt) {
 
     }
 
     @Override
-    public void shutdown(){
+    public void shutdown() {
 
     }
 
-    public static int parseColor(Object[] args) throws Exception{
+    public static int parseColor(Object[] args) throws Exception {
         if(args.length != 1 || args[0] == null || !(args[0] instanceof Double)){
             throw new Exception("Expected number");
         }
@@ -54,7 +52,7 @@ public class TermApi implements ILuaAPI {
     }
 
     @Override
-    public String[] getMethodNames(){
+    public String[] getMethodNames() {
         return new String[]{
                 "write",
                 "scroll",
@@ -70,7 +68,7 @@ public class TermApi implements ILuaAPI {
     }
 
     @Override
-    public Object[] callMethod(ILuaContext context, int method, Object[] args) throws Exception{
+    public Object[] callMethod(ILuaContext context, int method, Object[] args) throws Exception {
         switch(method){
             case 0: //write
                 String text;
@@ -155,7 +153,7 @@ public class TermApi implements ILuaAPI {
         return null;
     }
 
-    private static int getHighestBit(int group){
+    private static int getHighestBit(int group) {
         int bit = 0;
         while(group > 0){
             group >>= 1;

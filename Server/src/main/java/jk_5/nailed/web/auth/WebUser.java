@@ -1,6 +1,6 @@
 package jk_5.nailed.web.auth;
 
-import jk_5.nailed.api.player.NailedWebUser;
+import jk_5.nailed.api.player.*;
 
 /**
  * No description given

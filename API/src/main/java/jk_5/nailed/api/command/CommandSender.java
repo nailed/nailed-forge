@@ -1,6 +1,6 @@
 package jk_5.nailed.api.command;
 
-import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.*;
 
 /**
  * No description given

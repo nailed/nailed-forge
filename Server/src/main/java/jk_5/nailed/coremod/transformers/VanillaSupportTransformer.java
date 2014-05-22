@@ -1,11 +1,11 @@
 package jk_5.nailed.coremod.transformers;
 
-import jk_5.nailed.coremod.asm.ASMHelper;
-import jk_5.nailed.coremod.asm.Mapping;
-import net.minecraft.launchwrapper.IClassTransformer;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.*;
 import org.objectweb.asm.tree.*;
+
+import net.minecraft.launchwrapper.*;
+
+import jk_5.nailed.coremod.asm.*;
 
 /**
  * No description given
@@ -21,23 +21,25 @@ public class VanillaSupportTransformer implements IClassTransformer {
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
-        if(name.equals("cpw.mods.fml.common.network.handshake.NetworkDispatcher$VanillaTimeoutWaiter")){
+        if("cpw.mods.fml.common.network.handshake.NetworkDispatcher$VanillaTimeoutWaiter".equals(name)){
             return transformTimeout(basicClass);
-        }else if(name.equals("cpw.mods.fml.common.network.handshake.NetworkDispatcher")){
+        }else if("cpw.mods.fml.common.network.handshake.NetworkDispatcher".equals(name)){
             return transformNetworkDispatcher(basicClass);
-        }else if(name.equals("cpw.mods.fml.common.network.handshake.FMLHandshakeServerState$2")){
+        }else if("cpw.mods.fml.common.network.handshake.FMLHandshakeServerState$2".equals(name)){
             return transformModList(basicClass);
         }
         return basicClass;
     }
 
-    public byte[] transformNetworkDispatcher(byte[] bytes){
+    public byte[] transformNetworkDispatcher(byte[] bytes) {
         ClassNode cnode = ASMHelper.createClassNode(bytes);
         MethodNode mnode = ASMHelper.findMethod(kickMapping, cnode);
 
         //Remove vanilla kick
         int offset = 0;
-        while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKESTATIC) offset++;
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKESTATIC){
+            offset++;
+        }
         offset += 3;
         mnode.instructions.remove(mnode.instructions.get(offset));
         mnode.instructions.remove(mnode.instructions.get(offset));
@@ -61,26 +63,36 @@ public class VanillaSupportTransformer implements IClassTransformer {
         return ASMHelper.createBytes(cnode, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
     }
 
-    public byte[] transformTimeout(byte[] bytes){
+    public byte[] transformTimeout(byte[] bytes) {
         ClassNode cnode = ASMHelper.createClassNode(bytes);
         MethodNode mnode = ASMHelper.findMethod(timeoutMapping, cnode);
         int offset = 0;
-        while(mnode.instructions.get(offset).getOpcode() != Opcodes.GETSTATIC) offset++;
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.GETSTATIC){
+            offset++;
+        }
         FieldInsnNode node = (FieldInsnNode) mnode.instructions.get(offset);
         node.name = "SECONDS";
         return ASMHelper.createBytes(cnode, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
     }
 
-    public byte[] transformModList(byte[] bytes){
+    public byte[] transformModList(byte[] bytes) {
         ClassNode cnode = ASMHelper.createClassNode(bytes);
         MethodNode mnode = ASMHelper.findMethod(modListMapping, cnode);
         int offset = 0;
-        while(mnode.instructions.get(offset).getOpcode() != Opcodes.ANEWARRAY) offset++;
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.ANEWARRAY){
+            offset++;
+        }
         offset++;
-        while(mnode.instructions.get(offset).getOpcode() != Opcodes.ANEWARRAY) offset++;
-        while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKESTATIC) offset++;
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.ANEWARRAY){
+            offset++;
+        }
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKESTATIC){
+            offset++;
+        }
         offset++;
-        while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKESTATIC) offset++;
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKESTATIC){
+            offset++;
+        }
         AbstractInsnNode hook = mnode.instructions.get(offset);
 
         InsnList list = new InsnList();

@@ -1,9 +1,10 @@
 package jk_5.nailed.api.player;
 
-import com.mojang.authlib.GameProfile;
-import net.minecraft.entity.player.EntityPlayer;
+import java.util.*;
 
-import java.util.List;
+import com.mojang.authlib.*;
+
+import net.minecraft.entity.player.*;
 
 /**
  * No description given
@@ -12,10 +13,10 @@ import java.util.List;
  */
 public interface PlayerRegistry {
 
-    public List<Player> getPlayers();
-    public List<Player> getOnlinePlayers();
-    public Player getPlayer(EntityPlayer player);
-    public Player getPlayerById(String id);
-    public Player getPlayerByUsername(String username);
-    public Player getOrCreatePlayer(GameProfile profile);
+    List<Player> getPlayers();
+    List<Player> getOnlinePlayers();
+    Player getPlayer(EntityPlayer player);
+    Player getPlayerById(String id);
+    Player getPlayerByUsername(String username);
+    Player getOrCreatePlayer(GameProfile profile);
 }

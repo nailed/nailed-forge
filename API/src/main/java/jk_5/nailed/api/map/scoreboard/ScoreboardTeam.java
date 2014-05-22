@@ -1,10 +1,10 @@
 package jk_5.nailed.api.map.scoreboard;
 
-import jk_5.nailed.api.player.Player;
-import jk_5.nailed.api.scripting.ILuaObject;
+import java.util.*;
+import javax.annotation.*;
 
-import javax.annotation.Nonnull;
-import java.util.Set;
+import jk_5.nailed.api.player.*;
+import jk_5.nailed.api.scripting.*;
 
 /**
  * No description given
@@ -13,20 +13,26 @@ import java.util.Set;
  */
 public interface ScoreboardTeam extends ILuaObject {
 
-    @Nonnull public String getId();
-    @Nonnull public String getDisplayName();
-    public void setDisplayName(@Nonnull String displayName);
-    @Nonnull public String getPrefix();
-    public void setPrefix(@Nonnull String prefix);
-    @Nonnull public String getSuffix();
-    public void setSuffix(@Nonnull String suffix);
-    public boolean isFriendlyFire();
-    public void setFriendlyFire(boolean friendlyFire);
-    public boolean isFriendlyInvisiblesVisible();
-    public void setFriendlyInvisiblesVisible(boolean friendlyInvisiblesVisible);
+    @Nonnull
+    String getId();
+    @Nonnull
+    String getDisplayName();
+    void setDisplayName(@Nonnull String displayName);
+    @Nonnull
+    String getPrefix();
+    void setPrefix(@Nonnull String prefix);
+    @Nonnull
+    String getSuffix();
+    void setSuffix(@Nonnull String suffix);
+    boolean isFriendlyFire();
+    void setFriendlyFire(boolean friendlyFire);
+    boolean isFriendlyInvisiblesVisible();
+    void setFriendlyInvisiblesVisible(boolean friendlyInvisiblesVisible);
 
-    public boolean addPlayer(@Nonnull Player player);
-    public boolean removePlayer(@Nonnull Player player);
-    @Nonnull public Set<Player> getPlayers();
-    @Nonnull public Set<String> getPlayerNames();
+    boolean addPlayer(@Nonnull Player player);
+    boolean removePlayer(@Nonnull Player player);
+    @Nonnull
+    Set<Player> getPlayers();
+    @Nonnull
+    Set<String> getPlayerNames();
 }

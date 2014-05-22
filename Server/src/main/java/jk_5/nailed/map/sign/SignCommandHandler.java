@@ -1,20 +1,19 @@
 package jk_5.nailed.map.sign;
 
-import com.google.common.collect.Sets;
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.sign.Sign;
-import jk_5.nailed.api.map.sign.SignMappack;
-import jk_5.nailed.api.player.Player;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntitySign;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.world.ChunkEvent;
-import net.minecraftforge.event.world.ChunkWatchEvent;
+import java.util.*;
 
-import java.util.Collection;
-import java.util.Set;
+import com.google.common.collect.*;
+
+import net.minecraft.tileentity.*;
+import net.minecraft.world.*;
+import net.minecraft.world.chunk.*;
+
+import net.minecraftforge.event.entity.player.*;
+import net.minecraftforge.event.world.*;
+
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.sign.*;
+import jk_5.nailed.api.player.*;
 
 /**
  * No description given
@@ -33,7 +32,7 @@ public class SignCommandHandler implements jk_5.nailed.api.map.sign.SignCommandH
 
     @Override
     @SuppressWarnings("unchecked")
-    public void onChunkLoad(ChunkEvent.Load event){
+    public void onChunkLoad(ChunkEvent.Load event) {
         for(TileEntity tile : (Collection<TileEntity>) event.getChunk().chunkTileEntityMap.values()){
             if(tile instanceof TileEntitySign){
                 TileEntitySign sign = (TileEntitySign) tile;
@@ -47,7 +46,7 @@ public class SignCommandHandler implements jk_5.nailed.api.map.sign.SignCommandH
 
     @Override
     @SuppressWarnings("unchecked")
-    public void onChunkUnload(ChunkEvent.Unload event){
+    public void onChunkUnload(ChunkEvent.Unload event) {
         for(TileEntity tile : (Collection<TileEntity>) event.getChunk().chunkTileEntityMap.values()){
             if(tile instanceof TileEntitySign){
                 TileEntitySign sign = (TileEntitySign) tile;
@@ -58,14 +57,16 @@ public class SignCommandHandler implements jk_5.nailed.api.map.sign.SignCommandH
 
     @Override
     @SuppressWarnings("unchecked")
-    public void onWatch(ChunkWatchEvent.Watch event){
+    public void onWatch(ChunkWatchEvent.Watch event) {
         World world = event.player.worldObj;
         Chunk chunk = world.getChunkFromChunkCoords(event.chunk.chunkXPos, event.chunk.chunkZPos);
         for(TileEntity tile : (Collection<TileEntity>) chunk.chunkTileEntityMap.values()){
             if(tile instanceof TileEntitySign){
                 TileEntitySign signTile = (TileEntitySign) tile;
                 Sign sign = this.getSign(signTile.xCoord, signTile.yCoord, signTile.zCoord);
-                if(sign == null) continue;
+                if(sign == null){
+                    continue;
+                }
                 sign.addWatcher(event.player);
             }
         }
@@ -73,26 +74,28 @@ public class SignCommandHandler implements jk_5.nailed.api.map.sign.SignCommandH
 
     @Override
     @SuppressWarnings("unchecked")
-    public void onUnwatch(ChunkWatchEvent.UnWatch event){
+    public void onUnwatch(ChunkWatchEvent.UnWatch event) {
         World world = event.player.worldObj;
         Chunk chunk = world.getChunkFromChunkCoords(event.chunk.chunkXPos, event.chunk.chunkZPos);
         for(TileEntity tile : (Collection<TileEntity>) chunk.chunkTileEntityMap.values()){
             if(tile instanceof TileEntitySign){
                 TileEntitySign signTile = (TileEntitySign) tile;
                 Sign sign = this.getSign(signTile.xCoord, signTile.yCoord, signTile.zCoord);
-                if(sign == null) continue;
+                if(sign == null){
+                    continue;
+                }
                 sign.removeWatcher(event.player);
             }
         }
     }
 
-    private Sign getSignData(TileEntitySign sign){
+    private Sign getSignData(TileEntitySign sign) {
         return this.getSignData(sign.signText, sign.xCoord, sign.yCoord, sign.zCoord);
     }
 
-    private Sign getSignData(String[] lines, int x, int y, int z){
+    private Sign getSignData(String[] lines, int x, int y, int z) {
         Sign sign = null;
-        if(lines[0].equalsIgnoreCase("$mappack")){
+        if("$mappack".equalsIgnoreCase(lines[0])){
             sign = new SignMappack(this.map, x, y, z, lines);
         }
         if(sign != null){
@@ -104,7 +107,7 @@ public class SignCommandHandler implements jk_5.nailed.api.map.sign.SignCommandH
     }
 
     @Override
-    public void onSignAdded(String[] lines, int x, int y, int z){
+    public void onSignAdded(String[] lines, int x, int y, int z) {
         if(this.getSign(x, y, z) == null){
             Sign sign = this.getSignData(lines, x, y, z);
             if(sign != null){
@@ -113,17 +116,17 @@ public class SignCommandHandler implements jk_5.nailed.api.map.sign.SignCommandH
         }
     }
 
-    private void addSign(Sign sign){
+    private void addSign(Sign sign) {
         this.signs.add(sign);
         sign.broadcastUpdate();
     }
 
-    private void removeSign(Sign sign){
+    private void removeSign(Sign sign) {
         this.signs.remove(sign);
     }
 
     @Override
-    public Sign getSign(int x, int y, int z){
+    public Sign getSign(int x, int y, int z) {
         for(Sign sign : this.signs){
             if(sign.getX() == x && sign.getY() == y && sign.getZ() == z){
                 return sign;
@@ -133,21 +136,21 @@ public class SignCommandHandler implements jk_5.nailed.api.map.sign.SignCommandH
     }
 
     @Override
-    public void onPlayerLeftMap(Map oldMap, Player player){
+    public void onPlayerLeftMap(Map oldMap, Player player) {
         for(Sign sign : this.signs){
             sign.onPlayerLeftMap(oldMap, player);
         }
     }
 
     @Override
-    public void onPlayerJoinMap(Map newMap, Player player){
+    public void onPlayerJoinMap(Map newMap, Player player) {
         for(Sign sign : this.signs){
             sign.onPlayerJoinMap(newMap, player);
         }
     }
 
     @Override
-    public void onInteract(PlayerInteractEvent event){
+    public void onInteract(PlayerInteractEvent event) {
         if(event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK){
             Sign sign = this.getSign(event.x, event.y, event.z);
             if(sign != null){

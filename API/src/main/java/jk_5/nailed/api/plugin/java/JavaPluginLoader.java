@@ -1,6 +1,6 @@
 package jk_5.nailed.api.plugin.java;
 
-import jk_5.nailed.api.plugin.PluginLoader;
+import jk_5.nailed.api.plugin.*;
 
 /**
  * No description given
@@ -8,4 +8,5 @@ import jk_5.nailed.api.plugin.PluginLoader;
  * @author jk-5
  */
 public class JavaPluginLoader implements PluginLoader {
+
 }

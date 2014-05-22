@@ -1,23 +1,21 @@
 package jk_5.nailed.players;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.scoreboard.ScoreboardTeam;
-import jk_5.nailed.api.map.team.Team;
-import jk_5.nailed.api.player.Player;
-import jk_5.nailed.api.scripting.ILuaContext;
-import jk_5.nailed.api.scripting.ILuaObject;
-import jk_5.nailed.map.Location;
-import jk_5.nailed.util.ChatColor;
-import jk_5.nailed.util.NailedFoodStats;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IChatComponent;
-import org.luaj.vm2.LuaClosure;
-import org.luaj.vm2.LuaValue;
+import java.util.*;
 
-import java.util.List;
+import com.google.common.collect.*;
+
+import org.luaj.vm2.*;
+
+import net.minecraft.util.*;
+
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.scoreboard.*;
+import jk_5.nailed.api.map.team.*;
+import jk_5.nailed.api.player.*;
+import jk_5.nailed.api.scripting.*;
+import jk_5.nailed.map.*;
+import jk_5.nailed.util.*;
 
 /**
  * No description given
@@ -45,7 +43,7 @@ public class NailedTeam implements Team, ILuaObject {
     }
 
     @Override
-    public void onWorldSet(){
+    public void onWorldSet() {
         if(this.scoreboardTeam == null){
             this.scoreboardTeam = this.map.getScoreboardManager().getOrCreateTeam(this.teamId);
             this.scoreboardTeam.setDisplayName(this.name);
@@ -57,7 +55,7 @@ public class NailedTeam implements Team, ILuaObject {
     }
 
     @Override
-    public void setReady(boolean ready){
+    public void setReady(boolean ready) {
         this.ready = ready;
         if(this.isReady()){
             this.map.broadcastChatMessage("Team " + this.getColoredName() + " is ready!");
@@ -68,11 +66,11 @@ public class NailedTeam implements Team, ILuaObject {
         //this.map.getGameController().updateReadyStates();
     }
 
-    public void broadcastChatMessage(String message){
+    public void broadcastChatMessage(String message) {
         this.broadcastChatMessage(new ChatComponentText(message));
     }
 
-    public void broadcastChatMessage(IChatComponent message){
+    public void broadcastChatMessage(IChatComponent message) {
         for(Player player : NailedAPI.getPlayerRegistry().getPlayers()){
             if(player.getTeam() == this){
                 player.sendChat(message);
@@ -81,17 +79,17 @@ public class NailedTeam implements Team, ILuaObject {
     }
 
     @Override
-    public boolean shouldOverrideDefaultSpawnpoint(){
+    public boolean shouldOverrideDefaultSpawnpoint() {
         return this.spawnpoint != null;
     }
 
     @Override
-    public String getColoredName(){
+    public String getColoredName() {
         return this.color + this.name + ChatColor.RESET;
     }
 
     @Override
-    public List<Player> getMembers(){
+    public List<Player> getMembers() {
         List<Player> ret = Lists.newArrayList();
         for(Player player : this.map.getPlayers()){
             if(player.getTeam() == this){
@@ -102,39 +100,43 @@ public class NailedTeam implements Team, ILuaObject {
     }
 
     @Override
-    public void onAddPlayer(Player player){
+    public void onAddPlayer(Player player) {
         this.addPlayerToScoreboardTeam(player);
     }
 
     @Override
-    public void onRemovePlayer(Player player){
+    public void onRemovePlayer(Player player) {
         this.removePlayerFromScoreboardTeam(player);
     }
 
     @Override
-    public void addPlayerToScoreboardTeam(Player player){
-        if(this.scoreboardTeam == null) return;
+    public void addPlayerToScoreboardTeam(Player player) {
+        if(this.scoreboardTeam == null){
+            return;
+        }
         this.scoreboardTeam.addPlayer(player);
     }
 
     @Override
-    public void removePlayerFromScoreboardTeam(Player player){
-        if(this.scoreboardTeam == null) return;
+    public void removePlayerFromScoreboardTeam(Player player) {
+        if(this.scoreboardTeam == null){
+            return;
+        }
         this.scoreboardTeam.removePlayer(player);
     }
 
     @Override
-    public String getWinnerName(){
+    public String getWinnerName() {
         return this.name;
     }
 
     @Override
-    public String getWinnerColoredName(){
+    public String getWinnerColoredName() {
         return this.color + this.name;
     }
 
     @Override
-    public boolean canSeeFriendlyInvisibles(){
+    public boolean canSeeFriendlyInvisibles() {
         return this.seeFriendlyInvisibles;
     }
 
@@ -227,7 +229,7 @@ public class NailedTeam implements Team, ILuaObject {
     }
 
     @Override
-    public String[] getMethodNames(){
+    public String[] getMethodNames() {
         return new String[]{
                 "getName",
                 "getPlayers",
@@ -243,7 +245,7 @@ public class NailedTeam implements Team, ILuaObject {
     }
 
     @Override
-    public Object[] callMethod(ILuaContext context, int method, Object[] arguments) throws Exception{
+    public Object[] callMethod(ILuaContext context, int method, Object[] arguments) throws Exception {
         switch(method){
             case 0: //getName
                 return new Object[]{this.getName()};
@@ -282,7 +284,7 @@ public class NailedTeam implements Team, ILuaObject {
                 return new Object[]{this.getTeamId()};
             case 6: // setMinFood
                 if(arguments.length == 1 && arguments[0] instanceof Double){
-                    for(Player player : this.getMembers()) {
+                    for(Player player : this.getMembers()){
                         ((NailedFoodStats) player.getEntity().getFoodStats()).setMinFoodLevel(((Double) arguments[0]).intValue());
                     }
                 }else{
@@ -291,7 +293,7 @@ public class NailedTeam implements Team, ILuaObject {
                 break;
             case 7: // setMinHealth
                 if(arguments.length == 1 && arguments[0] instanceof Double){
-                    for(Player player : this.getMembers()) {
+                    for(Player player : this.getMembers()){
                         player.setMinHealth(((Double) arguments[0]).intValue());
                     }
                 }else{
@@ -300,7 +302,7 @@ public class NailedTeam implements Team, ILuaObject {
                 break;
             case 8: // setMaxFood
                 if(arguments.length == 1 && arguments[0] instanceof Double){
-                    for(Player player : this.getMembers()) {
+                    for(Player player : this.getMembers()){
                         ((NailedFoodStats) player.getEntity().getFoodStats()).setMaxFoodLevel(((Double) arguments[0]).intValue());
                     }
                 }else{
@@ -309,7 +311,7 @@ public class NailedTeam implements Team, ILuaObject {
                 break;
             case 9: // setMaxHealth
                 if(arguments.length == 1 && arguments[0] instanceof Double){
-                    for(Player player : this.getMembers()) {
+                    for(Player player : this.getMembers()){
                         player.setMaxHealth(((Double) arguments[0]).intValue());
                     }
                 }else{

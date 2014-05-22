@@ -1,46 +1,42 @@
 package jk_5.nailed.map;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.common.network.FMLOutboundHandler;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.relauncher.Side;
-import io.netty.channel.embedded.EmbeddedChannel;
-import jk_5.nailed.NailedLog;
-import jk_5.nailed.NailedServer;
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.concurrent.scheduler.NailedRunnable;
-import jk_5.nailed.api.map.GameManager;
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.Mappack;
-import jk_5.nailed.api.map.MappackMetadata;
-import jk_5.nailed.api.map.teleport.TeleportOptions;
-import jk_5.nailed.api.player.Player;
-import jk_5.nailed.api.scripting.IMount;
-import jk_5.nailed.api.zone.ZoneManager;
-import jk_5.nailed.map.game.NailedGameManager;
-import jk_5.nailed.map.scoreboard.NailedScoreboardManager;
-import jk_5.nailed.map.script.FileSystemException;
-import jk_5.nailed.map.script.MachineRegistry;
-import jk_5.nailed.map.script.ServerMachine;
-import jk_5.nailed.map.script.Terminal;
-import jk_5.nailed.map.sign.SignCommandHandler;
-import jk_5.nailed.map.stat.StatManager;
-import jk_5.nailed.map.weather.WeatherController;
-import jk_5.nailed.permissions.zone.DefaultZoneManager;
-import jk_5.nailed.util.NailedFoodStats;
-import net.minecraft.network.Packet;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.network.ForgeMessage;
+import java.io.*;
+import java.util.*;
 
-import java.io.File;
-import java.util.List;
+import com.google.common.base.*;
+import com.google.common.collect.*;
+
+import io.netty.channel.embedded.*;
+
+import net.minecraft.network.*;
+import net.minecraft.server.*;
+import net.minecraft.util.*;
+import net.minecraft.world.*;
+
+import cpw.mods.fml.common.gameevent.*;
+import cpw.mods.fml.common.network.*;
+import cpw.mods.fml.relauncher.*;
+
+import net.minecraftforge.common.*;
+import net.minecraftforge.common.network.*;
+
+import jk_5.nailed.*;
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.concurrent.scheduler.*;
+import jk_5.nailed.api.map.*;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.teleport.*;
+import jk_5.nailed.api.player.*;
+import jk_5.nailed.api.scripting.*;
+import jk_5.nailed.api.zone.*;
+import jk_5.nailed.map.game.*;
+import jk_5.nailed.map.scoreboard.*;
+import jk_5.nailed.map.script.*;
+import jk_5.nailed.map.sign.*;
+import jk_5.nailed.map.stat.*;
+import jk_5.nailed.map.weather.WeatherController;
+import jk_5.nailed.permissions.zone.*;
+import jk_5.nailed.util.*;
 
 /**
  * No description given
@@ -49,7 +45,10 @@ import java.util.List;
  */
 public class NailedMap implements Map {
 
-    private int ID;
+    public IMount mappackMount;
+    public boolean mounted = false;
+
+    private int id;
     private final Mappack mappack;
     private WorldServer world;
     private boolean isLoaded = false;
@@ -65,13 +64,11 @@ public class NailedMap implements Map {
     private LocationHandler locationHandler;
 
     private ServerMachine machine;
-    public IMount mappackMount;
-    public boolean mounted = false;
 
     private boolean loadNextTick = false;
 
-    public NailedMap(Mappack mappack, int id){
-        this.ID = id;
+    public NailedMap(Mappack mappack, int id) {
+        this.id = id;
         this.mappack = mappack;
         this.teamManager = new TeamManager(this);
         this.statManager = new StatManager(this);
@@ -90,8 +87,10 @@ public class NailedMap implements Map {
     }
 
     @Override
-    public void initMapServer(){
-        if(this.isLoaded) return;
+    public void initMapServer() {
+        if(this.isLoaded){
+            return;
+        }
         NailedLog.info("Initializing {}", this.getSaveFileName());
 
         DimensionManager.registerDimension(this.getID(), NailedServer.getProviderID());
@@ -104,10 +103,12 @@ public class NailedMap implements Map {
     }
 
     @Override
-    public void setWorld(WorldServer world){
+    public void setWorld(WorldServer world) {
         Preconditions.checkNotNull(world);
         this.world = world;
-        if(world.provider != null) this.ID = world.provider.dimensionId;
+        if(world.provider != null){
+            this.id = world.provider.dimensionId;
+        }
         this.isLoaded = true;
         this.teamManager.onWorldSet();
 
@@ -123,7 +124,7 @@ public class NailedMap implements Map {
 
     @Override
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public void unloadAndRemove(){
+    public void unloadAndRemove() {
         NailedAPI.getMapLoader().removeMap(this);
         NailedAPI.getScheduler().runTaskAsynchronously(new NailedRunnable() {
             @Override
@@ -141,7 +142,7 @@ public class NailedMap implements Map {
         this.players.add(player);
         NailedMapLoader.instance().checkShouldStart(this);
         NailedFoodStats playerFoodStats = new NailedFoodStats();
-        if (mappack != null) {
+        if(mappack != null){
             playerFoodStats.setMinFoodLevel(mappack.getMappackMetadata().getMinFoodLevel());
             playerFoodStats.setMaxFoodLevel(mappack.getMappackMetadata().getMaxFoodLevel());
             player.setMaxHealth(mappack.getMappackMetadata().getMaxHealth());
@@ -158,7 +159,7 @@ public class NailedMap implements Map {
     }
 
     @Override
-    public void onPlayerLeft(Player player){
+    public void onPlayerLeft(Player player) {
         this.scoreboardManager.onPlayerLeftMap(player);
         this.teamManager.onPlayerLeftMap(player);
         this.players.remove(player);
@@ -167,7 +168,7 @@ public class NailedMap implements Map {
     }
 
     @Override
-    public void onTick(TickEvent.ServerTickEvent event){
+    public void onTick(TickEvent.ServerTickEvent event) {
         if(event.phase == TickEvent.Phase.END){
             if(this.machine != null){
                 this.machine.update();
@@ -204,17 +205,17 @@ public class NailedMap implements Map {
     }
 
     @Override
-    public String getSaveFileName(){
+    public String getSaveFileName() {
         return PotentialMap.getSaveFileName(this);
     }
 
     @Override
-    public File getSaveFolder(){
+    public File getSaveFolder() {
         return new File(NailedMapLoader.instance().getMapsFolder(), this.getSaveFileName());
     }
 
     @Override
-    public TeleportOptions getSpawnTeleport(){
+    public TeleportOptions getSpawnTeleport() {
         if(this.mappack == null){
             return new TeleportOptions(this, new Location(this.world.getSpawnPoint()));
         }
@@ -224,7 +225,7 @@ public class NailedMap implements Map {
     }
 
     @Override
-    public void broadcastChatMessage(IChatComponent message){
+    public void broadcastChatMessage(IChatComponent message) {
         for(Player player : NailedAPI.getPlayerRegistry().getPlayers()){
             if(player.getCurrentMap() == this){
                 player.sendChat(message);
@@ -233,49 +234,51 @@ public class NailedMap implements Map {
     }
 
     @Override
-    public void broadcastChatMessage(String message){
+    public void broadcastChatMessage(String message) {
         this.broadcastChatMessage(new ChatComponentText(message));
     }
 
     @Override
-    public void onGameStarted(){
+    public void onGameStarted() {
         this.teamManager.onGameStarted();
     }
 
     @Override
-    public void onGameEnded(){
+    public void onGameEnded() {
         this.teamManager.onGameEnded();
     }
 
     @Override
-    public Location getRandomSpawnpoint(){
+    public Location getRandomSpawnpoint() {
         List<Location> spawnpoints = mappack.getMappackMetadata().getRandomSpawnpoints();
-        if(spawnpoints.size() == 0) return null;
+        if(spawnpoints.size() == 0){
+            return null;
+        }
         return spawnpoints.get(NailedMapLoader.instance().getRandomSpawnpointSelector().nextInt(spawnpoints.size()));
     }
 
-    public void markDataNeedsResync(){
+    public void markDataNeedsResync() {
         this.dataResyncRequired = true;
     }
 
-    public void onSynced(){
+    public void onSynced() {
         this.dataResyncRequired = false;
     }
 
     @Override
-    public void broadcastPacket(Packet packet){
+    public void broadcastPacket(Packet packet) {
         MinecraftServer.getServer().getConfigurationManager().sendPacketToAllPlayersInDimension(packet, this.getID());
     }
 
     @Override
-    public int getAmountOfPlayers(){
+    public int getAmountOfPlayers() {
         return this.players.size();
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "NailedMap{" +
-                "ID=" + ID +
+                "id=" + id +
                 ", name=" + this.getSaveFileName() +
                 ", mappack=" + mappack +
                 ", isLoaded=" + isLoaded +
@@ -284,7 +287,7 @@ public class NailedMap implements Map {
 
     @Override
     public int getID() {
-        return this.ID;
+        return this.id;
     }
 
     @Override
@@ -342,12 +345,12 @@ public class NailedMap implements Map {
     }
 
     @Override
-    public int getMaxFoodLevel(){
+    public int getMaxFoodLevel() {
         return mappack.getMappackMetadata().getMaxFoodLevel();
     }
 
     @Override
-    public int getMinFoodLevel(){
+    public int getMinFoodLevel() {
         return mappack.getMappackMetadata().getMinFoodLevel();
     }
 
@@ -362,17 +365,17 @@ public class NailedMap implements Map {
     }
 
     @Override
-    public ChatComponentText getInfoBar(){
+    public ChatComponentText getInfoBar() {
         return new ChatComponentText("");
     }
 
     @Override
-    public float getInfoBarProgress(){
+    public float getInfoBarProgress() {
         return 1;
     }
 
     @Override
-    public jk_5.nailed.api.map.LocationHandler getLocationHandler(){
+    public jk_5.nailed.api.map.LocationHandler getLocationHandler() {
         return this.locationHandler;
     }
 }

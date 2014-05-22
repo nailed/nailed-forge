@@ -1,20 +1,22 @@
 package jk_5.nailed.blocks.tileentity;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.network.ByteBufUtils;
-import io.netty.buffer.ByteBuf;
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.map.stat.IStatTileEntity;
-import jk_5.nailed.api.map.stat.Stat;
+import io.netty.buffer.*;
+
+import net.minecraft.nbt.*;
+import net.minecraft.util.*;
+
+import cpw.mods.fml.common.*;
+import cpw.mods.fml.common.network.*;
+
+import net.minecraftforge.permissions.api.*;
+
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.map.stat.*;
 import jk_5.nailed.api.map.stat.StatManager;
-import jk_5.nailed.api.player.Player;
-import jk_5.nailed.blocks.NailedBlocks;
-import jk_5.nailed.gui.IGuiReturnHandler;
-import jk_5.nailed.map.stat.StatMode;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.permissions.api.PermissionsManager;
+import jk_5.nailed.api.player.*;
+import jk_5.nailed.blocks.*;
+import jk_5.nailed.gui.*;
+import jk_5.nailed.map.stat.*;
 
 /**
  * No description given
@@ -34,10 +36,11 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
     private int redstonePulseTicks = -1;
     private int pulseLength = 4;
 
-    public void setStatName(String statName){
+    public void setStatName(String statName) {
         this.programmedName = statName;
-        if(this.worldObj == null) this.needsUpdate = true;
-        else if(!this.worldObj.isRemote){
+        if(this.worldObj == null){
+            this.needsUpdate = true;
+        }else if(!this.worldObj.isRemote){
             StatManager manager = NailedAPI.getMapLoader().getMap(this.worldObj).getStatManager();
             this.stat = manager.getStat(this.programmedName);
             manager.registerStatTile(this);
@@ -45,14 +48,17 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
             if(this.stat == null){
                 this.disable();
             }else{
-                if(this.stat.isEnabled()) this.enable();
-                else this.disable();
+                if(this.stat.isEnabled()){
+                    this.enable();
+                }else{
+                    this.disable();
+                }
             }
         }
     }
 
     @Override
-    public void updateEntity(){
+    public void updateEntity() {
         if(this.needsUpdate){
             StatManager manager = NailedAPI.getMapLoader().getMap(this.worldObj).getStatManager();
             this.stat = manager.getStat(this.programmedName);
@@ -61,8 +67,11 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
             if(this.stat == null){
                 this.disable();
             }else{
-                if(this.stat.isEnabled()) this.enable();
-                else this.disable();
+                if(this.stat.isEnabled()){
+                    this.enable();
+                }else{
+                    this.disable();
+                }
             }
             this.needsUpdate = false;
         }
@@ -82,7 +91,7 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
     }
 
     @Override
-    public void invalidate(){
+    public void invalidate() {
         super.invalidate();
         if(this.isLoaded){
             NailedAPI.getMapLoader().getMap(this.worldObj).getStatManager().unloadStatTile(this);
@@ -91,7 +100,7 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
     }
 
     @Override
-    public void onChunkUnload(){
+    public void onChunkUnload() {
         super.onChunkUnload();
         if(this.isLoaded){
             NailedAPI.getMapLoader().getMap(this.worldObj).getStatManager().unloadStatTile(this);
@@ -100,12 +109,12 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
     }
 
     @Override
-    public boolean canUpdate(){
+    public boolean canUpdate() {
         return FMLCommonHandler.instance().getEffectiveSide().isServer();
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tag){
+    public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
         this.setStatName(tag.getString("name"));
         this.mode = StatMode.values()[tag.getByte("mode")];
@@ -113,7 +122,7 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tag){
+    public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
         tag.setString("name", this.programmedName);
         tag.setByte("mode", (byte) this.mode.ordinal());
@@ -121,7 +130,7 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
     }
 
     @Override
-    public void enable(){
+    public void enable() {
         if(this.stat == null && this.signalEnabled){
             this.signalEnabled = false;
             this.scheduleRedstoneUpdate();
@@ -141,7 +150,7 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
     }
 
     @Override
-    public void disable(){
+    public void disable() {
         if(this.stat == null && this.signalEnabled){
             this.signalEnabled = false;
             this.scheduleRedstoneUpdate();
@@ -161,7 +170,7 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
     }
 
     @Override
-    public boolean canPlayerOpenGui(Player player){
+    public boolean canPlayerOpenGui(Player player) {
         if(!PermissionsManager.getPerm(player.getUsername(), PERMNODE, this).check()){
             ChatComponentTranslation message = new ChatComponentTranslation("nailed.noPermission");
             message.getChatStyle().setColor(EnumChatFormatting.RED);
@@ -172,20 +181,20 @@ public class TileEntityStatEmitter extends NailedTileEntity implements IStatTile
     }
 
     @Override
-    public void writeGuiData(ByteBuf buffer){
+    public void writeGuiData(ByteBuf buffer) {
         ByteBufUtils.writeUTF8String(buffer, this.programmedName);
         buffer.writeByte(this.mode.ordinal());
         buffer.writeByte(this.pulseLength);
     }
 
     @Override
-    public void readGuiCloseData(ByteBuf buffer){
+    public void readGuiCloseData(ByteBuf buffer) {
         this.setStatName(ByteBufUtils.readUTF8String(buffer));
         this.setMode(StatMode.values()[buffer.readByte()]);
         this.pulseLength = buffer.readByte();
     }
 
-    public void scheduleRedstoneUpdate(){
+    public void scheduleRedstoneUpdate() {
         //this.worldObj.notifyBlockChange(this.xCoord, this.yCoord, this.zCoord, NailedBlocks.stat);
         this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, NailedBlocks.stat);
     }

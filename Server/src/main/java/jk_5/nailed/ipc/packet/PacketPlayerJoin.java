@@ -1,8 +1,10 @@
 package jk_5.nailed.ipc.packet;
 
-import com.mojang.authlib.GameProfile;
-import io.netty.buffer.ByteBuf;
-import jk_5.nailed.ipc.PacketUtils;
+import com.mojang.authlib.*;
+
+import io.netty.buffer.*;
+
+import jk_5.nailed.ipc.*;
 
 /**
  * No description given
@@ -24,14 +26,14 @@ public class PacketPlayerJoin extends IpcPacket {
     }
 
     @Override
-    public void encode(ByteBuf buffer){
+    public void encode(ByteBuf buffer) {
         PacketUtils.writeString(this.profile.getId(), buffer);
         PacketUtils.writeString(this.profile.getName(), buffer);
         PacketUtils.writeString(this.ip, buffer);
     }
 
     @Override
-    public void decode(ByteBuf buffer){
+    public void decode(ByteBuf buffer) {
 
     }
 

@@ -1,12 +1,9 @@
 package jk_5.nailed.ipc.filestore;
 
-import jk_5.nailed.api.scripting.IMount;
+import java.io.*;
+import java.util.*;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
+import jk_5.nailed.api.scripting.*;
 
 /**
  * No description given
@@ -28,7 +25,9 @@ public class FilestoreMount implements IMount {
 
     @Override
     public boolean isDirectory(String path) throws IOException {
-        if(path.endsWith("/") || path.length() == 0 || path.length() == 1) return true;
+        if(path.endsWith("/") || path.length() == 0 || path.length() == 1){
+            return true;
+        }
         for(String p : filestore.paths.keySet()){
             if(p.startsWith(path + "/")){
                 return true;

@@ -1,8 +1,9 @@
 package jk_5.nailed.ipc.packet;
 
-import io.netty.buffer.ByteBuf;
-import jk_5.nailed.api.player.Player;
-import jk_5.nailed.ipc.PacketUtils;
+import io.netty.buffer.*;
+
+import jk_5.nailed.api.player.*;
+import jk_5.nailed.ipc.*;
 
 /**
  * No description given
@@ -24,13 +25,13 @@ public class PacketKill extends IpcPacket {
     }
 
     @Override
-    public void encode(ByteBuf buffer){
+    public void encode(ByteBuf buffer) {
         PacketUtils.writeString(killer.getGameProfile().getId(), buffer);
         PacketUtils.writeString(victim.getGameProfile().getId(), buffer);
     }
 
     @Override
-    public void decode(ByteBuf buffer){
+    public void decode(ByteBuf buffer) {
 
     }
 

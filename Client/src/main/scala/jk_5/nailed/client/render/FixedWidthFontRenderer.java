@@ -1,16 +1,16 @@
 package jk_5.nailed.client.render;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GLAllocation;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
+import java.awt.image.*;
+import java.io.*;
+import java.nio.*;
+import javax.imageio.*;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.nio.IntBuffer;
+import org.lwjgl.opengl.*;
+
+import net.minecraft.client.*;
+import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.texture.*;
+import net.minecraft.util.*;
 
 /**
  * No description given
@@ -56,9 +56,9 @@ public class FixedWidthFontRenderer {
             while(j2 >= 0){
                 int i3 = l * 8 + j2;
                 boolean flag = true;
-                for(int l3 = 0; (l3 < 8) && (flag); l3++){
+                for(int l3 = 0; (l3 < 8) && flag; l3++){
                     int i4 = (k1 * 8 + l3) * i;
-                    int k4 = ai[(i3 + i4)] & 0xFF;
+                    int k4 = ai[i3 + i4] & 0xFF;
                     if(k4 > 0){
                         flag = false;
                     }
@@ -72,7 +72,7 @@ public class FixedWidthFontRenderer {
             if(k == 32){
                 j2 = 2;
             }
-            this.charWidth[k] = (j2 + 2);
+            this.charWidth[k] = j2 + 2;
         }
 
         this.fontDisplayLists = GLAllocation.generateDisplayLists(274);
@@ -143,7 +143,7 @@ public class FixedWidthFontRenderer {
                 float marginSquish = marginSize / FONT_WIDTH;
 
                 int colour1 = BASE16.indexOf(colours.charAt(s.length()));
-                if((colour1 > 0) || (forceBackground)){
+                if(colour1 > 0 || forceBackground){
                     GL11.glPushMatrix();
                     GL11.glScalef(marginSquish, 1.0F, 1.0F);
                     GL11.glTranslatef((x - marginSize) / marginSquish, y, 0.0F);
@@ -153,7 +153,7 @@ public class FixedWidthFontRenderer {
                 }
 
                 int colour2 = "0123456789abcdef".indexOf(colours.charAt(s.length() + s.length() - 1));
-                if((colour2 > 0) || (forceBackground)){
+                if(colour2 > 0 || forceBackground){
                     GL11.glPushMatrix();
                     GL11.glScalef(marginSquish, 1.0F, 1.0F);
                     GL11.glTranslatef((x + s.length() * FONT_WIDTH) / marginSquish, y, 0.0F);
@@ -161,7 +161,6 @@ public class FixedWidthFontRenderer {
                     GL11.glCallList(this.fontDisplayLists + 256 + 16);
                     GL11.glPopMatrix();
                 }
-
             }
 
             GL11.glPushMatrix();
@@ -181,7 +180,7 @@ public class FixedWidthFontRenderer {
                     lastColour = colour;
                 }
 
-                this.buffer.put(this.fontDisplayLists + 256 + 16 + ((forceBackground) || (colour > 0) ? 0 : 1));
+                this.buffer.put(this.fontDisplayLists + 256 + 16 + (forceBackground || (colour > 0) ? 0 : 1));
                 if(this.buffer.remaining() == 0){
                     this.buffer.flip();
                     GL11.glCallLists(this.buffer);

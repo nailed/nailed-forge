@@ -1,6 +1,6 @@
 package jk_5.nailed.api.map.stat;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * No description given
@@ -9,7 +9,7 @@ import java.util.List;
  */
 public interface StatConfig {
 
-    public StatConfig clone();
-    public Stat getStat(String name);
-    public List<Stat> getStats();
+    StatConfig copy();
+    Stat getStat(String name);
+    List<Stat> getStats();
 }

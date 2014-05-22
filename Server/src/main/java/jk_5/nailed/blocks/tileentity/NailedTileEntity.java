@@ -1,15 +1,15 @@
 package jk_5.nailed.blocks.tileentity;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.player.Player;
-import jk_5.nailed.network.NailedNetworkHandler;
-import jk_5.nailed.network.NailedPacket;
-import jk_5.nailed.util.ISynchronizedTileEntity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.network.Packet;
-import net.minecraft.tileentity.TileEntity;
+import io.netty.buffer.*;
+
+import net.minecraft.entity.player.*;
+import net.minecraft.network.*;
+import net.minecraft.tileentity.*;
+
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.player.*;
+import jk_5.nailed.network.*;
+import jk_5.nailed.util.*;
 
 /**
  * No description given
@@ -18,13 +18,16 @@ import net.minecraft.tileentity.TileEntity;
  */
 public abstract class NailedTileEntity extends TileEntity {
 
-    public boolean onBlockActivated(EntityPlayer entity, int side, float hitX, float hitY, float hitZ){
+    public boolean onBlockActivated(EntityPlayer entity, int side, float hitX, float hitY, float hitZ) {
         if(this instanceof IGuiTileEntity){
             IGuiTileEntity tile = (IGuiTileEntity) this;
-            if(this.worldObj.isRemote) return true;
-            else{
+            if(this.worldObj.isRemote){
+                return true;
+            }else{
                 Player player = NailedAPI.getPlayerRegistry().getPlayer(entity);
-                if(player == null) return true;
+                if(player == null){
+                    return true;
+                }
                 if(tile.canPlayerOpenGui(player)){
                     ByteBuf data = Unpooled.buffer();
                     tile.writeGuiData(data);
@@ -37,8 +40,10 @@ public abstract class NailedTileEntity extends TileEntity {
     }
 
     @Override
-    public Packet getDescriptionPacket(){
-        if(!(this instanceof ISynchronizedTileEntity)) return null;
+    public Packet getDescriptionPacket() {
+        if(!(this instanceof ISynchronizedTileEntity)){
+            return null;
+        }
         ByteBuf buffer = Unpooled.buffer();
         ((ISynchronizedTileEntity) this).writeData(buffer);
         if(buffer.readableBytes() == 0){

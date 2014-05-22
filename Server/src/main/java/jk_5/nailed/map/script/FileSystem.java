@@ -1,15 +1,14 @@
 package jk_5.nailed.map.script;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import jk_5.nailed.api.scripting.IMount;
-import jk_5.nailed.api.scripting.IWritableMount;
-import org.apache.commons.io.IOUtils;
-
 import java.io.*;
 import java.util.*;
-import java.util.regex.Pattern;
+import java.util.regex.*;
+
+import com.google.common.collect.*;
+
+import org.apache.commons.io.*;
+
+import jk_5.nailed.api.scripting.*;
 
 /**
  * No description given
@@ -21,15 +20,15 @@ public class FileSystem {
     private Map<String, MountWrapper> mounts = Maps.newHashMap();
     private Set<IMountedFile> openFiles = Sets.newHashSet();
 
-    public FileSystem(String rootLabel, IMount rootMount) throws FileSystemException{
+    public FileSystem(String rootLabel, IMount rootMount) throws FileSystemException {
         mount(rootLabel, "", rootMount);
     }
 
-    public FileSystem(String rootLabel, IWritableMount rootMount) throws FileSystemException{
+    public FileSystem(String rootLabel, IWritableMount rootMount) throws FileSystemException {
         mountWritable(rootLabel, "", rootMount);
     }
 
-    public void unload(){
+    public void unload() {
         synchronized(this.openFiles){
             while(this.openFiles.size() > 0){
                 IMountedFile file = this.openFiles.iterator().next();
@@ -42,7 +41,7 @@ public class FileSystem {
         }
     }
 
-    public synchronized void mount(String label, String location, IMount mount) throws FileSystemException{
+    public synchronized void mount(String label, String location, IMount mount) throws FileSystemException {
         if(mount == null){
             throw new NullPointerException();
         }
@@ -53,7 +52,7 @@ public class FileSystem {
         mount(new MountWrapper(label, location, mount));
     }
 
-    public synchronized void mountWritable(String label, String location, IWritableMount mount) throws FileSystemException{
+    public synchronized void mountWritable(String label, String location, IWritableMount mount) throws FileSystemException {
         if(mount == null){
             throw new NullPointerException();
         }
@@ -64,7 +63,7 @@ public class FileSystem {
         mount(new MountWrapper(label, location, mount));
     }
 
-    private synchronized void mount(MountWrapper wrapper) throws FileSystemException{
+    private synchronized void mount(MountWrapper wrapper) throws FileSystemException {
         String location = wrapper.getLocation();
         if(this.mounts.containsKey(location)){
             this.mounts.remove(location);
@@ -72,26 +71,27 @@ public class FileSystem {
         this.mounts.put(location, wrapper);
     }
 
-    public synchronized void unmount(String path){
+    public synchronized void unmount(String path) {
         path = sanitizePath(path);
         if(this.mounts.containsKey(path)){
             this.mounts.remove(path);
         }
     }
 
-    public synchronized String combine(String path, String childPath){
+    public synchronized String combine(String path, String childPath) {
         path = sanitizePath(path);
         childPath = sanitizePath(childPath);
 
-        if(path.length() == 0)
+        if(path.length() == 0){
             return childPath;
+        }
         if(childPath.length() == 0){
             return path;
         }
         return sanitizePath(path + '/' + childPath);
     }
 
-    public static String getDirectory(String path){
+    public static String getDirectory(String path) {
         path = sanitizePath(path);
         if(path.length() == 0){
             return "..";
@@ -104,7 +104,7 @@ public class FileSystem {
         return "";
     }
 
-    public static String getName(String path){
+    public static String getName(String path) {
         path = sanitizePath(path);
         if(path.length() == 0){
             return "root";
@@ -117,13 +117,13 @@ public class FileSystem {
         return path;
     }
 
-    public synchronized long getSize(String path) throws FileSystemException{
+    public synchronized long getSize(String path) throws FileSystemException {
         path = sanitizePath(path);
         MountWrapper mount = getMount(path);
         return mount.getSize(path);
     }
 
-    public synchronized String[] list(String path) throws FileSystemException{
+    public synchronized String[] list(String path) throws FileSystemException {
         path = sanitizePath(path);
         MountWrapper mount = getMount(path);
 
@@ -141,7 +141,7 @@ public class FileSystem {
         return array;
     }
 
-    private void findIn(String dir, List<String> matches, Pattern wildPattern) throws FileSystemException{
+    private void findIn(String dir, List<String> matches, Pattern wildPattern) throws FileSystemException {
         String[] list = list(dir);
         for(int i = 0; i < list.length; i++){
             String entry = list[i];
@@ -155,7 +155,7 @@ public class FileSystem {
         }
     }
 
-    public synchronized String[] find(String wildPath) throws FileSystemException{
+    public synchronized String[] find(String wildPath) throws FileSystemException {
         wildPath = sanitizePath(wildPath, true);
         Pattern wildPattern = Pattern.compile("^\\Q" + wildPath.replaceAll("\\*", "\\\\E[^\\\\/]*\\\\Q") + "\\E$");
         List matches = new ArrayList();
@@ -166,43 +166,43 @@ public class FileSystem {
         return array;
     }
 
-    public synchronized boolean exists(String path) throws FileSystemException{
+    public synchronized boolean exists(String path) throws FileSystemException {
         path = sanitizePath(path);
         MountWrapper mount = getMount(path);
         return mount.exists(path);
     }
 
-    public synchronized boolean isDir(String path) throws FileSystemException{
+    public synchronized boolean isDir(String path) throws FileSystemException {
         path = sanitizePath(path);
         MountWrapper mount = getMount(path);
         return mount.isDirectory(path);
     }
 
-    public synchronized boolean isReadOnly(String path) throws FileSystemException{
+    public synchronized boolean isReadOnly(String path) throws FileSystemException {
         path = sanitizePath(path);
         MountWrapper mount = getMount(path);
         return mount.isReadOnly(path);
     }
 
-    public synchronized String getMountLabel(String path) throws FileSystemException{
+    public synchronized String getMountLabel(String path) throws FileSystemException {
         path = sanitizePath(path);
         MountWrapper mount = getMount(path);
         return mount.getLabel();
     }
 
-    public synchronized void makeDir(String path) throws FileSystemException{
+    public synchronized void makeDir(String path) throws FileSystemException {
         path = sanitizePath(path);
         MountWrapper mount = getMount(path);
         mount.makeDirectory(path);
     }
 
-    public synchronized void delete(String path) throws FileSystemException{
+    public synchronized void delete(String path) throws FileSystemException {
         path = sanitizePath(path);
         MountWrapper mount = getMount(path);
         mount.delete(path);
     }
 
-    public synchronized void move(String sourcePath, String destPath) throws FileSystemException{
+    public synchronized void move(String sourcePath, String destPath) throws FileSystemException {
         sourcePath = sanitizePath(sourcePath);
         destPath = sanitizePath(destPath);
         if((isReadOnly(sourcePath)) || (isReadOnly(destPath))){
@@ -221,7 +221,7 @@ public class FileSystem {
         delete(sourcePath);
     }
 
-    public synchronized void copy(String sourcePath, String destPath) throws FileSystemException{
+    public synchronized void copy(String sourcePath, String destPath) throws FileSystemException {
         sourcePath = sanitizePath(sourcePath);
         destPath = sanitizePath(destPath);
         if(isReadOnly(destPath)){
@@ -239,7 +239,7 @@ public class FileSystem {
         copyRecursive(sourcePath, getMount(sourcePath), destPath, getMount(destPath));
     }
 
-    private synchronized void copyRecursive(String sourcePath, MountWrapper sourceMount, String destinationPath, MountWrapper destinationMount) throws FileSystemException{
+    private synchronized void copyRecursive(String sourcePath, MountWrapper sourceMount, String destinationPath, MountWrapper destinationMount) throws FileSystemException {
         if(!sourceMount.exists(sourcePath)){
             return;
         }
@@ -262,8 +262,9 @@ public class FileSystem {
                 byte[] buffer = new byte[1024];
                 while(true){
                     int bytesRead = source.read(buffer);
-                    if(bytesRead < 0)
+                    if(bytesRead < 0){
                         break;
+                    }
                     destination.write(buffer, 0, bytesRead);
                 }
             }catch(IOException e){
@@ -275,7 +276,7 @@ public class FileSystem {
         }
     }
 
-    public synchronized IMountedFileNormal openForRead(String path) throws FileSystemException{
+    public synchronized IMountedFileNormal openForRead(String path) throws FileSystemException {
         path = sanitizePath(path);
         MountWrapper mount = getMount(path);
         InputStream stream = mount.openForRead(path);
@@ -283,17 +284,17 @@ public class FileSystem {
             final BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
             IMountedFileNormal file = new IMountedFileNormal() {
                 public String readLine()
-                        throws IOException{
+                        throws IOException {
                     return reader.readLine();
                 }
 
                 public void write(String s, int off, int len, boolean newLine)
-                        throws IOException{
+                        throws IOException {
                     throw new UnsupportedOperationException();
                 }
 
                 public void close()
-                        throws IOException{
+                        throws IOException {
                     synchronized(FileSystem.this.openFiles){
                         FileSystem.this.openFiles.remove(this);
                         reader.close();
@@ -301,7 +302,7 @@ public class FileSystem {
                 }
 
                 public void flush()
-                        throws IOException{
+                        throws IOException {
                     throw new UnsupportedOperationException();
                 }
             };
@@ -313,7 +314,7 @@ public class FileSystem {
         return null;
     }
 
-    public synchronized IMountedFileNormal openForWrite(String path, boolean append) throws FileSystemException{
+    public synchronized IMountedFileNormal openForWrite(String path, boolean append) throws FileSystemException {
         path = sanitizePath(path);
         MountWrapper mount = getMount(path);
         OutputStream stream = append ? mount.openForAppend(path) : mount.openForWrite(path);
@@ -321,12 +322,12 @@ public class FileSystem {
             final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(stream));
             IMountedFileNormal file = new IMountedFileNormal() {
                 public String readLine()
-                        throws IOException{
+                        throws IOException {
                     throw new UnsupportedOperationException();
                 }
 
                 public void write(String s, int off, int len, boolean newLine)
-                        throws IOException{
+                        throws IOException {
                     writer.write(s, off, len);
                     if(newLine){
                         writer.newLine();
@@ -334,7 +335,7 @@ public class FileSystem {
                 }
 
                 public void close()
-                        throws IOException{
+                        throws IOException {
                     synchronized(FileSystem.this.openFiles){
                         FileSystem.this.openFiles.remove(this);
                         writer.close();
@@ -342,7 +343,7 @@ public class FileSystem {
                 }
 
                 public void flush()
-                        throws IOException{
+                        throws IOException {
                     writer.flush();
                 }
             };
@@ -354,24 +355,24 @@ public class FileSystem {
         return null;
     }
 
-    public synchronized IMountedFileBinary openForBinaryRead(String path) throws FileSystemException{
+    public synchronized IMountedFileBinary openForBinaryRead(String path) throws FileSystemException {
         path = sanitizePath(path);
         MountWrapper mount = getMount(path);
         final InputStream stream = mount.openForRead(path);
         if(stream != null){
             IMountedFileBinary file = new IMountedFileBinary() {
                 public int read()
-                        throws IOException{
+                        throws IOException {
                     return stream.read();
                 }
 
                 public void write(int i)
-                        throws IOException{
+                        throws IOException {
                     throw new UnsupportedOperationException();
                 }
 
                 public void close()
-                        throws IOException{
+                        throws IOException {
                     synchronized(FileSystem.this.openFiles){
                         FileSystem.this.openFiles.remove(this);
                         stream.close();
@@ -379,7 +380,7 @@ public class FileSystem {
                 }
 
                 public void flush()
-                        throws IOException{
+                        throws IOException {
                     throw new UnsupportedOperationException();
                 }
             };
@@ -391,24 +392,24 @@ public class FileSystem {
         return null;
     }
 
-    public synchronized IMountedFileBinary openForBinaryWrite(String path, boolean append) throws FileSystemException{
+    public synchronized IMountedFileBinary openForBinaryWrite(String path, boolean append) throws FileSystemException {
         path = sanitizePath(path);
         MountWrapper mount = getMount(path);
         final OutputStream stream = append ? mount.openForAppend(path) : mount.openForWrite(path);
         if(stream != null){
             IMountedFileBinary file = new IMountedFileBinary() {
                 public int read()
-                        throws IOException{
+                        throws IOException {
                     throw new UnsupportedOperationException();
                 }
 
                 public void write(int i)
-                        throws IOException{
+                        throws IOException {
                     stream.write(i);
                 }
 
                 public void close()
-                        throws IOException{
+                        throws IOException {
                     synchronized(FileSystem.this.openFiles){
                         FileSystem.this.openFiles.remove(this);
                         stream.close();
@@ -416,7 +417,7 @@ public class FileSystem {
                 }
 
                 public void flush()
-                        throws IOException{
+                        throws IOException {
                     stream.flush();
                 }
             };
@@ -428,14 +429,14 @@ public class FileSystem {
         return null;
     }
 
-    public long getFreeSpace(String path) throws FileSystemException{
+    public long getFreeSpace(String path) throws FileSystemException {
         path = sanitizePath(path);
         MountWrapper mount = getMount(path);
         return mount.getFreeSpace();
     }
 
     private MountWrapper getMount(String path)
-            throws FileSystemException{
+            throws FileSystemException {
         Iterator it = this.mounts.values().iterator();
         MountWrapper match = null;
         int matchLength = 999;
@@ -455,11 +456,11 @@ public class FileSystem {
         return match;
     }
 
-    private static String sanitizePath(String path){
+    private static String sanitizePath(String path) {
         return sanitizePath(path, false);
     }
 
-    private static String sanitizePath(String path, boolean allowWildcards){
+    private static String sanitizePath(String path, boolean allowWildcards) {
         path = path.replace('\\', '/');
 
         char[] specialChars = {'"', ':', '<', '>', '?', '|'};
@@ -467,24 +468,25 @@ public class FileSystem {
         StringBuilder cleanName = new StringBuilder();
         for(int i = 0; i < path.length(); i++){
             char c = path.charAt(i);
-            if((c >= ' ') && (Arrays.binarySearch(specialChars, c) < 0) && ((allowWildcards) || (c != '*'))){
+            if((c >= ' ') && (Arrays.binarySearch(specialChars, c) < 0) && (allowWildcards || c != '*')){
                 cleanName.append(c);
             }
         }
         path = cleanName.toString();
 
         String[] parts = path.split("/");
-        Stack outputParts = new Stack();
+        Stack<String> outputParts = new Stack<String>();
         for(int n = 0; n < parts.length; n++){
             String part = parts[n];
-            if((part.length() != 0) && (!part.equals("."))){
-                if(part.equals("..")){
+            if((part.length() != 0) && (!".".equals(part))){
+                if("..".equals(part)){
                     if(!outputParts.empty()){
-                        String top = (String) outputParts.peek();
-                        if(!top.equals(".."))
+                        String top = outputParts.peek();
+                        if(!"..".equals(top)){
                             outputParts.pop();
-                        else
+                        }else{
                             outputParts.push("..");
+                        }
                     }else{
                         outputParts.push("..");
                     }
@@ -509,11 +511,11 @@ public class FileSystem {
         return result.toString();
     }
 
-    public static boolean contains(String pathA, String pathB){
+    public static boolean contains(String pathA, String pathB) {
         pathA = sanitizePath(pathA);
         pathB = sanitizePath(pathB);
 
-        if(pathB.equals("..")){
+        if("..".equals(pathB)){
             return false;
         }
         if(pathB.startsWith("../")){
@@ -529,11 +531,11 @@ public class FileSystem {
         return pathB.startsWith(pathA + "/");
     }
 
-    public static String toLocal(String path, String location){
+    public static String toLocal(String path, String location) {
         path = sanitizePath(path);
         location = sanitizePath(location);
 
-        assert (contains(location, path));
+        assert contains(location, path);
         String local = path.substring(location.length());
         if(local.startsWith("/")){
             return local.substring(1);
@@ -542,24 +544,25 @@ public class FileSystem {
     }
 
     private class MountWrapper {
+
         private String label;
         private String location;
         private IMount mount;
         private IWritableMount writableMount;
 
-        public MountWrapper(String label, String location, IMount mount){
+        public MountWrapper(String label, String location, IMount mount) {
             this.label = label;
             this.location = location;
             this.mount = mount;
             this.writableMount = null;
         }
 
-        public MountWrapper(String label, String location, IWritableMount mount){
+        public MountWrapper(String label, String location, IWritableMount mount) {
             this(label, location, (IMount) mount);
             this.writableMount = mount;
         }
 
-        public long getFreeSpace(){
+        public long getFreeSpace() {
             if(this.writableMount == null){
                 return 0L;
             }
@@ -572,12 +575,12 @@ public class FileSystem {
         }
 
         public boolean isReadOnly(String path)
-                throws FileSystemException{
+                throws FileSystemException {
             return this.writableMount == null;
         }
 
         public boolean exists(String path)
-                throws FileSystemException{
+                throws FileSystemException {
             path = toLocal(path);
             try{
                 return this.mount.exists(path);
@@ -586,7 +589,7 @@ public class FileSystem {
             }
         }
 
-        public boolean isDirectory(String path) throws FileSystemException{
+        public boolean isDirectory(String path) throws FileSystemException {
             path = toLocal(path);
             try{
                 return (this.mount.exists(path)) && (this.mount.isDirectory(path));
@@ -595,7 +598,7 @@ public class FileSystem {
             }
         }
 
-        public void list(String path, List<String> contents) throws FileSystemException{
+        public void list(String path, List<String> contents) throws FileSystemException {
             path = toLocal(path);
             try{
                 if(this.mount.exists(path) && this.mount.isDirectory(path)){
@@ -608,7 +611,7 @@ public class FileSystem {
             }
         }
 
-        public long getSize(String path) throws FileSystemException{
+        public long getSize(String path) throws FileSystemException {
             path = toLocal(path);
             try{
                 if(this.mount.exists(path)){
@@ -625,7 +628,7 @@ public class FileSystem {
             }
         }
 
-        public InputStream openForRead(String path) throws FileSystemException{
+        public InputStream openForRead(String path) throws FileSystemException {
             path = toLocal(path);
             try{
                 if((this.mount.exists(path)) && (!this.mount.isDirectory(path))){
@@ -639,7 +642,7 @@ public class FileSystem {
         }
 
         public void makeDirectory(String path)
-                throws FileSystemException{
+                throws FileSystemException {
             if(this.writableMount == null){
                 throw new FileSystemException("Access Denied");
             }
@@ -657,7 +660,7 @@ public class FileSystem {
             }
         }
 
-        public void delete(String path) throws FileSystemException{
+        public void delete(String path) throws FileSystemException {
             if(this.writableMount == null){
                 throw new FileSystemException("Access Denied");
             }
@@ -671,7 +674,7 @@ public class FileSystem {
             }
         }
 
-        public OutputStream openForWrite(String path) throws FileSystemException{
+        public OutputStream openForWrite(String path) throws FileSystemException {
             if(this.writableMount == null){
                 throw new FileSystemException("Access Denied");
             }
@@ -687,7 +690,7 @@ public class FileSystem {
             }
         }
 
-        public OutputStream openForAppend(String path) throws FileSystemException{
+        public OutputStream openForAppend(String path) throws FileSystemException {
             if(this.writableMount == null){
                 throw new FileSystemException("Access Denied");
             }
@@ -706,7 +709,7 @@ public class FileSystem {
             }
         }
 
-        private String toLocal(String path){
+        private String toLocal(String path) {
             return FileSystem.toLocal(path, this.location);
         }
 

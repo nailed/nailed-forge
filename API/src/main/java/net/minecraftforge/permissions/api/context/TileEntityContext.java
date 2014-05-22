@@ -1,8 +1,9 @@
 package net.minecraftforge.permissions.api.context;
 
-import lombok.Getter;
-import net.minecraft.block.Block;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.block.*;
+import net.minecraft.tileentity.*;
+
+import lombok.*;
 
 /**
  * No description given
@@ -12,10 +13,12 @@ import net.minecraft.tileentity.TileEntity;
 public class TileEntityContext implements IBlockContext {
 
     private int x, y, z;
-    @Getter private int dimensionId, blockMetadata;
-    @Getter private Block block;
+    @Getter
+    private int dimensionId, blockMetadata;
+    @Getter
+    private Block block;
 
-    public TileEntityContext(TileEntity tile){
+    public TileEntityContext(TileEntity tile) {
         this.x = tile.xCoord;
         this.y = tile.yCoord;
         this.z = tile.zCoord;
@@ -25,37 +28,37 @@ public class TileEntityContext implements IBlockContext {
     }
 
     @Override
-    public boolean hasTileEntity(){
+    public boolean hasTileEntity() {
         return true;
     }
 
     @Override
-    public double getX(){
+    public double getX() {
         return x;
     }
 
     @Override
-    public double getY(){
+    public double getY() {
         return y;
     }
 
     @Override
-    public double getZ(){
+    public double getZ() {
         return z;
     }
 
     @Override
-    public int getBlockX(){
+    public int getBlockX() {
         return this.x;
     }
 
     @Override
-    public int getBlockY(){
+    public int getBlockY() {
         return this.y;
     }
 
     @Override
-    public int getBlockZ(){
+    public int getBlockZ() {
         return this.z;
     }
 }

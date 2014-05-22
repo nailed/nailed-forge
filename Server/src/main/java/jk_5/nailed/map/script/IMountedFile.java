@@ -1,6 +1,6 @@
 package jk_5.nailed.map.script;
 
-import java.io.IOException;
+import java.io.*;
 
 /**
  * No description given
@@ -9,5 +9,5 @@ import java.io.IOException;
  */
 public interface IMountedFile {
 
-    public void close() throws IOException;
+    void close() throws IOException;
 }

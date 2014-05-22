@@ -1,6 +1,6 @@
 package jk_5.nailed.players;
 
-import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.*;
 
 /**
  * No description given
@@ -14,7 +14,7 @@ public class TeamUndefined extends NailedTeam {
     }
 
     @Override
-    public void onWorldSet(){
+    public void onWorldSet() {
         //NOOP
     }
 }

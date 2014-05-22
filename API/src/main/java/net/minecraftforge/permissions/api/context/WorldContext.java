@@ -1,7 +1,8 @@
 package net.minecraftforge.permissions.api.context;
 
-import lombok.Getter;
-import net.minecraft.world.World;
+import net.minecraft.world.*;
+
+import lombok.*;
 
 /**
  * No description given
@@ -10,9 +11,10 @@ import net.minecraft.world.World;
  */
 public class WorldContext implements IDimensionContext {
 
-    @Getter private final int dimensionId;
+    @Getter
+    private final int dimensionId;
 
-    public WorldContext(World world){
+    public WorldContext(World world) {
         this.dimensionId = world.provider.dimensionId;
 
     }

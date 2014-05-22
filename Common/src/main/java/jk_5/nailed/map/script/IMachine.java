@@ -1,6 +1,6 @@
 package jk_5.nailed.map.script;
 
-import net.minecraft.world.World;
+import net.minecraft.world.*;
 
 /**
  * No description given
@@ -9,10 +9,10 @@ import net.minecraft.world.World;
  */
 public interface IMachine extends ITerminal {
 
-    public int getId();
-    public boolean isOn();
-    public void shutdown();
-    public void reboot();
-    public void queueEvent(String event, Object... args);
-    public World getWorld();
+    int getId();
+    boolean isOn();
+    void shutdown();
+    void reboot();
+    void queueEvent(String event, Object... args);
+    World getWorld();
 }

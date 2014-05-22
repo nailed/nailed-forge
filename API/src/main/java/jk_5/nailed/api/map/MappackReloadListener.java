@@ -1,6 +1,6 @@
 package jk_5.nailed.api.map;
 
-import javax.annotation.Nonnull;
+import javax.annotation.*;
 
 /**
  * No description given
@@ -9,5 +9,5 @@ import javax.annotation.Nonnull;
  */
 public interface MappackReloadListener {
 
-    public void onReload(@Nonnull MappackLoader loader);
+    void onReload(@Nonnull MappackLoader loader);
 }

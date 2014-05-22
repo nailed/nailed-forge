@@ -1,7 +1,6 @@
 package jk_5.nailed.api.plugin.java;
 
-import java.net.URL;
-import java.net.URLClassLoader;
+import java.net.*;
 
 /**
  * No description given

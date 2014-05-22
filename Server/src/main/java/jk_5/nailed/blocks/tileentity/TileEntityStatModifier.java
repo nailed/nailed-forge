@@ -1,9 +1,9 @@
 package jk_5.nailed.blocks.tileentity;
 
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.map.stat.Stat;
-import jk_5.nailed.map.stat.DefaultStat;
-import jk_5.nailed.map.stat.types.StatTypeModifiable;
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.map.stat.*;
+import jk_5.nailed.map.stat.*;
+import jk_5.nailed.map.stat.types.*;
 
 /**
  * No description given
@@ -16,10 +16,11 @@ public class TileEntityStatModifier extends NailedTileEntity {
     private DefaultStat stat;
     private boolean needsUpdate = false;
 
-    public void setStatName(String statName){
+    public void setStatName(String statName) {
         this.programmedName = statName;
-        if(this.worldObj == null) this.needsUpdate = true;
-        else{
+        if(this.worldObj == null){
+            this.needsUpdate = true;
+        }else{
             Stat stat = NailedAPI.getMapLoader().getMap(this.worldObj).getStatManager().getStat(this.programmedName);
             if(stat instanceof DefaultStat && ((DefaultStat) stat).getType() instanceof StatTypeModifiable){
                 this.stat = (DefaultStat) stat;

@@ -7,5 +7,5 @@ package jk_5.nailed.api.map;
  */
 public interface PvpIgnoringDamageSource {
 
-    public boolean disableWhenPvpDisabled();
+    boolean disableWhenPvpDisabled();
 }

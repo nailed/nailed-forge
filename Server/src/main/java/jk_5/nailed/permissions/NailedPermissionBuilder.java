@@ -1,7 +1,7 @@
 package jk_5.nailed.permissions;
 
-import net.minecraftforge.permissions.api.PermBuilder;
-import net.minecraftforge.permissions.api.context.IContext;
+import net.minecraftforge.permissions.api.*;
+import net.minecraftforge.permissions.api.context.*;
 
 /**
  * No description given
@@ -23,7 +23,7 @@ public class NailedPermissionBuilder implements PermBuilder<NailedPermissionBuil
     }
 
     @Override
-    public boolean check(){
+    public boolean check() {
         if(this.userObj == null){
             this.userObj = this.factory.getUserInfo(this.username);
         }
@@ -31,25 +31,25 @@ public class NailedPermissionBuilder implements PermBuilder<NailedPermissionBuil
     }
 
     @Override
-    public NailedPermissionBuilder setUserName(String name){
+    public NailedPermissionBuilder setUserName(String name) {
         this.username = name;
         return this;
     }
 
     @Override
-    public NailedPermissionBuilder setPermNode(String node){
+    public NailedPermissionBuilder setPermNode(String node) {
         this.node = node;
         return this;
     }
 
     @Override
-    public NailedPermissionBuilder setTargetContext(IContext context){
+    public NailedPermissionBuilder setTargetContext(IContext context) {
         this.target = context;
         return this;
     }
 
     @Override
-    public NailedPermissionBuilder setUserContext(IContext context){
+    public NailedPermissionBuilder setUserContext(IContext context) {
         this.user = context;
         return this;
     }

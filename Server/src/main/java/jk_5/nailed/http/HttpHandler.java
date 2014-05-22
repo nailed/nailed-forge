@@ -1,10 +1,10 @@
 package jk_5.nailed.http;
 
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.*;
 import io.netty.handler.codec.http.*;
-import io.netty.util.CharsetUtil;
-import jk_5.nailed.api.concurrent.Callback;
+import io.netty.util.*;
+
+import jk_5.nailed.api.concurrent.*;
 
 /**
  * No description given
@@ -40,10 +40,10 @@ public class HttpHandler extends SimpleChannelInboundHandler<HttpObject> {
         }
     }
 
-    private void done(ChannelHandlerContext ctx){
+    private void done(ChannelHandlerContext ctx) {
         try{
             callback.callback(buffer.toString());
-        }finally {
+        }finally{
             ctx.channel().close();
         }
     }

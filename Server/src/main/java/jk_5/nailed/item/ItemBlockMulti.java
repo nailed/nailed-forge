@@ -1,9 +1,9 @@
 package jk_5.nailed.item;
 
-import jk_5.nailed.blocks.BlockMulti;
-import net.minecraft.block.Block;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
+import net.minecraft.block.*;
+import net.minecraft.item.*;
+
+import jk_5.nailed.blocks.*;
 
 /**
  * No description given
@@ -12,7 +12,7 @@ import net.minecraft.item.ItemStack;
  */
 public class ItemBlockMulti extends ItemBlock {
 
-    public ItemBlockMulti(Block block){
+    public ItemBlockMulti(Block block) {
         super(block);
         this.setMaxDamage(0);
         this.setNoRepair();
@@ -29,7 +29,7 @@ public class ItemBlockMulti extends ItemBlock {
     }
 
     @Override
-    public int getMetadata(int meta){
+    public int getMetadata(int meta) {
         return meta;
     }
 }

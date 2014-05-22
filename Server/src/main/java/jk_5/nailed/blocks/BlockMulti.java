@@ -1,7 +1,7 @@
 package jk_5.nailed.blocks;
 
-import net.minecraft.block.material.Material;
-import net.minecraft.item.ItemStack;
+import net.minecraft.block.material.*;
+import net.minecraft.item.*;
 
 /**
  * No description given
@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
  */
 public abstract class BlockMulti extends NailedBlock {
 
-    protected BlockMulti(String name, Material material){
+    protected BlockMulti(String name, Material material) {
         super(name, material);
     }
 

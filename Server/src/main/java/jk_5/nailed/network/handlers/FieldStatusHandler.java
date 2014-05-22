@@ -1,15 +1,14 @@
 package jk_5.nailed.network.handlers;
 
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.player.Player;
-import jk_5.nailed.ipc.IpcManager;
-import jk_5.nailed.ipc.packet.PacketCheckAccount;
-import jk_5.nailed.network.NailedNetworkHandler;
-import jk_5.nailed.network.NailedPacket;
+import java.util.regex.*;
 
-import java.util.regex.Pattern;
+import io.netty.channel.*;
+
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.player.*;
+import jk_5.nailed.ipc.*;
+import jk_5.nailed.ipc.packet.*;
+import jk_5.nailed.network.*;
 
 /**
  * No description given
@@ -21,7 +20,7 @@ public class FieldStatusHandler extends SimpleChannelInboundHandler<NailedPacket
     private static final Pattern emailPattern = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, NailedPacket.FieldStatus msg) throws Exception{
+    protected void channelRead0(ChannelHandlerContext ctx, NailedPacket.FieldStatus msg) throws Exception {
         Player player = NailedAPI.getPlayerRegistry().getPlayer(NailedNetworkHandler.getPlayer(ctx));
         char color = 'r';
         String info = "";

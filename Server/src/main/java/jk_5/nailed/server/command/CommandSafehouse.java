@@ -1,12 +1,12 @@
 package jk_5.nailed.server.command;
 
-import jk_5.nailed.NailedLog;
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.concurrent.Callback;
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.Mappack;
-import jk_5.nailed.api.player.Player;
-import net.minecraft.command.CommandException;
+import net.minecraft.command.*;
+
+import jk_5.nailed.*;
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.concurrent.*;
+import jk_5.nailed.api.map.*;
+import jk_5.nailed.api.player.*;
 
 /**
  * No description given
@@ -15,12 +15,12 @@ import net.minecraft.command.CommandException;
  */
 public class CommandSafehouse extends NailedCommand {
 
-    public CommandSafehouse(){
+    public CommandSafehouse() {
         super("safehouse");
     }
 
     @Override
-    public void processCommandPlayer(final Player sender, Map map, String[] args){
+    public void processCommandPlayer(final Player sender, Map map, String[] args) {
         final Mappack mappack = NailedAPI.getMappackLoader().getMappack("safehouse");
         if(mappack == null){
             NailedLog.error("No safehouse mappack was found. Not teleporting {}", sender.getUsername());
@@ -28,7 +28,7 @@ public class CommandSafehouse extends NailedCommand {
         }
         NailedAPI.getMapLoader().createMapServer(mappack, new Callback<Map>() {
             @Override
-            public void callback(Map obj){
+            public void callback(Map obj) {
                 sender.teleportToMap(obj);
             }
         });

@@ -1,14 +1,14 @@
 package jk_5.nailed.permissions;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.player.Player;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
-import net.minecraftforge.event.ServerChatEvent;
-import net.minecraftforge.permissions.api.PermissionsManager;
-import net.minecraftforge.permissions.api.RegisteredPermValue;
+import net.minecraft.util.*;
+
+import cpw.mods.fml.common.eventhandler.*;
+
+import net.minecraftforge.event.*;
+import net.minecraftforge.permissions.api.*;
+
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.player.*;
 
 /**
  * No description given
@@ -20,12 +20,12 @@ public class PermissionEventHandler {
 
     public static final String CHATNODE = "minecraft.chat";
 
-    public PermissionEventHandler(){
+    public PermissionEventHandler() {
         PermissionsManager.registerPermission(CHATNODE, RegisteredPermValue.TRUE);
     }
 
     @SubscribeEvent
-    public void onChat(ServerChatEvent event){
+    public void onChat(ServerChatEvent event) {
         Player player = NailedAPI.getPlayerRegistry().getPlayer(event.player);
         if(player == null){
             event.setCanceled(true);

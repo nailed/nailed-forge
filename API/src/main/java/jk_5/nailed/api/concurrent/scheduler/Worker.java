@@ -3,7 +3,7 @@ package jk_5.nailed.api.concurrent.scheduler;
 /**
  * Represents a worker thread for the scheduler. This gives information about
  * the Thread object for the task, owner of the task and the taskId.
- * <p>
+ * <p/>
  * Workers are used to execute async tasks.
  */
 public interface Worker {
@@ -13,12 +13,12 @@ public interface Worker {
      *
      * @return Task id number
      */
-    public int getTaskId();
+    int getTaskId();
 
     /**
      * Returns the thread for the worker.
      *
      * @return The Thread object for the worker
      */
-    public Thread getThread();
+    Thread getThread();
 }

@@ -1,16 +1,16 @@
 package jk_5.nailed.server.command;
 
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.player.Player;
-import jk_5.nailed.util.invsee.InventoryOtherPlayer;
-import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.ContainerChest;
-import net.minecraft.network.play.server.S2DPacketOpenWindow;
+import java.util.*;
 
-import java.util.List;
+import net.minecraft.command.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.inventory.*;
+import net.minecraft.network.play.server.*;
+
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.player.*;
+import jk_5.nailed.util.invsee.*;
 
 /**
  * No description given
@@ -19,15 +19,17 @@ import java.util.List;
  */
 public class CommandInvsee extends NailedCommand {
 
-    public CommandInvsee(){
+    public CommandInvsee() {
         super("invsee");
     }
 
     @Override
-    public void processCommandPlayer(Player sender, Map map, String[] args){
+    public void processCommandPlayer(Player sender, Map map, String[] args) {
         if(args.length == 1){
             Player player = NailedAPI.getPlayerRegistry().getPlayerByUsername(args[0]);
-            if(player == null) throw new CommandException("That player is not online!");
+            if(player == null){
+                throw new CommandException("That player is not online!");
+            }
             EntityPlayerMP entity = sender.getEntity();
             if(entity.openContainer != entity.inventoryContainer){
                 entity.closeScreen();
@@ -43,7 +45,7 @@ public class CommandInvsee extends NailedCommand {
     }
 
     @Override
-    public List<String> addAutocomplete(ICommandSender sender, String[] args){
+    public List<String> addAutocomplete(ICommandSender sender, String[] args) {
         if(args.length == 1){
             return getUsernameOptions(args);
         }else{

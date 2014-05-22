@@ -1,20 +1,18 @@
 package jk_5.nailed.map.script;
 
-import com.google.common.collect.Lists;
-import jk_5.nailed.NailedLog;
+import java.util.*;
+import java.util.concurrent.*;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
-import java.util.concurrent.LinkedBlockingQueue;
+import com.google.common.collect.*;
+
+import jk_5.nailed.*;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-public class ScriptThread {
+public final class ScriptThread {
 
     private static final Object lock = new Object();
     private static final Object monitor = new Object();
@@ -28,7 +26,11 @@ public class ScriptThread {
     private static List<LinkedBlockingQueue<Task>> activeTasks = Lists.newArrayList();
     private static Map<Object, LinkedBlockingQueue<Task>> machineTasks = new WeakHashMap<Object, LinkedBlockingQueue<Task>>();
 
-    public static void start(){
+    private ScriptThread(){
+
+    }
+
+    public static void start() {
         synchronized(lock){
             if(running){
                 stopped = false;
@@ -38,7 +40,7 @@ public class ScriptThread {
             thread = new Thread(new Runnable() {
 
                 @Override
-                public void run(){
+                public void run() {
                     while(true){
                         synchronized(pendingTasks){
                             if(!pendingTasks.isEmpty()){
@@ -69,9 +71,9 @@ public class ScriptThread {
                                 try{
                                     final Task task = queue.take();
                                     busy = true; //FIXME
-                                    Thread worker = new Thread(){
+                                    Thread worker = new Thread() {
                                         @Override
-                                        public void run(){
+                                        public void run() {
                                             try{
                                                 task.execute();
                                             }catch(Throwable e){
@@ -126,7 +128,7 @@ public class ScriptThread {
         }
     }
 
-    public static void stop(){
+    public static void stop() {
         synchronized(lock){
             if(running){
                 stopped = true;
@@ -135,7 +137,7 @@ public class ScriptThread {
         }
     }
 
-    public static void queueTask(Task task, ScriptingMachine owner){
+    public static void queueTask(Task task, ScriptingMachine owner) {
         Object queueObject = owner;
         if(queueObject == null){
             queueObject = defaultQueue;
@@ -156,7 +158,7 @@ public class ScriptThread {
     }
 
     public interface Task {
-        public ScriptingMachine getOwner();
-        public void execute();
+        ScriptingMachine getOwner();
+        void execute();
     }
 }

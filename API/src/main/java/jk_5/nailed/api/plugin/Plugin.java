@@ -1,9 +1,9 @@
 package jk_5.nailed.api.plugin;
 
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.command.Command;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.*;
+
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.command.*;
 
 /**
  * No description given
@@ -17,21 +17,22 @@ public abstract class Plugin {
 
     /**
      * Returns the name of the plugin.
-     * <p>
+     * <p/>
      * This should return the bare name of the plugin and should be used for
      * comparison.
      *
      * @return name of the plugin
      */
-    public String getName(){
+    public String getName() {
         return this.getClass().getSimpleName();
     }
 
     /**
      * Registers a command to the command system
+     *
      * @param command The command to register
      */
-    public final void registerCommand(Command command){
+    public final void registerCommand(Command command) {
         command.setOwner(this);
         NailedAPI.getCommandRegistry().registerCommand(command);
     }
@@ -42,27 +43,30 @@ public abstract class Plugin {
      *
      * @return true if this plugin is enabled, otherwise false
      */
-    public boolean isEnabled(){
+    public boolean isEnabled() {
         return this.enabled;
     }
 
     /**
      * Called when this plugin is disabled
      */
-    public void onDisable(){}
+    public void onDisable() {
+    }
 
     /**
      * Called after a plugin is loaded but before it has been enabled.
-     * <p>
+     * <p/>
      * When mulitple plugins are loaded, the onLoad() for all plugins is
      * called before any onEnable() is called.
      */
-    public void onLoad(){}
+    public void onLoad() {
+    }
 
     /**
      * Called when this plugin is enabled
      */
-    public void onEnable(){}
+    public void onEnable() {
+    }
 
     public Logger getLogger() {
         return logger;

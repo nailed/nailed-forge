@@ -1,18 +1,16 @@
 package jk_5.nailed.ipc.filestore;
 
-import com.ning.http.client.ListenableFuture;
-import com.ning.http.client.Request;
-import com.ning.http.client.Response;
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.concurrent.Callback;
-import jk_5.nailed.ipc.IpcManager;
-import org.apache.commons.io.IOUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.io.*;
+import javax.annotation.*;
 
-import javax.annotation.Nullable;
-import java.io.File;
-import java.io.FileOutputStream;
+import com.ning.http.client.*;
+
+import org.apache.commons.io.*;
+import org.apache.logging.log4j.*;
+
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.concurrent.*;
+import jk_5.nailed.ipc.*;
 
 /**
  * No description given
@@ -28,12 +26,12 @@ public class MappackFile {
     public long size;
     private File location;
 
-    public boolean isAvailable(){
+    public boolean isAvailable() {
         File loc = this.getLocation();
         return loc.isFile();
     }
 
-    public File getLocation(){
+    public File getLocation() {
         if(this.location != null){
             return this.location;
         }
@@ -49,7 +47,7 @@ public class MappackFile {
             dest.getParentFile().mkdirs();
             Request req = MappackFilestore.httpClient.prepareGet("http://" + IpcManager.instance().getHost() + ":" + IpcManager.instance().getPort() + "/api/data/" + this.hash + "/").build();
             final ListenableFuture<Response> future = MappackFilestore.httpClient.executeRequest(req);
-            future.addListener(new Runnable(){
+            future.addListener(new Runnable() {
                 @Override
                 public void run() {
                     FileOutputStream fos = null;
@@ -59,7 +57,9 @@ public class MappackFile {
                             fos = new FileOutputStream(dest);
                             fos.write(resp.getResponseBodyAsBytes());
                             logger.info("Successfully downloaded and written mappack file (Hash: {})", hash);
-                            if(callback != null) callback.callback(MappackFile.this);
+                            if(callback != null){
+                                callback.callback(MappackFile.this);
+                            }
                         }else{
                             logger.warn("Got non-200 response code while downloading mappack data ({})", resp.getStatusCode());
                         }

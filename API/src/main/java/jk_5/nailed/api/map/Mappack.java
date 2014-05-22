@@ -1,14 +1,12 @@
 package jk_5.nailed.api.map;
 
-import jk_5.nailed.api.concurrent.Callback;
-import jk_5.nailed.api.map.stat.StatConfig;
-import jk_5.nailed.api.scripting.IMount;
-import jk_5.nailed.api.zone.ZoneConfig;
-import net.minecraft.util.ChatComponentText;
+import java.io.*;
+import javax.annotation.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.io.File;
+import jk_5.nailed.api.concurrent.*;
+import jk_5.nailed.api.map.stat.*;
+import jk_5.nailed.api.scripting.*;
+import jk_5.nailed.api.zone.*;
 
 /**
  * No description given
@@ -39,15 +37,15 @@ public interface Mappack {
      * This method should prepare the game world at the given location asynchronously, and call the callback when it's done
      *
      * @param destinationDir The location where the game world should be prepared
-     * @param callback The callback to call when the map is set up.
+     * @param callback       The callback to call when the map is set up.
      */
     void prepareWorld(@Nonnull File destinationDir, @Nullable Callback<Void> callback);
 
     /**
      * Set the Map up, so it can load after this and players can join it
-     *
+     * <p/>
      * This is always called AFTER prepareWorld
-     *
+     * <p/>
      * If you don't have to do some fancy loading, you can just return potentialMap.createMap()
      *
      * @param mapBuilder The mapBuilder that contains all the required data
@@ -58,7 +56,7 @@ public interface Mappack {
 
     /**
      * Save the world data of the given map as the new world content of this mappack
-     *
+     * <p/>
      * If this operation is not supported, return {@code false}. Else, return {@code true}.
      *
      * @param map The map where you should copy the data from
@@ -66,7 +64,9 @@ public interface Mappack {
      */
     boolean saveAsMappack(@Nonnull Map map);
 
-    @Nullable IMount createMount();
+    @Nullable
+    IMount createMount();
 
-    @Nonnull ZoneConfig getZoneConfig();
+    @Nonnull
+    ZoneConfig getZoneConfig();
 }

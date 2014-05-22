@@ -1,12 +1,9 @@
 package jk_5.nailed.server.command;
 
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.Mappack;
-import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.command.*;
+import net.minecraft.util.*;
+
+import jk_5.nailed.api.map.*;
 
 /**
  * No description given
@@ -15,12 +12,12 @@ import net.minecraft.util.IChatComponent;
  */
 public class CommandSaveMappack extends NailedCommand {
 
-    public CommandSaveMappack(){
+    public CommandSaveMappack() {
         super("savemappack");
     }
 
     @Override
-    public void processCommandWithMap(ICommandSender sender, Map map, String[] args){
+    public void processCommandWithMap(ICommandSender sender, Map map, String[] args) {
         Mappack mappack = map.getMappack();
         if(mappack != null){
             if(mappack.saveAsMappack(map)){

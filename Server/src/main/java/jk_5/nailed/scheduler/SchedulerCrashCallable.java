@@ -1,7 +1,8 @@
 package jk_5.nailed.scheduler;
 
-import cpw.mods.fml.common.ICrashCallable;
-import jk_5.nailed.api.NailedAPI;
+import cpw.mods.fml.common.*;
+
+import jk_5.nailed.api.*;
 
 /**
  * No description given
@@ -11,12 +12,12 @@ import jk_5.nailed.api.NailedAPI;
 public class SchedulerCrashCallable implements ICrashCallable {
 
     @Override
-    public String getLabel(){
+    public String getLabel() {
         return "Scheduler";
     }
 
     @Override
-    public String call() throws Exception{
+    public String call() throws Exception {
         return NailedAPI.getScheduler().toString();
     }
 }

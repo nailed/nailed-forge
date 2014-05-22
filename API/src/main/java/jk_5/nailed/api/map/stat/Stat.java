@@ -12,7 +12,7 @@ public interface Stat extends Cloneable {
     void disable();
     boolean isEnabled();
     String getName();
-    Stat clone();
+    Stat copy();
 
     void store(String key, Object value);
     Object load(String key);

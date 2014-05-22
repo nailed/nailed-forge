@@ -7,7 +7,7 @@ package jk_5.nailed.api.map.stat;
  */
 public interface IStatTileEntity {
 
-    public void enable();
-    public void disable();
-    public Stat getStat();
+    void enable();
+    void disable();
+    Stat getStat();
 }

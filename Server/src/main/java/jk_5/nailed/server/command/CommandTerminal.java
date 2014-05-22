@@ -1,15 +1,13 @@
 package jk_5.nailed.server.command;
 
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.player.Player;
-import jk_5.nailed.map.NailedMap;
-import jk_5.nailed.map.script.ServerMachine;
-import jk_5.nailed.network.NailedNetworkHandler;
-import jk_5.nailed.network.NailedPacket;
+import java.util.*;
+import javax.annotation.*;
 
-import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.List;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.player.*;
+import jk_5.nailed.map.*;
+import jk_5.nailed.map.script.*;
+import jk_5.nailed.network.*;
 
 /**
  * No description given
@@ -18,7 +16,7 @@ import java.util.List;
  */
 public class CommandTerminal extends NailedCommand {
 
-    public CommandTerminal(){
+    public CommandTerminal() {
         super("terminal");
     }
 
@@ -29,7 +27,7 @@ public class CommandTerminal extends NailedCommand {
     }
 
     @Override
-    public void processCommandPlayer(Player sender, Map map, String[] args){
+    public void processCommandPlayer(Player sender, Map map, String[] args) {
         ServerMachine machine = ((NailedMap) map).getMachine();
         NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.OpenTerminalGui(machine.getInstanceId(), machine.getTerminal().getWidth(), machine.getTerminal().getHeight()), sender.getEntity());
         if(!machine.isOn()){

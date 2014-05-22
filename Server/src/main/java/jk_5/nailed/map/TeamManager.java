@@ -1,15 +1,15 @@
 package jk_5.nailed.map;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.team.Team;
-import jk_5.nailed.api.map.team.TeamBuilder;
-import jk_5.nailed.api.player.Player;
-import jk_5.nailed.players.TeamUndefined;
-import net.minecraft.entity.player.EntityPlayer;
+import java.util.*;
 
-import java.util.List;
+import com.google.common.collect.*;
+
+import net.minecraft.entity.player.*;
+
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.team.*;
+import jk_5.nailed.api.player.*;
+import jk_5.nailed.players.*;
 
 /**
  * No description given
@@ -23,10 +23,12 @@ public class TeamManager implements jk_5.nailed.api.map.team.TeamManager {
 
     private final java.util.Map<Player, Team> playerTeamMap = Maps.newHashMap();
 
-    public TeamManager(Map map){
+    public TeamManager(Map map) {
         this.defaultTeam = new TeamUndefined(map);
 
-        if(map.getMappack() == null) return;
+        if(map.getMappack() == null){
+            return;
+        }
 
         for(TeamBuilder builder : map.getMappack().getMappackMetadata().getDefaultTeams()){
             this.teams.add(builder.build(map));
@@ -34,7 +36,7 @@ public class TeamManager implements jk_5.nailed.api.map.team.TeamManager {
     }
 
     @Override
-    public Team getTeam(String name){
+    public Team getTeam(String name) {
         for(Team team : this.teams){
             if(team.getTeamId().equals(name)){
                 return team;
@@ -46,13 +48,17 @@ public class TeamManager implements jk_5.nailed.api.map.team.TeamManager {
     @Override
     public Team getPlayerTeam(Player player) {
         Team team = this.playerTeamMap.get(player);
-        if(team == null) return this.defaultTeam;
+        if(team == null){
+            return this.defaultTeam;
+        }
         return team;
     }
 
     @Override
     public void setPlayerTeam(Player player, Team team) {
-        if(this.playerTeamMap.get(player) == team) return;
+        if(this.playerTeamMap.get(player) == team){
+            return;
+        }
         if(this.playerTeamMap.containsKey(player)){
             team.onRemovePlayer(player);
             this.playerTeamMap.remove(player);
@@ -62,20 +68,20 @@ public class TeamManager implements jk_5.nailed.api.map.team.TeamManager {
         player.getEntity().refreshDisplayName();
     }
 
-    public void onWorldSet(){
+    public void onWorldSet() {
         for(Team team : this.teams){
             team.onWorldSet();
         }
     }
 
-    public void onPlayerJoinedMap(Player player){
+    public void onPlayerJoinedMap(Player player) {
         if(!this.playerTeamMap.containsKey(player)){
             this.playerTeamMap.put(player, this.defaultTeam);
             player.getEntity().refreshDisplayName();
         }
     }
 
-    public void onPlayerLeftMap(Player player){
+    public void onPlayerLeftMap(Player player) {
         if(!this.playerTeamMap.containsKey(player)){
             this.playerTeamMap.put(player, this.defaultTeam);
             EntityPlayer ent = player.getEntity();
@@ -85,11 +91,11 @@ public class TeamManager implements jk_5.nailed.api.map.team.TeamManager {
         }
     }
 
-    public void onGameStarted(){
+    public void onGameStarted() {
 
     }
 
-    public void onGameEnded(){
+    public void onGameEnded() {
 
     }
 

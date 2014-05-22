@@ -1,12 +1,10 @@
 package jk_5.nailed.ipc;
 
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.socket.SocketChannel;
-import jk_5.nailed.ipc.codec.PacketCodec;
-import jk_5.nailed.ipc.codec.VarintFrameCodec;
-import jk_5.nailed.ipc.handler.HandshakeHandler;
-import jk_5.nailed.ipc.handler.PacketHandler;
+import io.netty.channel.*;
+import io.netty.channel.socket.*;
+
+import jk_5.nailed.ipc.codec.*;
+import jk_5.nailed.ipc.handler.*;
 
 /**
  * No description given

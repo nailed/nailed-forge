@@ -1,16 +1,14 @@
 package jk_5.nailed.server.command;
 
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.util.Utils;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.command.WrongUsageException;
-import net.minecraft.event.HoverEvent;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.world.GameRules;
+import java.util.*;
 
-import java.util.List;
+import net.minecraft.command.*;
+import net.minecraft.event.*;
+import net.minecraft.util.*;
+import net.minecraft.world.*;
+
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.util.*;
 
 /**
  * No description given
@@ -19,17 +17,17 @@ import java.util.List;
  */
 public class CommandGamerule extends NailedCommand {
 
-    public CommandGamerule(){
+    public CommandGamerule() {
         super("gamerule");
     }
 
     @Override
-    public String getCommandUsage(ICommandSender icommandsender){
+    public String getCommandUsage(ICommandSender icommandsender) {
         return "commands.gamerule.usage";
     }
 
     @Override
-    public void processCommandWithMap(ICommandSender sender, Map map, String[] args){
+    public void processCommandWithMap(ICommandSender sender, Map map, String[] args) {
         GameRules gameRules = map.getWorld().getGameRules();
         if(args.length == 0){
             IChatComponent base = new ChatComponentText("");
@@ -40,7 +38,9 @@ public class CommandGamerule extends NailedCommand {
             for(String rule : gameRules.getRules()){
                 if(!first){
                     base.appendText(", ");
-                }else first = false;
+                }else{
+                    first = false;
+                }
                 IChatComponent c = new ChatComponentText(rule);
                 c.getChatStyle().setColor(EnumChatFormatting.RESET);
                 IChatComponent tooltip = new ChatComponentText(rule + " = " + gameRules.getGameRuleStringValue(rule));
@@ -66,11 +66,13 @@ public class CommandGamerule extends NailedCommand {
                 comp.getChatStyle().setColor(EnumChatFormatting.RED);
                 sender.addChatMessage(comp);
             }
-        }else throw new WrongUsageException("commands.gamerule.usage");
+        }else{
+            throw new WrongUsageException("commands.gamerule.usage");
+        }
     }
 
     @Override
-    public List<String> addAutocomplete(ICommandSender sender, String[] args){
+    public List<String> addAutocomplete(ICommandSender sender, String[] args) {
         GameRules gameRules = sender.getEntityWorld().getGameRules();
         if(args.length == 1){
             return getOptions(args, gameRules.getRules());

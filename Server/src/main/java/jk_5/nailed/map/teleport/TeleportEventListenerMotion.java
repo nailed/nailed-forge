@@ -1,7 +1,8 @@
 package jk_5.nailed.map.teleport;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import jk_5.nailed.api.map.teleport.TeleportEvent;
+import cpw.mods.fml.common.eventhandler.*;
+
+import jk_5.nailed.api.map.teleport.*;
 
 /**
  * No description given
@@ -11,7 +12,7 @@ import jk_5.nailed.api.map.teleport.TeleportEvent;
 public class TeleportEventListenerMotion {
 
     @SubscribeEvent
-    public void onExitWorld(TeleportEvent.TeleportEventExitWorld event){
+    public void onExitWorld(TeleportEvent.TeleportEventExitWorld event) {
         /*if(event.options.isMaintainMomentum()){
             float yaw = event.options.getLocation().getYaw();
             //noinspection SuspiciousNameCombination

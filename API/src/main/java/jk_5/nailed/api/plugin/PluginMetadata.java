@@ -1,6 +1,6 @@
 package jk_5.nailed.api.plugin;
 
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 
 /**
  * No description given
@@ -20,7 +20,7 @@ public class PluginMetadata {
         return mainClass;
     }
 
-    public static PluginMetadata read(JsonObject object){
+    public static PluginMetadata read(JsonObject object) {
         PluginMetadata ret = new PluginMetadata();
         ret.name = object.get("name").getAsString();
         ret.mainClass = object.get("mainClass").getAsString();

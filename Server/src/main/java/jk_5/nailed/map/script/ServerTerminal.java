@@ -1,6 +1,6 @@
 package jk_5.nailed.map.script;
 
-import io.netty.buffer.ByteBuf;
+import io.netty.buffer.*;
 
 /**
  * No description given
@@ -9,22 +9,22 @@ import io.netty.buffer.ByteBuf;
  */
 public class ServerTerminal implements ITerminal {
 
-    private Terminal terminal = null;
     public boolean terminalChanged = false;
+    private Terminal terminal = null;
 
-    public ServerTerminal(int width, int height){
+    public ServerTerminal(int width, int height) {
         this.terminal = new Terminal(width, height);
     }
 
     public ServerTerminal() {
     }
 
-    public void copyFrom(Terminal terminal){
+    public void copyFrom(Terminal terminal) {
         this.terminal = terminal;
         this.terminalChanged = true;
     }
 
-    public void resize(int width, int height){
+    public void resize(int width, int height) {
         if(this.terminal == null){
             this.terminal = new Terminal(width, height);
             this.terminalChanged = true;
@@ -33,14 +33,14 @@ public class ServerTerminal implements ITerminal {
         }
     }
 
-    public void delete(){
+    public void delete() {
         if(this.terminal != null){
             this.terminal = null;
             this.terminalChanged = true;
         }
     }
 
-    public boolean pollChanged(){
+    public boolean pollChanged() {
         if(this.terminalChanged || (this.terminal != null && this.terminal.isChanged())){
             if(this.terminal != null){
                 this.terminal.clearChanged();
@@ -51,7 +51,7 @@ public class ServerTerminal implements ITerminal {
         return false;
     }
 
-    public void writeData(ByteBuf buffer){
+    public void writeData(ByteBuf buffer) {
         if(this.terminal != null){
             buffer.writeBoolean(true);
             buffer.writeInt(this.terminal.getWidth());

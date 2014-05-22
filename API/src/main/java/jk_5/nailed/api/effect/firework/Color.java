@@ -1,14 +1,13 @@
 package jk_5.nailed.api.effect.firework;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableMap;
-import org.apache.commons.lang3.Validate;
+import java.util.*;
 
-import java.util.Map;
+import com.google.common.base.*;
+import com.google.common.collect.*;
+
+import org.apache.commons.lang3.*;
 
 public final class Color {
-
-    private static final int BIT_MASK = 0xff;
 
     /**
      * White, or (0xFF,0xFF,0xFF) in (R,G,B)
@@ -95,16 +94,28 @@ public final class Color {
      */
     public static final Color ORANGE = fromRGB(0xFFA500);
 
+    private static final int BIT_MASK = 0xff;
+
     private final byte red;
     private final byte green;
     private final byte blue;
 
+    private Color(int red, int green, int blue) {
+        Preconditions.checkArgument(red >= 0 && red <= BIT_MASK, "Red is not between 0-255: " + red);
+        Preconditions.checkArgument(green >= 0 && green <= BIT_MASK, "Green is not between 0-255: " + green);
+        Preconditions.checkArgument(blue >= 0 && blue <= BIT_MASK, "Blue is not between 0-255: " + blue);
+
+        this.red = (byte) red;
+        this.green = (byte) green;
+        this.blue = (byte) blue;
+    }
+
     /**
      * Creates a new Color object from a red, green, and blue
      *
-     * @param red integer from 0-255
+     * @param red   integer from 0-255
      * @param green integer from 0-255
-     * @param blue integer from 0-255
+     * @param blue  integer from 0-255
      * @return a new Color object for the red, green, blue
      * @throws IllegalArgumentException if any value is strictly >255 or <0
      */
@@ -115,9 +126,9 @@ public final class Color {
     /**
      * Creates a new Color object from a blue, green, and red
      *
-     * @param blue integer from 0-255
+     * @param blue  integer from 0-255
      * @param green integer from 0-255
-     * @param red integer from 0-255
+     * @param red   integer from 0-255
      * @return a new Color object for the red, green, blue
      * @throws IllegalArgumentException if any value is strictly >255 or <0
      */
@@ -132,7 +143,7 @@ public final class Color {
      * @param rgb the integer storing the red, green, and blue values
      * @return a new color object for specified values
      * @throws IllegalArgumentException if any data is in the highest order 8
-     *     bits
+     *                                  bits
      */
     public static Color fromRGB(int rgb) throws IllegalArgumentException {
         Preconditions.checkArgument((rgb >> 24) == 0, "Extrenuous data in: " + rgb);
@@ -146,21 +157,11 @@ public final class Color {
      * @param bgr the integer storing the blue, green, and red values
      * @return a new color object for specified values
      * @throws IllegalArgumentException if any data is in the highest order 8
-     *     bits
+     *                                  bits
      */
     public static Color fromBGR(int bgr) throws IllegalArgumentException {
         Preconditions.checkArgument((bgr >> 24) == 0, "Extrenuous data in: " + bgr);
         return fromBGR(bgr >> 16 & BIT_MASK, bgr >> 8 & BIT_MASK, bgr & BIT_MASK);
-    }
-
-    private Color(int red, int green, int blue) {
-        Preconditions.checkArgument(red >= 0 && red <= BIT_MASK, "Red is not between 0-255: " + red);
-        Preconditions.checkArgument(green >= 0 && green <= BIT_MASK, "Green is not between 0-255: " + green);
-        Preconditions.checkArgument(blue >= 0 && blue <= BIT_MASK, "Blue is not between 0-255: " + blue);
-
-        this.red = (byte) red;
-        this.green = (byte) green;
-        this.blue = (byte) blue;
     }
 
     /**
@@ -221,7 +222,6 @@ public final class Color {
     }
 
     /**
-     *
      * @return An integer representation of this color, as 0xRRGGBB
      */
     public int asRGB() {
@@ -229,7 +229,6 @@ public final class Color {
     }
 
     /**
-     *
      * @return An integer representation of this color, as 0xBBGGRR
      */
     public int asBGR() {
@@ -251,7 +250,7 @@ public final class Color {
         int totalGreen = this.getGreen();
         int totalBlue = this.getBlue();
         int totalMax = Math.max(Math.max(totalRed, totalGreen), totalBlue);
-        for (Color color : colors) {
+        for(Color color : colors){
             totalRed += color.getRed();
             totalGreen += color.getGreen();
             totalBlue += color.getBlue();
@@ -271,7 +270,7 @@ public final class Color {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Color)) {
+        if(!(o instanceof Color)){
             return false;
         }
         final Color that = (Color) o;
@@ -294,18 +293,18 @@ public final class Color {
     @SuppressWarnings("javadoc")
     public static Color deserialize(Map<String, Object> map) {
         return fromRGB(
-            asInt("RED", map),
-            asInt("GREEN", map),
-            asInt("BLUE", map)
+                asInt("RED", map),
+                asInt("GREEN", map),
+                asInt("BLUE", map)
         );
     }
 
     private static int asInt(String string, Map<String, Object> map) {
         Object value = map.get(string);
-        if (value == null) {
+        if(value == null){
             throw new IllegalArgumentException(string + " not in map " + map);
         }
-        if (!(value instanceof Number)) {
+        if(!(value instanceof Number)){
             throw new IllegalArgumentException(string + '(' + value + ") is not a number");
         }
         return ((Number) value).intValue();

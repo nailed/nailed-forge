@@ -1,15 +1,15 @@
 package jk_5.nailed.map.script;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import jk_5.nailed.NailedServer;
-import jk_5.nailed.api.scripting.IMount;
-import jk_5.nailed.api.scripting.IWritableMount;
-import jk_5.nailed.map.NailedMapLoader;
-import jk_5.nailed.network.NailedNetworkHandler;
-import net.minecraft.world.World;
+import java.io.*;
 
-import java.io.File;
+import io.netty.buffer.*;
+
+import net.minecraft.world.*;
+
+import jk_5.nailed.*;
+import jk_5.nailed.api.scripting.*;
+import jk_5.nailed.map.*;
+import jk_5.nailed.network.*;
 
 /**
  * No description given
@@ -25,7 +25,7 @@ public class ServerMachine extends ServerTerminal implements IMachine {
     private final ScriptingMachine machine;
     private File preferredSaveDir = null;
 
-    public ServerMachine(World world, int id, int instanceId, int termWidth, int termHeight){
+    public ServerMachine(World world, int id, int instanceId, int termWidth, int termHeight) {
         super(termWidth, termHeight);
         this.world = world;
         this.instanceId = instanceId;
@@ -33,19 +33,19 @@ public class ServerMachine extends ServerTerminal implements IMachine {
     }
 
     @Override
-    public int getId(){
+    public int getId() {
         return this.machine.getID();
     }
 
-    public IAPIEnvironment getApiEnvironment(){
+    public IAPIEnvironment getApiEnvironment() {
         return this.machine.getApiEnvironment();
     }
 
-    public void destroy(){
+    public void destroy() {
         this.machine.destroy();
     }
 
-    public void update(){
+    public void update() {
         double dt = 0.05D;
         this.machine.advance(dt);
 
@@ -56,51 +56,51 @@ public class ServerMachine extends ServerTerminal implements IMachine {
         }
     }
 
-    public boolean isOn(){
+    public boolean isOn() {
         return this.machine.isOn();
     }
 
-    public void turnOn(){
+    public void turnOn() {
         this.machine.turnOn();
     }
 
-    public void shutdown(){
+    public void shutdown() {
         this.machine.shutdown();
     }
 
-    public void reboot(){
+    public void reboot() {
         this.machine.reboot();
     }
 
-    public void unload(){
+    public void unload() {
         this.machine.unload();
     }
 
-    public void queueEvent(String event, Object... arguments){
+    public void queueEvent(String event, Object... arguments) {
         this.machine.queueEvent(event, arguments);
     }
 
-    public double getTimeOfDay(){
+    public double getTimeOfDay() {
         return (this.world.getWorldTime() + 6000L) % 24000L / 1000.0D;
     }
 
-    public int getDay(){
+    public int getDay() {
         return (int) ((this.world.getWorldTime() + 6000L) / 24000L) + 1;
     }
 
-    public IWritableMount createSaveDirMount(String subPath, long capacity){
+    public IWritableMount createSaveDirMount(String subPath, long capacity) {
         return new FileMount(new File(NailedMapLoader.instance().getMap(this.world).getSaveFolder(), subPath), capacity);
     }
 
-    public IMount createResourceMount(String domain, String subPath){
+    public IMount createResourceMount(String domain, String subPath) {
         return MountUtils.createResourceMount(NailedServer.class, domain, subPath);
     }
 
-    public long getMachineSpaceLimit(){
+    public long getMachineSpaceLimit() {
         return 1000000; //1MB
     }
 
-    public void writeData(ByteBuf buffer){
+    public void writeData(ByteBuf buffer) {
         super.writeData(buffer);
         buffer.writeInt(this.machine.getID());
         buffer.writeBoolean(this.machine.isOn());
@@ -127,7 +127,7 @@ public class ServerMachine extends ServerTerminal implements IMachine {
         this.preferredSaveDir = preferredSaveDir;
     }
 
-    public ScriptingMachine getVM(){
+    public ScriptingMachine getVM() {
         return this.machine;
     }
 }

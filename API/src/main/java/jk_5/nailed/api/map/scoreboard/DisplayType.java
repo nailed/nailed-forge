@@ -1,7 +1,6 @@
 package jk_5.nailed.api.map.scoreboard;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 /**
  * Describes where an objective should be displayed on the client gui

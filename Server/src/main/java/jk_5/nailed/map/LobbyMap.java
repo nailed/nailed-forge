@@ -1,13 +1,13 @@
 package jk_5.nailed.map;
 
-import com.google.common.collect.Lists;
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.player.Player;
-import net.minecraft.util.ChatComponentText;
+import java.util.*;
 
-import java.awt.*;
-import java.util.List;
-import java.util.Random;
+import com.google.common.collect.*;
+
+import net.minecraft.util.*;
+
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.player.*;
 
 /**
  * Map for the normal overworld, used for the lobby
@@ -16,11 +16,12 @@ import java.util.Random;
  * @author jk-5
  */
 public class LobbyMap extends NailedMap {
+
     private Random random = new Random();
     private int currentInfoBarData = 0;
     private List<ChatComponentText> infoBarData = Lists.newArrayList();
 
-    public LobbyMap(){
+    public LobbyMap() {
         super(NailedAPI.getMappackLoader().getMappack("lobby"), 0);
         if(this.getMappack() != null){
             this.getMappack().prepareWorld(this.getSaveFolder(), null);
@@ -29,11 +30,11 @@ public class LobbyMap extends NailedMap {
     }
 
     @Override
-    public void onPlayerJoined(Player player){
+    public void onPlayerJoined(Player player) {
         super.onPlayerJoined(player);
-        if (this.getAmountOfPlayers() < 40) {
+        if(this.getAmountOfPlayers() < 40){
             player.setPlayersVisible(this.getPlayers());
-        } else {
+        }else{
             List<Player> allPlayers = this.getPlayers();
             List<Player> visiblePlayers = Lists.newArrayList();
             for(int a = 0; a < 40; ++a){
@@ -46,24 +47,28 @@ public class LobbyMap extends NailedMap {
     }
 
     @Override
-    public void onPlayerLeft(Player player){
+    public void onPlayerLeft(Player player) {
         super.onPlayerLeft(player);
-        if( this.getAmountOfPlayers() < 40){
+        if(this.getAmountOfPlayers() < 40){
             List<Player> mapPlayers = this.getPlayers();
-            for (Player otherPlayer: mapPlayers){
+            for(Player otherPlayer : mapPlayers){
                 otherPlayer.setPlayersVisible(mapPlayers);
             }
-        } else {
+        }else{
             List<Player> mapPlayers = this.getPlayers();
-            for (Player otherPlayer: mapPlayers){
+            for(Player otherPlayer : mapPlayers){
                 otherPlayer.replacePlayerVisible(player, mapPlayers, this.random);
             }
         }
     }
 
     @Override
-    public ChatComponentText getInfoBar(){return this.infoBarData.get(this.currentInfoBarData);}
+    public ChatComponentText getInfoBar() {
+        return this.infoBarData.get(this.currentInfoBarData);
+    }
 
     @Override
-    public float getInfoBarProgress(){ return this.currentInfoBarData / this.infoBarData.size();}
+    public float getInfoBarProgress() {
+        return this.currentInfoBarData / this.infoBarData.size();
+    }
 }

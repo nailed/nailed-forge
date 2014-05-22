@@ -1,7 +1,8 @@
 package jk_5.nailed.map.stat;
 
-import cpw.mods.fml.common.eventhandler.Event;
-import jk_5.nailed.api.map.stat.Stat;
+import cpw.mods.fml.common.eventhandler.*;
+
+import jk_5.nailed.api.map.stat.*;
 
 /**
  * No description given
@@ -17,13 +18,15 @@ public class StatEvent extends Event {
     }
 
     public static class Enable extends StatEvent {
-        public Enable(Stat stat){
+
+        public Enable(Stat stat) {
             super(stat);
         }
     }
 
     public static class Disable extends StatEvent {
-        public Disable(Stat stat){
+
+        public Disable(Stat stat) {
             super(stat);
         }
     }

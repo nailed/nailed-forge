@@ -1,16 +1,14 @@
 package jk_5.nailed.api.map;
 
-import jk_5.nailed.api.WeatherType;
-import jk_5.nailed.api.map.team.TeamBuilder;
-import jk_5.nailed.map.Location;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.world.EnumDifficulty;
-import net.minecraft.world.WorldSettings;
-
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.Map;
+
+import net.minecraft.util.*;
+import net.minecraft.world.*;
+
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.map.team.*;
+import jk_5.nailed.map.*;
 
 /**
  * No description given
@@ -32,7 +30,8 @@ public interface MappackMetadata {
     boolean isChoosingRandomSpawnpointAtRespawn();
     List<Location> getRandomSpawnpoints();
     String getStartWhen();
-    @Deprecated EnumSet<WeatherType> getPermittedWeatherTypes();
+    @Deprecated
+    EnumSet<WeatherType> getPermittedWeatherTypes();
     SpawnRules getSpawnRules();
     int getMaxFoodLevel();
     int getMinFoodLevel();

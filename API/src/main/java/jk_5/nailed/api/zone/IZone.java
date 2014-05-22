@@ -1,12 +1,14 @@
 package jk_5.nailed.api.zone;
 
-import javax.annotation.Nonnull;
+import javax.annotation.*;
 
 /**
  * Created by matthias on 9-5-14.
  */
 public interface IZone {
-    public boolean isInZone(double x, double y, double z);
-    public IZone reMake();
-    @Nonnull public String getName();
+
+    boolean isInZone(double x, double y, double z);
+    IZone reMake();
+    @Nonnull
+    String getName();
 }

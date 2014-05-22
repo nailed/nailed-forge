@@ -1,14 +1,19 @@
 package jk_5.nailed.client.render;
 
-import net.minecraft.client.renderer.OpenGlHelper;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.*;
+
+import net.minecraft.client.renderer.*;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-public class RenderUtils {
+public final class RenderUtils {
+
+    private RenderUtils(){
+
+    }
 
     public static void disableLightmap() {
         OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);

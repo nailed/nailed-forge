@@ -1,9 +1,8 @@
 package jk_5.nailed.ipc.handler;
 
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
-import jk_5.nailed.ipc.packet.PacketIdentify;
-import jk_5.nailed.ipc.packet.PacketInitConnection;
+import io.netty.channel.*;
+
+import jk_5.nailed.ipc.packet.*;
 
 /**
  * No description given
@@ -13,7 +12,7 @@ import jk_5.nailed.ipc.packet.PacketInitConnection;
 public class HandshakeHandler extends ChannelInboundHandlerAdapter {
 
     @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception{
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
         ctx.fireChannelActive();
 
         ctx.writeAndFlush(new PacketIdentify());

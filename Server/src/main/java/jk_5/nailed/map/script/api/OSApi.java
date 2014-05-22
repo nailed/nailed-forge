@@ -1,16 +1,11 @@
 package jk_5.nailed.map.script.api;
 
-import com.google.common.collect.Lists;
-import jk_5.nailed.api.scripting.ILuaAPI;
-import jk_5.nailed.api.scripting.ILuaContext;
-import jk_5.nailed.map.script.IAPIEnvironment;
-import jk_5.nailed.map.script.ScriptingMachine;
-import jk_5.nailed.map.script.ServerMachine;
+import java.util.*;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import com.google.common.collect.*;
+
+import jk_5.nailed.api.scripting.*;
+import jk_5.nailed.map.script.*;
 
 /**
  * No description given
@@ -29,39 +24,38 @@ public class OSApi implements ILuaAPI {
     private int nextTimerToken;
     private int nextAlarmToken;
 
-    public OSApi(IAPIEnvironment _environment){
-        this.apiEnvironment = _environment;
-        this.machine = _environment.getMachine();
+    public OSApi(IAPIEnvironment env) {
+        this.apiEnvironment = env;
+        this.machine = env.getMachine();
         this.nextTimerToken = 0;
         this.nextAlarmToken = 0;
         this.rebootTimer = 60;
     }
 
-    public String[] getNames(){
+    public String[] getNames() {
         return new String[]{"os"};
     }
 
-    public void startup(){
+    public void startup() {
         this.timers = Lists.newArrayList();
         this.alarms = Lists.newArrayList();
         this.clock = 0.0D;
         this.time = ((ServerMachine) this.machine.getMachine()).getTimeOfDay();
     }
 
-    public void advance(double _dt){
+    public void advance(double dt) {
         synchronized(this.timers){
-            this.clock += _dt;
+            this.clock += dt;
 
             Iterator it = this.timers.iterator();
             while(it.hasNext()){
                 Timer t = (Timer) it.next();
-                t.timeLeft -= _dt;
+                t.timeLeft -= dt;
                 if(t.timeLeft <= 0.0D){
                     queueLuaEvent("timer", t.token);
                     it.remove();
                 }
             }
-
         }
 
         synchronized(this.alarms){
@@ -103,7 +97,7 @@ public class OSApi implements ILuaAPI {
         }
     }
 
-    public void shutdown(){
+    public void shutdown() {
         synchronized(this.timers){
             this.timers.clear();
         }
@@ -113,7 +107,7 @@ public class OSApi implements ILuaAPI {
         }
     }
 
-    public String[] getMethodNames(){
+    public String[] getMethodNames() {
         return new String[]{
                 "queueEvent",
                 "startTimer",
@@ -128,7 +122,7 @@ public class OSApi implements ILuaAPI {
     }
 
     public Object[] callMethod(ILuaContext context, int method, Object[] args)
-            throws Exception{
+            throws Exception {
         switch(method){
             case 0:
                 if((args.length == 0) || (args[0] == null) || (!(args[0] instanceof String))){
@@ -171,8 +165,10 @@ public class OSApi implements ILuaAPI {
                 synchronized(this.timers){
                     return new Object[]{this.clock};
                 }
+            //CHECKSTYLE.OFF: all
             case 8:
                 return new Object[]{this.apiEnvironment.getMachine().getMachine().getWorld().getTotalWorldTime()};
+            //CHECKSTYLE.ON: all
 
             /*case 8:
                 synchronized(this.alarms){
@@ -187,28 +183,29 @@ public class OSApi implements ILuaAPI {
         return null;
     }
 
-    private void queueLuaEvent(String event, Object... args){
+    private void queueLuaEvent(String event, Object... args) {
         this.apiEnvironment.queueEvent(event, args);
     }
 
-    private Object[] trimArray(Object[] array, int skip){
+    private Object[] trimArray(Object[] array, int skip) {
         return Arrays.copyOfRange(array, skip, array.length);
     }
 
-    private int getMachineID(){
+    private int getMachineID() {
         return this.apiEnvironment.getMachineID();
     }
 
     private class Alarm implements Comparable<Alarm> {
+
         double time;
         int token;
 
-        Alarm(double _time, int _token){
-            this.time = _time;
-            this.token = _token;
+        Alarm(double time, int token) {
+            this.time = time;
+            this.token = token;
         }
 
-        public int compareTo(Alarm o){
+        public int compareTo(Alarm o) {
             double t = this.time;
             if(t < OSApi.this.time){
                 t += 24.0D;
@@ -217,8 +214,9 @@ public class OSApi implements ILuaAPI {
             if(ot < OSApi.this.time){
                 ot += 24.0D;
             }
-            if(this.time < o.time)
+            if(this.time < o.time){
                 return -1;
+            }
             if(this.time > o.time){
                 return 1;
             }
@@ -227,12 +225,13 @@ public class OSApi implements ILuaAPI {
     }
 
     private static class Timer {
+
         double timeLeft;
         int token;
 
-        Timer(double _timeLeft, int _token){
-            this.timeLeft = _timeLeft;
-            this.token = _token;
+        Timer(double timeLeft, int token) {
+            this.timeLeft = timeLeft;
+            this.token = token;
         }
     }
 }

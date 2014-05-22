@@ -1,11 +1,13 @@
 package jk_5.nailed.api.map.teleport;
 
-import cpw.mods.fml.common.eventhandler.Cancelable;
-import cpw.mods.fml.common.eventhandler.Event;
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.map.Location;
-import lombok.RequiredArgsConstructor;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.*;
+
+import cpw.mods.fml.common.eventhandler.*;
+
+import jk_5.nailed.api.map.*;
+import jk_5.nailed.map.*;
+
+import lombok.*;
 
 @RequiredArgsConstructor
 public class TeleportEvent extends Event {
@@ -20,6 +22,7 @@ public class TeleportEvent extends Event {
      */
     @Cancelable
     public static class TeleportEventAllow extends TeleportEvent {
+
         public TeleportEventAllow(Map oldMap, Map newMap, Entity entity, TeleportOptions info) {
             super(oldMap, newMap, entity, info);
         }
@@ -29,7 +32,10 @@ public class TeleportEvent extends Event {
      * Used to provide alternate values for the teleport
      */
     public static class TeleportEventAlter extends TeleportEvent {
-        /** Set this to alter the teleport destination (null until set) */
+
+        /**
+         * Set this to alter the teleport destination (null until set)
+         */
         public Location location;
 
         public TeleportEventAlter(Map oldMap, Map newMap, Entity entity, TeleportOptions info) {
@@ -41,6 +47,7 @@ public class TeleportEvent extends Event {
      * Called before the entity is teleported
      */
     public static class TeleportEventStart extends TeleportEvent {
+
         public TeleportEventStart(Map oldMap, Map newMap, Entity entity, TeleportOptions info) {
             super(oldMap, newMap, entity, info);
         }
@@ -50,6 +57,7 @@ public class TeleportEvent extends Event {
      * Called when the entity leaves their current world but has not yet entered the next
      */
     public static class TeleportEventExitWorld extends TeleportEvent {
+
         public TeleportEventExitWorld(Map oldMap, Map newMap, Entity entity, TeleportOptions info) {
             super(oldMap, newMap, entity, info);
         }
@@ -61,6 +69,7 @@ public class TeleportEvent extends Event {
      * server-side information such as weather and time.
      */
     public static class TeleportEventEnterWorld extends TeleportEvent {
+
         public TeleportEventEnterWorld(Map oldMap, Map newMap, Entity entity, TeleportOptions info) {
             super(oldMap, newMap, entity, info);
         }
@@ -71,6 +80,7 @@ public class TeleportEvent extends Event {
      * The entity is fully realized in the world and has been updated on clients.
      */
     public static class TeleportEventEnd extends TeleportEvent {
+
         public TeleportEventEnd(Map oldMap, Map newMap, Entity entity, TeleportOptions info) {
             super(oldMap, newMap, entity, info);
         }

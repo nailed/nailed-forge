@@ -1,10 +1,10 @@
 package jk_5.nailed.client.particle;
 
-import net.minecraft.client.particle.EntityFX;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.world.World;
+import java.util.*;
 
-import java.util.Random;
+import net.minecraft.client.particle.*;
+import net.minecraft.client.renderer.*;
+import net.minecraft.world.*;
 
 /**
  * No description given
@@ -32,8 +32,8 @@ public class ParticleTeleport extends EntityFX {
         this.particleScale *= 0.75F;
         this.particleScale *= scale;
         this.tempParticleScale = this.particleScale;
-        this.particleMaxAge = ((int) (8.0D / (Math.random() * 0.8D + 0.2D)));
-        this.particleMaxAge = ((int) (this.particleMaxAge * scale));
+        this.particleMaxAge = (int) (8.0D / (Math.random() * 0.8D + 0.2D));
+        this.particleMaxAge = (int) (this.particleMaxAge * scale);
         this.noClip = false;
         this.random = new Random();
     }
@@ -49,7 +49,7 @@ public class ParticleTeleport extends EntityFX {
             var8 = 1.0F;
         }
 
-        this.particleScale = (this.tempParticleScale * var8);
+        this.particleScale = this.tempParticleScale * var8;
         super.renderParticle(par1Tessellator, par2, par3, par4, par5, par6, par7);
     }
 

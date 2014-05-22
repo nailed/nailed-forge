@@ -1,8 +1,8 @@
 package jk_5.nailed.map.script;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import java.util.concurrent.atomic.*;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import gnu.trove.map.hash.*;
 
 /**
  * No description given
@@ -16,7 +16,9 @@ public class MachineRegistry<T extends IMachine> {
 
     public int getUnusedInstanceID(){
         int i = 0;
-        while(this.machines.containsKey(i)) i++;
+        while(this.machines.containsKey(i)){
+            i++;
+        }
         return i;
     }
 

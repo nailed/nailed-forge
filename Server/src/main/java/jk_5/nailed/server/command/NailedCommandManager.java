@@ -1,26 +1,25 @@
 package jk_5.nailed.server.command;
 
-import com.google.common.collect.Maps;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.ModContainer;
-import jk_5.nailed.api.command.Command;
-import jk_5.nailed.api.command.CommandRegistry;
+import java.util.*;
+
+import com.google.common.collect.*;
+
+import org.apache.logging.log4j.*;
+
 import net.minecraft.command.*;
 import net.minecraft.command.CommandToggleDownfall;
 import net.minecraft.command.server.*;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.CommandEvent;
-import net.minecraftforge.permissions.api.PermissionsManager;
-import net.minecraftforge.permissions.api.RegisteredPermValue;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import net.minecraft.entity.player.*;
+import net.minecraft.server.*;
+import net.minecraft.util.*;
 
-import java.util.List;
-import java.util.Map;
+import cpw.mods.fml.common.*;
+
+import net.minecraftforge.common.*;
+import net.minecraftforge.event.*;
+import net.minecraftforge.permissions.api.*;
+
+import jk_5.nailed.api.command.*;
 
 /**
  * No description given
@@ -33,7 +32,7 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
     private static final Logger logger = LogManager.getLogger();
     private static final Map<ICommand, String> commandOwners = Maps.newHashMap();
 
-    public NailedCommandManager(){
+    public NailedCommandManager() {
         PermissionsManager.registerPermission(commandWarningsPerm, RegisteredPermValue.OP);
 
         this.registerCommand(new CommandHeal());
@@ -110,14 +109,14 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
     }
 
     @Override
-    public void notifyAdmins(ICommandSender sender, int normalSender, String key, Object... args){
+    public void notifyAdmins(ICommandSender sender, int normalSender, String key, Object... args) {
         boolean notifyPlayers = true;
 
         ChatComponentTranslation chatcomponenttranslation = new ChatComponentTranslation("chat.type.admin", sender.getCommandSenderName(), new ChatComponentTranslation(key, args));
         chatcomponenttranslation.getChatStyle().setColor(EnumChatFormatting.GRAY);
         chatcomponenttranslation.getChatStyle().setItalic(true);
 
-        if (sender instanceof CommandBlockLogic){
+        if(sender instanceof CommandBlockLogic){
             if(!sender.getEntityWorld().getGameRules().getGameRuleBooleanValue("commandBlockOutput")){
                 notifyPlayers = false;
             }
@@ -128,7 +127,7 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
         if(notifyPlayers){
             //noinspection unchecked
             for(EntityPlayerMP player : (List<EntityPlayerMP>) MinecraftServer.getServer().getConfigurationManager().playerEntityList){
-                if (player != sender && player.getEntityWorld() == sender.getEntityWorld() && PermissionsManager.checkPerm(player, commandWarningsPerm)){
+                if(player != sender && player.getEntityWorld() == sender.getEntityWorld() && PermissionsManager.checkPerm(player, commandWarningsPerm)){
                     player.addChatMessage(chatcomponenttranslation);
                 }
             }
@@ -140,7 +139,7 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
     }
 
     @Override
-    public int executeCommand(ICommandSender sender, String input){
+    public int executeCommand(ICommandSender sender, String input) {
         input = input.trim();
 
         if(input.startsWith("/")){
@@ -181,14 +180,14 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
             }
 
             CommandEvent event = new CommandEvent(icommand, sender, args);
-            if (MinecraftForge.EVENT_BUS.post(event)){
-                if (event.exception != null){
+            if(MinecraftForge.EVENT_BUS.post(event)){
+                if(event.exception != null){
                     throw event.exception;
                 }
                 return 1;
             }
 
-            if (usernameIndex > -1){
+            if(usernameIndex > -1){
                 EntityPlayerMP[] matched = PlayerSelector.matchPlayers(sender, args[usernameIndex]);
                 String username = args[usernameIndex];
 
@@ -196,7 +195,7 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
                     args[usernameIndex] = entityplayermp.getCommandSenderName();
                     try{
                         icommand.processCommand(sender, args);
-                        timesExecuted ++;
+                        timesExecuted++;
                     }catch(CommandException commandexception){
                         ChatComponentTranslation chatcomponenttranslation1 = new ChatComponentTranslation(commandexception.getMessage(), commandexception.getErrorOjbects());
                         chatcomponenttranslation1.getChatStyle().setColor(EnumChatFormatting.RED);
@@ -207,9 +206,9 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
                 args[usernameIndex] = username;
             }else{
                 icommand.processCommand(sender, args);
-                timesExecuted ++;
+                timesExecuted++;
             }
-        }catch (WrongUsageException e){
+        }catch(WrongUsageException e){
             chatcomponenttranslation = new ChatComponentTranslation("commands.generic.usage", new ChatComponentTranslation(e.getMessage(), e.getErrorOjbects()));
             chatcomponenttranslation.getChatStyle().setColor(EnumChatFormatting.RED);
             sender.addChatMessage(chatcomponenttranslation);
@@ -217,7 +216,7 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
             chatcomponenttranslation = new ChatComponentTranslation(e.getMessage(), e.getErrorOjbects());
             chatcomponenttranslation.getChatStyle().setColor(EnumChatFormatting.RED);
             sender.addChatMessage(chatcomponenttranslation);
-        }catch (Throwable throwable){
+        }catch(Throwable throwable){
             chatcomponenttranslation = new ChatComponentTranslation("commands.generic.exception");
             chatcomponenttranslation.getChatStyle().setColor(EnumChatFormatting.RED);
             sender.addChatMessage(chatcomponenttranslation);
@@ -227,7 +226,7 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
     }
 
     @Override
-    public ICommand registerCommand(ICommand command){
+    public ICommand registerCommand(ICommand command) {
         String modid = "minecraft";
         ModContainer container = Loader.instance().activeModContainer();
         if(container != null){
@@ -238,18 +237,18 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
         return super.registerCommand(command);
     }
 
-    private static String[] dropFirstString(String[] args){
+    private static String[] dropFirstString(String[] args) {
         String[] ret = new String[args.length - 1];
         System.arraycopy(args, 1, ret, 0, args.length - 1);
         return ret;
     }
 
-    private int getUsernameIndex(ICommand command, String[] args){
+    private int getUsernameIndex(ICommand command, String[] args) {
         if(command == null){
             return -1;
         }else{
-            for (int i = 0; i < args.length; ++i){
-                if (command.isUsernameIndex(args, i) && PlayerSelector.matchesMultiplePlayers(args[i])){
+            for(int i = 0; i < args.length; ++i){
+                if(command.isUsernameIndex(args, i) && PlayerSelector.matchesMultiplePlayers(args[i])){
                     return i;
                 }
             }

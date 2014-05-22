@@ -1,6 +1,6 @@
 package jk_5.nailed.api.map.stat;
 
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 
 /**
  * No description given

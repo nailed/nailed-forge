@@ -1,18 +1,21 @@
 package jk_5.nailed.effect;
 
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.init.*;
+import net.minecraft.item.*;
+import net.minecraft.nbt.*;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-public class FireworkColorizer {
+public final class FireworkColorizer {
 
-    public static ItemStack getItemStack(int color){
+    private FireworkColorizer(){
+
+    }
+
+    public static ItemStack getItemStack(int color) {
         /*ItemStack firework = new ItemStack(Item.firework, 1);
         NBTTagCompound tag = new NBTTagCompound();
         firework.setTagCompound(tag);

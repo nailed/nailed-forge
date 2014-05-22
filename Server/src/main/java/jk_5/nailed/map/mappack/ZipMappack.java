@@ -1,35 +1,30 @@
 package jk_5.nailed.map.mappack;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import jk_5.nailed.NailedLog;
-import jk_5.nailed.api.concurrent.Callback;
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.MapBuilder;
-import jk_5.nailed.api.map.Mappack;
-import jk_5.nailed.api.map.MappackMetadata;
-import jk_5.nailed.api.scripting.IMount;
-import jk_5.nailed.api.zone.ZoneConfig;
-import jk_5.nailed.map.DiscardedMappackInitializationException;
-import jk_5.nailed.map.MappackInitializationException;
-import jk_5.nailed.map.stat.StatConfig;
-import jk_5.nailed.permissions.zone.DefaultZoneConfig;
-import org.apache.commons.io.IOUtils;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.*;
-import java.util.Enumeration;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
+import java.util.*;
+import java.util.zip.*;
+import javax.annotation.*;
+
+import com.google.gson.*;
+
+import org.apache.commons.io.*;
+
+import jk_5.nailed.*;
+import jk_5.nailed.api.concurrent.*;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.*;
+import jk_5.nailed.api.scripting.*;
+import jk_5.nailed.api.zone.*;
+import jk_5.nailed.map.*;
+import jk_5.nailed.map.stat.*;
+import jk_5.nailed.permissions.zone.*;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-public class ZipMappack implements Mappack {
+public final class ZipMappack implements Mappack {
 
     private final String mappackID;
     private final File mappackFile;
@@ -37,11 +32,13 @@ public class ZipMappack implements Mappack {
     private StatConfig statConfig;
     private ZoneConfig zoneConfig;
 
-    private ZipMappack(File mappackFile, JsonMappackMetadata metadata){
+    private ZipMappack(File mappackFile, JsonMappackMetadata metadata) {
         this.mappackID = mappackFile.getName().substring(0, mappackFile.getName().length() - 8);
         this.mappackFile = mappackFile;
         this.mappackMetadata = metadata;
-        if(metadata.name == null) metadata.name = this.mappackID;
+        if(metadata.name == null){
+            metadata.name = this.mappackID;
+        }
     }
 
     public static Mappack create(File file) throws MappackInitializationException {
@@ -53,11 +50,11 @@ public class ZipMappack implements Mappack {
             zipStream = new ZipInputStream(new FileInputStream(file));
             ZipEntry entry = zipStream.getNextEntry();
             while(entry != null){
-                if(entry.getName().equals("mappack.json")){
+                if("mappack.json".equals(entry.getName())){
                     pack = new ZipMappack(file, new JsonMappackMetadata((JsonObject) new JsonParser().parse(new InputStreamReader(zipStream))));
-                }else if(entry.getName().equals("stats.json")){
+                }else if("stats.json".equals(entry.getName())){
                     stats = new StatConfig(new JsonParser().parse(new InputStreamReader(zipStream)).getAsJsonArray());
-                }else if(entry.getName().equals("zones.json")){
+                }else if("zones.json".equals(entry.getName())){
                     zones = new DefaultZoneConfig(new JsonParser().parse(new InputStreamReader(zipStream)).getAsJsonArray());
                 }
                 entry = zipStream.getNextEntry();
@@ -82,7 +79,9 @@ public class ZipMappack implements Mappack {
     @Override
     public void prepareWorld(@Nonnull File destinationDir, @Nullable Callback<Void> callback) {
         this.unzipMapFromMapPack(this.mappackFile, destinationDir);
-        if(callback != null) callback.callback(null);
+        if(callback != null){
+            callback.callback(null);
+        }
     }
 
     @Override
@@ -92,21 +91,29 @@ public class ZipMappack implements Mappack {
     }
 
     @Override
-    public boolean saveAsMappack(@Nonnull Map map){
+    public boolean saveAsMappack(@Nonnull Map map) {
         return false;
     }
 
-    public File unzipMapFromMapPack(File mapPack, File destDir){
+    public File unzipMapFromMapPack(File mapPack, File destDir) {
         try{
             ZipFile zipFile = new ZipFile(mapPack);
             Enumeration e = zipFile.entries();
             File worldDir = null;
             while(e.hasMoreElements()){
-                ZipEntry entry = (ZipEntry)e.nextElement();
-                if(entry.getName().equals("mappack.json")) continue;
-                if(entry.getName().equals("gameinstructions.cfg")) continue;
-                if(entry.getName().contains("##MCEDIT.TEMP##")) continue;
-                if(entry.getName().startsWith("__MACOSX/")) continue;
+                ZipEntry entry = (ZipEntry) e.nextElement();
+                if("mappack.json".equals(entry.getName())){
+                    continue;
+                }
+                if("gameinstructions.cfg".equals(entry.getName())){
+                    continue;
+                }
+                if(entry.getName().contains("##MCEDIT.TEMP##")){
+                    continue;
+                }
+                if(entry.getName().startsWith("__MACOSX/")){
+                    continue;
+                }
                 File destinationFilePath = new File(destDir.getParentFile(), entry.getName());
                 destinationFilePath.getParentFile().mkdirs();
                 if(!entry.isDirectory()){
@@ -116,7 +123,7 @@ public class ZipMappack implements Mappack {
                     bos.flush();
                     bos.close();
                     bis.close();
-                }else if(entry.getName().equals("world/")){
+                }else if("world/".equals(entry.getName())){
                     worldDir = destinationFilePath;
                 }
             }
@@ -133,7 +140,7 @@ public class ZipMappack implements Mappack {
 
     @Override
     @Nullable
-    public IMount createMount(){
+    public IMount createMount() {
         return null;
     }
 

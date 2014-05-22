@@ -1,8 +1,8 @@
 package jk_5.nailed.api.camera;
 
-import jk_5.nailed.map.Location;
+import javax.annotation.*;
 
-import javax.annotation.Nullable;
+import jk_5.nailed.map.*;
 
 /**
  * Created by matthias on 15-5-14.
@@ -10,9 +10,10 @@ import javax.annotation.Nullable;
 
 @Nullable
 public interface IMovement {
-    public Location getLastLocation();
-    public Location getCurrentLocation();
-    public Location getNextLocation();
-    public boolean isDone();
-    public void tick();
+
+    Location getLastLocation();
+    Location getCurrentLocation();
+    Location getNextLocation();
+    boolean isDone();
+    void tick();
 }

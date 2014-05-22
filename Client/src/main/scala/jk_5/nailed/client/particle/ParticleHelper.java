@@ -1,20 +1,25 @@
 package jk_5.nailed.client.particle;
 
-import com.google.common.collect.Maps;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.EntityFX;
-import net.minecraft.world.World;
+import java.util.*;
 
-import java.util.Map;
+import com.google.common.collect.*;
+
+import net.minecraft.client.*;
+import net.minecraft.client.particle.*;
+import net.minecraft.world.*;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-public class ParticleHelper {
+public final class ParticleHelper {
 
     private static Map<String, Class<? extends EntityFX>> particles = Maps.newHashMap();
+
+    private ParticleHelper(){
+
+    }
 
     static {
         particles.put("teleport", ParticleTeleport.class);
@@ -38,7 +43,9 @@ public class ParticleHelper {
                 double dy = mc.renderViewEntity.posY - y;
                 double dz = mc.renderViewEntity.posZ - z;
                 double maxDistance = 256.0d;
-                if(dx * dx + dy * dy + dz * dz > maxDistance) return;
+                if(dx * dx + dy * dy + dz * dz > maxDistance){
+                    return;
+                }
                 mc.effectRenderer.addEffect(particle);
             }catch(Exception e){
                 //Something broke. Don't spawn it!

@@ -7,5 +7,5 @@ package jk_5.nailed.api.concurrent;
  */
 public interface Callback<T> {
 
-    public void callback(T obj);
+    void callback(T obj);
 }

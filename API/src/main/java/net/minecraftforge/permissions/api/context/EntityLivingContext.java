@@ -1,7 +1,8 @@
 package net.minecraftforge.permissions.api.context;
 
-import lombok.Getter;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.*;
+
+import lombok.*;
 
 /**
  * No description given
@@ -10,9 +11,10 @@ import net.minecraft.entity.EntityLivingBase;
  */
 public class EntityLivingContext extends EntityContext implements IHealthContext {
 
-    @Getter private final float currentHealth, maxHealth;
+    @Getter
+    private final float currentHealth, maxHealth;
 
-    public EntityLivingContext(EntityLivingBase entity){
+    public EntityLivingContext(EntityLivingBase entity) {
         super(entity);
         this.maxHealth = entity.getMaxHealth();
         this.currentHealth = entity.getHealth();

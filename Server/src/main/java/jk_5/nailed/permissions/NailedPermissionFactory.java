@@ -1,35 +1,30 @@
 package jk_5.nailed.permissions;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
-import cpw.mods.fml.common.FMLCommonHandler;
-import jk_5.nailed.NailedLog;
-import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.player.Player;
-import net.minecraft.dispenser.ILocation;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.integrated.IntegratedServer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-import net.minecraftforge.permissions.api.PermBuilderFactory;
-import net.minecraftforge.permissions.api.PermReg;
-import net.minecraftforge.permissions.api.RegisteredPermValue;
-import net.minecraftforge.permissions.api.context.*;
-import org.apache.commons.io.IOUtils;
+import java.io.*;
+import java.lang.annotation.*;
+import java.lang.reflect.*;
+import java.util.*;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import com.google.common.collect.*;
+
+import org.apache.commons.io.*;
+
+import net.minecraft.dispenser.*;
+import net.minecraft.entity.*;
+import net.minecraft.entity.player.*;
+import net.minecraft.server.*;
+import net.minecraft.server.integrated.*;
+import net.minecraft.tileentity.*;
+import net.minecraft.world.*;
+
+import cpw.mods.fml.common.*;
+
+import net.minecraftforge.permissions.api.*;
+import net.minecraftforge.permissions.api.context.*;
+
+import jk_5.nailed.*;
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.player.*;
 
 /**
  * No description given
@@ -39,7 +34,8 @@ import java.util.Set;
 public class NailedPermissionFactory implements PermBuilderFactory<NailedPermissionBuilder> {
 
     private static final File configDir = new File("permissions");
-    private static final IContext GLOBAL = new IContext() {};
+    private static final IContext GLOBAL = new IContext() {
+    };
     private static final Map<String, Field> groupOptions = Maps.newHashMap();
     private final Set<Group> groups = Sets.newHashSet();
     private final Map<String, User> users = Maps.newHashMap();
@@ -60,47 +56,47 @@ public class NailedPermissionFactory implements PermBuilderFactory<NailedPermiss
     }
 
     @Override
-    public NailedPermissionBuilder builder(){
+    public NailedPermissionBuilder builder() {
         return new NailedPermissionBuilder(this);
     }
 
     @Override
-    public NailedPermissionBuilder builder(String username, String permNode){
+    public NailedPermissionBuilder builder(String username, String permNode) {
         return new NailedPermissionBuilder(this).setUserName(username).setPermNode(permNode);
     }
 
     @Override
-    public IContext getDefaultContext(EntityPlayer player){
+    public IContext getDefaultContext(EntityPlayer player) {
         return new PlayerContext(player);
     }
 
     @Override
-    public IContext getDefaultContext(TileEntity te){
+    public IContext getDefaultContext(TileEntity te) {
         return new TileEntityContext(te);
     }
 
     @Override
-    public IContext getDefaultContext(ILocation loc){
+    public IContext getDefaultContext(ILocation loc) {
         return new Point(loc);
     }
 
     @Override
-    public IContext getDefaultContext(Entity entity){
+    public IContext getDefaultContext(Entity entity) {
         return new EntityContext(entity);
     }
 
     @Override
-    public IContext getDefaultContext(World world){
+    public IContext getDefaultContext(World world) {
         return new WorldContext(world);
     }
 
     @Override
-    public IContext getGlobalContext(){
+    public IContext getGlobalContext() {
         return GLOBAL;
     }
 
     @Override
-    public IContext getDefaultContext(Object object){
+    public IContext getDefaultContext(Object object) {
         if(object instanceof EntityLivingBase){
             return new EntityLivingContext((EntityLivingBase) object);
         }else{
@@ -109,7 +105,7 @@ public class NailedPermissionFactory implements PermBuilderFactory<NailedPermiss
     }
 
     @Override
-    public void registerPermissions(List<PermReg> perms){
+    public void registerPermissions(List<PermReg> perms) {
         for(PermReg perm : perms){
             if(this.isRegistered(perm.key)){
                 continue;
@@ -118,7 +114,7 @@ public class NailedPermissionFactory implements PermBuilderFactory<NailedPermiss
         }
     }
 
-    public void readConfig(){
+    public void readConfig() {
         this.groups.clear();
         this.users.clear();
         this.defaultGroup = null;
@@ -149,10 +145,10 @@ public class NailedPermissionFactory implements PermBuilderFactory<NailedPermiss
                         if(value.startsWith("\"") && value.endsWith("\"")){
                             value = value.substring(1, value.length() - 1);
                         }else{
-                            if(value.equalsIgnoreCase("true")){
+                            if("true".equalsIgnoreCase(value)){
                                 isBoolean = true;
                                 val = true;
-                            }else if(value.equalsIgnoreCase("false")){
+                            }else if("false".equalsIgnoreCase(value)){
                                 isBoolean = true;
                                 val = false;
                             }
@@ -166,7 +162,7 @@ public class NailedPermissionFactory implements PermBuilderFactory<NailedPermiss
                         }else{
                             field.set(group, value);
                         }
-                        if(key.equalsIgnoreCase("default") && isBoolean && val){
+                        if("default".equalsIgnoreCase(key) && isBoolean && val){
                             this.defaultGroup = group;
                         }
                     }else if(line.contains("Permissions") && line.contains("{")){
@@ -247,7 +243,9 @@ public class NailedPermissionFactory implements PermBuilderFactory<NailedPermiss
                         readingGroups = false;
                     }else if(readingGroups){
                         Group group = groupNames.get(line.trim().toLowerCase());
-                        if(group == null) throw new ConfigParseException("Group \"" + line.trim() + "\" does not exist, on line " + lineNumber + " in " + usersFile.getAbsolutePath());
+                        if(group == null){
+                            throw new ConfigParseException("Group \"" + line.trim() + "\" does not exist, on line " + lineNumber + " in " + usersFile.getAbsolutePath());
+                        }
                         user.getGroups().add(group);
                     }else if(readingPerms){
                         String node = line.trim();
@@ -295,7 +293,7 @@ public class NailedPermissionFactory implements PermBuilderFactory<NailedPermiss
         }
     }
 
-    public User getUserInfo(String username){
+    public User getUserInfo(String username) {
         User ret = this.users.get(username);
         if(ret == null){ //This user is not listed in the config file. Create one with the default group
             ret = new User(username);
@@ -307,15 +305,15 @@ public class NailedPermissionFactory implements PermBuilderFactory<NailedPermiss
         return ret;
     }
 
-    private boolean isRegistered(String node){
+    private boolean isRegistered(String node) {
         return this.perms.containsKey(node);
     }
 
-    public static boolean isOp(String username){
+    public static boolean isOp(String username) {
         MinecraftServer server = FMLCommonHandler.instance().getSidedDelegate().getServer();
 
-        if (server.isSinglePlayer()){
-            if (server instanceof IntegratedServer){
+        if(server.isSinglePlayer()){
+            if(server instanceof IntegratedServer){
                 return server.getServerOwner().equalsIgnoreCase(username);
             }else{
                 return server.getConfigurationManager().getOps().contains(username);

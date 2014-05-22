@@ -1,11 +1,11 @@
 package jk_5.nailed.coremod.transformers;
 
-import jk_5.nailed.coremod.asm.ASMHelper;
-import jk_5.nailed.coremod.asm.Mapping;
-import net.minecraft.launchwrapper.IClassTransformer;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.*;
 import org.objectweb.asm.tree.*;
+
+import net.minecraft.launchwrapper.*;
+
+import jk_5.nailed.coremod.asm.*;
 
 /**
  * No description given
@@ -17,8 +17,8 @@ public class NetHandlerPlayServerTransformer implements IClassTransformer {
     private static final Mapping processClientStatusMapping = new Mapping("net/minecraft/network/NetHandlerPlayServer", "processClientStatus", "(Lnet/minecraft/network/play/client/C16PacketClientStatus;)V");
 
     @Override
-    public byte[] transform(String name, String transformedName, byte[] bytes){
-        if(name.equals("net.minecraft.network.NetHandlerPlayServer")){
+    public byte[] transform(String name, String transformedName, byte[] bytes) {
+        if("net.minecraft.network.NetHandlerPlayServer".equals(name)){
             ClassNode cnode = ASMHelper.createClassNode(bytes);
             /*MethodNode mnode = ASMHelper.findMethod(new Mapping("net/minecraft/network/NetHandlerPlayServer", "processVanilla250Packet", "(Lnet/minecraft/network/play/client/C17PacketCustomPayload;)V"), cnode);
             int offset = -1;
@@ -55,13 +55,25 @@ public class NetHandlerPlayServerTransformer implements IClassTransformer {
 
             MethodNode mnode = ASMHelper.findMethod(processClientStatusMapping, cnode);
             int offset = 0;
-            while(mnode.instructions.get(offset).getOpcode() != Opcodes.IFEQ) offset ++;
-            while(mnode.instructions.get(offset).getOpcode() != Opcodes.ALOAD) offset ++;
+            while(mnode.instructions.get(offset).getOpcode() != Opcodes.IFEQ){
+                offset++;
+            }
+            while(mnode.instructions.get(offset).getOpcode() != Opcodes.ALOAD){
+                offset++;
+            }
             offset++;
-            while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKEVIRTUAL) mnode.instructions.remove(mnode.instructions.get(offset));
-            while(mnode.instructions.get(offset).getOpcode() != Opcodes.GETFIELD) mnode.instructions.remove(mnode.instructions.get(offset));
-            while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKEVIRTUAL) mnode.instructions.remove(mnode.instructions.get(offset));
-            while(mnode.instructions.get(offset).getOpcode() != Opcodes.PUTFIELD) mnode.instructions.remove(mnode.instructions.get(offset));
+            while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKEVIRTUAL){
+                mnode.instructions.remove(mnode.instructions.get(offset));
+            }
+            while(mnode.instructions.get(offset).getOpcode() != Opcodes.GETFIELD){
+                mnode.instructions.remove(mnode.instructions.get(offset));
+            }
+            while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKEVIRTUAL){
+                mnode.instructions.remove(mnode.instructions.get(offset));
+            }
+            while(mnode.instructions.get(offset).getOpcode() != Opcodes.PUTFIELD){
+                mnode.instructions.remove(mnode.instructions.get(offset));
+            }
 
             InsnList list = new InsnList();
             list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "jk_5/nailed/api/NailedAPI", "getTeleporter", "()Ljk_5/nailed/api/map/teleport/Teleporter;"));
@@ -74,17 +86,33 @@ public class NetHandlerPlayServerTransformer implements IClassTransformer {
             mnode.instructions.insertBefore(mnode.instructions.get(offset), list);
             //new ClassReader(ASMHelper.createBytes(cnode, ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES)).accept(new TraceClassVisitor(null, new Textifier(), new PrintWriter(System.err)), 0);
 
-            while(mnode.instructions.get(offset).getOpcode() != Opcodes.GOTO) offset ++;
+            while(mnode.instructions.get(offset).getOpcode() != Opcodes.GOTO){
+                offset++;
+            }
             offset++;
-            while(mnode.instructions.get(offset).getOpcode() != Opcodes.GOTO) offset ++;
+            while(mnode.instructions.get(offset).getOpcode() != Opcodes.GOTO){
+                offset++;
+            }
             offset++;
-            while(mnode.instructions.get(offset).getOpcode() != Opcodes.GOTO) offset ++;
-            while(mnode.instructions.get(offset).getOpcode() != Opcodes.IFLE) offset ++;
-            while(mnode.instructions.get(offset).getOpcode() != Opcodes.ALOAD) offset ++;
+            while(mnode.instructions.get(offset).getOpcode() != Opcodes.GOTO){
+                offset++;
+            }
+            while(mnode.instructions.get(offset).getOpcode() != Opcodes.IFLE){
+                offset++;
+            }
+            while(mnode.instructions.get(offset).getOpcode() != Opcodes.ALOAD){
+                offset++;
+            }
             offset++;
-            while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKEVIRTUAL) mnode.instructions.remove(mnode.instructions.get(offset));
-            while(mnode.instructions.get(offset).getOpcode() != Opcodes.ICONST_0) mnode.instructions.remove(mnode.instructions.get(offset));
-            while(mnode.instructions.get(offset).getOpcode() != Opcodes.PUTFIELD) mnode.instructions.remove(mnode.instructions.get(offset));
+            while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKEVIRTUAL){
+                mnode.instructions.remove(mnode.instructions.get(offset));
+            }
+            while(mnode.instructions.get(offset).getOpcode() != Opcodes.ICONST_0){
+                mnode.instructions.remove(mnode.instructions.get(offset));
+            }
+            while(mnode.instructions.get(offset).getOpcode() != Opcodes.PUTFIELD){
+                mnode.instructions.remove(mnode.instructions.get(offset));
+            }
 
             list = new InsnList();
             list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "jk_5/nailed/api/NailedAPI", "getTeleporter", "()Ljk_5/nailed/api/map/teleport/Teleporter;"));

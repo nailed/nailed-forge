@@ -1,14 +1,14 @@
 package jk_5.nailed.map.weather;
 
-import jk_5.nailed.api.WeatherType;
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.Mappack;
-import net.minecraft.entity.effect.EntityLightningBolt;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
+import java.util.*;
 
-import java.util.EnumSet;
-import java.util.Random;
+import net.minecraft.entity.effect.*;
+import net.minecraft.world.*;
+import net.minecraft.world.chunk.*;
+
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.*;
 
 /**
  * No description given
@@ -17,10 +17,6 @@ import java.util.Random;
  */
 public class WeatherController implements jk_5.nailed.api.map.WeatherController {
 
-    private Random random = new Random();
-    private int updateLCG = this.random.nextInt();
-    private double rainingStrength;
-    private double thunderingStrength;
     protected int rainDuration;
     protected int rainDurationBase;
     protected int rainCooldown;
@@ -29,7 +25,12 @@ public class WeatherController implements jk_5.nailed.api.map.WeatherController 
     protected int thunderDurationBase;
     protected int thunderCooldown;
     protected int thunderCooldownBase;
-    
+
+    private Random random = new Random();
+    private int updateLCG = this.random.nextInt();
+    private double rainingStrength;
+    private double thunderingStrength;
+
     private int thunderCounter;
     private boolean thundering;
     private int rainCounter;
@@ -37,7 +38,7 @@ public class WeatherController implements jk_5.nailed.api.map.WeatherController 
 
     private EnumSet<WeatherType> permittedWeatherTypes;
 
-    public WeatherController(Map map){
+    public WeatherController(Map map) {
         Mappack mappack = map.getMappack();
         if(mappack == null){
             this.permittedWeatherTypes = EnumSet.allOf(WeatherType.class);
@@ -47,7 +48,7 @@ public class WeatherController implements jk_5.nailed.api.map.WeatherController 
     }
 
     @Override
-    public void updateRaining(){
+    public void updateRaining() {
         if(this.thunderCounter <= 0){
             if(this.thundering){
                 this.thunderCounter = this.thunderDurationBase;
@@ -86,15 +87,15 @@ public class WeatherController implements jk_5.nailed.api.map.WeatherController 
             this.rainCounter--;
         }
 
-        if(this.raining)
+        if(this.raining){
             this.rainingStrength += 0.01D;
-        else{
+        }else{
             this.rainingStrength -= 0.01D;
         }
 
-        if(this.thundering)
+        if(this.thundering){
             this.thunderingStrength += 0.01D;
-        else{
+        }else{
             this.thunderingStrength -= 0.01D;
         }
 
@@ -112,47 +113,48 @@ public class WeatherController implements jk_5.nailed.api.map.WeatherController 
     }
 
     @Override
-    public void tick(World worldObj, Chunk chunk){
+    public void tick(World worldObj, Chunk chunk) {
         if(worldObj.isRaining() && worldObj.isThundering() && worldObj.rand.nextInt(100000) == 0){
             int xBase = chunk.xPosition * 16;
             int zBase = chunk.zPosition * 16;
-            this.updateLCG = (this.updateLCG * 3 + 1013904223);
+            this.updateLCG = this.updateLCG * 3 + 1013904223;
             int coords = this.updateLCG >> 2;
             int x = xBase + (coords & 0xF);
             int z = zBase + (coords >> 8 & 0xF);
             int y = worldObj.getPrecipitationHeight(x, z);
 
-            if(worldObj.canLightningStrikeAt(x, y, z))
+            if(worldObj.canLightningStrikeAt(x, y, z)){
                 worldObj.addWeatherEffect(new EntityLightningBolt(worldObj, x, y, z));
+            }
         }
     }
 
     @Override
-    public void clear(){
+    public void clear() {
         this.rainCounter = 0;
         this.raining = false;
         this.thunderCounter = 0;
         this.thundering = false;
     }
 
-    public float getTemperature(float current, int x, int z){
+    public float getTemperature(float current, int x, int z) {
         return current;
     }
 
-    public boolean getEnableSnow(boolean current, int x, int y){
+    public boolean getEnableSnow(boolean current, int x, int y) {
         return current;
     }
 
-    public boolean getEnableRain(boolean current, int x, int y){
+    public boolean getEnableRain(boolean current, int x, int y) {
         return current;
     }
 
-    private static double clamp(double value){
+    private static double clamp(double value) {
         return Math.min(Math.max(value, 0d), 1d);
     }
 
     @Override
-    public void toggleRain(){
+    public void toggleRain() {
         this.rainCounter = 1;
     }
 

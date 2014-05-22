@@ -1,12 +1,12 @@
 package jk_5.nailed.server.command;
 
-import jk_5.nailed.api.map.Map;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.command.WrongUsageException;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.world.EnumDifficulty;
+import java.util.*;
 
-import java.util.List;
+import net.minecraft.command.*;
+import net.minecraft.util.*;
+import net.minecraft.world.*;
+
+import jk_5.nailed.api.map.Map;
 
 /**
  * No description given
@@ -15,33 +15,37 @@ import java.util.List;
  */
 public class CommandDifficulty extends NailedCommand {
 
-    public CommandDifficulty(){
+    public CommandDifficulty() {
         super("difficulty");
     }
 
     @Override
-    public String getCommandUsage(ICommandSender icommandsender){
+    public String getCommandUsage(ICommandSender icommandsender) {
         return "commands.difficulty.usage";
     }
 
     @Override
-    public void processCommandWithMap(ICommandSender sender, Map map, String[] args){
+    public void processCommandWithMap(ICommandSender sender, Map map, String[] args) {
         if(args.length == 1){
             EnumDifficulty newDifficulty;
             String s = args[0];
-            if(s.equalsIgnoreCase("peaceful") || s.equalsIgnoreCase("p") || s.equals("0")){
+            if("peaceful".equalsIgnoreCase(s) || "p".equalsIgnoreCase(s) || "0".equals(s)){
                 newDifficulty = EnumDifficulty.PEACEFUL;
-            }else if(s.equalsIgnoreCase("easy") || s.equalsIgnoreCase("e") || s.equals("1")){
+            }else if("easy".equalsIgnoreCase(s) || "e".equalsIgnoreCase(s) || "1".equals(s)){
                 newDifficulty = EnumDifficulty.EASY;
-            }else if(s.equalsIgnoreCase("normal") || s.equalsIgnoreCase("n") || s.equals("2")){
+            }else if("normal".equalsIgnoreCase(s) || "n".equalsIgnoreCase(s) || "2".equals(s)){
                 newDifficulty = EnumDifficulty.NORMAL;
-            }else if(s.equalsIgnoreCase("hard") || s.equalsIgnoreCase("h") || s.equals("3")){
+            }else if("hard".equalsIgnoreCase(s) || "h".equalsIgnoreCase(s) || "3".equals(s)){
                 newDifficulty = EnumDifficulty.HARD;
-            }else throw new WrongUsageException("commands.difficulty.usage");
+            }else{
+                throw new WrongUsageException("commands.difficulty.usage");
+            }
             map.getWorld().difficultySetting = newDifficulty;
             map.getWorld().setAllowedSpawnTypes(newDifficulty != EnumDifficulty.PEACEFUL, true);
             sender.addChatMessage(new ChatComponentText("Successfully changed difficulty"));
-        }else throw new WrongUsageException("commands.difficulty.usage");
+        }else{
+            throw new WrongUsageException("commands.difficulty.usage");
+        }
     }
 
     @Override

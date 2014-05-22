@@ -1,7 +1,7 @@
 package jk_5.nailed.api.map;
 
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.*;
+import net.minecraft.world.chunk.*;
 
 /**
  * No description given
@@ -10,10 +10,10 @@ import net.minecraft.world.chunk.Chunk;
  */
 public interface WeatherController {
 
-    public double getRainingStrength();
-    public double getThunderingStrength();
-    public void updateRaining();
-    public void tick(World worldObj, Chunk chunk);
-    public void clear();
-    public void toggleRain();
+    double getRainingStrength();
+    double getThunderingStrength();
+    void updateRaining();
+    void tick(World worldObj, Chunk chunk);
+    void clear();
+    void toggleRain();
 }

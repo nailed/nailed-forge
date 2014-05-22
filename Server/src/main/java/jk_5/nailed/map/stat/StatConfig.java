@@ -1,14 +1,12 @@
 package jk_5.nailed.map.stat;
 
-import com.google.common.collect.Lists;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import jk_5.nailed.NailedLog;
-import jk_5.nailed.api.map.stat.IStatType;
-import jk_5.nailed.api.map.stat.Stat;
+import java.util.*;
 
-import java.util.List;
+import com.google.common.collect.*;
+import com.google.gson.*;
+
+import jk_5.nailed.*;
+import jk_5.nailed.api.map.stat.*;
 
 /**
  * No description given
@@ -41,10 +39,10 @@ public class StatConfig implements jk_5.nailed.api.map.stat.StatConfig {
     }
 
     @SuppressWarnings("CloneDoesntDeclareCloneNotSupportedException")
-    public StatConfig clone() {
+    public StatConfig copy() {
         StatConfig config = new StatConfig();
         for(Stat stat : this.stats){
-            config.stats.add(stat.clone());
+            config.stats.add(stat.copy());
         }
         return config;
     }

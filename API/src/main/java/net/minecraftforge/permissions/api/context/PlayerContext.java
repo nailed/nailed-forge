@@ -1,7 +1,8 @@
 package net.minecraftforge.permissions.api.context;
 
-import lombok.Getter;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.*;
+
+import lombok.*;
 
 /**
  * No description given
@@ -10,9 +11,10 @@ import net.minecraft.entity.player.EntityPlayer;
  */
 public class PlayerContext extends EntityLivingContext implements INameContext {
 
-    @Getter private final String name;
+    @Getter
+    private final String name;
 
-    public PlayerContext(EntityPlayer entity){
+    public PlayerContext(EntityPlayer entity) {
         super(entity);
         this.name = entity.getGameProfile().getName();
     }

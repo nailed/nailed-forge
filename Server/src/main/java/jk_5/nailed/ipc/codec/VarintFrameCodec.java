@@ -1,13 +1,12 @@
 package jk_5.nailed.ipc.codec;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.ByteToMessageCodec;
-import io.netty.handler.codec.CorruptedFrameException;
-import jk_5.nailed.ipc.PacketUtils;
+import java.util.*;
 
-import java.util.List;
+import io.netty.buffer.*;
+import io.netty.channel.*;
+import io.netty.handler.codec.*;
+
+import jk_5.nailed.ipc.*;
 
 /**
  * No description given
@@ -17,7 +16,7 @@ import java.util.List;
 public class VarintFrameCodec extends ByteToMessageCodec<ByteBuf> {
 
     @Override
-    protected void encode(ChannelHandlerContext ctx, ByteBuf msg, ByteBuf out) throws Exception{
+    protected void encode(ChannelHandlerContext ctx, ByteBuf msg, ByteBuf out) throws Exception {
         int bodyLength = msg.readableBytes();
         int headerLength = PacketUtils.varIntSize(bodyLength);
         out.ensureWritable(headerLength + bodyLength);
@@ -26,7 +25,7 @@ public class VarintFrameCodec extends ByteToMessageCodec<ByteBuf> {
     }
 
     @Override
-    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception{
+    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
         in.markReaderIndex();
         final byte[] buf = new byte[3];
         for(int i = 0; i < buf.length; i++){

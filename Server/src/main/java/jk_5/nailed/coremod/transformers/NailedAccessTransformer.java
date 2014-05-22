@@ -1,8 +1,8 @@
 package jk_5.nailed.coremod.transformers;
 
-import cpw.mods.fml.common.asm.transformers.AccessTransformer;
+import java.io.*;
 
-import java.io.IOException;
+import cpw.mods.fml.common.asm.transformers.*;
 
 /**
  * No description given

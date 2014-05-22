@@ -1,6 +1,6 @@
 package jk_5.nailed.gui;
 
-import io.netty.buffer.ByteBuf;
+import io.netty.buffer.*;
 
 /**
  * No description given
@@ -9,5 +9,5 @@ import io.netty.buffer.ByteBuf;
  */
 public interface IGuiReturnHandler {
 
-    public void readGuiCloseData(ByteBuf buffer);
+    void readGuiCloseData(ByteBuf buffer);
 }

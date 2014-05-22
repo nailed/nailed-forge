@@ -1,12 +1,12 @@
 package jk_5.nailed.api.effect.firework;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import net.minecraft.nbt.NBTTagCompound;
-import org.apache.commons.lang3.Validate;
+import java.util.*;
 
-import java.util.List;
-import java.util.Map;
+import com.google.common.collect.*;
+
+import org.apache.commons.lang3.*;
+
+import net.minecraft.nbt.*;
 
 /**
  * No description given
@@ -14,6 +14,30 @@ import java.util.Map;
  * @author jk-5
  */
 public class FireworkEffect {
+
+    private static final String FLICKER = "flicker";
+    private static final String TRAIL = "trail";
+    private static final String COLORS = "colors";
+    private static final String FADE_COLORS = "fade-colors";
+    private static final String TYPE = "type";
+
+    private final boolean flicker;
+    private final boolean trail;
+    private final ImmutableList<Color> colors;
+    private final ImmutableList<Color> fadeColors;
+    private final Type type;
+    private String string = null;
+
+    FireworkEffect(boolean flicker, boolean trail, ImmutableList<Color> colors, ImmutableList<Color> fadeColors, Type type) {
+        if(colors.isEmpty()){
+            throw new IllegalStateException("Cannot make FireworkEffect without any color");
+        }
+        this.flicker = flicker;
+        this.trail = trail;
+        this.colors = colors;
+        this.fadeColors = fadeColors;
+        this.type = type;
+    }
 
     /**
      * The type or shape of the effect.
@@ -38,8 +62,7 @@ public class FireworkEffect {
         /**
          * A creeper-face effect.
          */
-        CREEPER,
-        ;
+        CREEPER
     }
 
     /**
@@ -57,13 +80,15 @@ public class FireworkEffect {
      * @see FireworkEffect#builder()
      */
     public static final class Builder {
+
         private boolean flicker = false;
         private boolean trail = false;
         private final ImmutableList.Builder<Color> colors = ImmutableList.builder();
         private ImmutableList.Builder<Color> fadeColors = null;
         private Type type = Type.BALL;
 
-        private Builder() {}
+        private Builder() {
+        }
 
         /**
          * Specify the type of the firework effect.
@@ -142,16 +167,16 @@ public class FireworkEffect {
          * @return This object, for chaining
          * @throws IllegalArgumentException If colors is null
          * @throws IllegalArgumentException If any color is null (may be
-         *     thrown after changes have occurred)
+         *                                  thrown after changes have occurred)
          */
-        public Builder withColor(Color...colors) throws IllegalArgumentException {
+        public Builder withColor(Color... colors) throws IllegalArgumentException {
             Validate.notNull(colors, "Cannot have null colors");
-            if (colors.length == 0) {
+            if(colors.length == 0){
                 return this;
             }
 
             ImmutableList.Builder<Color> list = this.colors;
-            for (Color color : colors) {
+            for(Color color : colors){
                 Validate.notNull(color, "Color cannot be null");
                 list.add(color);
             }
@@ -163,18 +188,18 @@ public class FireworkEffect {
          * Add several primary colors to the firework effect.
          *
          * @param colors An iterable object whose iterator yields the desired
-         *     colors
+         *               colors
          * @return This object, for chaining
          * @throws IllegalArgumentException If colors is null
          * @throws IllegalArgumentException If any color is null (may be
-         *     thrown after changes have occurred)
+         *                                  thrown after changes have occurred)
          */
         public Builder withColor(Iterable<?> colors) throws IllegalArgumentException {
             Validate.notNull(colors, "Cannot have null colors");
 
             ImmutableList.Builder<Color> list = this.colors;
-            for (Object color : colors) {
-                if (!(color instanceof Color)) {
+            for(Object color : colors){
+                if(!(color instanceof Color)){
                     throw new IllegalArgumentException(color + " is not a Color in " + colors);
                 }
                 list.add((Color) color);
@@ -190,12 +215,12 @@ public class FireworkEffect {
          * @return This object, for chaining
          * @throws IllegalArgumentException If colors is null
          * @throws IllegalArgumentException If any color is null (may be
-         *     thrown after changes have occurred)
+         *                                  thrown after changes have occurred)
          */
         public Builder withFade(Color color) throws IllegalArgumentException {
             Validate.notNull(color, "Cannot have null color");
 
-            if (fadeColors == null) {
+            if(fadeColors == null){
                 fadeColors = ImmutableList.builder();
             }
 
@@ -211,20 +236,20 @@ public class FireworkEffect {
          * @return This object, for chaining
          * @throws IllegalArgumentException If colors is null
          * @throws IllegalArgumentException If any color is null (may be
-         *     thrown after changes have occurred)
+         *                                  thrown after changes have occurred)
          */
-        public Builder withFade(Color...colors) throws IllegalArgumentException {
+        public Builder withFade(Color... colors) throws IllegalArgumentException {
             Validate.notNull(colors, "Cannot have null colors");
-            if (colors.length == 0) {
+            if(colors.length == 0){
                 return this;
             }
 
             ImmutableList.Builder<Color> list = this.fadeColors;
-            if (list == null) {
+            if(list == null){
                 list = this.fadeColors = ImmutableList.builder();
             }
 
-            for (Color color : colors) {
+            for(Color color : colors){
                 Validate.notNull(color, "Color cannot be null");
                 list.add(color);
             }
@@ -236,22 +261,22 @@ public class FireworkEffect {
          * Add several fade colors to the firework effect.
          *
          * @param colors An iterable object whose iterator yields the desired
-         *     colors
+         *               colors
          * @return This object, for chaining
          * @throws IllegalArgumentException If colors is null
          * @throws IllegalArgumentException If any color is null (may be
-         *     thrown after changes have occurred)
+         *                                  thrown after changes have occurred)
          */
         public Builder withFade(Iterable<?> colors) throws IllegalArgumentException {
             Validate.notNull(colors, "Cannot have null colors");
 
             ImmutableList.Builder<Color> list = this.fadeColors;
-            if (list == null) {
+            if(list == null){
                 list = this.fadeColors = ImmutableList.builder();
             }
 
-            for (Object color : colors) {
-                if (!(color instanceof Color)) {
+            for(Object color : colors){
+                if(!(color instanceof Color)){
                     throw new IllegalArgumentException(color + " is not a Color in " + colors);
                 }
                 list.add((Color) color);
@@ -263,7 +288,7 @@ public class FireworkEffect {
         /**
          * Create a {@link FireworkEffect} from the current contents of this
          * builder.
-         * <p>
+         * <p/>
          * To successfully build, you must have specified at least one color.
          *
          * @return The representative firework effect
@@ -277,30 +302,6 @@ public class FireworkEffect {
                     type
             );
         }
-    }
-
-    private static final String FLICKER = "flicker";
-    private static final String TRAIL = "trail";
-    private static final String COLORS = "colors";
-    private static final String FADE_COLORS = "fade-colors";
-    private static final String TYPE = "type";
-
-    private final boolean flicker;
-    private final boolean trail;
-    private final ImmutableList<Color> colors;
-    private final ImmutableList<Color> fadeColors;
-    private final Type type;
-    private String string = null;
-
-    FireworkEffect(boolean flicker, boolean trail, ImmutableList<Color> colors, ImmutableList<Color> fadeColors, Type type) {
-        if (colors.isEmpty()) {
-            throw new IllegalStateException("Cannot make FireworkEffect without any color");
-        }
-        this.flicker = flicker;
-        this.trail = trail;
-        this.colors = colors;
-        this.fadeColors = fadeColors;
-        this.type = type;
     }
 
     /**
@@ -361,7 +362,7 @@ public class FireworkEffect {
     @Override
     public String toString() {
         final String string = this.string;
-        if (string == null) {
+        if(string == null){
             return this.string = "FireworkEffect:" + serialize();
         }
         return string;
@@ -372,23 +373,23 @@ public class FireworkEffect {
         /**
          * TRUE and FALSE as per boolean.hashCode()
          */
-        final int PRIME = 31, TRUE = 1231, FALSE = 1237;
+        final int prime = 31, tr = 1231, fl = 1237;
         int hash = 1;
-        hash = hash * PRIME + (flicker ? TRUE : FALSE);
-        hash = hash * PRIME + (trail ? TRUE : FALSE);
-        hash = hash * PRIME + type.hashCode();
-        hash = hash * PRIME + colors.hashCode();
-        hash = hash * PRIME + fadeColors.hashCode();
+        hash = hash * prime + (flicker ? tr : fl);
+        hash = hash * prime + (trail ? tr : fl);
+        hash = hash * prime + type.hashCode();
+        hash = hash * prime + colors.hashCode();
+        hash = hash * prime + fadeColors.hashCode();
         return hash;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
+        if(this == obj){
             return true;
         }
 
-        if (!(obj instanceof FireworkEffect)) {
+        if(!(obj instanceof FireworkEffect)){
             return false;
         }
 
@@ -400,32 +401,32 @@ public class FireworkEffect {
                 && this.fadeColors.equals(that.fadeColors);
     }
 
-    public NBTTagCompound toNBT(){
+    public NBTTagCompound toNBT() {
         NBTTagCompound tag = new NBTTagCompound();
         tag.setByte("Flicker", (byte) (this.flicker ? 1 : 0));
         tag.setByte("Trail", (byte) (this.trail ? 1 : 0));
         tag.setByte("Type", (byte) this.type.ordinal());
         int[] colors = new int[this.colors.size()];
-        for (int i = 0; i < colors.length; i++) {
+        for(int i = 0; i < colors.length; i++){
             colors[i] = this.colors.get(i).asRGB();
         }
         tag.setIntArray("Colors", colors);
         int[] fadeColors = new int[this.fadeColors.size()];
-        for (int i = 0; i < fadeColors.length; i++) {
+        for(int i = 0; i < fadeColors.length; i++){
             fadeColors[i] = this.fadeColors.get(i).asRGB();
         }
         tag.setIntArray("FadeColors", fadeColors);
         return tag;
     }
 
-    public Firework toFirework(){
+    public Firework toFirework() {
         Firework firework = new Firework();
         firework.setPower(1);
         firework.addEffect(this);
         return firework;
     }
 
-    public Firework toFirework(int power){
+    public Firework toFirework(int power) {
         Firework firework = new Firework();
         firework.setPower(power);
         firework.addEffect(this);
