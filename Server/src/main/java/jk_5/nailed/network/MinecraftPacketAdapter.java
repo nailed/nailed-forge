@@ -23,9 +23,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.C12PacketUpdateSign;
-import net.minecraft.network.play.server.S02PacketChat;
-import net.minecraft.network.play.server.S33PacketUpdateSign;
-import net.minecraft.network.play.server.S38PacketPlayerListItem;
+import net.minecraft.network.play.server.*;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
@@ -128,9 +126,9 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
                     return;
                 }
             }
-        }/* else if(msg instanceof S2FPacketSetSlot) {
+        } else if(msg instanceof S2FPacketSetSlot) {
             S2FPacketSetSlot setSlot = (S2FPacketSetSlot) msg;
-            if (NailedAPI.getPlayerRegistry().getPlayer(player).getClient() != PlayerClient.NAILED) {
+            if (NailedAPI.getPlayerRegistry().getPlayer(player).getClient() != PlayerClient.NAILED && setSlot.field_149178_c != null) {
                 setSlot.field_149178_c = tryReplaceforClient(setSlot.field_149178_c);
             }
             ctx.write(setSlot, promise);
@@ -140,13 +138,13 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
             if(NailedAPI.getPlayerRegistry().getPlayer(player).getClient() != PlayerClient.NAILED) {
                 ItemStack[] array = windowItems.field_148913_b;
                 for(int f = 0; f < array.length; ++f){
-                    array[f] = tryReplaceforClient(array[f]);
+                    if(array[f] != null) array[f] = tryReplaceforClient(array[f]);
                 }
                 windowItems.field_148913_b = array;
             }
             ctx.write(windowItems, promise);
             return;
-        } */else if(msg instanceof CustomChunkPacket){
+        } else if(msg instanceof CustomChunkPacket){
             Player nPlayer = NailedAPI.getPlayerRegistry().getPlayer(player);
 
             CustomChunkPacket ccPacket = ((CustomChunkPacket) msg);
