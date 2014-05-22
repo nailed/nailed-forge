@@ -115,7 +115,7 @@ public class NailedScoreboardManager implements ScoreboardManager {
                 S3BPacketScoreboardObjective packet = new S3BPacketScoreboardObjective();
                 packet.field_149343_a = objective.getId();
                 packet.field_149341_b = objective.getDisplayName();
-                packet.field_149342_c = 1;
+                packet.field_149342_c = 1; //Remove
                 player.sendPacket(packet);
             }
 
