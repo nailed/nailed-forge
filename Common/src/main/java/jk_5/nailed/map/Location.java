@@ -13,11 +13,8 @@ import javax.annotation.Nonnull;
  *
  * @author jk-5
  */
-public class Location implements Cloneable {
+public class Location extends Point implements Cloneable {
 
-    private double x;
-    private double y;
-    private double z;
     private float yaw;
     private float pitch;
 
@@ -42,9 +39,7 @@ public class Location implements Cloneable {
      * @param pitch The absolute rotation on the y-plane, in degrees
      */
     public Location(final double x, final double y, final double z, final float yaw, final float pitch){
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        super(x, y, z);
         this.pitch = pitch;
         this.yaw = yaw;
     }
@@ -55,9 +50,7 @@ public class Location implements Cloneable {
      * @param location The location to get all the properties from
      */
     public Location(final Location location){
-        this.x = location.x;
-        this.y = location.y;
-        this.z = location.z;
+        super(location);
         this.pitch = location.pitch;
         this.yaw = location.yaw;
     }
@@ -68,9 +61,7 @@ public class Location implements Cloneable {
      * @param coords The {@link ChunkCoordinates} to copy
      */
     public Location(final ChunkCoordinates coords){
-        this.x = coords.posX;
-        this.y = coords.posY;
-        this.z = coords.posZ;
+        this(coords, 0, 0);
     }
 
     /**
@@ -81,95 +72,9 @@ public class Location implements Cloneable {
      * @param pitch The absolute rotation on the y-plane, in degrees
      */
     public Location(final ChunkCoordinates coords, final float yaw, final float pitch){
-        this.x = coords.posX;
-        this.y = coords.posY;
-        this.z = coords.posZ;
+        super(coords);
         this.yaw = yaw;
         this.pitch = pitch;
-    }
-
-    /**
-     * Sets the x-coordinate of this location
-     *
-     * @param x X-coordinate
-     */
-    public void setX(double x) {
-        this.x = x;
-    }
-
-    /**
-     * Gets the x-coordinate of this location
-     *
-     * @return x-coordinate
-     */
-    public double getX() {
-        return x;
-    }
-
-    /**
-     * Gets the floored value of the X component, indicating the block that
-     * this location is contained with.
-     *
-     * @return block X
-     */
-    public int getBlockX(){
-        return locToBlock(x);
-    }
-
-    /**
-     * Sets the y-coordinate of this location
-     *
-     * @param y y-coordinate
-     */
-    public void setY(double y){
-        this.y = y;
-    }
-
-    /**
-     * Gets the y-coordinate of this location
-     *
-     * @return y-coordinate
-     */
-    public double getY(){
-        return y;
-    }
-
-    /**
-     * Gets the floored value of the Y component, indicating the block that
-     * this location is contained with.
-     *
-     * @return block y
-     */
-    public int getBlockY(){
-        return locToBlock(y);
-    }
-
-    /**
-     * Sets the z-coordinate of this location
-     *
-     * @param z z-coordinate
-     */
-    public void setZ(double z){
-        this.z = z;
-    }
-
-    /**
-     * Gets the z-coordinate of this location
-     *
-     * @return z-coordinate
-     */
-    public double getZ(){
-        return z;
-    }
-
-    /**
-     * Gets the floored value of the Z component, indicating the block that
-     * this location is contained with.
-     *
-     * @return block z
-     */
-    public int getBlockZ(){
-        return locToBlock(z);
     }
 
     /**
@@ -250,9 +155,7 @@ public class Location implements Cloneable {
     public Location add(@Nonnull Location vec){
         Preconditions.checkNotNull(vec, "vec");
 
-        this.x += vec.x;
-        this.y += vec.y;
-        this.z += vec.z;
+        super.add(vec);
         return this;
     }
 
@@ -265,9 +168,7 @@ public class Location implements Cloneable {
      * @return the same location
      */
     public Location add(double x, double y, double z) {
-        this.x += x;
-        this.y += y;
-        this.z += z;
+        super.add(x, y, z);
         return this;
     }
 
@@ -280,10 +181,7 @@ public class Location implements Cloneable {
      */
     public Location subtract(@Nonnull Location vec) {
         Preconditions.checkNotNull(vec, "vec");
-
-        this.x -= vec.x;
-        this.y -= vec.y;
-        this.z -= vec.z;
+        super.subtract(vec);
         return this;
     }
 
@@ -297,9 +195,7 @@ public class Location implements Cloneable {
      * @return the same location
      */
     public Location subtract(double x, double y, double z) {
-        this.x -= x;
-        this.y -= y;
-        this.z -= z;
+        super.subtract(x, y, z);
         return this;
     }
 
@@ -317,20 +213,7 @@ public class Location implements Cloneable {
     public double distance(@Nonnull Location o) {
         Preconditions.checkNotNull(o, "o");
 
-        return Math.sqrt(distanceSquared(o));
-    }
-
-    /**
-     * Get the squared distance between this location and another.
-     *
-     * @param o The other location
-     * @return the distance
-     * @throws NullPointerException when o is null
-     */
-    public double distanceSquared(@Nonnull Location o) {
-        Preconditions.checkNotNull(o, "o");
-
-        return MathUtil.square(x - o.x) + MathUtil.square(y - o.y) + MathUtil.square(z - o.z);
+        return super.distance(o);
     }
 
     /**
@@ -340,10 +223,9 @@ public class Location implements Cloneable {
      * @param m The factor
      * @return the same location
      */
+    @Override
     public Location multiply(double m) {
-        this.x *= m;
-        this.y *= m;
-        this.z *= m;
+        super.multiply(m);
         return this;
     }
 
@@ -352,10 +234,9 @@ public class Location implements Cloneable {
      *
      * @return the same location
      */
+    @Override
     public Location zero() {
-        this.x = 0;
-        this.y = 0;
-        this.z = 0;
+        super.zero();
         return this;
     }
 
@@ -373,13 +254,7 @@ public class Location implements Cloneable {
         }
         final Location other = (Location) obj;
 
-        if (Double.doubleToLongBits(this.x) != Double.doubleToLongBits(other.x)) {
-            return false;
-        }
-        if (Double.doubleToLongBits(this.y) != Double.doubleToLongBits(other.y)) {
-            return false;
-        }
-        if (Double.doubleToLongBits(this.z) != Double.doubleToLongBits(other.z)) {
+        if (!super.equals(obj)){
             return false;
         }
         if (Float.floatToIntBits(this.pitch) != Float.floatToIntBits(other.pitch)) {
@@ -393,11 +268,7 @@ public class Location implements Cloneable {
 
     @Override
     public int hashCode() {
-        int hash = 3;
-
-        hash = 19 * hash + (int) (Double.doubleToLongBits(this.x) ^ (Double.doubleToLongBits(this.x) >>> 32));
-        hash = 19 * hash + (int) (Double.doubleToLongBits(this.y) ^ (Double.doubleToLongBits(this.y) >>> 32));
-        hash = 19 * hash + (int) (Double.doubleToLongBits(this.z) ^ (Double.doubleToLongBits(this.z) >>> 32));
+        int hash = super.hashCode();
         hash = 19 * hash + Float.floatToIntBits(this.pitch);
         hash = 19 * hash + Float.floatToIntBits(this.yaw);
         return hash;
@@ -405,27 +276,12 @@ public class Location implements Cloneable {
 
     @Override
     public String toString() {
-        return "Location{x=" + x + ",y=" + y + ",z=" + z + ",pitch=" + pitch + ",yaw=" + yaw + '}';
+        return "Location{x=" + this.getX() + ",y=" + this.getY() + ",z=" + this.getZ() + ",pitch=" + pitch + ",yaw=" + yaw + '}';
     }
 
     @Override
     public Location clone() {
-        try {
-            return (Location) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new Error(e);
-        }
-    }
-
-    /**
-     * Safely converts a double (location coordinate) to an int (block
-     * coordinate)
-     *
-     * @param loc Precise coordinate
-     * @return Block coordinate
-     */
-    public static int locToBlock(double loc) {
-        return MathUtil.floor(loc);
+        return new Location(this.getX(), this.getY(), this.getZ(), this.pitch, this.yaw);
     }
 
     public static Location readFrom(JsonObject json){
@@ -441,10 +297,9 @@ public class Location implements Cloneable {
         return new Location(buffer.readDouble(), buffer.readDouble(), buffer.readDouble(), buffer.readFloat(), buffer.readFloat());
     }
 
+    @Override
     public void write(ByteBuf buffer) {
-        buffer.writeDouble(this.x);
-        buffer.writeDouble(this.y);
-        buffer.writeDouble(this.z);
+        super.write(buffer);
         buffer.writeFloat(this.yaw);
         buffer.writeFloat(this.pitch);
     }

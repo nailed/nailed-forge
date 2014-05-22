@@ -3,6 +3,7 @@ package jk_5.nailed.network;
 import com.google.common.base.Charsets;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
+import jk_5.nailed.map.Point;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
@@ -383,6 +384,34 @@ public abstract class NailedPacket {
             this.vx = buffer.readDouble();
             this.vy = buffer.readDouble();
             this.vz = buffer.readDouble();
+        }
+    }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class RenderList extends NailedPacket {
+        private Point[][] points;
+        @Override
+        public void encode(ByteBuf buffer){
+            buffer.writeInt(points.length);
+            for(int x = 0; x < points.length; x++){
+                buffer.writeByte(points[x].length);
+                for(int y = 0; y < points[x].length; y++){
+                    buffer.writeDouble(points[x][y].getX());
+                    buffer.writeDouble(points[x][y].getY());
+                    buffer.writeDouble(points[x][y].getZ());
+                }
+            }
+        }
+
+        public void decode(ByteBuf buffer){
+            this.points = new Point[buffer.readInt()][];
+            for(int x = 0; x < points.length; x++){
+                points[x] = new Point[buffer.readByte()];
+                for(int y = 0; y < points[x].length; y++){
+                    points[x][y] = new Point(buffer.readDouble(),buffer.readDouble(),buffer.readDouble());
+                }
+            }
         }
     }
 }
