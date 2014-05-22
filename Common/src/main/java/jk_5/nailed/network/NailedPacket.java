@@ -385,4 +385,18 @@ public abstract class NailedPacket {
             this.vz = buffer.readDouble();
         }
     }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class RenderList extends NailedPacket {
+        private double[][] coords;
+        @Override
+        public void encode(ByteBuf buffer){
+
+        }
+
+        public void decode(ByteBuf buffer){
+
+        }
+    }
 }
