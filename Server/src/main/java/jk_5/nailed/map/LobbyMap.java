@@ -3,7 +3,9 @@ package jk_5.nailed.map;
 import com.google.common.collect.Lists;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.player.Player;
+import net.minecraft.util.ChatComponentText;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Random;
 
@@ -15,11 +17,14 @@ import java.util.Random;
  */
 public class LobbyMap extends NailedMap {
     private Random random = new Random();
+    private int currentInfoBarData = 0;
+    private List<ChatComponentText> infoBarData = Lists.newArrayList();
 
     public LobbyMap(){
         super(NailedAPI.getMappackLoader().getMappack("lobby"), 0);
         if(this.getMappack() != null){
             this.getMappack().prepareWorld(this.getSaveFolder(), null);
+            this.infoBarData = this.getMappack().getMappackMetadata().getInfoBarItems();
         }
     }
 
@@ -55,4 +60,10 @@ public class LobbyMap extends NailedMap {
             }
         }
     }
+
+    @Override
+    public ChatComponentText getInfoBar(){return this.infoBarData.get(this.currentInfoBarData);}
+
+    @Override
+    public float getInfoBarProgress(){ return this.currentInfoBarData / this.infoBarData.size();}
 }

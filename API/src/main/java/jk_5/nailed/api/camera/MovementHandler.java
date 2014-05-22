@@ -15,9 +15,4 @@ public interface MovementHandler {
     public void updatePlayerLocations();
     public void removePlayerMovement(Player player);
     public void addPlayerMovement(Player player, IMovement movement);
-    public void addLocation(String string, Location location);
-    public void removeLocation(String string);
-    public HashMap<String, Location> getLocations();
-    @Nullable
-    public Location getLocation(String string);
 }

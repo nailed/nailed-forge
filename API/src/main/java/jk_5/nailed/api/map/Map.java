@@ -10,6 +10,7 @@ import jk_5.nailed.api.player.Player;
 import jk_5.nailed.api.zone.ZoneManager;
 import jk_5.nailed.map.Location;
 import net.minecraft.network.Packet;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.WorldServer;
 
@@ -55,4 +56,7 @@ public interface Map {
     public int getMinFoodLevel();
     public ZoneManager getZoneManager();
     public void queueEvent(String event, Object... args);
+    public ChatComponentText getInfoBar();
+    public float getInfoBarProgress();
+    public LocationHandler getLocationHandler();
 }

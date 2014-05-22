@@ -11,10 +11,7 @@ import jk_5.nailed.NailedLog;
 import jk_5.nailed.NailedServer;
 import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.concurrent.scheduler.NailedRunnable;
-import jk_5.nailed.api.map.GameManager;
-import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.Mappack;
-import jk_5.nailed.api.map.MappackMetadata;
+import jk_5.nailed.api.map.*;
 import jk_5.nailed.api.map.teleport.TeleportOptions;
 import jk_5.nailed.api.player.Player;
 import jk_5.nailed.api.scripting.IMount;
@@ -62,6 +59,7 @@ public class NailedMap implements Map {
     private NailedScoreboardManager scoreboardManager;
     private DefaultZoneManager zoneManager;
     private List<Player> players = Lists.newArrayList();
+    private LocationHandler locationHandler;
 
     private ServerMachine machine;
     public IMount mappackMount;
@@ -79,6 +77,7 @@ public class NailedMap implements Map {
         this.gameManager = new NailedGameManager(this);
         this.scoreboardManager = new NailedScoreboardManager(this);
         this.zoneManager = new DefaultZoneManager(this);
+        this.locationHandler = new LocationHandler(this);
 
         NailedAPI.getMapLoader().registerMap(this);
 
@@ -356,4 +355,12 @@ public class NailedMap implements Map {
     public void queueEvent(String event, Object... args) {
         this.getMachine().queueEvent(event, args);
     }
+
+    @Override
+    public ChatComponentText getInfoBar(){ return new ChatComponentText("{\"text\":\"\"}");}
+
+    @Override
+    public float getInfoBarProgress(){ return 1;}
+
+    public jk_5.nailed.api.map.LocationHandler getLocationHandler(){ return this.locationHandler; }
 }

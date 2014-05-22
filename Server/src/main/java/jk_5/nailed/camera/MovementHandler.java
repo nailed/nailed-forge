@@ -18,9 +18,7 @@ import java.util.List;
  */
 public class MovementHandler implements jk_5.nailed.api.camera.MovementHandler {
     private HashMap<Player, IMovement> movements = Maps.newHashMap();
-    private HashMap<String, Location> locations = Maps.newHashMap();
     private List<Player> players = Lists.newArrayList();
-
 
     public void addPlayerMovement(Player player, IMovement movement){
         if(movement == null || player == null) return;
@@ -57,25 +55,5 @@ public class MovementHandler implements jk_5.nailed.api.camera.MovementHandler {
                 player.setGameMode(Gamemode.SURVIVAL);
             }
         }
-    }
-
-    public void addLocation(String name, Location location){
-        if(!locations.containsKey(name) && !(location == null)){
-            locations.put(name, location);
-        }
-    }
-
-    public void removeLocation(String name){
-        if(locations.containsKey(name)) locations.remove(name);
-    }
-
-    public HashMap<String, Location> getLocations(){
-        return this.locations;
-    }
-
-    @Nullable
-    public Location getLocation(String name){
-        if (this.locations.containsKey(name)) return this.locations.get(name);
-        return null;
     }
 }

@@ -14,10 +14,13 @@ import jk_5.nailed.api.map.team.TeamBuilder;
 import jk_5.nailed.api.zone.IZone;
 import jk_5.nailed.map.Location;
 import jk_5.nailed.util.ChatColor;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.WorldSettings;
+import scala.util.parsing.json.JSONObject;
 
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,6 +52,8 @@ public class JsonMappackMetadata implements MappackMetadata {
     public int maxHealth;
     public PostGameAction postGameAction;
     public List<IZone> zones;
+    public List<ChatComponentText> infoBarItems;
+    public HashMap<String, Location> locations;
 
     public JsonMappackMetadata(JsonObject json){
         this.spawnPoint = json.has("spawnpoint") ? Location.readFrom(json.get("spawnpoint").getAsJsonObject()) : new Location(0, 64, 0, 0, 0);
@@ -103,6 +108,25 @@ public class JsonMappackMetadata implements MappackMetadata {
             for(JsonElement t : points){
                 this.randomSpawnpoints.add(Location.readFrom(t.getAsJsonObject()));
             }
+        }
+
+        this.infoBarItems = Lists.newArrayList();
+        if(json.has("infobaritems")){
+            JsonArray items = json.getAsJsonArray("infobaritems");
+            for(JsonElement i : items){
+                this.infoBarItems.add(new ChatComponentText(i.getAsString()));
+            }
+        }
+
+        this.locations = Maps.newHashMap();
+        if(json.has("locations")){
+            JsonArray array = json.getAsJsonArray("locations");
+            for( JsonElement element : array ){
+                if(element instanceof JsonObject){
+                    this.locations.put(((JsonObject) element).get("name").getAsString(), Location.readFrom((JsonObject) element));
+                }
+            }
+
         }
 
         //TODO: this is not used yet
@@ -208,4 +232,10 @@ public class JsonMappackMetadata implements MappackMetadata {
 
     @Override
     public PostGameAction getPostGameAction() { return this.postGameAction; }
+
+    @Override
+    public List<ChatComponentText> getInfoBarItems(){ return this.infoBarItems; }
+
+    @Override
+    public HashMap<String, Location> getLocations(){ return this.locations; }
 }

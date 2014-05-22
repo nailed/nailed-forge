@@ -3,10 +3,12 @@ package jk_5.nailed.api.map;
 import jk_5.nailed.api.WeatherType;
 import jk_5.nailed.api.map.team.TeamBuilder;
 import jk_5.nailed.map.Location;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.WorldSettings;
 
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,4 +39,6 @@ public interface MappackMetadata {
     int getMaxHealth();
     int getMinHealth();
     PostGameAction getPostGameAction();
+    List<ChatComponentText> getInfoBarItems();
+    HashMap<String, Location> getLocations();
 }

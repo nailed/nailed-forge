@@ -337,7 +337,7 @@ public class NailedPlayer implements Player, ILuaObject {
     }
 
     public void replacePlayerVisible(Player player, List<Player> players, Random random){
-        players.remove(this.playersVisible);
+        players.removeAll(this.playersVisible);
         this.playersVisible.remove(player);
         this.playersVisible.add(players.get(random.nextInt() % players.size()));
     }

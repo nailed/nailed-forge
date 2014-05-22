@@ -37,8 +37,8 @@ public class BezierMovement implements IMovement {
         double dx = nextLocation.getX() - lastLocation.getX();
         double dy = nextLocation.getY() - lastLocation.getY();
         double dz = nextLocation.getZ() - lastLocation.getZ();
-        currentLocation.setPitch((float) Math.asin(dx/dy));
-        currentLocation.setPitch((float) Math.asin(dz/Math.sqrt(dy*dy + dx * dx)));
+        currentLocation.setPitch((float) (Math.atan(dx/dy) / Math.PI * 180));
+        currentLocation.setPitch((float) (Math.asin(dz/Math.sqrt(dy*dy + dx * dx)) / Math.PI * 180));
 
         return currentLocation;
     }

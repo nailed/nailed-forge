@@ -4,6 +4,7 @@ import jk_5.nailed.api.concurrent.Callback;
 import jk_5.nailed.api.map.stat.StatConfig;
 import jk_5.nailed.api.scripting.IMount;
 import jk_5.nailed.api.zone.ZoneConfig;
+import net.minecraft.util.ChatComponentText;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
