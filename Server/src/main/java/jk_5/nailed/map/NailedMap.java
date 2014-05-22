@@ -360,7 +360,7 @@ public class NailedMap implements Map {
     }
 
     @Override
-    public ChatComponentText getInfoBar(){ return new ChatComponentText("{\"text\":\"\"}");}
+    public ChatComponentText getInfoBar(){return new ChatComponentText("");}
 
     @Override
     public float getInfoBarProgress(){ return 1;}
