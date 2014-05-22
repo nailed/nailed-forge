@@ -341,10 +341,12 @@ public class NailedMap implements Map {
         return this.machine;
     }
 
+    @Override
     public int getMaxFoodLevel(){
         return mappack.getMappackMetadata().getMaxFoodLevel();
     }
 
+    @Override
     public int getMinFoodLevel(){
         return mappack.getMappackMetadata().getMinFoodLevel();
     }
@@ -360,10 +362,17 @@ public class NailedMap implements Map {
     }
 
     @Override
-    public ChatComponentText getInfoBar(){return new ChatComponentText("");}
+    public ChatComponentText getInfoBar(){
+        return new ChatComponentText("");
+    }
 
     @Override
-    public float getInfoBarProgress(){ return 1;}
+    public float getInfoBarProgress(){
+        return 1;
+    }
 
-    public jk_5.nailed.api.map.LocationHandler getLocationHandler(){ return this.locationHandler; }
+    @Override
+    public jk_5.nailed.api.map.LocationHandler getLocationHandler(){
+        return this.locationHandler;
+    }
 }
