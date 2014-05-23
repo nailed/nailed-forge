@@ -1,12 +1,13 @@
 package jk_5.nailed.map;
 
-import com.google.common.base.Preconditions;
-import com.google.gson.JsonObject;
-import io.netty.buffer.ByteBuf;
-import jk_5.nailed.util.MathUtil;
-import net.minecraft.util.ChunkCoordinates;
+import javax.annotation.*;
 
-import javax.annotation.Nonnull;
+import com.google.common.base.*;
+import com.google.gson.*;
+
+import io.netty.buffer.*;
+
+import net.minecraft.util.*;
 
 /**
  * Represents a 3-dimensional location in a world
@@ -25,20 +26,20 @@ public class Location extends Point implements Cloneable {
      * @param y The y-coordinate of this new location
      * @param z The z-coordinate of this new location
      */
-    public Location(final double x, final double y, final double z){
+    public Location(final double x, final double y, final double z) {
         this(x, y, z, 0, 0);
     }
 
     /**
      * Constructs a new Location with the given coordinates and direction
      *
-     * @param x The x-coordinate of this new location
-     * @param y The y-coordinate of this new location
-     * @param z The z-coordinate of this new location
-     * @param yaw The absolute rotation on the x-plane, in degrees
+     * @param x     The x-coordinate of this new location
+     * @param y     The y-coordinate of this new location
+     * @param z     The z-coordinate of this new location
+     * @param yaw   The absolute rotation on the x-plane, in degrees
      * @param pitch The absolute rotation on the y-plane, in degrees
      */
-    public Location(final double x, final double y, final double z, final float yaw, final float pitch){
+    public Location(final double x, final double y, final double z, final float yaw, final float pitch) {
         super(x, y, z);
         this.pitch = pitch;
         this.yaw = yaw;
@@ -49,7 +50,7 @@ public class Location extends Point implements Cloneable {
      *
      * @param location The location to get all the properties from
      */
-    public Location(final Location location){
+    public Location(final Location location) {
         super(location);
         this.pitch = location.pitch;
         this.yaw = location.yaw;
@@ -60,7 +61,7 @@ public class Location extends Point implements Cloneable {
      *
      * @param coords The {@link ChunkCoordinates} to copy
      */
-    public Location(final ChunkCoordinates coords){
+    public Location(final ChunkCoordinates coords) {
         this(coords, 0, 0);
     }
 
@@ -68,10 +69,10 @@ public class Location extends Point implements Cloneable {
      * Constructs a new Location from {@link ChunkCoordinates}
      *
      * @param coords The {@link ChunkCoordinates} to copy
-     * @param yaw The absolute rotation on the x-plane, in degrees
-     * @param pitch The absolute rotation on the y-plane, in degrees
+     * @param yaw    The absolute rotation on the x-plane, in degrees
+     * @param pitch  The absolute rotation on the y-plane, in degrees
      */
-    public Location(final ChunkCoordinates coords, final float yaw, final float pitch){
+    public Location(final ChunkCoordinates coords, final float yaw, final float pitch) {
         super(coords);
         this.yaw = yaw;
         this.pitch = pitch;
@@ -91,7 +92,7 @@ public class Location extends Point implements Cloneable {
      *
      * @param yaw new rotation's yaw
      */
-    public void setYaw(float yaw){
+    public void setYaw(float yaw) {
         this.yaw = yaw;
     }
 
@@ -109,7 +110,7 @@ public class Location extends Point implements Cloneable {
      *
      * @return the rotation's yaw
      */
-    public float getYaw(){
+    public float getYaw() {
         return yaw;
     }
 
@@ -118,14 +119,14 @@ public class Location extends Point implements Cloneable {
      * <ul>
      * <li>A pitch of 0 represents level forward facing.
      * <li>A pitch of 90 represents downward facing, or negative y
-     *     direction.
+     * direction.
      * <li>A pitch of -90 represents upward facing, or positive y direction.
      * <ul>
      * Increasing pitch values the equivalent of looking down.
      *
      * @param pitch new incline's pitch
      */
-    public void setPitch(float pitch){
+    public void setPitch(float pitch) {
         this.pitch = pitch;
     }
 
@@ -134,14 +135,14 @@ public class Location extends Point implements Cloneable {
      * <ul>
      * <li>A pitch of 0 represents level forward facing.
      * <li>A pitch of 90 represents downward facing, or negative y
-     *     direction.
+     * direction.
      * <li>A pitch of -90 represents upward facing, or positive y direction.
      * <ul>
      * Increasing pitch values the equivalent of looking down.
      *
      * @return the incline's pitch
      */
-    public float getPitch(){
+    public float getPitch() {
         return pitch;
     }
 
@@ -152,7 +153,7 @@ public class Location extends Point implements Cloneable {
      * @return the same location
      * @throws NullPointerException when vec is null
      */
-    public Location add(@Nonnull Location vec){
+    public Location add(@Nonnull Location vec) {
         Preconditions.checkNotNull(vec, "vec");
 
         super.add(vec);
@@ -240,27 +241,27 @@ public class Location extends Point implements Cloneable {
         return this;
     }
 
-    public ChunkCoordinates toChunkCoordinates(){
+    public ChunkCoordinates toChunkCoordinates() {
         return new ChunkCoordinates(this.getBlockX(), this.getBlockY(), this.getBlockZ());
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null) {
+        if(obj == null){
             return false;
         }
-        if (getClass() != obj.getClass()) {
+        if(getClass() != obj.getClass()){
             return false;
         }
         final Location other = (Location) obj;
 
-        if (!super.equals(obj)){
+        if(!super.equals(obj)){
             return false;
         }
-        if (Float.floatToIntBits(this.pitch) != Float.floatToIntBits(other.pitch)) {
+        if(Float.floatToIntBits(this.pitch) != Float.floatToIntBits(other.pitch)){
             return false;
         }
-        if (Float.floatToIntBits(this.yaw) != Float.floatToIntBits(other.yaw)) {
+        if(Float.floatToIntBits(this.yaw) != Float.floatToIntBits(other.yaw)){
             return false;
         }
         return true;
@@ -284,7 +285,7 @@ public class Location extends Point implements Cloneable {
         return new Location(this.getX(), this.getY(), this.getZ(), this.pitch, this.yaw);
     }
 
-    public static Location readFrom(JsonObject json){
+    public static Location readFrom(JsonObject json) {
         double x = json.has("x") ? json.get("x").getAsDouble() : 0;
         double y = json.has("y") ? json.get("y").getAsDouble() : 64;
         double z = json.has("z") ? json.get("z").getAsDouble() : 0;

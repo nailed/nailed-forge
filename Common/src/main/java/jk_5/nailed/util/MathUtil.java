@@ -6,7 +6,9 @@ package jk_5.nailed.util;
  * @author jk-5
  */
 public final class MathUtil {
-    private MathUtil(){}
+
+    private MathUtil() {
+    }
 
     public static int floor(double num) {
         final int floor = (int) num;

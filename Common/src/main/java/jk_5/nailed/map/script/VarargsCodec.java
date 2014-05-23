@@ -11,11 +11,11 @@ import cpw.mods.fml.common.network.*;
  */
 public final class VarargsCodec {
 
-    private VarargsCodec(){
+    private VarargsCodec() {
 
     }
 
-    public static void writeObjects(ByteBuf buffer, Object... data){
+    public static void writeObjects(ByteBuf buffer, Object... data) {
         if(data == null){
             buffer.writeShort(0);
             return;
@@ -32,7 +32,7 @@ public final class VarargsCodec {
         }
     }
 
-    public static Object[] readObjects(ByteBuf buffer){
+    public static Object[] readObjects(ByteBuf buffer) {
         int length = buffer.readShort();
         Object[] ret = new Object[length];
         for(int i = 0; i < length; i++){

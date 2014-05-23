@@ -1,10 +1,11 @@
 package jk_5.nailed.network;
 
-import cpw.mods.fml.common.network.FMLIndexedMessageToMessageCodec;
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelHandlerContext;
-import jk_5.nailed.map.script.ScriptPacket;
+import io.netty.buffer.*;
+import io.netty.channel.*;
+
+import cpw.mods.fml.common.network.*;
+
+import jk_5.nailed.map.script.*;
 
 /**
  * No description given
@@ -14,7 +15,7 @@ import jk_5.nailed.map.script.ScriptPacket;
 @ChannelHandler.Sharable
 public class NailedPacketCodec extends FMLIndexedMessageToMessageCodec<NailedPacket> {
 
-    public NailedPacketCodec(){
+    public NailedPacketCodec() {
         //0
         this.addDiscriminator(1, NailedPacket.MovementEvent.class);
         this.addDiscriminator(2, NailedPacket.GuiReturnDataPacket.class);
@@ -42,12 +43,12 @@ public class NailedPacketCodec extends FMLIndexedMessageToMessageCodec<NailedPac
     }
 
     @Override
-    public void encodeInto(ChannelHandlerContext ctx, NailedPacket msg, ByteBuf target) throws Exception{
+    public void encodeInto(ChannelHandlerContext ctx, NailedPacket msg, ByteBuf target) throws Exception {
         msg.encode(target);
     }
 
     @Override
-    public void decodeInto(ChannelHandlerContext ctx, ByteBuf source, NailedPacket msg){
+    public void decodeInto(ChannelHandlerContext ctx, ByteBuf source, NailedPacket msg) {
         msg.decode(source);
     }
 }

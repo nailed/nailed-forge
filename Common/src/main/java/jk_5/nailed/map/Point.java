@@ -1,17 +1,20 @@
 package jk_5.nailed.map;
 
-import com.google.common.base.Preconditions;
-import io.netty.buffer.ByteBuf;
-import jk_5.nailed.util.MathUtil;
-import net.minecraft.util.ChunkCoordinates;
+import javax.annotation.*;
 
-import javax.annotation.Nonnull;
+import com.google.common.base.*;
+
+import io.netty.buffer.*;
+
+import net.minecraft.util.*;
+
+import jk_5.nailed.util.*;
 
 
 /**
  * Created by matthias on 22-5-14.
  */
-public class Point implements Cloneable{
+public class Point implements Cloneable {
 
     private double x;
     private double y;
@@ -24,7 +27,7 @@ public class Point implements Cloneable{
      * @param y The y-coordinate of this new point
      * @param z The z-coordinate of this new point
      */
-    public Point(double x, double y, double z){
+    public Point(double x, double y, double z) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -35,7 +38,7 @@ public class Point implements Cloneable{
      *
      * @param point The point to get all the properties from
      */
-    public Point(Point point){
+    public Point(Point point) {
         this.x = point.x;
         this.y = point.y;
         this.z = point.z;
@@ -47,7 +50,7 @@ public class Point implements Cloneable{
      * @param coords The {@link ChunkCoordinates} to copy
      */
 
-    public Point(ChunkCoordinates coords){
+    public Point(ChunkCoordinates coords) {
         this.x = coords.posX;
         this.y = coords.posY;
         this.z = coords.posZ;
@@ -77,7 +80,7 @@ public class Point implements Cloneable{
      *
      * @return block X
      */
-    public int getBlockX(){
+    public int getBlockX() {
         return locToBlock(x);
     }
 
@@ -86,7 +89,7 @@ public class Point implements Cloneable{
      *
      * @param y y-coordinate
      */
-    public void setY(double y){
+    public void setY(double y) {
         this.y = y;
     }
 
@@ -95,7 +98,7 @@ public class Point implements Cloneable{
      *
      * @return y-coordinate
      */
-    public double getY(){
+    public double getY() {
         return y;
     }
 
@@ -105,7 +108,7 @@ public class Point implements Cloneable{
      *
      * @return block y
      */
-    public int getBlockY(){
+    public int getBlockY() {
         return locToBlock(y);
     }
 
@@ -114,7 +117,7 @@ public class Point implements Cloneable{
      *
      * @param z z-coordinate
      */
-    public void setZ(double z){
+    public void setZ(double z) {
         this.z = z;
     }
 
@@ -123,7 +126,7 @@ public class Point implements Cloneable{
      *
      * @return z-coordinate
      */
-    public double getZ(){
+    public double getZ() {
         return z;
     }
 
@@ -133,7 +136,7 @@ public class Point implements Cloneable{
      *
      * @return block z
      */
-    public int getBlockZ(){
+    public int getBlockZ() {
         return locToBlock(z);
     }
 
@@ -153,14 +156,14 @@ public class Point implements Cloneable{
         return this;
     }
 
-        /**
-         * Adds the point by another. Not world-aware.
-         *
-         * @param x X coordinate
-         * @param y Y coordinate
-         * @param z Z coordinate
-         * @return the same point
-         */
+    /**
+     * Adds the point by another. Not world-aware.
+     *
+     * @param x X coordinate
+     * @param y Y coordinate
+     * @param z Z coordinate
+     * @return the same point
+     */
     public Point add(double x, double y, double z) {
         this.x -= x;
         this.y -= y;
@@ -177,7 +180,7 @@ public class Point implements Cloneable{
      * @param z Z coordinate
      * @return the same point
      */
-    public Point subtract(double x, double y, double z){
+    public Point subtract(double x, double y, double z) {
         this.x -= x;
         this.y -= y;
         this.z -= z;
@@ -191,7 +194,7 @@ public class Point implements Cloneable{
      * @return the same point
      * @throws NullPointerException when vec is null
      */
-    public Point subtract(Point vec){
+    public Point subtract(Point vec) {
         this.x -= vec.x;
         this.y -= vec.y;
         this.z -= vec.z;
@@ -235,7 +238,7 @@ public class Point implements Cloneable{
      * @param m The factor
      * @return the same point
      */
-    public Point multiply(double m){
+    public Point multiply(double m) {
         this.x *= m;
         this.y *= m;
         this.z *= m;
@@ -265,14 +268,14 @@ public class Point implements Cloneable{
         return MathUtil.floor(loc);
     }
 
-    public void write(ByteBuf buffer){
+    public void write(ByteBuf buffer) {
         buffer.writeDouble(this.x);
         buffer.writeDouble(this.y);
         buffer.writeDouble(this.z);
     }
 
     @Override
-    public int hashCode(){
+    public int hashCode() {
         int hash = 3;
 
         hash = 19 * hash + (int) (Double.doubleToLongBits(this.x) ^ (Double.doubleToLongBits(this.x) >>> 32));

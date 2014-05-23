@@ -6,5 +6,6 @@ package jk_5.nailed.map.script;
  * @author jk-5
  */
 public interface ITerminal {
+
     Terminal getTerminal();
 }

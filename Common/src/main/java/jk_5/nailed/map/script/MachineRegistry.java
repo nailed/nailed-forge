@@ -14,7 +14,7 @@ public class MachineRegistry<T extends IMachine> {
     private static final AtomicInteger nextMachineId = new AtomicInteger(0);
     private final TIntObjectHashMap<Entry> machines = new TIntObjectHashMap<Entry>();
 
-    public int getUnusedInstanceID(){
+    public int getUnusedInstanceID() {
         int i = 0;
         while(this.machines.containsKey(i)){
             i++;
@@ -22,38 +22,39 @@ public class MachineRegistry<T extends IMachine> {
         return i;
     }
 
-    public T get(int id){
+    public T get(int id) {
         if(this.machines.containsKey(id)){
             return this.machines.get(id).machine;
         }
         return null;
     }
 
-    public void add(int id, T machine){
+    public void add(int id, T machine) {
         if(id >= 0 && !this.machines.containsKey(id)){
             this.machines.put(id, new Entry(machine));
         }
     }
 
-    public void remove(int id){
+    public void remove(int id) {
         if(this.machines.containsKey(id)){
             this.machines.remove(id);
         }
     }
 
-    public void reset(){
+    public void reset() {
         this.machines.clear();
     }
 
     private class Entry {
+
         public final T machine;
 
-        public Entry(T machine){
+        public Entry(T machine) {
             this.machine = machine;
         }
     }
 
-    public static int getNextId(){
+    public static int getNextId() {
         return nextMachineId.getAndIncrement();
     }
 }
