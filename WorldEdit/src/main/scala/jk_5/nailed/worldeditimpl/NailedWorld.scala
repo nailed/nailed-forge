@@ -25,6 +25,9 @@ import net.minecraft.enchantment.Enchantment
 import net.minecraft.block.Block
 import java.util
 import scala.Some
+import com.sk89q.worldedit.util.TreeGenerator
+import java.util.Random
+import com.sk89q.worldedit.regions.Region
 
 /**
  * No description given
@@ -48,6 +51,67 @@ object NailedWorld {
     val bl = Block.getBlockById(id)
     if(bl == null) Blocks.air else bl
   }
+
+  private def isEntityOfType(entity: Entity, typ: EntityType): Boolean = typ match {
+    case EntityType.ALL =>
+      entity.isInstanceOf[EntityBoat] || entity.isInstanceOf[EntityItem] || entity.isInstanceOf[EntityFallingBlock] || entity.isInstanceOf[EntityMinecart] || entity.isInstanceOf[EntityHanging] || entity.isInstanceOf[EntityTNTPrimed] || entity.isInstanceOf[EntityXPOrb] || entity.isInstanceOf[EntityEnderEye] || entity.isInstanceOf[IProjectile]
+    case EntityType.PROJECTILES | EntityType.ARROWS =>
+      entity.isInstanceOf[EntityEnderEye] || entity.isInstanceOf[IProjectile]
+    case EntityType.BOATS =>
+      entity.isInstanceOf[EntityBoat]
+    case EntityType.ITEMS =>
+      entity.isInstanceOf[EntityItem]
+    case EntityType.FALLING_BLOCKS =>
+      entity.isInstanceOf[EntityFallingBlock]
+    case EntityType.MINECARTS =>
+      entity.isInstanceOf[EntityMinecart]
+    case EntityType.PAINTINGS =>
+      entity.isInstanceOf[EntityPainting]
+    case EntityType.ITEM_FRAMES =>
+      entity.isInstanceOf[EntityItemFrame]
+    case EntityType.TNT =>
+      entity.isInstanceOf[EntityTNTPrimed]
+    case EntityType.XP_ORBS =>
+      entity.isInstanceOf[EntityXPOrb]
+    case _ => false
+  }
+
+  private def getTreeGeneratorByType(typ: TreeGenerator.TreeType, rand: Random): WorldGenerator = typ match {
+    case TreeGenerator.TreeType.ACACIA =>
+      new WorldGenSavannaTree(true)
+    case TreeGenerator.TreeType.BIG_TREE =>
+      new WorldGenBigTree(true)
+    case TreeGenerator.TreeType.BIRCH =>
+      new WorldGenForest(true, false)
+    case TreeGenerator.TreeType.BROWN_MUSHROOM =>
+      new WorldGenBigMushroom(0)
+    case TreeGenerator.TreeType.DARK_OAK =>
+      new WorldGenCanopyTree(true)
+    case TreeGenerator.TreeType.JUNGLE =>
+      new WorldGenMegaJungle(true, 10, 20, 3, 3)
+    case TreeGenerator.TreeType.JUNGLE_BUSH =>
+      new WorldGenShrub(3, 0)
+    case TreeGenerator.TreeType.MEGA_REDWOOD =>
+      new WorldGenMegaPineTree(true, rand.nextBoolean)
+    case TreeGenerator.TreeType.REDWOOD =>
+      new WorldGenTaiga2(true)
+    case TreeGenerator.TreeType.RED_MUSHROOM =>
+      new WorldGenBigMushroom(1)
+    case TreeGenerator.TreeType.SMALL_JUNGLE =>
+      new WorldGenTrees(true, 4 + rand.nextInt(7), 3, 3, false)
+    case TreeGenerator.TreeType.SWAMP =>
+      new WorldGenSwamp
+    case TreeGenerator.TreeType.TALL_BIRCH =>
+      new WorldGenForest(true, true)
+    case TreeGenerator.TreeType.TALL_REDWOOD =>
+      new WorldGenTaiga1
+    case TreeGenerator.TreeType.TREE =>
+      new WorldGenTrees(true)
+    case _ => null
+  }
+
+  @inline def getBaseBlock(block: Block) = new BaseBlock(net.minecraft.block.Block.getIdFromBlock(block))
+  @inline def getBaseBlock(block: Block, metaData: Int) = new BaseBlock(net.minecraft.block.Block.getIdFromBlock(block), metaData)
 }
 class NailedWorld private (val world: WeakReference[World]) extends LocalWorld {
 
@@ -188,33 +252,31 @@ class NailedWorld private (val world: WeakReference[World]) extends LocalWorld {
       theWorld.loadedEntityList.asInstanceOf[util.List[Entity]].foreach {
         case e: EntityLiving =>
           val distanceTo = if(radius < 0) 0 else origin.distanceSq(new Vector(e.posX, e.posY, e.posZ))
-          if (distanceTo <= sqRadius && NailedWorld.isEntityOfType(entity, typ)) {
+          if (distanceTo <= sqRadius && NailedWorld.isEntityOfType(e, typ)) {
             e.isDead = true
             count += 1
           }
         case _ =>
       }
+      count
     case _ => 0
   }
 
-  def regenerate(region: Region, editSession: EditSession): Boolean = {
-    var result: Boolean = false
-    val chunks: Set[Vector2D] = region.getChunks
-    for (chunk <- chunks) {
-      val theWorld: World = this.world.get
-      if (theWorld != null) {
-        val chunkCoords: Vector = new Vector(chunk.getBlockX * 16, 0, chunk.getBlockZ * 16)
-        val chunkData: Array[BaseBlock] = this.getChunkData(chunkCoords, editSession)
-        if (this.regenChunk(chunk, theWorld)) {
+  def regenerate(region: Region, editSession: EditSession): Boolean = this.world.get match {
+    case Some(theWorld) =>
+      var result = false
+      region.getChunks.foreach(chunk => {
+        val chunkCoords = new Vector(chunk.getBlockX * 16, 0, chunk.getBlockZ * 16)
+        val chunkData = this.getChunkData(chunkCoords, editSession)
+        if(this.regenChunk(chunk, theWorld)){
           result = true
           this.applyChanges(chunkCoords, chunkData, editSession, region, theWorld)
-        }
-        else {
+        }else{
           result = false
         }
-      }
-    }
-    return result
+      })
+      result
+    case _ => false
   }
 
   def getChunkData(chunkCoords: Vector, session: EditSession): Array[BaseBlock] = {
@@ -452,105 +514,21 @@ class NailedWorld private (val world: WeakReference[World]) extends LocalWorld {
     return false
   }
 
-  @SuppressWarnings(Array("deprecation")) def getBaseBlock(block: Block): BaseBlock = {
-    val `type`: Int = net.minecraft.block.Block.getIdFromBlock(block)
-    return new BaseBlock(`type`)
+  private def getBlockAt(pt: Vector): Block = this.world.get match {
+    case Some(theWorld) => theWorld.getBlock(pt.getBlockX, pt.getBlockY, pt.getBlockZ)
+    case _ => Blocks.air
   }
 
-  @SuppressWarnings(Array("deprecation")) def getBaseBlock(block: Block, metaData: Int): BaseBlock = {
-    val `type`: Int = net.minecraft.block.Block.getIdFromBlock(block)
-    return new BaseBlock(`type`, metaData)
+  override def equals(other: AnyRef): Boolean = other match {
+    case w: NailedWorld =>
+      val world = w.world.get
+      if(world != null){
+        world == this.world.get
+      }else{
+        this.world.get == null
+      }
+    case _ => false
   }
 
-  private def getBlockAt(pt: Vector): Block = {
-    val theWorld: World = this.world.get
-    if (theWorld != null) {
-      return theWorld.getBlock(pt.getBlockX, pt.getBlockY, pt.getBlockZ)
-    }
-    return Blocks.air
-  }
-
-  @SuppressWarnings(Array("deprecation")) def getBlockById(`type`: Int): Block = {
-    val block: Block = net.minecraft.block.Block.getBlockById(`type`)
-    return if (block != null) block else Blocks.air
-  }
-
-  @SuppressWarnings(Array("deprecation")) private def getIdFromBlock(block: Block): Int = {
-    return if (block == null) 0 else net.minecraft.block.Block.getIdFromBlock(block)
-  }
-
-  def equals(other: AnyRef): Boolean = {
-    if (other.isInstanceOf[VanillaWorld]) {
-      val otherWorld: World = (other.asInstanceOf[VanillaWorld]).world.get
-      return if (otherWorld != null) (otherWorld == this.world.get) else this.world.get == null
-    }
-    return false
-  }
-
-  def hashCode: Int = {
-    return if (this.world.get != null) this.world.get.hashCode else 0
-  }
-
-  @SuppressWarnings(Array("deprecation")) private def isEntityOfType(entity: Entity, `type`: EntityType): Boolean = {
-    `type` match {
-      case ALL =>
-        return entity.isInstanceOf[EntityBoat] || entity.isInstanceOf[EntityItem] || entity.isInstanceOf[EntityFallingBlock] || entity.isInstanceOf[EntityMinecart] || entity.isInstanceOf[EntityHanging] || entity.isInstanceOf[EntityTNTPrimed] || entity.isInstanceOf[EntityXPOrb] || entity.isInstanceOf[EntityEnderEye] || entity.isInstanceOf[IProjectile]
-      case PROJECTILES =>
-      case ARROWS =>
-        return entity.isInstanceOf[EntityEnderEye] || entity.isInstanceOf[IProjectile]
-      case BOATS =>
-        return entity.isInstanceOf[EntityBoat]
-      case ITEMS =>
-        return entity.isInstanceOf[EntityItem]
-      case FALLING_BLOCKS =>
-        return entity.isInstanceOf[EntityFallingBlock]
-      case MINECARTS =>
-        return entity.isInstanceOf[EntityMinecart]
-      case PAINTINGS =>
-        return entity.isInstanceOf[EntityPainting]
-      case ITEM_FRAMES =>
-        return entity.isInstanceOf[EntityItemFrame]
-      case TNT =>
-        return entity.isInstanceOf[EntityTNTPrimed]
-      case XP_ORBS =>
-        return entity.isInstanceOf[EntityXPOrb]
-    }
-    return false
-  }
-
-  private def getTreeGeneratorByType(`type`: TreeGenerator.TreeType, rand: Random): WorldGenerator = {
-    `type` match {
-      case ACACIA =>
-        return new WorldGenSavannaTree(true)
-      case BIG_TREE =>
-        return new WorldGenBigTree(true)
-      case BIRCH =>
-        return new WorldGenForest(true, false)
-      case BROWN_MUSHROOM =>
-        return new WorldGenBigMushroom(0)
-      case DARK_OAK =>
-        return new WorldGenCanopyTree(true)
-      case JUNGLE =>
-        return new WorldGenMegaJungle(true, 10, 20, 3, 3)
-      case JUNGLE_BUSH =>
-        return new WorldGenShrub(3, 0)
-      case MEGA_REDWOOD =>
-        return new WorldGenMegaPineTree(true, rand.nextBoolean)
-      case REDWOOD =>
-        return new WorldGenTaiga2(true)
-      case RED_MUSHROOM =>
-        return new WorldGenBigMushroom(1)
-      case SMALL_JUNGLE =>
-        return new WorldGenTrees(true, 4 + rand.nextInt(7), 3, 3, false)
-      case SWAMP =>
-        return new WorldGenSwamp
-      case TALL_BIRCH =>
-        return new WorldGenForest(true, true)
-      case TALL_REDWOOD =>
-        return new WorldGenTaiga1
-      case TREE =>
-        return new WorldGenTrees(true)
-    }
-    return null
-  }
+  override def hashCode = if(this.world.get != null) this.world.get.hashCode else 0
 }
