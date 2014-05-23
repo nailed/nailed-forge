@@ -1,4 +1,4 @@
-package jk_5.nailed.worldeditimpl.impl
+package jk_5.nailed.worldeditimpl
 
 import com.sk89q.worldedit.blocks.BaseBlock
 import com.sk89q.worldedit.Vector
@@ -10,7 +10,7 @@ import net.minecraft.nbt.NBTTagCompound
  *
  * @author jk-5
  */
-class NailedTileEntityBlock(typ: Int, data: Int, var tile: TileEntity) extends BaseBlock(typ, data) {
+class NailedTileEntityBlock(val typ: Int, val data: Int, var tile: TileEntity) extends BaseBlock(typ, data) {
 
   override def getNbtId: String = {
     val tag = new NBTTagCompound
@@ -20,6 +20,11 @@ class NailedTileEntityBlock(typ: Int, data: Int, var tile: TileEntity) extends B
     }catch{
       case e: Exception => ""
     }
+  }
+
+  def setTileEntity(tileEntity: TileEntity): NailedTileEntityBlock = {
+    this.tile = tileEntity
+    this
   }
 
   def createCopyAt(pt: Vector): TileEntity = try{

@@ -12,7 +12,7 @@
         <module name="RedundantImport"/>
         <module name="UnusedImports"/>
         <module name="MethodName">
-            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
+            <property name="format" value="^[a-z][a-zA-Z0-9_]*$"/>
         </module>
         <!--<module name="ImportOrder">
             <property name="groups" value="java,com,org,io,net.minecraft,cpw,net.minecraftforge,jk_5"/>
