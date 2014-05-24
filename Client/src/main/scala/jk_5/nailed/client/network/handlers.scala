@@ -93,6 +93,11 @@ object TerminalGuiHandler extends SimpleChannelInboundHandler[NailedPacket.OpenT
   }
 }
 
+object RenderListhandler extends SimpleChannelInboundHandler[NailedPacket.RenderList]{
+  override def channelRead0(ctx: ChannelHandlerContext, msg: NailedPacket.RenderList){
+  }
+}
+
 object TileEntityDataHandler extends SimpleChannelInboundHandler[TileEntityData] {
   override def channelRead0(ctx: ChannelHandlerContext, msg: TileEntityData){
     val tile = mc.theWorld.getTileEntity(msg.x, msg.y, msg.z)
