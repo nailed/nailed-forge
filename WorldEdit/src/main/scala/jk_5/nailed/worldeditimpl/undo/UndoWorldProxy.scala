@@ -33,7 +33,7 @@ object UndoWorldProxy {
     new WorldSettings(UndoWorldProxy.pendingWorldInfo)
   }
 }
-class UndoWorldProxy(val editSession: EditSession, val proxy: World) extends World(null, "Undo", new UndoWorldProviderProxy, UndoWorldProxy.getWorldSettings(proxy), proxy.theProfiler) {
+class UndoWorldProxy(val editSession: EditSession, val proxy: World) extends World(null, "Undo", UndoWorldProxy.getWorldSettings(proxy), new UndoWorldProviderProxy, proxy.theProfiler) {
   UndoWorldProxy.pendingWorldInfo = null
 
   def createChunkProvider: IChunkProvider = null
