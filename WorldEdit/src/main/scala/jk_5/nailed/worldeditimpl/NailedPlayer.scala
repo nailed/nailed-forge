@@ -16,7 +16,7 @@ import com.sk89q.worldedit.cui.CUIEvent
 object NailedPlayer {
   def apply(server: NailedServerInterface, player: EntityPlayerMP) = new NailedPlayer(server, new WeakReference[EntityPlayerMP](player))
 }
-class NailedPlayer private (val server: NailedServerInterface, val player: WeakReference[EntityPlayerMP]) extends LocalPlayer(server) {
+class NailedPlayer private (val srv: NailedServerInterface, val player: WeakReference[EntityPlayerMP]) extends LocalPlayer(srv) {
 
   final val CHATPREFIX = ""
   val playerName: String = player.get.get.getCommandSenderName
@@ -87,6 +87,6 @@ class NailedPlayer private (val server: NailedServerInterface, val player: WeakR
   }
 
   override def dispatchCUIEvent(event: CUIEvent){
-    this.server.asInstanceOf[NailedServerInterface].dispatchCUIEvent(this, event)
+    this.srv.asInstanceOf[NailedServerInterface].dispatchCUIEvent(this, event)
   }
 }

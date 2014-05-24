@@ -447,7 +447,7 @@ class NailedWorld private (val world: WeakReference[World]) extends LocalWorld {
     case _ => Blocks.air
   }
 
-  override def equals(other: AnyRef): Boolean = other match {
+  override def equals(other: Any): Boolean = other match {
     case w: NailedWorld =>
       val world = w.world.get
       if(world != null){
