@@ -2,7 +2,6 @@ package jk_5.nailed.worldeditimpl
 
 import com.sk89q.worldedit.{LocalPlayer, LocalWorld, ServerInterface}
 import net.minecraft.server.MinecraftServer
-import com.mumfrey.worldeditwrapper.impl.VanillaBiomeTypes
 import net.minecraft.entity.player.{EntityPlayer, EntityPlayerMP}
 import net.minecraft.command.CommandHandler
 import net.minecraft.entity.EntityList
@@ -21,10 +20,10 @@ import com.sk89q.worldedit.cui.CUIEvent
  */
 class NailedServerInterface(val server: MinecraftServer) extends ServerInterface {
 
-  final val players = mutable.HashMap[String, VanillaPlayer]()
-  final val tasks = mutable.ArrayBuffer[WorldEditScheduledTask]()
+  final val players = mutable.HashMap[String, NailedPlayer]()
+  final val tasks = mutable.ArrayBuffer[NailedScheduledTask]()
 
-  def getLocalPlayer(player: EntityPlayer): VanillaPlayer = {
+  def getLocalPlayer(player: EntityPlayer): NailedPlayer = {
     val playerName = player.getCommandSenderName
     var localPlayer = this.players.get(playerName)
     localPlayer match {
@@ -34,20 +33,20 @@ class NailedServerInterface(val server: MinecraftServer) extends ServerInterface
     localPlayer match {
       case Some(p) =>
       case None =>
-        localPlayer = Some(new VanillaPlayer(this, player.asInstanceOf[EntityPlayerMP]))
+        localPlayer = Some(NailedPlayer(this, player.asInstanceOf[EntityPlayerMP]))
         this.players.put(playerName, localPlayer.get)
     }
     localPlayer.get
   }
 
   override def reload() = this.tasks.clear()
-  override def getBiomes = VanillaBiomeTypes.getInstance
+  override def getBiomes = NailedBiomeTypes
   override def isValidMobType(typ: String) = EntityList.stringToClassMapping.containsKey(typ)
 
   override def getWorlds: util.List[LocalWorld] = {
     val worlds = new util.ArrayList[LocalWorld](this.server.worldServers.length)
     for(world <- this.server.worldServers){
-      worlds.add(VanillaWorld.getLocalWorld(world))
+      worlds.add(NailedWorld(world))
     }
     worlds
   }
@@ -80,14 +79,13 @@ class NailedServerInterface(val server: MinecraftServer) extends ServerInterface
   }
 
   override def schedule(delay: Long, period: Long, task: Runnable): Int = {
-    val scheduledTask: WorldEditScheduledTask = new WorldEditScheduledTask(task, period, delay)
-    this.tasks.add(scheduledTask)
+    this.tasks.add(new NailedScheduledTask(task, period, delay))
     this.tasks.size - 1
   }
 
   def onTick() = this.tasks.foreach(_.onTick())
 
-  def dispatchCUIEvent(localPlayer: VanillaPlayer, event: CUIEvent){
+  def dispatchCUIEvent(localPlayer: NailedPlayer, event: CUIEvent){
     val message = this.packCUIEvent(event)
     WorldEditNetworkHandler.sendMessageToPlayer(localPlayer.getPlayer, message)
   }

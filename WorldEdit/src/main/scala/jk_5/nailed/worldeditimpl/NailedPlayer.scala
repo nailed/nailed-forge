@@ -26,92 +26,64 @@ class NailedPlayer private (val server: NailedServerInterface, val player: WeakR
   override def getGroups = Array[String]()
   override def getInventoryBlockBag: BlockBag = null
 
-  def getItemInHand: Int = {
-    val thePlayer = this.player.get
-    if(thePlayer.isEmpty) return 0
-    val stack = thePlayer.get.getCurrentEquippedItem
-    if(stack != null){
-      val item = stack.getItem
-      if(item != null){
-        return Item.getIdFromItem(item)
+  def getItemInHand: Int = this.player.get match {
+    case Some(thePlayer) =>
+      val stack = thePlayer.getCurrentEquippedItem
+      if(stack != null){
+        val item = stack.getItem
+        if(item != null){
+          return Item.getIdFromItem(item)
+        }
       }
-    }
-    0
+      0
+    case _ => 0
   }
 
-  def getPitch: Double = {
-    val thePlayer = this.player.get
-    if(thePlayer.isDefined) thePlayer.get.rotationPitch else 0.0
+  def getPitch: Double = this.player.get match {
+    case Some(thePlayer) => thePlayer.rotationPitch
+    case _ => 0.0
   }
 
-  def getYaw: Double = {
-    val thePlayer = this.player.get
-    if(thePlayer.isDefined) thePlayer.get.rotationYaw else 0.0
+  def getYaw: Double = this.player.get match {
+    case Some(thePlayer) => thePlayer.rotationYaw
+    case _ => 0.0
   }
 
-  def getPosition: WorldVector = {
-    val thePlayer = this.player.get
-    if(thePlayer.isDefined){
-      new Nothing(VanillaWorld.getLocalWorld(thePlayer.get.worldObj), thePlayer.get.posX, thePlayer.get.posY, thePlayer.get.posZ)
-    }else null
+  def getPosition: WorldVector = this.player.get match {
+    case Some(thePlayer) => new WorldVector(NailedWorld(thePlayer.worldObj), thePlayer.posX, thePlayer.posY, thePlayer.posZ)
+    case _ => null
   }
 
-  def setPosition(pos: Vector, pitch: Float, yaw: Float) {
-    val thePlayer = this.player.get
-    if(thePlayer.isDefined){
-      thePlayer.get.playerNetServerHandler.setPlayerLocation(pos.getX, pos.getY, pos.getZ, yaw, pitch)
-    }
+  def setPosition(pos: Vector, pitch: Float, yaw: Float) = this.player.get match {
+    case Some(thePlayer) => thePlayer.playerNetServerHandler.setPlayerLocation(pos.getX, pos.getY, pos.getZ, yaw, pitch)
+    case _ =>
   }
 
-  def getWorld: LocalWorld = {
-    val thePlayer = this.player.get
-    if(thePlayer.isDefined){
-      VanillaWorld.getLocalWorld(thePlayer.get.worldObj)
-    }else null
+  def getWorld: LocalWorld = this.player.get match {
+    case Some(thePlayer) => NailedWorld(thePlayer.worldObj)
+    case _ => null
   }
 
-  def giveItem(typ: Int, amt: Int) {
-    val thePlayer = this.player.get
-    if(thePlayer.isDefined){
+  def giveItem(typ: Int, amt: Int) = this.player.get match {
+    case Some(thePlayer) =>
       val item = Item.getItemById(typ)
       if(item != null){
         val stack = new ItemStack(item, amt, 0)
-        thePlayer.get.inventory.addItemStackToInventory(stack)
+        thePlayer.inventory.addItemStackToInventory(stack)
       }
-    }
+    case _ =>
   }
 
   def hasPermission(perm: String) = this.player.get.isDefined //TODO
 
-  def print(msg: String){
-    for(line <- msg.split("\n")){
-      this.sendMessage(CHATPREFIX + EnumChatFormatting.LIGHT_PURPLE + line)
-    }
-  }
+  def print(msg: String) = msg.split("\n").foreach(l => this.sendMessage(CHATPREFIX + EnumChatFormatting.LIGHT_PURPLE + l))
+  def printDebug(msg: String) = msg.split("\n").foreach(l => this.sendMessage(CHATPREFIX + EnumChatFormatting.GRAY + l))
+  def printError(msg: String) = msg.split("\n").foreach(l => this.sendMessage(CHATPREFIX + EnumChatFormatting.RED + l))
+  def printRaw(msg: String) = msg.split("\n").foreach(l => this.sendMessage(CHATPREFIX + l))
 
-  def printDebug(msg: String){
-    for(line <- msg.split("\n")){
-      this.sendMessage(CHATPREFIX + EnumChatFormatting.GRAY + line)
-    }
-  }
-
-  def printError(msg: String){
-    for(line <- msg.split("\n")){
-      this.sendMessage(CHATPREFIX + EnumChatFormatting.RED + line)
-    }
-  }
-
-  def printRaw(msg: String){
-    for(line <- msg.split("\n")){
-      this.sendMessage(CHATPREFIX + line)
-    }
-  }
-
-  private def sendMessage(message: String){
-    val thePlayer = this.player.get
-    if(thePlayer.isDefined){
-      thePlayer.get.addChatMessage(new ChatComponentText(message))
-    }
+  def sendMessage(msg: String) = this.player.get match {
+    case Some(thePlayer) => thePlayer.addChatMessage(new ChatComponentText(msg))
+    case _ =>
   }
 
   override def dispatchCUIEvent(event: CUIEvent){

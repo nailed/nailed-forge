@@ -75,7 +75,7 @@ object NailedWorldEdit {
   @SubscribeEvent def onPlayerInteract(event: PlayerInteractEvent){
     if(this.worldEdit == null || this.server == null) return
     val player = this.server.getLocalPlayer(event.entityPlayer)
-    val world = VanillaWorld.getLocalWorld(event.entityPlayer.worldObj)
+    val world = NailedWorld(event.entityPlayer.worldObj)
     val vec = new WorldVector(world, event.x, event.y, event.z)
 
     event.action match {

@@ -11,12 +11,9 @@ import net.minecraft.entity.passive.{EntityAmbientCreature, EntityVillager, Enti
 import net.minecraft.entity.monster.EntityGolem
 import net.minecraft.world.chunk.{Chunk, IChunkProvider}
 import net.minecraft.world.gen.ChunkProviderServer
-import com.mumfrey.worldeditwrapper.reflect.PrivateFields
 import net.minecraft.util.LongHashMap
 import net.minecraft.world.biome.BiomeGenBase
-import net.minecraft.server.management.PlayerManager
 import net.minecraft.world.gen.feature._
-import com.mumfrey.worldeditwrapper.impl.undo.UndoWorldProxy
 import net.minecraft.init.Blocks
 import net.minecraft.item.{Item, ItemStack}
 import scala.ref.WeakReference
@@ -24,10 +21,12 @@ import scala.collection.JavaConversions._
 import net.minecraft.enchantment.Enchantment
 import net.minecraft.block.Block
 import java.util
-import scala.Some
 import com.sk89q.worldedit.util.TreeGenerator
 import java.util.Random
 import com.sk89q.worldedit.regions.Region
+import scala.Some
+import cpw.mods.fml.common.ObfuscationReflectionHelper
+import jk_5.nailed.worldeditimpl.undo.UndoWorldProxy
 
 /**
  * No description given
@@ -281,237 +280,166 @@ class NailedWorld private (val world: WeakReference[World]) extends LocalWorld {
 
   def getChunkData(chunkCoords: Vector, session: EditSession): Array[BaseBlock] = {
     val chunkData: Array[BaseBlock] = new Array[BaseBlock](16 * 16 * (this.getMaxY + 1))
-    {
-      var x: Int = 0
-      while (x < 16) {
-        {
-          {
-            var y: Int = 0
-            while (y <= this.getMaxY) {
-              {
-                {
-                  var z: Int = 0
-                  while (z < 16) {
-                    {
-                      val pt: Vector = chunkCoords.add(x, y, z)
-                      val index: Int = y * 16 * 16 + z * 16 + x
-                      chunkData(index) = session.getBlock(pt)
-                    }
-                    ({
-                      z += 1; z - 1
-                    })
-                  }
-                }
-              }
-              ({
-                y += 1; y - 1
-              })
-            }
-          }
+    for(x <- 0 until 16){
+      for(y <- 0 until this.getMaxY){
+        for(z <- 0 until 16){
+          val pt = chunkCoords.add(x, y, z)
+          val index = y * 16 * 16 + z * 16 + x
+          chunkData(index) = session.getBlock(pt)
         }
-        ({
-          x += 1; x - 1
-        })
       }
     }
-    return chunkData
+    chunkData
   }
 
   def regenChunk(chunkCoords: Vector2D, world: World): Boolean = {
-    try {
-      val provider: IChunkProvider = world.getChunkProvider
-      if (!(provider.isInstanceOf[ChunkProviderServer])) {
-        return false
+    try{
+      val provider = world.getChunkProvider
+      if(!provider.isInstanceOf[ChunkProviderServer]) return false
+      val chunkServer = provider.asInstanceOf[ChunkProviderServer]
+      val cls = classOf[ChunkProviderServer]
+
+      val chunksToUnload: util.Set[_] = ObfuscationReflectionHelper.getPrivateValue(cls, chunkServer, "chunksToUnload", "field_73248_b")
+      val loadedChunkHashMap: LongHashMap = ObfuscationReflectionHelper.getPrivateValue(cls, chunkServer, "loadedChunkHashMap", "field_73244_f")
+      val loadedChunks: util.List[Chunk] = ObfuscationReflectionHelper.getPrivateValue(cls, chunkServer, "loadedChunks", "field_73245_g")
+      val chunkProvider: IChunkProvider = ObfuscationReflectionHelper.getPrivateValue(cls, chunkServer, "currentChunkProvider", "field_73246_d")
+
+      val chunkCoordX = chunkCoords.getBlockX
+      val chunkCoordZ = chunkCoords.getBlockZ
+
+      if(chunkServer.chunkExists(chunkCoordX, chunkCoordZ)){
+        chunkServer.loadChunk(chunkCoordX, chunkCoordZ).onChunkUnload()
       }
-      val chunkServer: ChunkProviderServer = provider.asInstanceOf[ChunkProviderServer]
-      val chunksToUnload: Set[_] = PrivateFields.chunksToUnload.get(chunkServer)
-      val loadedChunkHashMap: LongHashMap = PrivateFields.loadedChunkHashMap.get(chunkServer)
-      val loadedChunks: List[Chunk] = PrivateFields.loadedChunks.get(chunkServer)
-      val chunkProvider: IChunkProvider = PrivateFields.currentChunkProvider.get(chunkServer)
-      val chunkCoordX: Int = chunkCoords.getBlockX
-      val chunkCoordZ: Int = chunkCoords.getBlockZ
-      if (chunkServer.chunkExists(chunkCoordX, chunkCoordZ)) {
-        chunkServer.loadChunk(chunkCoordX, chunkCoordZ).onChunkUnload
-      }
-      val chunkIndex: Long = ChunkCoordIntPair.chunkXZ2Int(chunkCoordX, chunkCoordZ)
+      val chunkIndex = ChunkCoordIntPair.chunkXZ2Int(chunkCoordX, chunkCoordZ)
       chunksToUnload.remove(chunkIndex)
       loadedChunkHashMap.remove(chunkIndex)
-      val chunk: Chunk = chunkProvider.provideChunk(chunkCoordX, chunkCoordZ)
+
+      val chunk = chunkProvider.provideChunk(chunkCoordX, chunkCoordZ)
       loadedChunkHashMap.add(chunkIndex, chunk)
       loadedChunks.add(chunk)
-      if (chunk != null) {
-        try {
-          chunk.onChunkLoad
+      if(chunk != null){
+        try{
+          chunk.onChunkLoad()
           chunk.populateChunk(chunkProvider, chunkProvider, chunkCoordX, chunkCoordZ)
-        }
-        catch {
-          case ex: Exception => {
-            for (biome <- BiomeGenBase.getBiomeGenArray) {
-              if (biome != null && biome.theBiomeDecorator != null) {
+        }catch{
+          case ex: Exception =>
+            for(biome <- BiomeGenBase.getBiomeGenArray){
+              if(biome != null && biome.theBiomeDecorator != null){
                 biome.theBiomeDecorator.currentWorld = null
               }
             }
-          }
         }
-        try {
-          chunk.func_150809_p
-        }
-        catch {
-          case ex: Exception => {
+        try{
+          chunk.func_150809_p()
+        }catch{
+          case ex: Exception =>
             ex.printStackTrace(System.out)
-          }
         }
       }
-    }
-    catch {
-      case th: Throwable => {
-        th.printStackTrace
+    }catch{
+      case th: Throwable =>
+        th.printStackTrace()
         return false
-      }
     }
-    return true
+    true
   }
 
-  def applyChanges(chunkCoords: Vector, oldChunkData: Array[BaseBlock], editSession: EditSession, region: Region, world: World) {
-    var playerManager: PlayerManager = null
-    if (world.isInstanceOf[WorldServer]) {
-      playerManager = (world.asInstanceOf[WorldServer]).getPlayerManager
+  def applyChanges(chunkCoords: Vector, oldChunkData: Array[BaseBlock], editSession: EditSession, region: Region, world: World){
+    val playerManager = world match {
+      case server: WorldServer =>
+        Some(server.getPlayerManager)
+      case _ => None
     }
-    {
-      var x: Int = 0
-      while (x < 16) {
-        {
-          {
-            var y: Int = 0
-            while (y <= this.getMaxY) {
-              {
-                {
-                  var z: Int = 0
-                  while (z < 16) {
-                    {
-                      val pt: Vector = chunkCoords.add(x, y, z)
-                      val index: Int = y * 16 * 16 + z * 16 + x
-                      if (!region.contains(pt)) {
-                        editSession.smartSetBlock(pt, oldChunkData(index))
-                      }
-                      else {
-                        if (playerManager != null) {
-                          playerManager.markBlockForUpdate(pt.getBlockX, pt.getBlockY, pt.getBlockZ)
-                        }
-                        editSession.rememberChange(pt, oldChunkData(index), editSession.rawGetBlock(pt))
-                      }
-                    }
-                    ({
-                      z += 1; z - 1
-                    })
-                  }
-                }
-              }
-              ({
-                y += 1; y - 1
-              })
+    for(x <- 0 until 16){
+      for(y <- 0 until this.getMaxY){
+        for(z <- 0 until 16){
+          val pt = chunkCoords.add(x, y, z)
+          val index = y * 16 * 16 + z * 16 + x
+          if(!region.contains(pt)){
+            editSession.smartSetBlock(pt, oldChunkData(index))
+          }else{
+            playerManager match {
+              case Some(man) => man.markBlockForUpdate(pt.getBlockX, pt.getBlockY, pt.getBlockZ)
+              case None =>
             }
+            editSession.rememberChange(pt, oldChunkData(index), editSession.rawGetBlock(pt))
           }
         }
-        ({
-          x += 1; x - 1
-        })
       }
     }
   }
 
-  def setBiome(pt: Vector2D, biome: BiomeType) {
-    val theWorld: World = this.world.get
-    if (theWorld != null) {
-      val biomeGen: BiomeGenBase = NailedBiomeTypes.getFromBiomeType(biome.asInstanceOf[NailedBiomeType])
-      if (biomeGen == null) {
-        return
-      }
-      val biomeID: Byte = biomeGen.biomeID.asInstanceOf[Byte]
-      if (theWorld.getChunkProvider.chunkExists(pt.getBlockX >> 4, pt.getBlockZ >> 4)) {
-        val chunk: Chunk = theWorld.getChunkFromBlockCoords(pt.getBlockX, pt.getBlockZ)
-        if ((chunk != null) && (chunk.isChunkLoaded)) {
-          val biomes: Array[Byte] = chunk.getBiomeArray
-          biomes((pt.getBlockZ & 0xF) << 4 | pt.getBlockX & 0xF) = biomeID
+  def setBiome(pt: Vector2D, biome: BiomeType): Unit = this.world.get match {
+    case Some(theWorld) =>
+        val biomeGen = NailedBiomeTypes.getFromBiomeType(biome.asInstanceOf[NailedBiomeType])
+        if(biomeGen == null) return
+        val biomeID = biomeGen.biomeID.toByte
+        if(theWorld.getChunkProvider.chunkExists(pt.getBlockX >> 4, pt.getBlockZ >> 4)){
+          val chunk = theWorld.getChunkFromBlockCoords(pt.getBlockX, pt.getBlockZ)
+          if(chunk != null && chunk.isChunkLoaded){
+            val biomes = chunk.getBiomeArray
+            biomes((pt.getBlockZ & 0xF) << 4 | pt.getBlockX & 0xF) = biomeID
+          }
         }
-      }
-    }
+    case _ =>
   }
 
-  @SuppressWarnings(Array("cast")) override def setBlock(pt: Vector, block: Block, notify: Boolean): Boolean = {
-    val theWorld: World = this.world.get
-    if (theWorld != null && block.isInstanceOf[BaseBlock]) {
-      val newBlock: Block = VanillaWorld.getBlockById(block.getId)
-      val result: Boolean = theWorld.setBlock(pt.getBlockX, pt.getBlockY, pt.getBlockZ, newBlock)
-      if (result && block.isInstanceOf[TileEntityBlock]) {
+
+  override def setBlock(pt: Vector, block: foundation.Block, notifyAdjacent: Boolean): Boolean = this.world.get match {
+    case Some(theWorld) =>
+      val newBlock = NailedWorld.getBlockById(block.getId)
+      val result = theWorld.setBlock(pt.getBlockX, pt.getBlockY, pt.getBlockZ, newBlock)
+      if(result && block.isInstanceOf[TileEntityBlock]){
         this.copyToWorld(pt, block.asInstanceOf[BaseBlock])
       }
       theWorld.setBlockMetadataWithNotify(pt.getBlockX, pt.getBlockY, pt.getBlockZ, block.getData, 2)
-      return result
-    }
-    return false
+      result
+    case _ => false
   }
 
-  def setBlockData(pt: Vector, data: Int) {
-    val theWorld: World = this.world.get
-    if (theWorld != null) {
+  def setBlockData(pt: Vector, data: Int): Unit = this.world.get match {
+    case Some(theWorld) =>
       theWorld.setBlockMetadataWithNotify(pt.getBlockX, pt.getBlockY, pt.getBlockZ, data, 3)
-    }
+    case _ =>
   }
 
-  def setBlockDataFast(pt: Vector, data: Int) {
-    val theWorld: World = this.world.get
-    if (theWorld != null) {
+  def setBlockDataFast(pt: Vector, data: Int): Unit = this.world.get match {
+    case Some(theWorld) =>
       theWorld.setBlockMetadataWithNotify(pt.getBlockX, pt.getBlockY, pt.getBlockZ, data, 3)
-    }
+    case _ =>
   }
 
-  def setBlockType(pt: Vector, `type`: Int): Boolean = {
-    val theWorld: World = this.world.get
-    if (theWorld != null) {
-      val newBlock: Block = VanillaWorld.getBlockById(`type`)
-      return theWorld.setBlock(pt.getBlockX, pt.getBlockY, pt.getBlockZ, newBlock, 0, 3)
-    }
-    return false
+  def setBlockType(pt: Vector, typ: Int): Boolean = this.world.get match {
+    case Some(theWorld) =>
+      theWorld.setBlock(pt.getBlockX, pt.getBlockY, pt.getBlockZ, NailedWorld.getBlockById(typ), 0, 3)
+    case _ => false
   }
 
-  override def setBlockTypeFast(pt: Vector, `type`: Int): Boolean = {
-    val theWorld: World = this.world.get
-    if (theWorld != null) {
-      val newBlock: Block = VanillaWorld.getBlockById(`type`)
-      return theWorld.setBlock(pt.getBlockX, pt.getBlockY, pt.getBlockZ, newBlock)
-    }
-    return false
+  override def setBlockTypeFast(pt: Vector, typ: Int): Boolean = this.world.get match {
+    case Some(theWorld) =>
+      theWorld.setBlock(pt.getBlockX, pt.getBlockY, pt.getBlockZ, NailedWorld.getBlockById(typ))
+    case _ => false
   }
 
-  override def setTypeIdAndData(pt: Vector, `type`: Int, data: Int): Boolean = {
-    val theWorld: World = this.world.get
-    if (theWorld != null) {
-      val newBlock: Block = VanillaWorld.getBlockById(`type`)
-      return theWorld.setBlock(pt.getBlockX, pt.getBlockY, pt.getBlockZ, newBlock, data, 3)
-    }
-    return false
+  override def setTypeIdAndData(pt: Vector, typ: Int, data: Int): Boolean = this.world.get match {
+    case Some(theWorld) =>
+      theWorld.setBlock(pt.getBlockX, pt.getBlockY, pt.getBlockZ, NailedWorld.getBlockById(typ), data, 3)
+    case _ => false
   }
 
-  override def setTypeIdAndDataFast(pt: Vector, `type`: Int, data: Int): Boolean = {
-    val theWorld: World = this.world.get
-    if (theWorld != null) {
-      val newBlock: Block = VanillaWorld.getBlockById(`type`)
-      return theWorld.setBlock(pt.getBlockX, pt.getBlockY, pt.getBlockZ, newBlock, data, 3)
-    }
-    return false
+  override def setTypeIdAndDataFast(pt: Vector, typ: Int, data: Int): Boolean = this.world.get match {
+    case Some(theWorld) =>
+      theWorld.setBlock(pt.getBlockX, pt.getBlockY, pt.getBlockZ, NailedWorld.getBlockById(typ), data, 3)
+    case _ => false
   }
 
-  override def generateTree(`type`: TreeGenerator.TreeType, editSession: EditSession, pt: Vector): Boolean = {
-    val theWorld: World = this.world.get
-    if (theWorld != null) {
-      val treeGenerator: WorldGenerator = VanillaWorld.getTreeGeneratorByType(`type`, theWorld.rand)
-      if (treeGenerator != null) {
-        val result: Boolean = treeGenerator.generate(new UndoWorldProxy(editSession, theWorld), theWorld.rand, pt.getBlockX, pt.getBlockY, pt.getBlockZ)
-        return result
-      }
-    }
-    return false
+  override def generateTree(typ: TreeGenerator.TreeType, editSession: EditSession, pt: Vector): Boolean = this.world.get match {
+    case Some(theWorld) =>
+      val generator = NailedWorld.getTreeGeneratorByType(typ, theWorld.rand)
+      if(generator != null){
+        generator.generate(new UndoWorldProxy(editSession, theWorld), theWorld.rand, pt.getBlockX, pt.getBlockY, pt.getBlockZ)
+      }else false
+    case _ => false
   }
 
   private def getBlockAt(pt: Vector): Block = this.world.get match {
