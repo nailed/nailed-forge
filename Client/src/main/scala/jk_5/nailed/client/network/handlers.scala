@@ -95,6 +95,11 @@ object TerminalGuiHandler extends SimpleChannelInboundHandler[NailedPacket.OpenT
 
 object RenderListhandler extends SimpleChannelInboundHandler[NailedPacket.RenderList]{
   override def channelRead0(ctx: ChannelHandlerContext, msg: NailedPacket.RenderList){
+    msg.func match {
+      case 0 => NailedClient.renderer.setRenderList(msg.points)
+      case 1 => NailedClient.renderer.addRenderList(msg.points)
+      case 2 => NailedClient.renderer.clearRenderList()
+    }
   }
 }
 

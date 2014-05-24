@@ -396,10 +396,12 @@ public abstract class NailedPacket {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class RenderList extends NailedPacket {
+        public int func = 0;
         public List<RenderPoint[]> points = Lists.newArrayList();
 
         @Override
         public void encode(ByteBuf buffer){
+            buffer.writeByte(func);
             buffer.writeInt(points.size());
             for(RenderPoint[] pPoints : points){
                 buffer.writeByte(pPoints.length);
@@ -415,7 +417,8 @@ public abstract class NailedPacket {
 
         public void decode(ByteBuf buffer){
             this.points = Lists.newArrayList();
-            int size = buffer.readByte();
+            this.func = buffer.readByte();
+            int size = buffer.readInt();
             for(int x = 0; x < size; x++){
                 RenderPoint[] tPoints = new RenderPoint[buffer.readByte()];
                 for(int y = 0; y < tPoints.length; y++){

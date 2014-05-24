@@ -14,6 +14,7 @@ import java.util.*;
  * Created by matthias on 24-5-14.
  */
 public class CustomsRenderer {
+    private static final CustomsRenderer INSTANCE = new CustomsRenderer();
     private static final Minecraft mc = Minecraft.getMinecraft();
     private List<RenderPoint[]> objects;
 
@@ -165,4 +166,6 @@ public class CustomsRenderer {
         cl[3] = (float) (colors & 255) / 255;
         return cl;
     }
+
+    public static CustomsRenderer instance() { return INSTANCE; }
 }
