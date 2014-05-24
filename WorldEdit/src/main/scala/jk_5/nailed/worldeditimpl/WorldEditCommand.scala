@@ -17,7 +17,7 @@ class WorldEditCommand(command: Command) extends CommandBase {
 
   PermissionsManager.registerPermission("nailedworldedit.commands." + this.commandName, RegisteredPermValue.OP)
 
-  override def getCommandAliases = util.Arrays.asList(this.command.aliases())
+  override def getCommandAliases = util.Arrays.asList(this.command.aliases(): _*)
   override def getCommandName = this.commandName
   override def getCommandUsage(sender: ICommandSender) = this.usage
   override def processCommand(sender: ICommandSender, args: Array[String]) = {}
