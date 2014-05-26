@@ -18,13 +18,13 @@ import net.minecraft.client.renderer.Tessellator
  */
 object TeamInformationRenderer extends Gui {
 
+  val team1 = List("jk_5", "Dabadooba", "ikzelf1248")
+  val team2 = List("Dinnerbone", "Grumm", "Jeb_")
+  val team3 = List("Docm77","Etho","AnderZEL")
+
   val textures = mutable.HashMap[String, ResourceLocation]()
 
   @SubscribeEvent def render(event: RenderGameOverlayEvent.Post): Unit = if(event.`type` == ElementType.ALL) {
-    if(false) return
-    val team1 = List("jk_5", "Dabadooba", "ikzelf1248")
-    val team2 = List("Dinnerbone", "Grumm", "Jeb_")
-    val team3 = List("Docm77","Etho","AnderZEL")
     renderTopRight(team1, event.resolution)
     renderLeft(team2, event.resolution)
     renderRight(team3, event.resolution)
@@ -83,8 +83,8 @@ object TeamInformationRenderer extends Gui {
     glPushMatrix()
     glEnable(GL_TEXTURE_2D)
     for(name <- players){
-      this.renderHead(start + number*31 + 8, 3, players(number))
-      number = number + 1
+      this.renderHead(start + number*31 + 8, 3, name)
+      number += 1
     }
     glDisable(GL_TEXTURE_2D)
     glPopMatrix()
@@ -108,7 +108,7 @@ object TeamInformationRenderer extends Gui {
     glPushMatrix()
     glEnable(GL_TEXTURE_2D)
     for(name <- players){
-      this.renderHead(start + number*31 + 8, 3, players(number))
+      this.renderHead(start + number*31 + 8, 3, name)
       number += 1
     }
     glDisable(GL_TEXTURE_2D)
@@ -134,7 +134,7 @@ object TeamInformationRenderer extends Gui {
     glPushMatrix()
     glEnable(GL_TEXTURE_2D)
     for(name <- players){
-      this.renderHead(start + number*31 + 8, 3, players(number))
+      this.renderHead(start + number*31 + 8, 3, name)
       number += 1
     }
     glDisable(GL_TEXTURE_2D)
@@ -148,7 +148,7 @@ object TeamInformationRenderer extends Gui {
     val start = f * 1
     val end = f * 5
 
-    Gui.drawRect(0, start, 36, end, 0x88000000)
+    Gui.drawRect(0, start, 31, end, 0x88000000)
 
     val height = end - start
 
@@ -160,7 +160,7 @@ object TeamInformationRenderer extends Gui {
     glPushMatrix()
     glEnable(GL_TEXTURE_2D)
     for(name <- players){
-      this.renderHead(8, start + number*31 + 3, players(number))
+      this.renderHead(8, start + number*31 + 3, name)
       number += 1
     }
     glDisable(GL_TEXTURE_2D)
@@ -175,7 +175,7 @@ object TeamInformationRenderer extends Gui {
     val end = f * 5
     val screenwidth = resolution.getScaledWidth
 
-    Gui.drawRect(screenwidth - 36, start, screenwidth, end, 0x88000000)
+    Gui.drawRect(screenwidth - 31, start, screenwidth, end, 0x88000000)
 
     val height = end - start
 
@@ -187,7 +187,7 @@ object TeamInformationRenderer extends Gui {
     glPushMatrix()
     glEnable(GL_TEXTURE_2D)
     for(name <- players){
-      this.renderHead(screenwidth - 28, start + 31*number + 3, players(number))
+      this.renderHead(screenwidth - 23, start + 31*number + 3, name)
       number += 1
     }
     glDisable(GL_TEXTURE_2D)
