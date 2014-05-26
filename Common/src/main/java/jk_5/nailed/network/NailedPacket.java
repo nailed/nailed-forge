@@ -2,6 +2,7 @@ package jk_5.nailed.network;
 
 import com.google.common.base.*;
 
+import com.google.common.collect.*;
 import io.netty.buffer.*;
 
 import cpw.mods.fml.common.network.*;
@@ -9,6 +10,8 @@ import cpw.mods.fml.common.network.*;
 import jk_5.nailed.map.*;
 
 import lombok.*;
+
+import java.util.List;
 
 /**
  * No description given
@@ -22,13 +25,13 @@ public abstract class NailedPacket {
 
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class MovementEvent extends NailedPacket {
+    public static class MovementEvent extends NailedPacket{
 
         public int x, y, z;
         public byte type;
 
         @Override
-        public void encode(ByteBuf buffer) {
+        public void encode(ByteBuf buffer){
             buffer.writeInt(this.x);
             buffer.writeInt(this.y);
             buffer.writeInt(this.z);
@@ -36,7 +39,7 @@ public abstract class NailedPacket {
         }
 
         @Override
-        public void decode(ByteBuf buffer) {
+        public void decode(ByteBuf buffer){
             this.x = buffer.readInt();
             this.y = buffer.readInt();
             this.z = buffer.readInt();
@@ -52,7 +55,7 @@ public abstract class NailedPacket {
         public ByteBuf data;
 
         @Override
-        public void encode(ByteBuf buffer) {
+        public void encode(ByteBuf buffer){
             buffer.writeInt(this.x);
             buffer.writeInt(this.y);
             buffer.writeInt(this.z);
@@ -60,7 +63,7 @@ public abstract class NailedPacket {
         }
 
         @Override
-        public void decode(ByteBuf buffer) {
+        public void decode(ByteBuf buffer){
             this.x = buffer.readInt();
             this.y = buffer.readInt();
             this.z = buffer.readInt();
@@ -76,7 +79,7 @@ public abstract class NailedPacket {
         public ByteBuf data;
 
         @Override
-        public void encode(ByteBuf buffer) {
+        public void encode(ByteBuf buffer){
             buffer.writeInt(this.x);
             buffer.writeInt(this.y);
             buffer.writeInt(this.z);
@@ -84,7 +87,7 @@ public abstract class NailedPacket {
         }
 
         @Override
-        public void decode(ByteBuf buffer) {
+        public void decode(ByteBuf buffer){
             this.x = buffer.readInt();
             this.y = buffer.readInt();
             this.z = buffer.readInt();
@@ -100,7 +103,7 @@ public abstract class NailedPacket {
         public ByteBuf data;
 
         @Override
-        public void encode(ByteBuf buffer) {
+        public void encode(ByteBuf buffer){
             buffer.writeInt(this.x);
             buffer.writeInt(this.y);
             buffer.writeInt(this.z);
@@ -108,7 +111,7 @@ public abstract class NailedPacket {
         }
 
         @Override
-        public void decode(ByteBuf buffer) {
+        public void decode(ByteBuf buffer){
             this.x = buffer.readInt();
             this.y = buffer.readInt();
             this.z = buffer.readInt();
@@ -123,14 +126,14 @@ public abstract class NailedPacket {
         public String data;
 
         @Override
-        public void encode(ByteBuf buffer) {
+        public void encode(ByteBuf buffer){
             byte[] utf8Bytes = this.data.getBytes(Charsets.UTF_8);
             buffer.writeInt(utf8Bytes.length);
             buffer.writeBytes(utf8Bytes);
         }
 
         @Override
-        public void decode(ByteBuf buffer) {
+        public void decode(ByteBuf buffer){
             int len = buffer.readInt();
             this.data = buffer.toString(buffer.readerIndex(), len, Charsets.UTF_8);
             buffer.readerIndex(buffer.readerIndex() + len);
@@ -145,13 +148,13 @@ public abstract class NailedPacket {
         public ByteBuf data;
 
         @Override
-        public void encode(ByteBuf buffer) {
+        public void encode(ByteBuf buffer){
             buffer.writeInt(this.dimId);
             buffer.writeBytes(this.data);
         }
 
         @Override
-        public void decode(ByteBuf buffer) {
+        public void decode(ByteBuf buffer){
             this.dimId = buffer.readInt();
             this.data = buffer.slice();
         }
@@ -165,7 +168,7 @@ public abstract class NailedPacket {
         public String name;
 
         @Override
-        public void encode(ByteBuf buffer) {
+        public void encode(ByteBuf buffer){
             buffer.writeDouble(this.x);
             buffer.writeDouble(this.y);
             buffer.writeDouble(this.z);
@@ -173,7 +176,7 @@ public abstract class NailedPacket {
         }
 
         @Override
-        public void decode(ByteBuf buffer) {
+        public void decode(ByteBuf buffer){
             this.x = buffer.readDouble();
             this.y = buffer.readDouble();
             this.z = buffer.readDouble();
@@ -188,12 +191,12 @@ public abstract class NailedPacket {
         public int fps;
 
         @Override
-        public void encode(ByteBuf buffer) {
+        public void encode(ByteBuf buffer){
             buffer.writeInt(this.fps);
         }
 
         @Override
-        public void decode(ByteBuf buffer) {
+        public void decode(ByteBuf buffer){
             this.fps = buffer.readInt();
         }
     }
@@ -207,14 +210,14 @@ public abstract class NailedPacket {
         public int height;
 
         @Override
-        public void encode(ByteBuf buffer) {
+        public void encode(ByteBuf buffer){
             buffer.writeInt(this.instanceId);
             buffer.writeInt(this.width);
             buffer.writeInt(this.height);
         }
 
         @Override
-        public void decode(ByteBuf buffer) {
+        public void decode(ByteBuf buffer){
             this.instanceId = buffer.readInt();
             this.width = buffer.readInt();
             this.height = buffer.readInt();
@@ -229,7 +232,7 @@ public abstract class NailedPacket {
         public ByteBuf buffer;
 
         @Override
-        public void encode(ByteBuf buffer) {
+        public void encode(ByteBuf buffer){
             buffer.writeBoolean(this.enable);
             if(this.enable){
                 buffer.writeBytes(this.buffer);
@@ -237,7 +240,7 @@ public abstract class NailedPacket {
         }
 
         @Override
-        public void decode(ByteBuf buffer) {
+        public void decode(ByteBuf buffer){
             this.enable = buffer.readBoolean();
             if(this.enable){
                 this.buffer = buffer.slice();
@@ -249,12 +252,12 @@ public abstract class NailedPacket {
     public static class CheckClientUpdates extends NailedPacket {
 
         @Override
-        public void encode(ByteBuf buffer) {
+        public void encode(ByteBuf buffer){
 
         }
 
         @Override
-        public void decode(ByteBuf buffer) {
+        public void decode(ByteBuf buffer){
 
         }
     }
@@ -263,12 +266,12 @@ public abstract class NailedPacket {
     public static class DisplayLogin extends NailedPacket {
 
         @Override
-        public void encode(ByteBuf buffer) {
+        public void encode(ByteBuf buffer){
 
         }
 
         @Override
-        public void decode(ByteBuf buffer) {
+        public void decode(ByteBuf buffer){
 
         }
     }
@@ -281,13 +284,13 @@ public abstract class NailedPacket {
         public String password;
 
         @Override
-        public void encode(ByteBuf buffer) {
+        public void encode(ByteBuf buffer){
             ByteBufUtils.writeUTF8String(buffer, this.username);
             ByteBufUtils.writeUTF8String(buffer, this.password);
         }
 
         @Override
-        public void decode(ByteBuf buffer) {
+        public void decode(ByteBuf buffer){
             this.username = ByteBufUtils.readUTF8String(buffer);
             this.password = ByteBufUtils.readUTF8String(buffer);
         }
@@ -300,12 +303,12 @@ public abstract class NailedPacket {
         public int state;
 
         @Override
-        public void encode(ByteBuf buffer) {
+        public void encode(ByteBuf buffer){
             buffer.writeByte(state);
         }
 
         @Override
-        public void decode(ByteBuf buffer) {
+        public void decode(ByteBuf buffer){
             this.state = buffer.readByte();
         }
     }
@@ -319,14 +322,14 @@ public abstract class NailedPacket {
         public int status;
 
         @Override
-        public void encode(ByteBuf buffer) {
+        public void encode(ByteBuf buffer){
             buffer.writeByte(this.field);
             ByteBufUtils.writeUTF8String(buffer, this.content);
             buffer.writeByte(this.status);
         }
 
         @Override
-        public void decode(ByteBuf buffer) {
+        public void decode(ByteBuf buffer){
             this.field = buffer.readByte();
             this.content = ByteBufUtils.readUTF8String(buffer);
             this.status = buffer.readByte();
@@ -343,7 +346,7 @@ public abstract class NailedPacket {
         public String password;
 
         @Override
-        public void encode(ByteBuf buffer) {
+        public void encode(ByteBuf buffer){
             ByteBufUtils.writeUTF8String(buffer, this.username);
             ByteBufUtils.writeUTF8String(buffer, this.email);
             ByteBufUtils.writeUTF8String(buffer, this.name);
@@ -351,7 +354,7 @@ public abstract class NailedPacket {
         }
 
         @Override
-        public void decode(ByteBuf buffer) {
+        public void decode(ByteBuf buffer){
             this.username = ByteBufUtils.readUTF8String(buffer);
             this.email = ByteBufUtils.readUTF8String(buffer);
             this.name = ByteBufUtils.readUTF8String(buffer);
@@ -368,7 +371,7 @@ public abstract class NailedPacket {
         public double vx, vy, vz;
 
         @Override
-        public void encode(ByteBuf buffer) {
+        public void encode(ByteBuf buffer){
             ByteBufUtils.writeUTF8String(buffer, this.name);
             buffer.writeDouble(x);
             buffer.writeDouble(y);
@@ -379,7 +382,7 @@ public abstract class NailedPacket {
         }
 
         @Override
-        public void decode(ByteBuf buffer) {
+        public void decode(ByteBuf buffer){
             this.name = ByteBufUtils.readUTF8String(buffer);
             this.x = buffer.readDouble();
             this.y = buffer.readDouble();
@@ -393,28 +396,33 @@ public abstract class NailedPacket {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class RenderList extends NailedPacket {
-
-        private Point[][] points;
+        public int func = 0;
+        public List<RenderPoint[]> points = Lists.newArrayList();
 
         @Override
-        public void encode(ByteBuf buffer) {
-            buffer.writeInt(points.length);
-            for(int x = 0; x < points.length; x++){
-                buffer.writeByte(points[x].length);
-                for(int y = 0; y < points[x].length; y++){
-                    buffer.writeDouble(points[x][y].getX());
-                    buffer.writeDouble(points[x][y].getY());
-                    buffer.writeDouble(points[x][y].getZ());
+        public void encode(ByteBuf buffer){
+            buffer.writeByte(func);
+            buffer.writeInt(points.size());
+            for(RenderPoint[] pPoints : points){
+                buffer.writeByte(pPoints.length);
+                for(RenderPoint point : pPoints){
+                    buffer.writeDouble(point.getX());
+                    buffer.writeDouble(point.getY());
+                    buffer.writeDouble(point.getZ());
+                    buffer.writeInt(point.getColor());
+                    buffer.writeFloat(point.getSize());
                 }
             }
         }
 
-        public void decode(ByteBuf buffer) {
-            this.points = new Point[buffer.readInt()][];
-            for(int x = 0; x < points.length; x++){
-                points[x] = new Point[buffer.readByte()];
-                for(int y = 0; y < points[x].length; y++){
-                    points[x][y] = new Point(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
+        public void decode(ByteBuf buffer){
+            this.points = Lists.newArrayList();
+            this.func = buffer.readByte();
+            int size = buffer.readInt();
+            for(int x = 0; x < size; x++){
+                RenderPoint[] tPoints = new RenderPoint[buffer.readByte()];
+                for(int y = 0; y < tPoints.length; y++){
+                    tPoints[y] = new RenderPoint(buffer.readDouble(),buffer.readDouble(),buffer.readDouble(),buffer.readInt(),buffer.readFloat());
                 }
             }
         }

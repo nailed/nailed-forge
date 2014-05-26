@@ -32,7 +32,7 @@ object NailedClient {
   if(FMLLaunchHandler.side.isServer){
     throw new RuntimeException("Nailed-Client is client-only, don\'t use it on the server!")
   }
-
+  var renderer: CustomsRenderer = CustomsRenderer.instance()
   var providerId = 10
   var fixedWidthFontRenderer: FixedWidthFontRenderer = _
   val machines = new MachineRegistry[ClientMachine]()
@@ -47,9 +47,11 @@ object NailedClient {
     NailedLog.info("Registering event handlers")
     MinecraftForge.EVENT_BUS.register(TimeUpdateRenderer)
     MinecraftForge.EVENT_BUS.register(MapEditManager.instance())
+    MinecraftForge.EVENT_BUS.register(CustomsRenderer.instance())
     MinecraftForge.EVENT_BUS.register(StencilSkyRenderer)
     MinecraftForge.EVENT_BUS.register(TeamInformationRenderer)
     FMLCommonHandler.instance().bus().register(MapEditManager.instance())
+    FMLCommonHandler.instance().bus().register(CustomsRenderer.instance())
     FMLCommonHandler.instance().bus().register(TickHandlerClient)
     FMLCommonHandler.instance().bus().register(this)
 

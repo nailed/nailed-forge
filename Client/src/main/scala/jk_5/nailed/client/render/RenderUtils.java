@@ -11,10 +11,6 @@ import net.minecraft.client.renderer.*;
  */
 public final class RenderUtils {
 
-    private RenderUtils(){
-
-    }
-
     public static void disableLightmap() {
         OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
         GL11.glDisable(GL11.GL_TEXTURE_2D);

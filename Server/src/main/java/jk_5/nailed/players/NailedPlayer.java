@@ -56,6 +56,7 @@ public class NailedPlayer implements Player, ILuaObject {
     private int minHealth = 0;
     private List<Player> playersVisible = Lists.newArrayList();
     private PlayerClient playerClient = PlayerClient.VANILLA; // standard = vanilla, no problems with idconflicts;
+    private List<RenderPoint[]> renderList;
 
     private NailedWebUser webUser;
 
@@ -602,5 +603,13 @@ public class NailedPlayer implements Player, ILuaObject {
                 break;
         }
         return null;
+    }
+
+    private void addRenderArray(RenderPoint[] array){
+        this.renderList.add(array);
+    }
+
+    private void clearRenderList(){
+        this.renderList = Lists.newArrayList();
     }
 }
