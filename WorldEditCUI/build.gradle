@@ -1,0 +1,13 @@
+apply plugin: 'scala'
+
+version = '0.1-SNAPSHOT'
+
+rootProject.tasks.reobf {
+    reobf(tasks.jar) { spec ->
+        spec.classpath = sourceSets.main.compileClasspath
+    }
+}
+
+dependencies {
+    compile rootProject
+}
