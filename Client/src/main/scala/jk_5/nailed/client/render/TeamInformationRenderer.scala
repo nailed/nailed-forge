@@ -79,14 +79,13 @@ object TeamInformationRenderer extends Gui {
 
     var number = 0
 
+    glColor4f(1, 1, 1, 1)
     glPushMatrix()
     glEnable(GL_TEXTURE_2D)
-
     for(name <- players){
       this.renderHead(start + number*31 + 8, 3, players(number))
       number = number + 1
     }
-
     glDisable(GL_TEXTURE_2D)
     glPopMatrix()
   }
@@ -105,6 +104,7 @@ object TeamInformationRenderer extends Gui {
 
     var number = 0
 
+    glColor4f(1, 1, 1, 1)
     glPushMatrix()
     glEnable(GL_TEXTURE_2D)
     for(name <- players){
@@ -130,6 +130,7 @@ object TeamInformationRenderer extends Gui {
 
     var number = 0
 
+    glColor4f(1, 1, 1, 1)
     glPushMatrix()
     glEnable(GL_TEXTURE_2D)
     for(name <- players){
@@ -155,6 +156,7 @@ object TeamInformationRenderer extends Gui {
 
     var number = 0
 
+    glColor4f(1, 1, 1, 1)
     glPushMatrix()
     glEnable(GL_TEXTURE_2D)
     for(name <- players){
@@ -181,6 +183,7 @@ object TeamInformationRenderer extends Gui {
 
     var number = 0
 
+    glColor4f(1, 1, 1, 1)
     glPushMatrix()
     glEnable(GL_TEXTURE_2D)
     for(name <- players){
