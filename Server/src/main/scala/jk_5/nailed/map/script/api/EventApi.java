@@ -87,7 +87,7 @@ public class EventApi implements ILuaAPI {
     }
 
     public void onEvent(String eventName, Object... args) {
-        LuaValue[] eventArgs = this.env.getMachine().getLuaMachine().toValues(args, 0);
+        LuaValue[] eventArgs = this.env.getMachine().getLuaMachine().converter.toValues(args, 0);
         Collection<LuaClosure> listeners = this.eventListeners.get(eventName);
         LuaClosure[] list = listeners.toArray(new LuaClosure[listeners.size()]);
         for(int i = 0; i < list.length; i++){
