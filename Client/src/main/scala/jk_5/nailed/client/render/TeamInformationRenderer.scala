@@ -3,7 +3,7 @@ package jk_5.nailed.client.render
 import cpw.mods.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType
-import net.minecraft.client.gui.Gui
+import net.minecraft.client.gui.{ScaledResolution, Gui}
 import net.minecraft.client.Minecraft.{getMinecraft => mc}
 import net.minecraft.util.ResourceLocation
 import org.lwjgl.opengl.GL11
@@ -21,30 +21,13 @@ object TeamInformationRenderer extends Gui {
   val textures = mutable.HashMap[String, ResourceLocation]()
 
   @SubscribeEvent def render(event: RenderGameOverlayEvent.Post): Unit = if(event.`type` == ElementType.ALL) {
-    import GL11._
-    if(true) return
-
-    val start1 = event.resolution.getScaledWidth / 7
-    val end1 = start1 * 3
-    val start2 = start1 * 4
-    val end2 = start1 * 6
-
-    Gui.drawRect(start1, 0, end1, 28, 0x88000000)
-    Gui.drawRect(start2, 0, end2, 28, 0x88000000)
-
-    glPushMatrix()
-    glEnable(GL_TEXTURE_2D)
-    glColor4f(1, 1, 1, 1)
-
-    renderHead(start1 + 0*31 + 8, 3, "Clank26")
-    renderHead(start1 + 1*31 + 8, 3, "Dabadooba")
-    renderHead(start1 + 2*31 + 8, 3, "ikzelf1248")
-    renderHead(start2 + 0*15 + 8, 3, "Dinnerbone")
-    renderHead(start2 + 1*31 + 8, 3, "Notch")
-    renderHead(start2 + 2*31 + 8, 3, "Grumm")
-
-    glDisable(GL_TEXTURE_2D)
-    glPopMatrix()
+    if(false) return
+    val team1 = List("jk_5", "Dabadooba", "ikzelf1248")
+    val team2 = List("Dinnerbone", "Grumm", "Jeb_")
+    val team3 = List("Docm77","Etho","AnderZEL")
+    renderTopRight(team1, event.resolution)
+    renderLeft(team2, event.resolution)
+    renderRight(team3, event.resolution)
   }
 
   def renderHead(x: Int, y: Int, username: String){
@@ -80,5 +63,131 @@ object TeamInformationRenderer extends Gui {
     AbstractClientPlayer.getDownloadImageSkin(tex, username)
     textures.put(username, tex)
     tex
+  }
+
+  def renderTopMiddle(players: List[String], resolution: ScaledResolution) {
+    import GL11._
+
+    val start = resolution.getScaledWidth / 7
+    val end = start * 6
+
+    Gui.drawRect(start, 0, end, 28, 0x88000000)
+
+    val width = end - start
+
+    players.take(width / 31)
+
+    var number = 0
+
+    glPushMatrix()
+    glEnable(GL_TEXTURE_2D)
+
+    for(name <- players){
+      this.renderHead(start + number*31 + 8, 3, players(number))
+      number = number + 1
+    }
+
+    glDisable(GL_TEXTURE_2D)
+    glPopMatrix()
+  }
+
+  def renderTopRight(players: List[String], resolution: ScaledResolution) {
+    import GL11._
+
+    val start = resolution.getScaledWidth / 7
+    val end = start * 3
+
+    Gui.drawRect(start, 0, end, 28, 0x88000000)
+
+    val width = end - start
+
+    players.take(width / 31)
+
+    var number = 0
+
+    glPushMatrix()
+    glEnable(GL_TEXTURE_2D)
+    for(name <- players){
+      this.renderHead(start + number*31 + 8, 3, players(number))
+      number += 1
+    }
+    glDisable(GL_TEXTURE_2D)
+    glPopMatrix()
+  }
+
+  def renderTopLeft(players: List[String], resolution: ScaledResolution) {
+    import GL11._
+
+    val f = resolution.getScaledWidth / 7
+    val start = f * 4
+    val end = f * 6
+
+    Gui.drawRect(start, 0, end, 28, 0x88000000)
+
+    val width = end - start
+
+    players.take(width / 31)
+
+    var number = 0
+
+    glPushMatrix()
+    glEnable(GL_TEXTURE_2D)
+    for(name <- players){
+      this.renderHead(start + number*31 + 8, 3, players(number))
+      number += 1
+    }
+    glDisable(GL_TEXTURE_2D)
+    glPopMatrix()
+  }
+
+  def renderLeft(players: List[String], resolution: ScaledResolution) {
+    import GL11._
+
+    val f = resolution.getScaledHeight / 7
+    val start = f * 1
+    val end = f * 5
+
+    Gui.drawRect(0, start, 36, end, 0x88000000)
+
+    val height = end - start
+
+    players.take(height / 31)
+
+    var number = 0
+
+    glPushMatrix()
+    glEnable(GL_TEXTURE_2D)
+    for(name <- players){
+      this.renderHead(8, start + number*31 + 3, players(number))
+      number += 1
+    }
+    glDisable(GL_TEXTURE_2D)
+    glPopMatrix()
+  }
+
+  def renderRight(players: List[String], resolution: ScaledResolution) {
+    import GL11._
+
+    val f = resolution.getScaledHeight / 7
+    val start = f * 1
+    val end = f * 5
+    val screenwidth = resolution.getScaledWidth
+
+    Gui.drawRect(screenwidth - 36, start, screenwidth, end, 0x88000000)
+
+    val height = end - start
+
+    players.take(height / 31)
+
+    var number = 0
+
+    glPushMatrix()
+    glEnable(GL_TEXTURE_2D)
+    for(name <- players){
+      this.renderHead(screenwidth - 28, start + 31*number + 3, players(number))
+      number += 1
+    }
+    glDisable(GL_TEXTURE_2D)
+    glPopMatrix()
   }
 }

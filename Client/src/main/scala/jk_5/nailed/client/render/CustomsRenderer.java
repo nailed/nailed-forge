@@ -16,7 +16,7 @@ import java.util.*;
 public class CustomsRenderer {
     private static final CustomsRenderer INSTANCE = new CustomsRenderer();
     private static final Minecraft mc = Minecraft.getMinecraft();
-    private List<RenderPoint[]> objects;
+    private List<RenderPoint[]> objects = Lists.newArrayList();
 
     @SubscribeEvent
     public void onRenderWorld(RenderWorldLastEvent event) {
@@ -32,6 +32,7 @@ public class CustomsRenderer {
         OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_TRUE, GL11.GL_FALSE);
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
 
+        if(objects.size() == 0) return;
         for(RenderPoint[] points : objects){
             switch (points.length){
                 case 0:
@@ -47,8 +48,6 @@ public class CustomsRenderer {
                     break;
             }
         }
-
-
     }
 
     public void renderPoint(RenderPoint[] points, double dx, double dy, double dz) {
