@@ -8,6 +8,7 @@ import net.minecraft.util.*;
 import cpw.mods.fml.common.eventhandler.*;
 import cpw.mods.fml.common.gameevent.*;
 
+import net.minecraftforge.event.*;
 import net.minecraftforge.event.entity.living.*;
 
 import jk_5.nailed.api.*;
@@ -62,5 +63,15 @@ public class IpcEventListener {
         if(IpcManager.instance().isConnected()){
             IpcManager.instance().sendPacket(new PacketLoginPlayer(p, username, password));
         }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onChat(ServerChatEvent event) {
+        PacketChatIn packet = new PacketChatIn();
+        packet.message = event.message;
+        packet.playerId = NailedAPI.getPlayerRegistry().getPlayer(event.player).getId();
+        packet.target = "";
+        packet.targetType = PacketChatIn.Target.GLOBAL;
+        IpcManager.instance().sendPacket(packet);
     }
 }
