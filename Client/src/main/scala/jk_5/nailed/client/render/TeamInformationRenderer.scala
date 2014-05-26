@@ -28,18 +28,21 @@ object TeamInformationRenderer extends Gui {
     val end1 = start1 * 3
     val start2 = start1 * 4
     val end2 = start1 * 6
+
     Gui.drawRect(start1, 0, end1, 28, 0x88000000)
     Gui.drawRect(start2, 0, end2, 28, 0x88000000)
 
     glPushMatrix()
     glEnable(GL_TEXTURE_2D)
     glColor4f(1, 1, 1, 1)
-    renderHead(start1 + 8, 3, "Clank26")
-    renderHead(start1 + 23 + 16, 3, "Dabadooba")
-    renderHead(start1 + 38 + 32, 3, "ikzelf1248")
-    renderHead(start2 + 8, 3, "Dinnerbone")
-    renderHead(start2 + 23 + 16, 3, "Notch")
-    renderHead(start2 + 38 + 32, 3, "Grumm")
+
+    renderHead(start1 + 0*31 + 8, 3, "Clank26")
+    renderHead(start1 + 1*31 + 8, 3, "Dabadooba")
+    renderHead(start1 + 2*31 + 8, 3, "ikzelf1248")
+    renderHead(start2 + 0*15 + 8, 3, "Dinnerbone")
+    renderHead(start2 + 1*31 + 8, 3, "Notch")
+    renderHead(start2 + 2*31 + 8, 3, "Grumm")
+
     glDisable(GL_TEXTURE_2D)
     glPopMatrix()
   }
