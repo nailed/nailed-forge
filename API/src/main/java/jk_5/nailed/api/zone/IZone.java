@@ -1,5 +1,7 @@
 package jk_5.nailed.api.zone;
 
+import jk_5.nailed.map.Point;
+
 import javax.annotation.*;
 
 /**
@@ -8,6 +10,7 @@ import javax.annotation.*;
 public interface IZone {
 
     boolean isInZone(double x, double y, double z);
+    boolean isInZone(Point point);
     IZone reMake();
     @Nonnull
     String getName();

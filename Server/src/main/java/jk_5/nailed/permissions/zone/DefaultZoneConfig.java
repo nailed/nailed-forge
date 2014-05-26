@@ -7,6 +7,7 @@ import com.google.gson.*;
 
 import jk_5.nailed.*;
 import jk_5.nailed.api.*;
+import jk_5.nailed.api.player.Player;
 import jk_5.nailed.api.zone.*;
 
 /**

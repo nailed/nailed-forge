@@ -5,6 +5,7 @@ import java.util.*;
 import com.google.common.base.*;
 import com.google.common.collect.*;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.player.*;
 import jk_5.nailed.api.zone.*;
@@ -17,8 +18,10 @@ import jk_5.nailed.api.zone.*;
 public class DefaultZoneManager implements ZoneManager {
 
     private final ZoneConfig zones;
+    private final Map map;
 
     public DefaultZoneManager(Map map) {
+        this.map = map;
         if(map.getMappack() != null){
             Preconditions.checkNotNull(map.getMappack().getZoneConfig(), "ZoneConfig may not be null!");
             this.zones = map.getMappack().getZoneConfig().reMake();
@@ -41,5 +44,13 @@ public class DefaultZoneManager implements ZoneManager {
     @Override
     public Set<IZone> getZones(Player player) {
         return this.getZones(player.getEntity().posX, player.getEntity().posY, player.getEntity().posZ);
+    }
+
+    public Set<Player> getPlayers(IZone zone) {
+        Set<Player> players = Sets.newHashSet();
+        for(Player player : this.map.getPlayers()) {
+            if(zone.isInZone(player.getLocation())) players.add(player);
+        }
+        return players;
     }
 }

@@ -156,7 +156,7 @@ public class CustomsRenderer {
 
     public void addRenderList(List<RenderPoint[]> renderList) { this.objects.addAll(renderList); }
 
-    public void clearRenderList(){ this.objects = Lists.newArrayList(); }
+    public void clearRenderList(){ this.objects.clear(); }
 
     private float[] getColors(int colors){
         float[] cl = new float[4];

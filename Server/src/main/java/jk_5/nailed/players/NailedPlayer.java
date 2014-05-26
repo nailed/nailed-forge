@@ -605,11 +605,26 @@ public class NailedPlayer implements Player, ILuaObject {
         return null;
     }
 
+    private void setRenderList(List<RenderPoint[]> list){
+        this.clearRenderList();
+        this.addRenderList(list);
+    }
+
+    private void addRenderList(List<RenderPoint[]> list){
+        this.renderList.addAll(list);
+    }
+
     private void addRenderArray(RenderPoint[] array){
         this.renderList.add(array);
+        this.sendRenderListPacket();
     }
 
     private void clearRenderList(){
-        this.renderList = Lists.newArrayList();
+        this.renderList.clear();
+        this.sendRenderListPacket();
+    }
+
+    private void sendRenderListPacket(){
+        NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.RenderList(0, this.renderList), this.getEntity());
     }
 }

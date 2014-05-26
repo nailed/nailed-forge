@@ -3,7 +3,7 @@ Todo:
 - World and zone specific permissions
 - Add a lot of chat commands - When nailed-web is stable and running
 - A way to let surfaces, lines and points be rendered in the world, on request of the server
-  - Packets have been implemented, rendering and serverside requests have to be added
+  - Packets & rendering have been implemented , serverside requests have to be added
 -
 
 Bugs:
