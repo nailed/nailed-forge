@@ -18,16 +18,16 @@ import net.minecraft.client.renderer.Tessellator
  */
 object TeamInformationRenderer extends Gui {
 
-  val team1 = List("jk_5", "Dabadooba", "ikzelf1248")
-  val team2 = List("Dinnerbone", "Grumm", "Jeb_")
-  val team3 = List("Docm77","Etho","AnderZEL")
+  val left = List("jk_5", "Dabadooba", "ikzelf1248")
+  val topLeft = List("Dinnerbone", "Grumm", "Jeb_")
+  val right = List("Docm77","Etho","AnderZEL")
 
   val textures = mutable.HashMap[String, ResourceLocation]()
 
   @SubscribeEvent def render(event: RenderGameOverlayEvent.Post): Unit = if(event.`type` == ElementType.ALL) {
-    renderTopRight(team1, event.resolution)
-    renderLeft(team2, event.resolution)
-    renderRight(team3, event.resolution)
+    renderTopRight(ropRight, event.resolution)
+    renderLeft(left, event.resolution)
+    renderRight(right, event.resolution)
   }
 
   def renderHead(x: Int, y: Int, username: String){
@@ -90,7 +90,7 @@ object TeamInformationRenderer extends Gui {
     glPopMatrix()
   }
 
-  def renderTopRight(players: List[String], resolution: ScaledResolution) {
+  def renderTopLeft(players: List[String], resolution: ScaledResolution) {
     import GL11._
 
     val start = resolution.getScaledWidth / 7
@@ -115,7 +115,7 @@ object TeamInformationRenderer extends Gui {
     glPopMatrix()
   }
 
-  def renderTopLeft(players: List[String], resolution: ScaledResolution) {
+  def renderTopRight(players: List[String], resolution: ScaledResolution) {
     import GL11._
 
     val f = resolution.getScaledWidth / 7
