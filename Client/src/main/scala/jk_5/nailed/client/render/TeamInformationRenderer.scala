@@ -19,13 +19,13 @@ import net.minecraft.client.renderer.Tessellator
 object TeamInformationRenderer extends Gui {
 
   val left = List("jk_5", "Dabadooba", "ikzelf1248")
-  val topLeft = List("Dinnerbone", "Grumm", "Jeb_")
+  val topRight = List("Dinnerbone", "Grumm", "Jeb_")
   val right = List("Docm77","Etho","AnderZEL")
 
   val textures = mutable.HashMap[String, ResourceLocation]()
 
   @SubscribeEvent def render(event: RenderGameOverlayEvent.Post): Unit = if(event.`type` == ElementType.ALL) {
-    renderTopRight(ropRight, event.resolution)
+    renderTopRight(topRight, event.resolution)
     renderLeft(left, event.resolution)
     renderRight(right, event.resolution)
   }
