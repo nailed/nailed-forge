@@ -21,6 +21,8 @@ object WorldEditCUI {
   final val TWOPI = Math.PI * 2
 
   @EventHandler def preInit(event: FMLPreInitializationEvent){
+    WENetworkHandler.load()
+    
     MinecraftForge.EVENT_BUS.register(WERenderer)
     FMLCommonHandler.instance.bus.register(WERenderer)
     MinecraftForge.EVENT_BUS.register(this)
