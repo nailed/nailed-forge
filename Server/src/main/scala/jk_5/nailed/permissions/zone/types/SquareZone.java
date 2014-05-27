@@ -1,7 +1,6 @@
 package jk_5.nailed.permissions.zone.types;
 
 import com.google.common.base.*;
-import jk_5.nailed.map.Point;
 
 /**
  * Created by matthias on 9-5-14.

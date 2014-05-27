@@ -5,6 +5,7 @@ package jk_5.nailed.api.scripting;
  *
  * @author jk-5
  */
+@Deprecated
 public interface ILuaObject {
 
     /**

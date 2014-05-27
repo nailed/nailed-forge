@@ -5,7 +5,6 @@ import java.util.*;
 import com.google.common.base.*;
 import com.google.common.collect.*;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.player.*;
 import jk_5.nailed.api.zone.*;

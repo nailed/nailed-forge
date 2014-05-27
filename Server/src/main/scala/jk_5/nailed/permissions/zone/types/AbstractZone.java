@@ -3,7 +3,7 @@ package jk_5.nailed.permissions.zone.types;
 import javax.annotation.*;
 
 import jk_5.nailed.api.zone.*;
-import jk_5.nailed.map.Point;
+import jk_5.nailed.map.*;
 
 /**
  * No description given

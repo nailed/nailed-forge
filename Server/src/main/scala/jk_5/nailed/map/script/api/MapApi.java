@@ -148,7 +148,7 @@ public class MapApi implements ILuaAPI {
                     LuaMachine machine = this.env.getMachine().getLuaMachine();
                     List<Player> players1 = this.map.getPlayers();
                     for(int i = 0; i < players1.size(); i++){
-                        closure.invoke(LuaValue.varargsOf(machine.toValues(new Object[]{players1.get(i)}, 0)));
+                        closure.invoke(LuaValue.varargsOf(machine.converter.toValues(new Object[]{players1.get(i)}, 0)));
                     }
                 }else{
                     throw new Exception("Excpected 1 function as argument");
@@ -160,7 +160,7 @@ public class MapApi implements ILuaAPI {
                     LuaMachine machine = this.env.getMachine().getLuaMachine();
                     List<Team> teams1 = this.map.getTeamManager().getTeams();
                     for(int i = 0; i < teams1.size(); i++){
-                        closure.invoke(LuaValue.varargsOf(machine.toValues(new Object[]{teams1.get(i)}, 0)));
+                        closure.invoke(LuaValue.varargsOf(machine.converter.toValues(new Object[]{teams1.get(i)}, 0)));
                     }
                 }else{
                     throw new Exception("Excpected 1 function as argument");
