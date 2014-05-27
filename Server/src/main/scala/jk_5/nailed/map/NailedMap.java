@@ -23,6 +23,7 @@ import net.minecraftforge.common.network.*;
 import jk_5.nailed.*;
 import jk_5.nailed.api.*;
 import jk_5.nailed.api.concurrent.scheduler.*;
+import jk_5.nailed.api.lua.*;
 import jk_5.nailed.api.map.*;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.teleport.*;
@@ -377,5 +378,10 @@ public class NailedMap implements Map {
     @Override
     public jk_5.nailed.api.map.LocationHandler getLocationHandler() {
         return this.locationHandler;
+    }
+
+    @Override
+    public MapLuaVm getLuaVm() {
+        return null;
     }
 }

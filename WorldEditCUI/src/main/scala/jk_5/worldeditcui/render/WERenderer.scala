@@ -36,8 +36,8 @@ object WERenderer {
     }catch{
       case e: Exception =>
     }
-    glDepthFunc(GL11.GL_LEQUAL)
     glPopMatrix()
+    glDepthFunc(GL11.GL_LEQUAL)
     glDepthMask(true)
     glEnable(GL11.GL_TEXTURE_2D)
     glDisable(GL11.GL_BLEND)

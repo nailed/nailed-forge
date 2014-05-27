@@ -25,6 +25,7 @@ object TeamInformationRenderer extends Gui {
   val textures = mutable.HashMap[String, ResourceLocation]()
 
   @SubscribeEvent def render(event: RenderGameOverlayEvent.Post): Unit = if(event.`type` == ElementType.ALL) {
+    if(true) return
     renderTopRight(topRight, event.resolution)
     renderLeft(left, event.resolution)
     renderRight(right, event.resolution)

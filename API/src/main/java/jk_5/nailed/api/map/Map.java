@@ -10,6 +10,7 @@ import net.minecraft.world.*;
 
 import cpw.mods.fml.common.gameevent.*;
 
+import jk_5.nailed.api.lua.*;
 import jk_5.nailed.api.map.scoreboard.*;
 import jk_5.nailed.api.map.sign.*;
 import jk_5.nailed.api.map.stat.*;
@@ -61,4 +62,5 @@ public interface Map {
     ChatComponentText getInfoBar();
     float getInfoBarProgress();
     LocationHandler getLocationHandler();
+    MapLuaVm getLuaVm();
 }

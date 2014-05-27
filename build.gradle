@@ -17,7 +17,7 @@ buildscript {
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
-        classpath 'jk_5.nailed.gradle:nailed-gradle:1.1.23'
+        classpath 'jk_5.nailed.gradle:nailed-gradle:1.1.24'
     }
 }
 
@@ -42,7 +42,7 @@ nailed {
     //deploy artifact: 'nailedMumbleLink', project: 'MumbleLink', load: true
     deploy artifact: 'nailedCrashReporter', project: 'CrashReporter', load: true, reobf: true, coremod: 'jk_5.nailed.crashreporter.CorePlugin'
     deploy artifact: 'nailedUpdater', project: 'Updater', restart: 'game', mclib: true
-    deploy artifact: 'forge', maven: 'net.minecraftforge:forge:1.7.2-10.12.1.1085:universal', load: true, server: 'http://files.minecraftforge.net/maven/'
+    deploy artifact: 'forge', maven: 'net.minecraftforge:forge:1.7.2-10.12.1.1098:universal', load: true, server: 'http://files.minecraftforge.net/maven/'
     deploy artifact: 'minecraft', maven: 'versions::1.7.2', localmaven: 'net.minecraft:minecraft:1.7.2', load: true, server: 'https://s3.amazonaws.com/Minecraft.Download/'
 
     tweaker = 'cpw.mods.fml.common.launcher.FMLTweaker'
@@ -64,7 +64,7 @@ createLauncherProfile {
 }
 
 minecraft {
-    version = '1.7.2-10.12.1.1085'
+    version = '1.7.2-10.12.1.1098'
     assetDir = 'runtime/client/assets'
 }
 
@@ -123,7 +123,7 @@ subprojects {
 
     if(rootProject.keystoreLocation != "."){
         rootProject.tasks.reobf.doLast {
-            project.getLogger().lifecycle(":" + project.name + ":sign")
+            project.getLogger().lifecycle(":" + name + ":sign")
             ant.signjar(
                     destDir: jar.destinationDir,
                     jar: jar.getArchivePath(),
@@ -173,4 +173,17 @@ subprojects {
         archives javadocJar
         archives sourcesJar
     }
+
+    /*task sign << {
+        if(rootProject.keystoreLocation != "."){
+            ant.signjar(
+                    destDir: jar.destinationDir,
+                    jar: jar.getArchivePath(),
+                    keystore: rootProject.keystoreLocation,
+                    alias: rootProject.keystoreAlias,
+                    storepass: rootProject.keystorePassword
+            )
+        }
+    }
+    rootProject.tasks.build.finalizedBy(tasks.sign)*/
 }

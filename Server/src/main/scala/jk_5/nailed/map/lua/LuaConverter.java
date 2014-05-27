@@ -82,6 +82,40 @@ public class LuaConverter {
                             Object[] args = new Object[argTypes.length + 1];
                             args[0] = new Context() { //TODO: make this immutable
 
+                                @Override
+                                public boolean canInteract(String player) {
+                                    return false;
+                                }
+
+                                @Override
+                                public boolean isRunning() {
+                                    return false;
+                                }
+
+                                @Override
+                                public boolean isPaused() {
+                                    return false;
+                                }
+
+                                @Override
+                                public boolean start() {
+                                    return false;
+                                }
+
+                                @Override
+                                public boolean pause(double seconds) {
+                                    return false;
+                                }
+
+                                @Override
+                                public boolean stop() {
+                                    return false;
+                                }
+
+                                @Override
+                                public boolean signal(String name, Object... args) {
+                                    return false;
+                                }
                             };
                             for(int i = 1; i < argTypes.length + 1; i++){
                                 //ArgType type = argTypes[i - 1];

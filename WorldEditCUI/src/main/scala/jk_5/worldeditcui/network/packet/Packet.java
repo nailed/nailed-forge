@@ -20,6 +20,7 @@ public abstract class Packet {
 
     public final void processPacket(String[] args){
         this.args = args;
+        this.setupArguments();
         if((this.maxArguments == this.minArguments && this.args.length != maxArguments) || (this.maxArguments != this.minArguments && (this.args.length > this.maxArguments || this.args.length < this.minArguments))){
             throw new PacketException("Received invalid number of arguments");
         }else{
