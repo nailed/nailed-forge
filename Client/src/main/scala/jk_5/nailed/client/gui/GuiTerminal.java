@@ -1,12 +1,13 @@
 package jk_5.nailed.client.gui;
 
-import jk_5.nailed.client.gui.elements.ElementTerminal;
-import jk_5.nailed.map.script.IMachine;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.ResourceLocation;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.input.*;
+import org.lwjgl.opengl.*;
+
+import net.minecraft.client.gui.*;
+import net.minecraft.util.*;
+
+import jk_5.nailed.client.gui.elements.*;
+import jk_5.nailed.client.scripting.*;
 
 /**
  * No description given
@@ -16,12 +17,12 @@ import org.lwjgl.opengl.GL11;
 public class GuiTerminal extends GuiScreen {
 
     private static final ResourceLocation background = new ResourceLocation("nailed", "textures/gui/terminal.png");
-    private IMachine machine;
+    private ClientMachine machine;
     private ElementTerminal terminalBox = null;
     private int terminalWidth;
     private int terminalHeight;
 
-    public GuiTerminal(IMachine machine, int termWidth, int termHeight){
+    public GuiTerminal(ClientMachine machine, int termWidth, int termHeight){
         this.machine = machine;
         this.terminalWidth = termWidth;
         this.terminalHeight = termHeight;

@@ -1,7 +1,6 @@
 package jk_5.nailed.map.script;
 
 import java.io.*;
-import java.util.*;
 
 import org.apache.commons.io.*;
 import org.luaj.vm2.*;
@@ -23,9 +22,6 @@ import jk_5.nailed.map.script.api.*;
  */
 public class LuaMachine {
 
-    private static Map<LuaTable, Map> processing;
-    private static List<LuaValue> tree;
-
     public LuaValue luaGlobals;
     public LuaValue luaMainRoutine = null;
     public LuaValue luaLoadString;
@@ -38,8 +34,6 @@ public class LuaMachine {
     private String hardAbortMessage = null;
 
     private String eventFilter = null;
-
-    private Map<Map, LuaValue> processingValue;
 
     public final LuaConverter converter = new LuaConverter(this);
 

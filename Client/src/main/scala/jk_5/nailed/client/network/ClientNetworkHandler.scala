@@ -3,7 +3,6 @@ package jk_5.nailed.client.network
 import cpw.mods.fml.common.network.{FMLOutboundHandler, NetworkRegistry, FMLEmbeddedChannel}
 import jk_5.nailed.network.{NailedPacket, NailedPacketCodec}
 import cpw.mods.fml.relauncher.Side
-import jk_5.nailed.client.scripting.ScriptPacketHandler
 
 /**
  * No description given
@@ -27,8 +26,7 @@ object ClientNetworkHandler {
     pipeline.addAfter(targetName, "DisplayLoginHandler", DisplayLoginHandler)
     pipeline.addAfter(targetName, "LoginResponseHandler", LoginResponseHandler)
     pipeline.addAfter(targetName, "FieldStatusHandler", FieldStatusHandler)
-
-    pipeline.addAfter(targetName, "Script-MachineUpdateHandler", new ScriptPacketHandler.MachineUpdateHandler)
+    pipeline.addAfter(targetName, "MachineUpdateHandler", MachineUpdateHandler)
   }
 
   def sendPacketToServer(packet: NailedPacket){

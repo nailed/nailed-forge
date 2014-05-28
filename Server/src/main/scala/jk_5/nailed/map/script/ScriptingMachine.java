@@ -27,7 +27,7 @@ public class ScriptingMachine {
     private boolean isUnloaded = false;
 
     private final int id;
-    private final IMachine machine;
+    private final ServerMachine machine;
     private int ticksSinceStart = -1;
     private boolean blinking = false;
     private boolean startupRequested = false;
@@ -38,7 +38,7 @@ public class ScriptingMachine {
     private Terminal terminal;
     private FileSystem fileSystem = null;
 
-    public ScriptingMachine(IMachine machine, Terminal terminal, int id) {
+    public ScriptingMachine(ServerMachine machine, Terminal terminal, int id) {
         ScriptThread.start();
 
         this.id = id;
@@ -367,7 +367,7 @@ public class ScriptingMachine {
         }, this);
     }
 
-    public IMachine getMachine() {
+    public ServerMachine getMachine() {
         return this.machine;
     }
 

@@ -12,6 +12,7 @@ import jk_5.nailed.client.particle.ParticleHelper
 import jk_5.nailed.client.gui.{GuiCreateAccount, GuiLogin, GuiTerminal}
 import jk_5.nailed.client.scripting.ClientMachine
 import jk_5.nailed.client.NailedClient
+import jk_5.nailed.map.script.ScriptPacket
 
 object MapEditHandler extends SimpleChannelInboundHandler[NailedPacket.EditMode] {
   override def channelRead0(ctx: ChannelHandlerContext, msg: NailedPacket.EditMode){
@@ -25,12 +26,14 @@ object MapEditHandler extends SimpleChannelInboundHandler[NailedPacket.EditMode]
 object OpenGuiHandler extends SimpleChannelInboundHandler[NailedPacket.GuiOpen] {
   override def channelRead0(ctx: ChannelHandlerContext, msg: NailedPacket.GuiOpen){
     val tile = Minecraft.getMinecraft.theWorld.getTileEntity(msg.x, msg.y, msg.z)
-    if(tile != null && tile.isInstanceOf[IGuiTileEntity]) {
-      var gui = tile.asInstanceOf[IGuiTileEntity].getGui
-      if(gui == null) return
-      gui = gui.readGuiData(msg.data)
-      if(gui == null) return
-      Minecraft.getMinecraft.displayGuiScreen(gui)
+    tile match {
+      case g: IGuiTileEntity =>
+        var gui = Option(g.getGui)
+        if(gui.isEmpty) return
+        gui = Option(gui.get.readGuiData(msg.data))
+        if(gui.isEmpty) return
+        mc.displayGuiScreen(gui.get)
+      case _ =>
     }
   }
 }
@@ -113,5 +116,12 @@ object FieldStatusHandler extends SimpleChannelInboundHandler[FieldStatus] {
       case l: GuiCreateAccount => l.onFieldStatus(msg)
       case _ =>
     }
+  }
+}
+
+object MachineUpdateHandler extends SimpleChannelInboundHandler[ScriptPacket.UpdateMachine] {
+  override def channelRead0(ctx: ChannelHandlerContext, msg: ScriptPacket.UpdateMachine){
+    val machine = Option(NailedClient.machines.get(msg.instanceId))
+    machine.foreach(_.readData(msg.data))
   }
 }

@@ -328,16 +328,6 @@ public class NailedMap implements Map {
     }
 
     @Override
-    public ChatComponentText getInfoBar() {
-        return new ChatComponentText("");
-    }
-
-    @Override
-    public float getInfoBarProgress() {
-        return 1;
-    }
-
-    @Override
     public jk_5.nailed.api.map.LocationHandler getLocationHandler() {
         return this.locationHandler;
     }

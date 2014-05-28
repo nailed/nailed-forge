@@ -16,23 +16,24 @@ import jk_5.nailed.network.*;
  *
  * @author jk-5
  */
-public class ServerMachine extends ServerTerminal implements IMachine {
+public class ServerMachine {
 
     public static final MachineRegistry<ServerMachine> REGISTRY = new MachineRegistry<ServerMachine>();
 
+    private Terminal terminal;
     private World world;
     private final int instanceId;
     private final ScriptingMachine machine;
     private File preferredSaveDir = null;
+    public boolean terminalChanged = false;
 
-    public ServerMachine(World world, int id, int instanceId, int termWidth, int termHeight) {
-        super(termWidth, termHeight);
+    public ServerMachine(World world, int id, int instanceId, int width, int height) {
+        this.terminal = new Terminal(width, height);
         this.world = world;
         this.instanceId = instanceId;
-        this.machine = new ScriptingMachine(this, this.getTerminal(), id);
+        this.machine = new ScriptingMachine(this, this.terminal, id);
     }
 
-    @Override
     public int getId() {
         return this.machine.getID();
     }
@@ -49,7 +50,7 @@ public class ServerMachine extends ServerTerminal implements IMachine {
         double dt = 0.05D;
         this.machine.advance(dt);
 
-        if(super.pollChanged()){
+        if(this.needsResync()){
             ByteBuf buffer = Unpooled.buffer();
             this.writeData(buffer);
             NailedNetworkHandler.sendPacketToAllPlayersInDimension(new ScriptPacket.UpdateMachine(this.instanceId, buffer), this.world.provider.dimensionId);
@@ -100,13 +101,6 @@ public class ServerMachine extends ServerTerminal implements IMachine {
         return 1000000; //1MB
     }
 
-    public void writeData(ByteBuf buffer) {
-        super.writeData(buffer);
-        buffer.writeInt(this.machine.getID());
-        buffer.writeBoolean(this.machine.isOn());
-        buffer.writeBoolean(this.machine.isBlinking());
-    }
-
     public World getWorld() {
         return this.world;
     }
@@ -129,5 +123,31 @@ public class ServerMachine extends ServerTerminal implements IMachine {
 
     public ScriptingMachine getVM() {
         return this.machine;
+    }
+
+    public boolean needsResync() {
+        if(this.terminalChanged || (this.terminal != null && this.terminal.isChanged())){
+            if(this.terminal != null){
+                this.terminal.clearChanged();
+            }
+            this.terminalChanged = false;
+            return true;
+        }
+        return false;
+    }
+
+    public void writeData(ByteBuf buffer) {
+        if(this.terminal != null){
+            buffer.writeBoolean(true);
+            buffer.writeInt(this.terminal.getWidth());
+            buffer.writeInt(this.terminal.getHeight());
+            this.terminal.writeData(buffer);
+        }else{
+            buffer.writeBoolean(false);
+        }
+    }
+
+    public Terminal getTerminal() {
+        return this.terminal;
     }
 }

@@ -9,7 +9,7 @@ import gnu.trove.map.hash.*;
  *
  * @author jk-5
  */
-public class MachineRegistry<T extends IMachine> {
+public class MachineRegistry<T> {
 
     private static final AtomicInteger nextMachineId = new AtomicInteger(0);
     private final TIntObjectHashMap<Entry> machines = new TIntObjectHashMap<Entry>();
