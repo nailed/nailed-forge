@@ -10,7 +10,6 @@ import net.minecraft.world.*;
 
 import cpw.mods.fml.common.gameevent.*;
 
-import jk_5.nailed.api.lua.*;
 import jk_5.nailed.api.map.scoreboard.*;
 import jk_5.nailed.api.map.sign.*;
 import jk_5.nailed.api.map.stat.*;
@@ -28,14 +27,12 @@ import jk_5.nailed.map.*;
 public interface Map {
 
     int getID();
-    @Nullable
-    Mappack getMappack();
+    @Nullable Mappack getMappack();
     WorldServer getWorld();
     void setWorld(WorldServer world);
     boolean isLoaded();
     TeamManager getTeamManager();
     StatManager getStatManager();
-    WeatherController getWeatherController();
     SignCommandHandler getSignCommandHandler();
     List<Player> getPlayers();
     int getAmountOfPlayers();
@@ -49,18 +46,11 @@ public interface Map {
     void onPlayerJoined(Player player);
     void onPlayerLeft(Player player);
     void initMapServer();
-    void onGameStarted();
-    void onGameEnded();
     void onTick(TickEvent.ServerTickEvent event);
     GameManager getGameManager();
     ScoreboardManager getScoreboardManager();
     void broadcastPacket(Packet packet);
-    int getMaxFoodLevel();
-    int getMinFoodLevel();
     ZoneManager getZoneManager();
     void queueEvent(String event, Object... args);
-    ChatComponentText getInfoBar();
-    float getInfoBarProgress();
     LocationHandler getLocationHandler();
-    MapLuaVm getLuaVm();
 }

@@ -3,12 +3,8 @@ package jk_5.nailed.client.network
 import io.netty.channel.{ChannelHandlerContext, SimpleChannelInboundHandler}
 import jk_5.nailed.network.NailedPacket
 import jk_5.nailed.network.NailedPacket._
-import jk_5.nailed.client.updater.UpdaterApi
-import com.google.common.util.concurrent.ThreadFactoryBuilder
 import net.minecraft.client.Minecraft.{getMinecraft => mc}
-import net.minecraft.util.{EnumChatFormatting, ChatComponentText}
 import net.minecraft.client.Minecraft
-import jk_5.nailed.client.map.NailedWorldProvider
 import jk_5.nailed.client.map.edit.MapEditManager
 import jk_5.nailed.client.render.TimeUpdateRenderer
 import jk_5.nailed.client.blocks.tileentity.{NailedTileEntity, IGuiTileEntity}
@@ -16,31 +12,6 @@ import jk_5.nailed.client.particle.ParticleHelper
 import jk_5.nailed.client.gui.{GuiCreateAccount, GuiLogin, GuiTerminal}
 import jk_5.nailed.client.scripting.ClientMachine
 import jk_5.nailed.client.NailedClient
-
-object ClientUpdateHandler extends SimpleChannelInboundHandler[NailedPacket.CheckClientUpdates] {
-  val updaterFactory = new ThreadFactoryBuilder().setDaemon(false).setNameFormat("Updater main thread %d").build()
-
-  override def channelRead0(ctx: ChannelHandlerContext, msg: CheckClientUpdates){
-    updaterFactory.newThread(new Runnable {
-      override def run(){
-        if(UpdaterApi.update()){
-          val comp = new ChatComponentText("Installed a few updates. Restart the game to make them active")
-          comp.getChatStyle.setColor(EnumChatFormatting.GREEN)
-          mc.ingameGUI.getChatGUI.printChatMessage(comp)
-        }
-      }
-    })
-  }
-}
-
-object MapDataHandler extends SimpleChannelInboundHandler[NailedPacket.MapData] {
-  override def channelRead0(ctx: ChannelHandlerContext, msg: NailedPacket.MapData){
-    val world = Minecraft.getMinecraft.theWorld
-    if(world.provider.dimensionId == msg.dimId && world.provider.isInstanceOf[NailedWorldProvider]) {
-      world.provider.asInstanceOf[NailedWorldProvider].readData(msg.data)
-    }
-  }
-}
 
 object MapEditHandler extends SimpleChannelInboundHandler[NailedPacket.EditMode] {
   override def channelRead0(ctx: ChannelHandlerContext, msg: NailedPacket.EditMode){
@@ -142,11 +113,5 @@ object FieldStatusHandler extends SimpleChannelInboundHandler[FieldStatus] {
       case l: GuiCreateAccount => l.onFieldStatus(msg)
       case _ =>
     }
-  }
-}
-
-object SpawnVanillaParticleHandler extends SimpleChannelInboundHandler[SpawnVanillaParticle] {
-  override def channelRead0(ctx: ChannelHandlerContext, msg: SpawnVanillaParticle){
-    mc.theWorld.spawnParticle(msg.name, msg.x, msg.y, msg.z, msg.vx, msg.vy, msg.vz)
   }
 }

@@ -41,7 +41,7 @@ public class LuaMachine {
 
     private Map<Map, LuaValue> processingValue;
 
-    public final  LuaConverter converter = new LuaConverter(this);
+    public final LuaConverter converter = new LuaConverter(this);
 
     private EventApi eventApi;
 

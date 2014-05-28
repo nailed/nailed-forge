@@ -91,14 +91,6 @@ public class TeamManager implements jk_5.nailed.api.map.team.TeamManager {
         }
     }
 
-    public void onGameStarted() {
-
-    }
-
-    public void onGameEnded() {
-
-    }
-
     public Team getDefaultTeam() {
         return this.defaultTeam;
     }

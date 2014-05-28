@@ -3,10 +3,8 @@ package jk_5.nailed.api.map;
 import java.util.*;
 import java.util.Map;
 
-import net.minecraft.util.*;
 import net.minecraft.world.*;
 
-import jk_5.nailed.api.*;
 import jk_5.nailed.api.map.team.*;
 import jk_5.nailed.map.*;
 
@@ -30,14 +28,11 @@ public interface MappackMetadata {
     boolean isChoosingRandomSpawnpointAtRespawn();
     List<Location> getRandomSpawnpoints();
     String getStartWhen();
-    @Deprecated
-    EnumSet<WeatherType> getPermittedWeatherTypes();
     SpawnRules getSpawnRules();
     int getMaxFoodLevel();
     int getMinFoodLevel();
     int getMaxHealth();
     int getMinHealth();
     PostGameAction getPostGameAction();
-    List<ChatComponentText> getInfoBarItems();
     HashMap<String, Location> getLocations();
 }

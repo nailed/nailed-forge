@@ -7,7 +7,6 @@ import cpw.mods.fml.relauncher.*;
 
 import net.minecraftforge.common.network.*;
 
-import jk_5.nailed.*;
 import jk_5.nailed.api.*;
 import jk_5.nailed.api.map.*;
 
@@ -29,7 +28,7 @@ public class FMLHandshakeHandler extends ChannelInboundHandlerAdapter {
                 if(map.getID() >= -1 && map.getID() <= 1){
                     continue;
                 }
-                channel.writeOutbound(new ForgeMessage.DimensionRegisterMessage(map.getID(), NailedServer.getProviderID()));
+                channel.writeOutbound(new ForgeMessage.DimensionRegisterMessage(map.getID(), 0));
             }
         }
         ctx.fireUserEventTriggered(evt);

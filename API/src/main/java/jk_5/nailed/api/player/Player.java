@@ -51,8 +51,6 @@ public interface Player extends PossibleWinner, ILuaObject {
     boolean hasPermission(String node);
     void setSpawnpoint(Location spawnpoint);
     Location getSpawnpoint();
-    void setPdaID(int id);
-    int getPdaID();
     NetHandlerPlayServer getNetHandler();
     void sendTimeUpdate(String message);
     boolean isEditModeEnabled();

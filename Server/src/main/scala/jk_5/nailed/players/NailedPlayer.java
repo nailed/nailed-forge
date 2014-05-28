@@ -49,7 +49,6 @@ public class NailedPlayer implements Player, ILuaObject {
     private boolean online = false;
     private int fps;
     private Location spawnpoint;
-    private int pdaID = -1;
     private NetHandlerPlayServer netHandler;
     private boolean editModeEnabled = false;
     private int maxHealth = 20;
@@ -263,11 +262,6 @@ public class NailedPlayer implements Player, ILuaObject {
     }
 
     @Override
-    public int getPdaID() {
-        return this.pdaID;
-    }
-
-    @Override
     public NetHandlerPlayServer getNetHandler() {
         return this.netHandler;
     }
@@ -295,11 +289,6 @@ public class NailedPlayer implements Player, ILuaObject {
     @Override
     public void setSpawnpoint(Location spawnpoint) {
         this.spawnpoint = spawnpoint;
-    }
-
-    @Override
-    public void setPdaID(int pdaID) {
-        this.pdaID = pdaID;
     }
 
     @Override
