@@ -49,8 +49,8 @@ object CertificateHelper {
       val md = MessageDigest.getInstance("SHA-1")
       md.update(certificate.getEncoded)
       hexify(md.digest)
-    }catch {
-      case e: Exception => return null
+    }catch{
+      case e: Exception => null
     }
   }
 

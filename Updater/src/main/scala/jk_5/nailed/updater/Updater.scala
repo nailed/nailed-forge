@@ -1,7 +1,7 @@
 package jk_5.nailed.updater
 
 import org.apache.logging.log4j.LogManager
-import java.io.{IOException, File}
+import java.io.File
 import java.util.concurrent.{CountDownLatch, ThreadFactory, Executors}
 import jk_5.nailed.updater.json.{Library, LibraryList, RestartLevel}
 import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger}
@@ -30,6 +30,7 @@ object Updater {
       new File(userHome, ".minecraft")
     }
   }
+  val nomonitor = Properties.propIsSet("nailed.updater.nomonitor")
   var restart = RestartLevel.NOTHING
   val logger = LogManager.getLogger("Nailed-Updater")
   val server = "http://maven.reening.nl/"
@@ -53,19 +54,12 @@ object Updater {
 
     val progress = new AtomicInteger(0)
 
-    if(monitor) DownloadMonitor.setNote("Reading remote versions")
     val remote = LibraryList.readFromUrl(this.versionsUrl)
-    if(monitor) DownloadMonitor.setNote("Reading local versions")
     val local = LibraryList.readFromFile(this.versionsFile)
 
     val download = new util.HashSet[Library]()
 
-    if(monitor){
-      DownloadMonitor.setNote("Scanning artifact versions")
-      DownloadMonitor.setProgress(0)
-      DownloadMonitor.setMaximum(remote.libraries.size)
-    }
-    progress.set(0)
+    logger.info("Scanning artifact versions...")
     remote.libraries.foreach(library => {
       val loc = local.libraries.find(_.name == library.name)
       if(loc.isEmpty){
@@ -79,13 +73,12 @@ object Updater {
           download.add(library)
         }
       }
-      if(monitor) DownloadMonitor.setProgress(progress.getAndIncrement)
     })
 
     val updated = new AtomicBoolean(false)
     val latch = new CountDownLatch(download.size)
 
-    if(monitor){
+    if(monitor && download.size() > 0){
       DownloadMonitor.setProgress(0)
       DownloadMonitor.setMaximum(download.size)
       progress.set(0)
@@ -129,14 +122,13 @@ object Updater {
 
     latch.await()
 
-    if(monitor){
-      DownloadMonitor.setProgress(0)
-      DownloadMonitor.setMaximum(0)
-      progress.set(0)
-      DownloadMonitor.setNote("Writing local versions file")
-    }
-
     if(updated.get) {
+      if(monitor){
+        DownloadMonitor.setProgress(0)
+        DownloadMonitor.setMaximum(0)
+        progress.set(0)
+        DownloadMonitor.setNote("Writing local versions file")
+      }
       logger.info("Writing local versions file...")
       local.writeToFile(this.versionsFile)
     }
@@ -145,53 +137,34 @@ object Updater {
   }
 
   def checkForUpdates(): Boolean = {
-    val progress = new AtomicInteger(0)
-
-    DownloadMonitor.setNote("Cleaning up the mods folder...")
+    logger.info("Cleaning up mods folder...")
     val modsFolder = this.resolve("{MC_GAME_DIR}/mods/")
     if(!modsFolder.exists) modsFolder.mkdir
-    DownloadMonitor.setProgress(0)
-    DownloadMonitor.setMaximum(modsFolder.listFiles.length)
     modsFolder.listFiles.filter(f => f.getName.contains("Nailed") || f.getName.contains("nailed")).foreach(f => {
       logger.info(s"Found nailed related file ${f.getName} in mods folder. Removing it!")
       f.delete
-      DownloadMonitor.setProgress(progress.getAndIncrement)
     })
 
-    val (updated, remote) = this.downloadUpdates(monitor = true)
+    val (updated, remote) = this.downloadUpdates(monitor = !this.nomonitor)
 
     if(restart == RestartLevel.NOTHING) {
-      logger.info("Moving artifacts to the mod folder")
-      remote.libraries.foreach(library => {
-        if(library.mod) {
-          try{
-            DownloadMonitor.setNote(s"Moving ${library.name} to the mods folder")
-            logger.info(s"  Moving ${library.name} to the mods folder")
-            val location = resolve(library.destination)
-            val dest = resolve(s"{MC_GAME_DIR}/mods/${location.getName}")
-            FileUtils.copyFile(location, dest)
-            dest.deleteOnExit()
-          }catch{
-            case e: IOException => logger.error(s"Error while moving file ${library.name}", e)
-          }
-          DownloadMonitor.setProgress(progress.getAndIncrement)
-        }
-      })
-
-      logger.info("Adding cascaded tweakers")
+      logger.info("Injecting cascaded tweakers")
       val tweakList = Launch.blackboard.get("TweakClasses").asInstanceOf[util.List[String]]
       tweakList.addAll(remote.tweakers)
+      remote.tweakers.foreach(t => logger.info(s"  Injected $t"))
 
       logger.info("Injecting artifacts into classLoader")
       remote.libraries.filter(_.load).foreach(l => this.injectIntoClassLoader(this.resolve(l.destination)))
 
       logger.info("Injecting coremods")
       Properties.setProp("fml.coreMods.load", remote.libraries.filter(_.coremod != null).map(_.coremod).mkString(","))
+      remote.libraries.map(_.coremod).foreach(c => logger.info(s"  Injected " + c))
 
-      logger.info("Retrieving main class")
+      logger.info("Resolving main class")
       this.mainClass = Option(remote.mainClass).getOrElse(this.mainClass)
+      logger.info(s"  Main class is: ${this.mainClass}")
     }
-    DownloadMonitor.close()
+    if(!this.nomonitor) DownloadMonitor.close()
     updated
   }
 
@@ -211,6 +184,7 @@ object Updater {
 
   private def injectIntoClassLoader(file: File){
     val url = file.toURI.toURL
+    logger.info(s"  Injecting ${file.getName} into classloader")
     if(this.addUrl == null){
       this.addUrl = classOf[URLClassLoader].getDeclaredMethod("addURL", classOf[URL])
       this.addUrl.setAccessible(true)

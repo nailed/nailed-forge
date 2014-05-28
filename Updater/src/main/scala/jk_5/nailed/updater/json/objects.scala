@@ -18,7 +18,6 @@ class Library {
   var destination: String = null
   var location: String = null
   var restart: RestartLevel = null
-  var mod = false
   var load = false
   var coremod: String = null
 }
