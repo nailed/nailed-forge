@@ -3,7 +3,7 @@ package jk_5.quakecraft
 import cpw.mods.fml.common.{FMLCommonHandler, Mod}
 import cpw.mods.fml.common.Mod.EventHandler
 import scala.collection.mutable
-import cpw.mods.fml.common.network.{FMLOutboundHandler, NetworkRegistry, NetworkCheckHandler}
+import cpw.mods.fml.common.network.NetworkCheckHandler
 import java.util
 import cpw.mods.fml.relauncher.Side
 import cpw.mods.fml.common.event.FMLPreInitializationEvent
@@ -25,7 +25,6 @@ import net.minecraftforge.event.entity.living.{LivingHurtEvent, LivingFallEvent}
 import net.minecraftforge.event.entity.EntityJoinWorldEvent
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.potion.{Potion, PotionEffect}
-import jk_5.nailed.network.NailedPacket
 
 /**
  * No description given
@@ -109,15 +108,14 @@ object Quakecraft {
     val d = Math.sqrt(dx * dx + dy * dy + dz * dz) / (1 / particlesPerBlock)
     val total = (d * particlesPerBlock).toInt
 
-    val channel = NetworkRegistry.INSTANCE.getChannel("nailed", Side.SERVER)
-    channel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.DIMENSION)
-    channel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(world.provider.dimensionId: java.lang.Integer)
-
     for(i <- 0 until total){
       val x = dx / d * i + start._1
       val y = dy / d * i + start._2
       val z = dz / d * i + start._3
-      channel.writeOutbound(new NailedPacket.SpawnVanillaParticle("fireworksSpark", x, y, z, 0, 0, 0))
+
+      val entity = new EntityFireworkRocket(world, x, y, z, null)
+      world.spawnEntityInWorld(entity) //TODO: spawnParticle
+      world.removeEntity(entity)
     }
   }
 

@@ -1,40 +1,22 @@
 package jk_5.nailed.client.scripting;
 
-import io.netty.buffer.ByteBuf;
-import jk_5.nailed.client.network.ClientNetworkHandler;
-import jk_5.nailed.map.script.IMachine;
-import jk_5.nailed.map.script.ScriptPacket;
-import lombok.Getter;
-import net.minecraft.client.Minecraft;
-import net.minecraft.world.World;
+import io.netty.buffer.*;
+
+import jk_5.nailed.client.network.*;
+import jk_5.nailed.map.script.*;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-public class ClientMachine extends ClientTerminal implements IMachine {
+public class ClientMachine {
 
     private final int instanceId;
-    @Getter private int id;
-    @Getter private boolean on;
-    private boolean blinking;
-    private boolean changed;
+    private Terminal terminal = null;
 
     public ClientMachine(int instanceId){
         this.instanceId = instanceId;
-        this.on = false;
-        this.id = -1;
-        this.blinking = false;
-        this.changed = false;
-    }
-
-    public boolean pollChanged(){
-        if(this.changed){
-            this.changed = false;
-            return true;
-        }
-        return false;
     }
 
     public void turnOn(){
@@ -53,16 +35,29 @@ public class ClientMachine extends ClientTerminal implements IMachine {
         ClientNetworkHandler.sendPacketToServer(new ScriptPacket.QueueEvent(this.instanceId, event, arguments));
     }
 
-    @Override
-    public World getWorld(){
-        return Minecraft.getMinecraft().theWorld;
+    public void readData(ByteBuf buffer){
+        boolean hasTerminal = buffer.readBoolean();
+        if(hasTerminal){
+            this.resizeTerminal(buffer.readInt(), buffer.readInt());
+            this.terminal.readData(buffer);
+        }else{
+            deleteTerminal();
+        }
     }
 
-    public void readData(ByteBuf buffer){
-        super.readData(buffer);
-        this.id = buffer.readInt();
-        this.on = buffer.readBoolean();
-        this.blinking = buffer.readBoolean();
-        this.changed = true;
+    private void resizeTerminal(int width, int height){
+        if(this.terminal == null){
+            this.terminal = new Terminal(width, height);
+        }else{
+            this.terminal.resize(width, height);
+        }
+    }
+
+    private void deleteTerminal(){
+        this.terminal = null;
+    }
+
+    public Terminal getTerminal() {
+        return terminal;
     }
 }

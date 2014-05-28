@@ -6,13 +6,10 @@ import java.util.Map;
 import com.google.common.collect.*;
 import com.google.gson.*;
 
-import net.minecraft.util.*;
 import net.minecraft.world.*;
 
-import jk_5.nailed.api.*;
 import jk_5.nailed.api.map.*;
 import jk_5.nailed.api.map.team.*;
-import jk_5.nailed.api.zone.*;
 import jk_5.nailed.map.*;
 import jk_5.nailed.util.*;
 
@@ -35,15 +32,12 @@ public class JsonMappackMetadata implements MappackMetadata {
     public boolean choosingRandomSpawnpointAtRespawn;
     public List<Location> randomSpawnpoints;
     public String startWhen = "false";
-    public EnumSet<WeatherType> permittedWeatherTypes;
     public SpawnRules spawnRules;
     public int minFoodLevel;
     public int maxFoodLevel;
     public int minHealth;
     public int maxHealth;
     public PostGameAction postGameAction;
-    public List<IZone> zones;
-    public List<ChatComponentText> infoBarItems;
     public HashMap<String, Location> locations;
     private List<TeamBuilder> defaultTeams;
 
@@ -102,14 +96,6 @@ public class JsonMappackMetadata implements MappackMetadata {
             }
         }
 
-        this.infoBarItems = Lists.newArrayList();
-        if(json.has("infobaritems")){
-            JsonArray items = json.getAsJsonArray("infobaritems");
-            for(JsonElement i : items){
-                this.infoBarItems.add(new ChatComponentText(i.getAsString()));
-            }
-        }
-
         this.locations = Maps.newHashMap();
         if(json.has("locations")){
             JsonArray array = json.getAsJsonArray("locations");
@@ -120,17 +106,6 @@ public class JsonMappackMetadata implements MappackMetadata {
             }
 
         }
-
-        //TODO: this is not used yet
-        /*this.permittedWeatherTypes = EnumSet.noneOf(WeatherType.class);
-        ConfigTag weatherTag = this.config.getTag("permittedWeather");
-        for(ConfigTag tag : weatherTag.getSortedTagList()){
-            WeatherType type = WeatherType.valueOf(tag.name.toUpperCase());
-            if(type == null) continue;
-            if(tag.getBooleanValue(true)){
-                this.permittedWeatherTypes.add(type);
-            }
-        }*/
     }
 
     @Override
@@ -199,12 +174,6 @@ public class JsonMappackMetadata implements MappackMetadata {
     }
 
     @Override
-    public EnumSet<WeatherType> getPermittedWeatherTypes() {
-        return this.permittedWeatherTypes;
-    }
-
-    @Override
-
     public SpawnRules getSpawnRules() {
         return this.spawnRules;
     }
@@ -232,11 +201,6 @@ public class JsonMappackMetadata implements MappackMetadata {
     @Override
     public PostGameAction getPostGameAction() {
         return this.postGameAction;
-    }
-
-    @Override
-    public List<ChatComponentText> getInfoBarItems() {
-        return this.infoBarItems;
     }
 
     @Override

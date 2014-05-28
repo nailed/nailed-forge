@@ -32,7 +32,6 @@ import jk_5.nailed.camera.*;
 import jk_5.nailed.chat.joinmessage.*;
 import jk_5.nailed.ipc.*;
 import jk_5.nailed.irc.*;
-import jk_5.nailed.item.*;
 import jk_5.nailed.map.*;
 import jk_5.nailed.map.gen.*;
 import jk_5.nailed.map.mappack.*;
@@ -158,7 +157,6 @@ public class NailedServer {
 
         NailedLog.info("Registering blocks");
         NailedBlocks.init();
-        NailedItems.init();
 
         NailedLog.info("Registering Nailed WorldProvider");
         NailedServer.providerID = config.get("providerId").getAsInt();

@@ -5,7 +5,6 @@ package jk_5.nailed.api.lua;
  *
  * @author jk-5
  */
-public interface MapLuaVm {
+public class LimitReachedException extends Exception {
 
-    void registerApi(Object api);
 }

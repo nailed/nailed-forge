@@ -1,18 +1,18 @@
 package jk_5.nailed.client.gui.elements;
 
-import jk_5.nailed.client.NailedClient;
-import jk_5.nailed.client.TickHandlerClient;
-import jk_5.nailed.client.render.FixedWidthFontRenderer;
-import jk_5.nailed.map.script.IMachine;
-import jk_5.nailed.map.script.Terminal;
-import lombok.Getter;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.ResourceLocation;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.input.*;
+import org.lwjgl.opengl.*;
+
+import net.minecraft.client.*;
+import net.minecraft.client.gui.*;
+import net.minecraft.util.*;
+
+import jk_5.nailed.client.*;
+import jk_5.nailed.client.render.*;
+import jk_5.nailed.client.scripting.*;
+import jk_5.nailed.map.script.*;
+
+import lombok.*;
 
 /**
  * No description given
@@ -34,9 +34,9 @@ public class ElementTerminal extends Gui {
     private int lastClickButton = -1;
     private int lastClickX = -1;
     private int lastClickY = -1;
-    private IMachine machine;
+    private ClientMachine machine;
 
-    public ElementTerminal(int x, int y, int termWidth, int termHeight, IMachine machine){
+    public ElementTerminal(int x, int y, int termWidth, int termHeight, ClientMachine machine){
         this.xPosition = x;
         this.yPosition = y;
         this.width = 2 * MARGIN + termWidth * FixedWidthFontRenderer.FONT_WIDTH;

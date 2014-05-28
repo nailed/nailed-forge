@@ -17,8 +17,6 @@ public class Terminal {
 
     public static final int WIDTH = 51;
     public static final int HEIGHT = 19;
-    public static final int PDAWIDTH = 20;
-    public static final int PDAHEIGHT = 27;
     public static final String base16 = "0123456789abcdef";
 
     @Getter

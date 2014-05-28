@@ -1,12 +1,12 @@
 package jk_5.nailed.client.item;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import jk_5.nailed.client.blocks.BlockMulti;
-import net.minecraft.block.Block;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
+import net.minecraft.block.*;
+import net.minecraft.item.*;
+import net.minecraft.util.*;
+
+import cpw.mods.fml.relauncher.*;
+
+import jk_5.nailed.client.blocks.*;
 
 /**
  * No description given
@@ -34,7 +34,6 @@ public class ItemBlockMulti extends ItemBlock {
     @Override
     @SideOnly(Side.CLIENT)
     public IIcon getIconFromDamage(int meta){
-        //this.block.getIcon(side, meta)
         return this.field_150939_a.getIcon(2, meta);
     }
 

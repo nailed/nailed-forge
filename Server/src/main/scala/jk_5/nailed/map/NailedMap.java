@@ -23,7 +23,6 @@ import net.minecraftforge.common.network.*;
 import jk_5.nailed.*;
 import jk_5.nailed.api.*;
 import jk_5.nailed.api.concurrent.scheduler.*;
-import jk_5.nailed.api.lua.*;
 import jk_5.nailed.api.map.*;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.teleport.*;
@@ -35,7 +34,6 @@ import jk_5.nailed.map.scoreboard.*;
 import jk_5.nailed.map.script.*;
 import jk_5.nailed.map.sign.*;
 import jk_5.nailed.map.stat.*;
-import jk_5.nailed.map.weather.WeatherController;
 import jk_5.nailed.permissions.zone.*;
 import jk_5.nailed.util.*;
 
@@ -55,8 +53,6 @@ public class NailedMap implements Map {
     private boolean isLoaded = false;
     private final TeamManager teamManager;
     private final StatManager statManager;
-    private boolean dataResyncRequired = true;
-    private WeatherController weatherController;
     private SignCommandHandler signCommandHandler;
     private GameManager gameManager;
     private NailedScoreboardManager scoreboardManager;
@@ -73,7 +69,6 @@ public class NailedMap implements Map {
         this.mappack = mappack;
         this.teamManager = new TeamManager(this);
         this.statManager = new StatManager(this);
-        this.weatherController = new WeatherController(this);
         this.signCommandHandler = new SignCommandHandler(this);
         this.gameManager = new NailedGameManager(this);
         this.scoreboardManager = new NailedScoreboardManager(this);
@@ -97,7 +92,7 @@ public class NailedMap implements Map {
         DimensionManager.registerDimension(this.getID(), NailedServer.getProviderID());
         DimensionManager.initDimension(this.getID());
 
-        ForgeMessage.DimensionRegisterMessage packet = new ForgeMessage.DimensionRegisterMessage(this.getID(), NailedServer.getProviderID());
+        ForgeMessage.DimensionRegisterMessage packet = new ForgeMessage.DimensionRegisterMessage(this.getID(), 0);
         EmbeddedChannel channel = NetworkRegistry.INSTANCE.getChannel("FORGE", Side.SERVER);
         channel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALL);
         channel.writeOutbound(packet);
@@ -240,30 +235,12 @@ public class NailedMap implements Map {
     }
 
     @Override
-    public void onGameStarted() {
-        this.teamManager.onGameStarted();
-    }
-
-    @Override
-    public void onGameEnded() {
-        this.teamManager.onGameEnded();
-    }
-
-    @Override
     public Location getRandomSpawnpoint() {
         List<Location> spawnpoints = mappack.getMappackMetadata().getRandomSpawnpoints();
         if(spawnpoints.size() == 0){
             return null;
         }
         return spawnpoints.get(NailedMapLoader.instance().getRandomSpawnpointSelector().nextInt(spawnpoints.size()));
-    }
-
-    public void markDataNeedsResync() {
-        this.dataResyncRequired = true;
-    }
-
-    public void onSynced() {
-        this.dataResyncRequired = false;
     }
 
     @Override
@@ -317,11 +294,6 @@ public class NailedMap implements Map {
     }
 
     @Override
-    public WeatherController getWeatherController() {
-        return this.weatherController;
-    }
-
-    @Override
     public SignCommandHandler getSignCommandHandler() {
         return this.signCommandHandler;
     }
@@ -346,16 +318,6 @@ public class NailedMap implements Map {
     }
 
     @Override
-    public int getMaxFoodLevel() {
-        return mappack.getMappackMetadata().getMaxFoodLevel();
-    }
-
-    @Override
-    public int getMinFoodLevel() {
-        return mappack.getMappackMetadata().getMinFoodLevel();
-    }
-
-    @Override
     public ZoneManager getZoneManager() {
         return this.zoneManager;
     }
@@ -366,22 +328,7 @@ public class NailedMap implements Map {
     }
 
     @Override
-    public ChatComponentText getInfoBar() {
-        return new ChatComponentText("");
-    }
-
-    @Override
-    public float getInfoBarProgress() {
-        return 1;
-    }
-
-    @Override
     public jk_5.nailed.api.map.LocationHandler getLocationHandler() {
         return this.locationHandler;
-    }
-
-    @Override
-    public MapLuaVm getLuaVm() {
-        return null;
     }
 }

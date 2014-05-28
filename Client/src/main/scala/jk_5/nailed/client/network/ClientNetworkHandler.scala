@@ -3,7 +3,6 @@ package jk_5.nailed.client.network
 import cpw.mods.fml.common.network.{FMLOutboundHandler, NetworkRegistry, FMLEmbeddedChannel}
 import jk_5.nailed.network.{NailedPacket, NailedPacketCodec}
 import cpw.mods.fml.relauncher.Side
-import jk_5.nailed.client.scripting.ScriptPacketHandler
 
 /**
  * No description given
@@ -21,17 +20,13 @@ object ClientNetworkHandler {
     pipeline.addAfter(targetName, "OpenGuiHandler", OpenGuiHandler)
     pipeline.addAfter(targetName, "TileEntityDataHandler", TileEntityDataHandler)
     pipeline.addAfter(targetName, "TimeUpdateHandler", TimeUpdateHandler)
-    pipeline.addAfter(targetName, "MapDataHandler", MapDataHandler)
     pipeline.addAfter(targetName, "ParticleHandler", ParticleHandler)
     pipeline.addAfter(targetName, "TerminalGuiHandler", TerminalGuiHandler)
     pipeline.addAfter(targetName, "MapEditHandler", MapEditHandler)
-    pipeline.addAfter(targetName, "ClientUpdateHandler", ClientUpdateHandler)
     pipeline.addAfter(targetName, "DisplayLoginHandler", DisplayLoginHandler)
     pipeline.addAfter(targetName, "LoginResponseHandler", LoginResponseHandler)
     pipeline.addAfter(targetName, "FieldStatusHandler", FieldStatusHandler)
-    pipeline.addAfter(targetName, "SpawnVanillaParticleHandler", SpawnVanillaParticleHandler)
-
-    pipeline.addAfter(targetName, "Script-MachineUpdateHandler", new ScriptPacketHandler.MachineUpdateHandler)
+    pipeline.addAfter(targetName, "MachineUpdateHandler", MachineUpdateHandler)
   }
 
   def sendPacketToServer(packet: NailedPacket){

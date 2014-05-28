@@ -6,16 +6,13 @@ import cpw.mods.fml.common.Mod.EventHandler
 import cpw.mods.fml.common.event.{FMLInitializationEvent, FMLPreInitializationEvent}
 import jk_5.nailed.NailedLog
 import jk_5.nailed.client.network.ClientNetworkHandler
-import net.minecraftforge.common.{DimensionManager, MinecraftForge}
+import net.minecraftforge.common.MinecraftForge
 import jk_5.nailed.client.render._
 import jk_5.nailed.client.map.edit.MapEditManager
 import jk_5.nailed.client.blocks.NailedBlocks
-import jk_5.nailed.client.item.NailedItems
-import jk_5.nailed.client.map.NailedWorldProvider
 import net.minecraft.network.play.server.S2BPacketChangeGameState
 import jk_5.nailed.client.scripting.ClientMachine
 import jk_5.nailed.map.script.MachineRegistry
-import jk_5.nailed.client.updater.UpdaterApi
 
 /**
  * No description given
@@ -33,7 +30,6 @@ object NailedClient {
     throw new RuntimeException("Nailed-Client is client-only, don\'t use it on the server!")
   }
   var renderer: CustomsRenderer = CustomsRenderer.instance()
-  var providerId = 10
   var fixedWidthFontRenderer: FixedWidthFontRenderer = _
   val machines = new MachineRegistry[ClientMachine]()
 
@@ -60,18 +56,8 @@ object NailedClient {
 
     NailedLog.info("Registering blocks")
     NailedBlocks.init()
-    NailedItems.init()
-
-    NailedLog.info("Registering Nailed WorldProvider")
-    DimensionManager.registerProviderType(NailedClient.providerId, classOf[NailedWorldProvider], false)
-
-    NailedLog.info("Overriding Default WorldProviders")
-    DimensionManager.unregisterProviderType(0)
-    DimensionManager.registerProviderType(0, classOf[NailedWorldProvider], true)
 
     S2BPacketChangeGameState.field_149142_a(3) = null //Prevent annoying "Your gamemode has been updated" message. If we want it we'll send it ourselves
-
-    NailedLog.info("Updater installed: {}", UpdaterApi.updaterInstalled: java.lang.Boolean)
   }
 
   @Mod.EventHandler def init(event: FMLInitializationEvent){

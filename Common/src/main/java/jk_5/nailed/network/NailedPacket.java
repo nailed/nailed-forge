@@ -1,8 +1,10 @@
 package jk_5.nailed.network;
 
-import com.google.common.base.*;
+import java.util.*;
 
+import com.google.common.base.*;
 import com.google.common.collect.*;
+
 import io.netty.buffer.*;
 
 import cpw.mods.fml.common.network.*;
@@ -10,8 +12,6 @@ import cpw.mods.fml.common.network.*;
 import jk_5.nailed.map.*;
 
 import lombok.*;
-
-import java.util.List;
 
 /**
  * No description given
@@ -142,26 +142,6 @@ public abstract class NailedPacket {
 
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class MapData extends NailedPacket {
-
-        public int dimId;
-        public ByteBuf data;
-
-        @Override
-        public void encode(ByteBuf buffer){
-            buffer.writeInt(this.dimId);
-            buffer.writeBytes(this.data);
-        }
-
-        @Override
-        public void decode(ByteBuf buffer){
-            this.dimId = buffer.readInt();
-            this.data = buffer.slice();
-        }
-    }
-
-    @NoArgsConstructor
-    @AllArgsConstructor
     public static class Particle extends NailedPacket {
 
         public double x, y, z;
@@ -245,20 +225,6 @@ public abstract class NailedPacket {
             if(this.enable){
                 this.buffer = buffer.slice();
             }
-        }
-    }
-
-    @NoArgsConstructor
-    public static class CheckClientUpdates extends NailedPacket {
-
-        @Override
-        public void encode(ByteBuf buffer){
-
-        }
-
-        @Override
-        public void decode(ByteBuf buffer){
-
         }
     }
 
@@ -359,37 +325,6 @@ public abstract class NailedPacket {
             this.email = ByteBufUtils.readUTF8String(buffer);
             this.name = ByteBufUtils.readUTF8String(buffer);
             this.password = ByteBufUtils.readUTF8String(buffer);
-        }
-    }
-
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class SpawnVanillaParticle extends NailedPacket {
-
-        public String name;
-        public double x, y, z;
-        public double vx, vy, vz;
-
-        @Override
-        public void encode(ByteBuf buffer){
-            ByteBufUtils.writeUTF8String(buffer, this.name);
-            buffer.writeDouble(x);
-            buffer.writeDouble(y);
-            buffer.writeDouble(z);
-            buffer.writeDouble(vx);
-            buffer.writeDouble(vy);
-            buffer.writeDouble(vz);
-        }
-
-        @Override
-        public void decode(ByteBuf buffer){
-            this.name = ByteBufUtils.readUTF8String(buffer);
-            this.x = buffer.readDouble();
-            this.y = buffer.readDouble();
-            this.z = buffer.readDouble();
-            this.vx = buffer.readDouble();
-            this.vy = buffer.readDouble();
-            this.vz = buffer.readDouble();
         }
     }
 
