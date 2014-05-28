@@ -11,5 +11,5 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 public @interface LuaApi {
 
-    String[] value();
+    String[] value() default {};
 }

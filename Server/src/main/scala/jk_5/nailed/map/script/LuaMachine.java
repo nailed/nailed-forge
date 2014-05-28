@@ -11,16 +11,19 @@ import io.netty.util.*;
 
 import jk_5.nailed.*;
 import jk_5.nailed.api.lua.*;
-import jk_5.nailed.api.scripting.*;
 import jk_5.nailed.map.lua.*;
 import jk_5.nailed.map.script.api.*;
+
+import scala.*;
+import scala.collection.immutable.*;
+import scala.runtime.*;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-public class LuaMachine {
+public class LuaMachine implements Machine {
 
     public LuaValue luaGlobals;
     public LuaValue luaMainRoutine = null;
@@ -89,16 +92,22 @@ public class LuaMachine {
 
     public void addAPI(Object api) {
         String[] names;
-        if(api instanceof ILuaAPI){
-            ILuaAPI a = (ILuaAPI) api;
-            names = a.getNames();
-        }else if(api.getClass().isAnnotationPresent(LuaApi.class)){
+        if(api.getClass().isAnnotationPresent(LuaApi.class)){
             LuaApi a = api.getClass().getAnnotation(LuaApi.class);
             names = a.value();
         }else{
             throw new InvalidLuaApiException("Given class does not have a @LuaApi annotation and is no ILuaApi");
         }
-        LuaTable table = this.converter.classToValue(api);
+        Map<String, NewLuaConverter.LuaMethodCallback> callbacks = NewLuaConverter.callbacks(api);
+        LuaTable table = NewLuaConverter.asLua(callbacks, new Function0<BoxedUnit>(){
+            @Override
+            public BoxedUnit apply() {
+                abortIfErrored();
+                return BoxedUnit.UNIT;
+            }
+        });
+
+        //LuaTable table = this.converter.classToValue(api);
         for(String name : names){
             this.luaGlobals.set(name, table);
         }
@@ -206,5 +215,15 @@ public class LuaMachine {
             this.hardAbortMessage = null;
             throw new LuaError(abortMsg);
         }
+    }
+
+    @Override
+    public void registerApi(Object api) {
+
+    }
+
+    @Override
+    public Object[] invoke(String method, Object[] args) throws Exception {
+        return new Object[0];
     }
 }
