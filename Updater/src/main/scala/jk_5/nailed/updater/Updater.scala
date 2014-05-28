@@ -158,7 +158,7 @@ object Updater {
 
       logger.info("Injecting coremods")
       Properties.setProp("fml.coreMods.load", remote.libraries.filter(_.coremod != null).map(_.coremod).mkString(","))
-      remote.libraries.map(_.coremod).foreach(c => logger.info(s"  Injected " + c))
+      remote.libraries.filter(_.coremod != null).map(_.coremod).foreach(c => logger.info(s"  Injected " + c))
 
       logger.info("Resolving main class")
       this.mainClass = Option(remote.mainClass).getOrElse(this.mainClass)
