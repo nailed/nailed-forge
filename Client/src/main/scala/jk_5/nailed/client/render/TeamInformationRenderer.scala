@@ -10,6 +10,8 @@ import org.lwjgl.opengl.GL11
 import scala.collection.mutable
 import net.minecraft.client.entity.AbstractClientPlayer
 import net.minecraft.client.renderer.Tessellator
+import net.minecraft.client.Minecraft
+import scala.util.Random
 
 /**
  * No description given
@@ -17,10 +19,10 @@ import net.minecraft.client.renderer.Tessellator
  * @author jk-5
  */
 object TeamInformationRenderer extends Gui {
-
-  val left = List("jk_5", "Dabadooba", "ikzelf1248")
-  val topRight = List("Dinnerbone", "Grumm", "Jeb_")
-  val right = List("Docm77","Etho","AnderZEL")
+  val random = new Random()
+  val left = List(getRenderer("jk_5"), getRenderer("Dabadooba"), getRenderer("ikzelf1248"))
+  val topRight = List(getRenderer("Dinnerbone"), getRenderer("Grumm"), getRenderer("Jeb_"))
+  val right = List(getRenderer("Docm77"),getRenderer("Etho"),getRenderer("AnderZEL"))
 
   val textures = mutable.HashMap[String, ResourceLocation]()
 
@@ -30,6 +32,8 @@ object TeamInformationRenderer extends Gui {
     renderLeft(left, event.resolution)
     renderRight(right, event.resolution)
   }
+
+  def getRenderer(name: String): PlayerHeadRenderer = new PlayerHeadRenderer(name, random)
 
   def renderHead(x: Int, y: Int, username: String){
     import GL11._
@@ -66,7 +70,7 @@ object TeamInformationRenderer extends Gui {
     tex
   }
 
-  def renderTopMiddle(players: List[String], resolution: ScaledResolution) {
+  def renderTopMiddle(players: List[PlayerHeadRenderer], resolution: ScaledResolution) {
     import GL11._
 
     val start = resolution.getScaledWidth / 7
@@ -83,15 +87,16 @@ object TeamInformationRenderer extends Gui {
     glColor4f(1, 1, 1, 1)
     glPushMatrix()
     glEnable(GL_TEXTURE_2D)
-    for(name <- players){
-      this.renderHead(start + number*31 + 8, 3, name)
+    for(renderer <- players){
+      renderer.setLocation(start + number*31 + 8, 3)
+      renderer.renderHead()
       number += 1
     }
     glDisable(GL_TEXTURE_2D)
     glPopMatrix()
   }
 
-  def renderTopLeft(players: List[String], resolution: ScaledResolution) {
+  def renderTopLeft(players: List[PlayerHeadRenderer], resolution: ScaledResolution) {
     import GL11._
 
     val start = resolution.getScaledWidth / 7
@@ -108,15 +113,16 @@ object TeamInformationRenderer extends Gui {
     glColor4f(1, 1, 1, 1)
     glPushMatrix()
     glEnable(GL_TEXTURE_2D)
-    for(name <- players){
-      this.renderHead(start + number*31 + 8, 3, name)
+    for(renderer <- players){
+      renderer.renderHead(start + number*31 + 8, 3)
+      renderer.renderHead()
       number += 1
     }
     glDisable(GL_TEXTURE_2D)
     glPopMatrix()
   }
 
-  def renderTopRight(players: List[String], resolution: ScaledResolution) {
+  def renderTopRight(players: List[PlayerHeadRenderer], resolution: ScaledResolution) {
     import GL11._
 
     val f = resolution.getScaledWidth / 7
@@ -134,15 +140,16 @@ object TeamInformationRenderer extends Gui {
     glColor4f(1, 1, 1, 1)
     glPushMatrix()
     glEnable(GL_TEXTURE_2D)
-    for(name <- players){
-      this.renderHead(start + number*31 + 8, 3, name)
+    for(renderer <- players){
+      renderer.renderHead(start + number*31 + 8, 3)
+      renderer.renderHead()
       number += 1
     }
     glDisable(GL_TEXTURE_2D)
     glPopMatrix()
   }
 
-  def renderLeft(players: List[String], resolution: ScaledResolution) {
+  def renderLeft(players: List[PlayerHeadRenderer], resolution: ScaledResolution) {
     import GL11._
 
     val f = resolution.getScaledHeight / 7
@@ -160,15 +167,16 @@ object TeamInformationRenderer extends Gui {
     glColor4f(1, 1, 1, 1)
     glPushMatrix()
     glEnable(GL_TEXTURE_2D)
-    for(name <- players){
-      this.renderHead(8, start + number*31 + 3, name)
+    for(renderer <- players){
+      renderer.renderHead(8, start + number*31 + 3, name)
+      renderer.renderHead()
       number += 1
     }
     glDisable(GL_TEXTURE_2D)
     glPopMatrix()
   }
 
-  def renderRight(players: List[String], resolution: ScaledResolution) {
+  def renderRight(players: List[PlayerHeadRenderer], resolution: ScaledResolution) {
     import GL11._
 
     val f = resolution.getScaledHeight / 7
@@ -187,8 +195,9 @@ object TeamInformationRenderer extends Gui {
     glColor4f(1, 1, 1, 1)
     glPushMatrix()
     glEnable(GL_TEXTURE_2D)
-    for(name <- players){
-      this.renderHead(screenwidth - 23, start + 31*number + 3, name)
+    for(renderer <- players){
+      renderer.renderHead(screenwidth - 23, start + 31*number + 3, name)
+      renderer.renderHead()
       number += 1
     }
     glDisable(GL_TEXTURE_2D)
