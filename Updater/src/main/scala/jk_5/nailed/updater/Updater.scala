@@ -184,7 +184,6 @@ object Updater {
 
   private def injectIntoClassLoader(file: File){
     val url = file.toURI.toURL
-    logger.info(s"  Injecting ${file.getName} into classloader")
     if(this.addUrl == null){
       this.addUrl = classOf[URLClassLoader].getDeclaredMethod("addURL", classOf[URL])
       this.addUrl.setAccessible(true)
@@ -195,5 +194,6 @@ object Updater {
     }catch{
       case e: Throwable => logger.error(s"Error while injecting ${file.getAbsolutePath} into classloader", e)
     }
+    logger.info(s"  Injected ${file.getName} into classloader")
   }
 }
