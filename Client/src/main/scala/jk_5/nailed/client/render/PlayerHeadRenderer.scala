@@ -5,6 +5,7 @@ import net.minecraft.util.ResourceLocation
 import net.minecraft.client.entity.AbstractClientPlayer
 import org.lwjgl.opengl.GL11
 import net.minecraft.client.renderer.Tessellator
+import scala.collection.mutable
 
 /**
  * Created by matthias on 28-5-14.
@@ -43,18 +44,60 @@ class PlayerHeadRenderer {
 
     @inline val width = 16
     @inline val height = 16
-    @inline val uMin = 0.125f
-    @inline val vMin = 0.25f
-    @inline val uMax = 0.25f
-    @inline val vMax = 0.5f
+    @inline val depth = 16
+    @inline val hWidth = width / 2
+    @inline val hHeight = height / 2
+    @inline val hDepth = depth / 2
+    @inline val uMin_f = 0.125f // f = front
+    @inline val vMin_f = 0.25f
+    @inline val uMax_f = 0.25f
+    @inline val vMax_f = 0.5f
+    @inline val uMin_t = 0.125f // t = top
+    @inline val vMin_t = 0.0f
+    @inline val uMax_t = 0.25f
+    @inline val vMax_t = 0.25f
+    @inline val uMin_b = 0.25f // b = back
+    @inline val vMin_b = 0.0f
+    @inline val uMax_b = 0.375f
+    @inline val vMax_b = 0.25f
+    @inline val uMin_l = 0.0f // r = right
+    @inline val vMin_l = 0.25f
+    @inline val uMax_l = 0.125f
+    @inline val vMax_l = 0.5f
+    @inline val uMin_r = 0.25f // l = left
+    @inline val vMin_r = 0.25f
+    @inline val uMax_r = 0.375f
+    @inline val vMax_r = 0.5f
     @inline val tessellator = Tessellator.instance
 
+    glTranslated(this.x hwidth, this.y + hwidht, hdepth)
+    glRotated(pitch, yaw)
     tessellator.setColorOpaque(255, 255, 255)
     tessellator.startDrawingQuads()
-    tessellator.addVertexWithUV(x, y + height, 0, uMin, vMax)
-    tessellator.addVertexWithUV(x + width, y + height, 0, uMax, vMax)
-    tessellator.addVertexWithUV(x + width, y, 0, uMax, vMin)
-    tessellator.addVertexWithUV(x, y, 0, uMin, vMin)
+    tessellator.addVertexWithUV(- hWidth, hHeight, - hDepth, uMin_f, vMax_f)
+    tessellator.addVertexWithUV(hWidth, hHeight, - hDepth, uMax_f, vMax_f)
+    tessellator.addVertexWithUV(hWidth, -hHeight, -hDepth, uMax_f, vMin_f)
+    tessellator.addVertexWithUV(- hWidth, -hHeight, -hDepth, uMin_f, vMin_f)
+
+    tessellator.addVertexWithUV(-hWidth, -hHeight, hDepth, uMin_t, vMax_t)
+    tessellator.addVertexWithUV(hWidth, -hHeight, hDepth, uMax_t, vMax_t)
+    tessellator.addVertexWithUV(hWidth, -hHeight, -hDepth, uMax_t, vMin_t)
+    tessellator.addVertexWithUV(-hWidth, -hHeight, -hDepth, uMin_t, vMin_t)
+
+    tessellator.addVertexWithUV(-hWidth, hHeight, -hDepth, uMin_b, vMax_b)
+    tessellator.addVertexWithUV(hWidth, hHeight, -hDepth, uMax_b, vMax_b)
+    tessellator.addVertexWithUV(hWidth, hHeight, hDepth, uMax_b, vMin_b)
+    tessellator.addVertexWithUV(-hWidth, hHeight, hDepth, uMin_b, vMin_b)
+
+    tessellator.addVertexWithUV(-hWidth, hHeight, hDepth, uMin_l, vMax_l)
+    tessellator.addVertexWithUV(-hWidth, hHeight, -hDepth, uMax_l, vMax_l)
+    tessellator.addVertexWithUV(-hWidth, -hHeight, -hDepth, uMax_l, vMin_l)
+    tessellator.addVertexWithUV(-hWidth, -hHeight, hDepth, uMin_l, vMin_l)
+
+    tessellator.addVertexWithUV(hWidth, hHeight, -hDepth, uMin_l, vMax_l)
+    tessellator.addVertexWithUV(hWidth, hHeight, hDepth, uMax_l, vMax_l)
+    tessellator.addVertexWithUV(hWidth, -hHeight, hDepth, uMax_l, vMin_l)
+    tessellator.addVertexWithUV(hWidth, -hHeight, -hDepth, uMin_l, vMin_l)
     tessellator.draw()
 
     glPushMatrix()
@@ -77,7 +120,6 @@ class PlayerHeadRenderer {
   }
 
   def getTexture(username: String): ResourceLocation = {
-    if(textures.contains(username)) return textures.get(username).get
     val tex = AbstractClientPlayer.getLocationSkin(username)
     AbstractClientPlayer.getDownloadImageSkin(tex, username)
     this.tex = tex
