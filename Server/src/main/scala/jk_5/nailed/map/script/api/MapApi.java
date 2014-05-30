@@ -1,16 +1,22 @@
 package jk_5.nailed.map.script.api;
 
+import java.util.*;
+
+import com.google.common.collect.*;
 import com.google.gson.*;
 
 import org.luaj.vm2.*;
 
+import net.minecraft.util.*;
 import net.minecraft.world.*;
 
-import jk_5.nailed.api.map.*;
+import jk_5.nailed.api.*;
+import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.stat.*;
 import jk_5.nailed.api.map.team.*;
 import jk_5.nailed.api.map.teleport.*;
 import jk_5.nailed.api.map.teleport.Teleporter;
+import jk_5.nailed.api.player.*;
 import jk_5.nailed.api.scripting.*;
 import jk_5.nailed.map.*;
 import jk_5.nailed.map.script.*;

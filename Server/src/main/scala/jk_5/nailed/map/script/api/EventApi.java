@@ -1,6 +1,9 @@
 package jk_5.nailed.map.script.api;
 
+import java.util.*;
 import java.util.concurrent.atomic.*;
+
+import com.google.common.collect.*;
 
 import org.luaj.vm2.*;
 
