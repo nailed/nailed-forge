@@ -10,7 +10,6 @@ import net.minecraft.world.chunk.*;
 import jk_5.nailed.api.*;
 import jk_5.nailed.api.map.*;
 import jk_5.nailed.map.*;
-import jk_5.nailed.network.*;
 
 /**
  * No description given
@@ -100,11 +99,5 @@ public class NailedWorldProvider extends WorldProvider implements MappackContain
     @Override
     public int getRespawnDimension(EntityPlayerMP player) {
         return player.dimension;
-    }
-
-    public NailedPacket.MapData getMapDataPacket() {
-        ByteBuf buffer = Unpooled.buffer();
-        this.writeData(buffer);
-        return new NailedPacket.MapData(this.mapID, buffer);
     }
 }

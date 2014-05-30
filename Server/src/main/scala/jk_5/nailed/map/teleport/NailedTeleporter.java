@@ -27,7 +27,6 @@ import jk_5.nailed.api.map.teleport.*;
 import jk_5.nailed.api.map.teleport.Teleporter;
 import jk_5.nailed.api.player.*;
 import jk_5.nailed.map.*;
-import jk_5.nailed.map.gen.*;
 import jk_5.nailed.players.*;
 
 public class NailedTeleporter implements Teleporter {
@@ -95,9 +94,6 @@ public class NailedTeleporter implements Teleporter {
                 }else{
                     player.playerNetServerHandler.sendPacket(new S07PacketRespawn(1, player.worldObj.difficultySetting, destWorld.getWorldInfo().getTerrainType(), player.theItemInWorldManager.getGameType()));
                     player.playerNetServerHandler.sendPacket(new S07PacketRespawn(0, player.worldObj.difficultySetting, destWorld.getWorldInfo().getTerrainType(), player.theItemInWorldManager.getGameType()));
-                }
-                if(destWorld.provider instanceof NailedWorldProvider){
-                    ((NailedWorldProvider) destWorld.provider).sendMapData(player);
                 }
                 ((WorldServer) entity.worldObj).getPlayerManager().removePlayer(player);
             }

@@ -30,7 +30,6 @@ import jk_5.nailed.api.events.*;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.*;
 import jk_5.nailed.api.player.*;
-import jk_5.nailed.map.gen.*;
 
 /**
  * {@inheritDoc}
@@ -154,10 +153,6 @@ public class NailedMapLoader implements MapLoader {
     public void playerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         Map map = this.getMap(event.player.worldObj);
         map.onPlayerJoined(NailedAPI.getPlayerRegistry().getPlayer(event.player));
-
-        if(event.player.worldObj.provider instanceof NailedWorldProvider){
-            ((NailedWorldProvider) event.player.worldObj.provider).sendMapData(event.player);
-        }
     }
 
     @SubscribeEvent

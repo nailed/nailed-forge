@@ -8,7 +8,6 @@ import org.luaj.vm2.*;
  * This is very useful if you need to signal work to be performed on the main thread, and don't want to return
  * until the work has been completed.
  */
-@Deprecated
 public interface ILuaContext {
 
     /**

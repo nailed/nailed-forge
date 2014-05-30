@@ -7,7 +7,6 @@ import com.google.common.collect.*;
 import org.apache.logging.log4j.*;
 
 import net.minecraft.command.*;
-import net.minecraft.command.CommandToggleDownfall;
 import net.minecraft.command.server.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.server.*;
@@ -56,7 +55,6 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
         this.registerCommand(new CommandRandomSpawnpoint());
         this.registerCommand(new CommandEdit());
         this.registerCommand(new CommandTP());
-        this.registerCommand(new CommandToggleDownfall());
         this.registerCommand(new CommandGamemode());
         this.registerCommand(new CommandGamerule());
         this.registerCommand(new CommandDifficulty());
@@ -66,7 +64,6 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
         this.registerCommand(new CommandWhereAmI());
 
         this.registerCommand(new CommandKill());
-        this.registerCommand(new CommandWeather());
         this.registerCommand(new CommandXP());
         this.registerCommand(new CommandGive());
         this.registerCommand(new CommandEffect());
