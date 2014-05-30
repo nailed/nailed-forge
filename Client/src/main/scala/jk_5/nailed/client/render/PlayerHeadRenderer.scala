@@ -5,8 +5,8 @@ import net.minecraft.util.ResourceLocation
 import net.minecraft.client.entity.AbstractClientPlayer
 import org.lwjgl.opengl.GL11
 import net.minecraft.client.renderer.Tessellator
-import scala.collection.mutable
 import net.minecraft.client.Minecraft
+import scala.collection.parallel.mutable
 
 /**
  * Created by matthias on 28-5-14.
@@ -18,7 +18,8 @@ class PlayerHeadRenderer(name: String, xx: Int, yy: Int, random: Random) {
   var yaw: Double = 0
   var dPitch: Double = 0
   var dYaw: Double = 0
-  var tex: ResourceLocation = getTexture(name)
+  var hasTexture: Boolean = false
+  var tex: ResourceLocation = null
   var mc: Minecraft = Minecraft.getMinecraft
 
   def this(name: String, random: Random) = this(name, 0, 0, random)
@@ -26,6 +27,11 @@ class PlayerHeadRenderer(name: String, xx: Int, yy: Int, random: Random) {
   def renderHead(){
     import GL11._
 
+    glPushMatrix()
+    if (!this.hasTexture) {
+      this.tex = this.getTexture(this.name)
+      this.hasTexture = true
+    }
     mc.getTextureManager.bindTexture(this.tex)
 
     @inline val width = 16
@@ -56,38 +62,61 @@ class PlayerHeadRenderer(name: String, xx: Int, yy: Int, random: Random) {
     @inline val vMax_r = 0.5f
     @inline val tessellator = Tessellator.instance
 
-    glTranslated(this.x + hWidth, this.y + hHeight, hDepth)
-    glRotated(pitch, 0, 1, 0)
-    glRotated(yaw, 0, 0, 1)
+    // implement translations
+
+    @inline val p1x = translateX(-hWidth, -hHeight, -hDepth, pitch, yaw) + x + 8 // back down left
+    @inline val p1y = translateY(-hWidth, -hHeight, -hDepth, pitch, yaw) + y + 8
+
+    @inline val p2x = translateX(hWidth, -hHeight, -hDepth, pitch, yaw) + x + 8 // back down right
+    @inline val p2y = translateY(hWidth, -hHeight, -hDepth, pitch, yaw) + y + 8
+
+    @inline val p3x = translateX(hWidth, -hHeight, hDepth, pitch, yaw) + x + 8 // front down right
+    @inline val p3y = translateY(hWidth, -hHeight, hDepth, pitch, yaw) + y + 8
+
+    @inline val p4x = translateX(-hWidth, -hHeight, hDepth, pitch, yaw) + x + 8 // front down left
+    @inline val p4y = translateY(-hWidth, -hHeight, hDepth, pitch, yaw) + y + 8
+
+    @inline val p5x = translateX(-hWidth, hHeight, -hDepth, pitch, yaw) + x + 8 // back up left
+    @inline val p5y = translateY(-hWidth, hHeight, -hDepth, pitch, yaw) + y + 8
+
+    @inline val p6x = translateX(hWidth, hHeight, -hDepth, pitch, yaw) + x + 8 // back up right
+    @inline val p6y = translateY(hWidth, hHeight, -hDepth, pitch, yaw) + y + 8
+
+    @inline val p7x = translateX(hWidth, hHeight, hDepth, pitch, yaw) + x + 8 // front up right
+    @inline val p7y = translateY(hWidth, hHeight, hDepth, pitch, yaw) + y + 8
+
+    @inline val p8x = translateX(-hWidth, hHeight, hDepth, pitch, yaw) + x + 8 // front up left
+    @inline val p8y = translateY(-hWidth, hHeight, hDepth, pitch, yaw) + y + 8
+
     tessellator.setColorOpaque(255, 255, 255)
     tessellator.startDrawingQuads()
-    tessellator.addVertexWithUV(- hWidth, hHeight, - hDepth, uMin_f, vMax_f)
-    tessellator.addVertexWithUV(hWidth, hHeight, - hDepth, uMax_f, vMax_f)
-    tessellator.addVertexWithUV(hWidth, -hHeight, -hDepth, uMax_f, vMin_f)
-    tessellator.addVertexWithUV(- hWidth, -hHeight, -hDepth, uMin_f, vMin_f)
 
-    tessellator.addVertexWithUV(-hWidth, -hHeight, hDepth, uMin_t, vMax_t)
-    tessellator.addVertexWithUV(hWidth, -hHeight, hDepth, uMax_t, vMax_t)
-    tessellator.addVertexWithUV(hWidth, -hHeight, -hDepth, uMax_t, vMin_t)
-    tessellator.addVertexWithUV(-hWidth, -hHeight, -hDepth, uMin_t, vMin_t)
+    tessellator.addVertexWithUV(p8x, p8y, 0, uMin_f, vMax_f)
+    tessellator.addVertexWithUV(p7x, p7y, 0, uMax_f, vMax_f)
+    tessellator.addVertexWithUV(p3x, p3y, 0, uMax_f, vMin_f)
+    tessellator.addVertexWithUV(p4x, p4y, 0, uMin_f, vMin_f)
 
-    tessellator.addVertexWithUV(-hWidth, hHeight, -hDepth, uMin_b, vMax_b)
-    tessellator.addVertexWithUV(hWidth, hHeight, -hDepth, uMax_b, vMax_b)
-    tessellator.addVertexWithUV(hWidth, hHeight, hDepth, uMax_b, vMin_b)
-    tessellator.addVertexWithUV(-hWidth, hHeight, hDepth, uMin_b, vMin_b)
+    tessellator.addVertexWithUV(p4x, p4y, 0, uMin_t, vMax_t)
+    tessellator.addVertexWithUV(p3x, p3y, 0, uMax_t, vMax_t)
+    tessellator.addVertexWithUV(p2x, p2y, 0, uMax_t, vMin_t)
+    tessellator.addVertexWithUV(p1x, p1y, 0, uMin_t, vMin_t)
 
-    tessellator.addVertexWithUV(-hWidth, hHeight, hDepth, uMin_l, vMax_l)
-    tessellator.addVertexWithUV(-hWidth, hHeight, -hDepth, uMax_l, vMax_l)
-    tessellator.addVertexWithUV(-hWidth, -hHeight, -hDepth, uMax_l, vMin_l)
-    tessellator.addVertexWithUV(-hWidth, -hHeight, hDepth, uMin_l, vMin_l)
+    tessellator.addVertexWithUV(p5x, p5y, 0, uMin_b, vMax_b)
+    tessellator.addVertexWithUV(p6x, p6y, 0, uMax_b, vMax_b)
+    tessellator.addVertexWithUV(p7x, p7y, 0, uMax_b, vMin_b)
+    tessellator.addVertexWithUV(p8x, p8y, 0, uMin_b, vMin_b)
 
-    tessellator.addVertexWithUV(hWidth, hHeight, -hDepth, uMin_r, vMax_r)
-    tessellator.addVertexWithUV(hWidth, hHeight, hDepth, uMax_r, vMax_r)
-    tessellator.addVertexWithUV(hWidth, -hHeight, hDepth, uMax_r, vMin_r)
-    tessellator.addVertexWithUV(hWidth, -hHeight, -hDepth, uMin_r, vMin_r)
+    tessellator.addVertexWithUV(p5x, p5y, 0, uMin_l, vMax_l)
+    tessellator.addVertexWithUV(p8x, p8y, 0, uMax_l, vMax_l)
+    tessellator.addVertexWithUV(p4x, p4y, 0, uMax_l, vMin_l)
+    tessellator.addVertexWithUV(p3y, p3y, 0, uMin_l, vMin_l)
+
+    tessellator.addVertexWithUV(p7x, p7y, 0, uMin_r, vMax_r)
+    tessellator.addVertexWithUV(p6x, p6y, 0, uMax_r, vMax_r)
+    tessellator.addVertexWithUV(p2x, p2y, 0, uMax_r, vMin_r)
+    tessellator.addVertexWithUV(p3x, p3y, 0, uMin_r, vMin_r)
     tessellator.draw()
 
-    glPushMatrix()
     glScalef(0.5f, 0.5f, 1)
     mc.fontRenderer.drawString(this.name, (x + 8 - (mc.fontRenderer.getStringWidth(this.name) / 4)) * 2, (y + 18) * 2, 0xFFFFFFFF: Int)
     glPopMatrix()
@@ -111,5 +140,9 @@ class PlayerHeadRenderer(name: String, xx: Int, yy: Int, random: Random) {
     AbstractClientPlayer.getDownloadImageSkin(tex, username)
     tex
   }
+
+  def translateX(x: Int, y: Int, z: Int, pitch: Double, yaw: Double): Int = (x * Math.cos(pitch) + z * Math.sin(pitch)).toInt
+
+  def translateY(x: Int, y: Int, z: Int, pitch: Double, yaw: Double): Int = (y * Math.cos(yaw) + z * Math.sin(yaw)).toInt
 
 }
