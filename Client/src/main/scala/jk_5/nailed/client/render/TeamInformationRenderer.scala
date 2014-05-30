@@ -88,7 +88,6 @@ object TeamInformationRenderer extends Gui {
     glPushMatrix()
     glEnable(GL_TEXTURE_2D)
     for(renderer <- players){
-      renderer.setLocation(start + number*31 + 8, 3)
       renderer.renderHead()
       number += 1
     }
@@ -114,7 +113,6 @@ object TeamInformationRenderer extends Gui {
     glPushMatrix()
     glEnable(GL_TEXTURE_2D)
     for(renderer <- players){
-      renderer.renderHead(start + number*31 + 8, 3)
       renderer.renderHead()
       number += 1
     }
@@ -141,7 +139,6 @@ object TeamInformationRenderer extends Gui {
     glPushMatrix()
     glEnable(GL_TEXTURE_2D)
     for(renderer <- players){
-      renderer.renderHead(start + number*31 + 8, 3)
       renderer.renderHead()
       number += 1
     }
@@ -168,7 +165,6 @@ object TeamInformationRenderer extends Gui {
     glPushMatrix()
     glEnable(GL_TEXTURE_2D)
     for(renderer <- players){
-      renderer.renderHead(8, start + number*31 + 3, name)
       renderer.renderHead()
       number += 1
     }
@@ -196,7 +192,6 @@ object TeamInformationRenderer extends Gui {
     glPushMatrix()
     glEnable(GL_TEXTURE_2D)
     for(renderer <- players){
-      renderer.renderHead(screenwidth - 23, start + 31*number + 3, name)
       renderer.renderHead()
       number += 1
     }
