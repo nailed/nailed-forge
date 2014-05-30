@@ -63,6 +63,7 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
         this.registerCommand(new CommandMove());
         this.registerCommand(new CommandWhereAmI());
         this.registerCommand(new CommandEffect());
+        this.registerCommand(new CommandKick());
 
         this.registerCommand(new CommandKill());
         this.registerCommand(new CommandXP());
@@ -97,7 +98,6 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
         this.registerCommand(new CommandBanPlayer());
         this.registerCommand(new CommandListBans());
         this.registerCommand(new CommandPardonPlayer());
-        this.registerCommand(new CommandServerKick());
         this.registerCommand(new CommandListPlayers());
         this.registerCommand(new CommandWhitelist());
         this.registerCommand(new CommandSetPlayerTimeout());
