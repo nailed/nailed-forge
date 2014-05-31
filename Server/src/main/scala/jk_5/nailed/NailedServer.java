@@ -145,7 +145,6 @@ public class NailedServer {
         FMLCommonHandler.instance().bus().register(NailedAPI.getPlayerRegistry());
         FMLCommonHandler.instance().bus().register(NailedAPI.getMapLoader());
         FMLCommonHandler.instance().bus().register(new InvSeeTicker());
-        FMLCommonHandler.instance().bus().register(new MotdManager());
         FMLCommonHandler.instance().bus().register(ipcEventListener);
 
         FMLCommonHandler.instance().registerCrashCallable(new SchedulerCrashCallable());
@@ -195,8 +194,6 @@ public class NailedServer {
         permissionFactory.readConfig();
 
         ((NailedMappackLoader) NailedAPI.getMappackLoader()).loadASync = true;
-
-        MotdManager.firstTick = true;
     }
 
     @SubscribeEvent

@@ -21,6 +21,7 @@ import jk_5.nailed.api.concurrent.scheduler.*;
 import jk_5.nailed.api.player.*;
 import jk_5.nailed.map.script.*;
 import jk_5.nailed.network.handlers.*;
+import jk_5.nailed.network.minecraft.*;
 
 /**
  * No description given
@@ -124,8 +125,9 @@ public final class NailedNetworkHandler {
             clientMods.remove(dispatcher);
         }
         NailedLog.info("{} client connected", player.getClient().name());
+
         ChannelPipeline pipe = dispatcher.manager.channel().pipeline();
-        pipe.addAfter("encoder", "NailedPacketAdapter", new MinecraftPacketAdapter(playerEnt));
+        ((MinecraftPacketAdapter) pipe.get("NailedPacketAdapter")).player = playerEnt;
     }
 
     @SuppressWarnings("unused")

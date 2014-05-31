@@ -21,9 +21,9 @@ class RenderCylinderBox(val color: LineColor, val center: PointCube, val radX: D
         tess.startDrawing(GL11.GL_LINE_LOOP)
         color.prepareColor()
         for(i <- 0 to 75){
-          val tempTheta: Double = i * WorldEditCUI.TWOPI / 75
-          val tempX: Double = radX * Math.cos(tempTheta)
-          val tempZ: Double = radZ * Math.sin(tempTheta)
+          val tempTheta = i * WorldEditCUI.TWOPI / 75
+          val tempX = radX * Math.cos(tempTheta)
+          val tempZ = radZ * Math.sin(tempTheta)
           tess.addVertex(centerX + tempX, ybl, centerZ + tempZ)
         }
         tess.draw()

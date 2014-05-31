@@ -30,6 +30,7 @@ public class NailedFMLPlugin implements IFMLLoadingPlugin {
                     "jk_5.nailed.coremod.transformers.VanillaSupportTransformer",
                     "jk_5.nailed.coremod.transformers.WorldServerMultiTransformer",
                     "jk_5.nailed.coremod.transformers.DimensionManagerTransformer",
+                    "jk_5.nailed.coremod.transformers.NetworkSystemTransformer",
                     "jk_5.nailed.coremod.transformers.NetHandlerPlayServerTransformer"
             };
         }
