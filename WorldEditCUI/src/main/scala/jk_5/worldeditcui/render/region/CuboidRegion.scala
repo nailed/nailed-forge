@@ -2,7 +2,7 @@ package jk_5.worldeditcui.render.region
 
 import jk_5.worldeditcui.render.{LineColor, PointCube}
 import jk_5.worldeditcui.render.vector.Vector3D
-import jk_5.worldeditcui.render.shape.{Render3DGrid, Render3DBox}
+import jk_5.worldeditcui.render.shape.Render3DBox
 
 /**
  * No description given
@@ -18,11 +18,11 @@ class CuboidRegion extends Region {
 
   def render(){
     if(firstPoint != null && secondPoint != null){
-      firstPoint.render()
-      secondPoint.render()
       val bounds = this.calcBounds
       new Render3DBox(LineColor.CUBOIDBOX, bounds(0), bounds(1)).render()
-      new Render3DGrid(LineColor.CUBOIDGRID, bounds(0), bounds(1)).render()
+      //new Render3DGrid(LineColor.CUBOIDGRID, bounds(0), bounds(1)).render()
+      firstPoint.render()
+      secondPoint.render()
     }else if (firstPoint != null){
       firstPoint.render()
     }else if (secondPoint != null){
@@ -43,7 +43,8 @@ class CuboidRegion extends Region {
   protected def calcBounds: Array[Vector3D] = {
     val off = 0.02f
     val off1 = 1 + off
-    var x0, y0, z0, x1, y1, z1 = 0F
+    var x0, y0, z0 = Double.MaxValue
+    var x1, y1, z1 = Double.MinValue
     for(point <- Array(firstPoint, secondPoint)){
       if(point.point.getX + off1 > x1){
         x1 = point.point.getX + off1
@@ -64,6 +65,6 @@ class CuboidRegion extends Region {
         z0 = point.point.getZ - off
       }
     }
-    Array(new Vector3D(x0, y0, z0), new Vector3D(x1, y1, z1))
+    Array(new Vector3D(x0 toFloat, y0 toFloat, z0 toFloat), new Vector3D(x1 toFloat, y1 toFloat, z1 toFloat))
   }
 }

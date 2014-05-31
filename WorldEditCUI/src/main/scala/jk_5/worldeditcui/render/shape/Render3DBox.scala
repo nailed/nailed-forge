@@ -42,7 +42,6 @@ class Render3DBox(val color: LineColor, val first: Vector3D, val second: Vector3
 
       // Draw join top and bottom faces
       tess.startDrawing(GL11.GL_LINES)
-
       tess.addVertex(x1, y1, z1)
       tess.addVertex(x1, y2, z1)
       tess.addVertex(x2, y1, z1)
