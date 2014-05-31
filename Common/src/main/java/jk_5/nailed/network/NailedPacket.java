@@ -25,30 +25,6 @@ public abstract class NailedPacket {
 
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class MovementEvent extends NailedPacket{
-
-        public int x, y, z;
-        public byte type;
-
-        @Override
-        public void encode(ByteBuf buffer){
-            buffer.writeInt(this.x);
-            buffer.writeInt(this.y);
-            buffer.writeInt(this.z);
-            buffer.writeByte(this.type);
-        }
-
-        @Override
-        public void decode(ByteBuf buffer){
-            this.x = buffer.readInt();
-            this.y = buffer.readInt();
-            this.z = buffer.readInt();
-            this.type = buffer.readByte();
-        }
-    }
-
-    @NoArgsConstructor
-    @AllArgsConstructor
     public static class GuiReturnDataPacket extends NailedPacket {
 
         public int x, y, z;

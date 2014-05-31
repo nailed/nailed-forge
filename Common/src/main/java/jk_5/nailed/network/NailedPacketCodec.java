@@ -17,7 +17,7 @@ public class NailedPacketCodec extends FMLIndexedMessageToMessageCodec<NailedPac
 
     public NailedPacketCodec() {
         //0
-        this.addDiscriminator(1, NailedPacket.MovementEvent.class);
+        //1
         this.addDiscriminator(2, NailedPacket.GuiReturnDataPacket.class);
         this.addDiscriminator(3, NailedPacket.GuiOpen.class);
         this.addDiscriminator(4, NailedPacket.TileEntityData.class);

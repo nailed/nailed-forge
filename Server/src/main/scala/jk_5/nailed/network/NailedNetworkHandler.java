@@ -61,7 +61,6 @@ public final class NailedNetworkHandler {
         String targetName = channel.findChannelHandlerNameForType(NailedPacketCodec.class);
 
         pipeline.addAfter(targetName, "FMLHandshakeHandler", new FMLHandshakeHandler());
-        pipeline.addAfter(targetName, "MovementEventHandler", new MovementEventHandler());
         pipeline.addAfter(targetName, "GuiReturnDataHandler", new GuiReturnDataHandler());
         pipeline.addAfter(targetName, "FPSSummaryHandler", new FPSSummaryHandler());
         pipeline.addAfter(targetName, "LoginHandler", new LoginHandler());
