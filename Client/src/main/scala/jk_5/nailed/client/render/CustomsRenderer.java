@@ -157,7 +157,7 @@ public class CustomsRenderer {
         GL11.glEnd();
 
         GL11.glEnable(GL11.GL_TEXTURE_2D);
-        GL11.glPushMatrix();
+        GL11.glPopMatrix();
     }
 
     public void setRenderList(List<RenderPoint[]> renderList) { this.objects = renderList; }
