@@ -26,8 +26,6 @@ class PlayerHeadRenderer(name: String, xx: Int, yy: Int, random: Random) {
 
   def renderHead(){
     import GL11._
-
-    glPushMatrix()
     if (!this.hasTexture) {
       this.tex = this.getTexture(this.name)
       this.hasTexture = true
@@ -64,30 +62,31 @@ class PlayerHeadRenderer(name: String, xx: Int, yy: Int, random: Random) {
 
     // implement translations
 
-    @inline val p1x = translateX(-hWidth, -hHeight, -hDepth, pitch, yaw) + x + 8 // back down left
-    @inline val p1y = translateY(-hWidth, -hHeight, -hDepth, pitch, yaw) + y + 8
+    @inline val p1x = translateX(-hWidth, -hHeight, -hDepth, pitch, yaw) + this.x + 8 // back down left
+    @inline val p1y = translateY(-hWidth, -hHeight, -hDepth, pitch, yaw) + this.y + 8
 
-    @inline val p2x = translateX(hWidth, -hHeight, -hDepth, pitch, yaw) + x + 8 // back down right
-    @inline val p2y = translateY(hWidth, -hHeight, -hDepth, pitch, yaw) + y + 8
+    @inline val p2x = translateX(hWidth, -hHeight, -hDepth, pitch, yaw) + this.x + 8 // back down right
+    @inline val p2y = translateY(hWidth, -hHeight, -hDepth, pitch, yaw) + this.y + 8
 
-    @inline val p3x = translateX(hWidth, -hHeight, hDepth, pitch, yaw) + x + 8 // front down right
-    @inline val p3y = translateY(hWidth, -hHeight, hDepth, pitch, yaw) + y + 8
+    @inline val p3x = translateX(hWidth, -hHeight, hDepth, pitch, yaw) + this.x + 8 // front down right
+    @inline val p3y = translateY(hWidth, -hHeight, hDepth, pitch, yaw) + this.y + 8
 
-    @inline val p4x = translateX(-hWidth, -hHeight, hDepth, pitch, yaw) + x + 8 // front down left
-    @inline val p4y = translateY(-hWidth, -hHeight, hDepth, pitch, yaw) + y + 8
+    @inline val p4x = translateX(-hWidth, -hHeight, hDepth, pitch, yaw) + this.x + 8 // front down left
+    @inline val p4y = translateY(-hWidth, -hHeight, hDepth, pitch, yaw) + this.y + 8
 
-    @inline val p5x = translateX(-hWidth, hHeight, -hDepth, pitch, yaw) + x + 8 // back up left
-    @inline val p5y = translateY(-hWidth, hHeight, -hDepth, pitch, yaw) + y + 8
+    @inline val p5x = translateX(-hWidth, hHeight, -hDepth, pitch, yaw) + this.x + 8 // back up left
+    @inline val p5y = translateY(-hWidth, hHeight, -hDepth, pitch, yaw) + this.y + 8
 
-    @inline val p6x = translateX(hWidth, hHeight, -hDepth, pitch, yaw) + x + 8 // back up right
-    @inline val p6y = translateY(hWidth, hHeight, -hDepth, pitch, yaw) + y + 8
+    @inline val p6x = translateX(hWidth, hHeight, -hDepth, pitch, yaw) + this.x + 8 // back up right
+    @inline val p6y = translateY(hWidth, hHeight, -hDepth, pitch, yaw) + this.y + 8
 
-    @inline val p7x = translateX(hWidth, hHeight, hDepth, pitch, yaw) + x + 8 // front up right
-    @inline val p7y = translateY(hWidth, hHeight, hDepth, pitch, yaw) + y + 8
+    @inline val p7x = translateX(hWidth, hHeight, hDepth, pitch, yaw) + this.x + 8 // front up right
+    @inline val p7y = translateY(hWidth, hHeight, hDepth, pitch, yaw) + this.y + 8
 
-    @inline val p8x = translateX(-hWidth, hHeight, hDepth, pitch, yaw) + x + 8 // front up left
-    @inline val p8y = translateY(-hWidth, hHeight, hDepth, pitch, yaw) + y + 8
+    @inline val p8x = translateX(-hWidth, hHeight, hDepth, pitch, yaw) + this.x + 8 // front up left
+    @inline val p8y = translateY(-hWidth, hHeight, hDepth, pitch, yaw) + this.y + 8
 
+    glPushMatrix()
     tessellator.setColorOpaque(255, 255, 255)
     tessellator.startDrawingQuads()
 
@@ -109,14 +108,15 @@ class PlayerHeadRenderer(name: String, xx: Int, yy: Int, random: Random) {
     tessellator.addVertexWithUV(p5x, p5y, 0, uMin_l, vMax_l)
     tessellator.addVertexWithUV(p8x, p8y, 0, uMax_l, vMax_l)
     tessellator.addVertexWithUV(p4x, p4y, 0, uMax_l, vMin_l)
-    tessellator.addVertexWithUV(p3y, p3y, 0, uMin_l, vMin_l)
+    tessellator.addVertexWithUV(p1x, p1y, 0, uMin_l, vMin_l)
 
     tessellator.addVertexWithUV(p7x, p7y, 0, uMin_r, vMax_r)
     tessellator.addVertexWithUV(p6x, p6y, 0, uMax_r, vMax_r)
     tessellator.addVertexWithUV(p2x, p2y, 0, uMax_r, vMin_r)
     tessellator.addVertexWithUV(p3x, p3y, 0, uMin_r, vMin_r)
     tessellator.draw()
-
+    glPopMatrix()
+    glPushMatrix()
     glScalef(0.5f, 0.5f, 1)
     mc.fontRenderer.drawString(this.name, (x + 8 - (mc.fontRenderer.getStringWidth(this.name) / 4)) * 2, (y + 18) * 2, 0xFFFFFFFF: Int)
     glPopMatrix()
@@ -126,8 +126,8 @@ class PlayerHeadRenderer(name: String, xx: Int, yy: Int, random: Random) {
   def tick(){
     this.pitch += this.dPitch
     this.yaw += this.dYaw
-    this.dPitch = (this.dPitch + (if (random.nextBoolean()) Math.random() else Math.random())) * Math.pow(1 - Math.abs(this.yaw) / 45, 2) // randomizing yaw movement
-    this.dYaw = (this.dYaw + (if (random.nextBoolean()) Math.random() else Math.random())) * Math.pow(1 - Math.abs(this.yaw) / 45, 2) // randomizing pitch movement
+    this.dPitch = (this.dPitch + (if (random.nextBoolean()) -Math.random() else Math.random())) * Math.pow(1 - Math.abs(this.yaw) / 45, 2) // randomizing yaw movement
+    this.dYaw = (this.dYaw + (if (random.nextBoolean()) -Math.random() else Math.random())) * Math.pow(1 - Math.abs(this.yaw) / 45, 2) // randomizing pitch movement
   }
 
   def setLocation(x: Int, y: Int){
@@ -141,8 +141,8 @@ class PlayerHeadRenderer(name: String, xx: Int, yy: Int, random: Random) {
     tex
   }
 
-  def translateX(x: Int, y: Int, z: Int, pitch: Double, yaw: Double): Int = (x * Math.cos(pitch) + z * Math.sin(pitch)).toInt
+  def translateX(x: Int, y: Int, z: Int, pitch: Double, yaw: Double): Int = (x * Math.cos(Math.toRadians(pitch)) + z * Math.sin(Math.toRadians(pitch))).toInt
 
-  def translateY(x: Int, y: Int, z: Int, pitch: Double, yaw: Double): Int = (y * Math.cos(yaw) + z * Math.sin(yaw)).toInt
+  def translateY(x: Int, y: Int, z: Int, pitch: Double, yaw: Double): Int = (y * Math.cos(Math.toRadians(yaw)) - z * Math.sin(Math.toRadians(yaw))).toInt
 
 }

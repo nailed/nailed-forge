@@ -10,6 +10,7 @@ import org.lwjgl.opengl.GL11
 import scala.collection.mutable
 import net.minecraft.client.entity.AbstractClientPlayer
 import net.minecraft.client.renderer.Tessellator
+import net.minecraft.client.Minecraft
 import scala.util.Random
 
 /**
@@ -17,7 +18,7 @@ import scala.util.Random
  *
  * @author jk-5
  */
-object TeamInformationRenderer {
+object TeamInformationRenderer extends Gui {
   val random = new Random()
   val left = List(getRenderer("jk_5"), getRenderer("Dabadooba"), getRenderer("ikzelf1248"))
   val topRight = List(getRenderer("Dinnerbone"), getRenderer("Grumm"), getRenderer("Jeb_"))
@@ -26,7 +27,6 @@ object TeamInformationRenderer {
   val textures = mutable.HashMap[String, ResourceLocation]()
 
   @SubscribeEvent def render(event: RenderGameOverlayEvent.Post): Unit = if(event.`type` == ElementType.ALL) {
-    if(true) return
     renderTopRight(topRight, event.resolution)
     renderLeft(left, event.resolution)
     renderRight(right, event.resolution)
@@ -87,6 +87,7 @@ object TeamInformationRenderer {
     glPushMatrix()
     glEnable(GL_TEXTURE_2D)
     for(renderer <- players){
+      renderer.setLocation(start + number*31 + 8, 3)
       renderer.renderHead()
       number += 1
     }
@@ -112,6 +113,7 @@ object TeamInformationRenderer {
     glPushMatrix()
     glEnable(GL_TEXTURE_2D)
     for(renderer <- players){
+      renderer.setLocation(start + number*31 + 8, 3)
       renderer.renderHead()
       number += 1
     }
@@ -138,6 +140,7 @@ object TeamInformationRenderer {
     glPushMatrix()
     glEnable(GL_TEXTURE_2D)
     for(renderer <- players){
+      renderer.setLocation(start + number*31 + 8, 3)
       renderer.renderHead()
       number += 1
     }
@@ -164,6 +167,7 @@ object TeamInformationRenderer {
     glPushMatrix()
     glEnable(GL_TEXTURE_2D)
     for(renderer <- players){
+      renderer.setLocation(8, start + number*31 + 3)
       renderer.renderHead()
       number += 1
     }
@@ -191,6 +195,7 @@ object TeamInformationRenderer {
     glPushMatrix()
     glEnable(GL_TEXTURE_2D)
     for(renderer <- players){
+      renderer.setLocation(screenwidth - 23, start + 31*number + 3)
       renderer.renderHead()
       number += 1
     }
