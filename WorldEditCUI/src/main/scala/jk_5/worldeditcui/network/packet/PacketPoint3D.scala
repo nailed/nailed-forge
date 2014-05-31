@@ -10,6 +10,6 @@ import jk_5.worldeditcui.render.WERenderer
 class PacketPoint3D extends Packet(5, 6) {
 
    override def process(){
-     WERenderer.selection.get.setPolygonPoint(this.getInt(0), this.getInt(1), this.getInt(2), this.getInt(3))
+     WERenderer.selection.get.setCuboidPoint(this.getInt(0), this.getInt(1), this.getInt(2), this.getInt(3))
    }
  }

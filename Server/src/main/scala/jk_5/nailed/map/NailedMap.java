@@ -89,7 +89,7 @@ public class NailedMap implements Map {
         }
         NailedLog.info("Initializing {}", this.getSaveFileName());
 
-        DimensionManager.registerDimension(this.getID(), NailedServer.getProviderID());
+        DimensionManager.registerDimension(this.getID(), 0);
         DimensionManager.initDimension(this.getID());
 
         ForgeMessage.DimensionRegisterMessage packet = new ForgeMessage.DimensionRegisterMessage(this.getID(), 0);

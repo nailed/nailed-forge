@@ -25,8 +25,7 @@ object TickHandlerClient {
   private var fps = 0
   private var fpsUpdateTime = Minecraft.getSystemTime
 
-  @SubscribeEvent def onClientTick(event: TickEvent.ClientTickEvent){
-    if(event.phase eq TickEvent.Phase.START) return
+  @SubscribeEvent def onClientTick(event: TickEvent.ClientTickEvent) = if(event.phase == TickEvent.Phase.END){
     val player = mc.thePlayer
     val world = mc.theWorld
     if(player != null && world != null){
