@@ -1,14 +1,19 @@
 package jk_5.nailed.client.render;
 
-import com.google.common.collect.Lists;
-import cpw.mods.fml.common.eventhandler.*;
-import jk_5.nailed.map.*;
-import net.minecraft.client.*;
-import net.minecraft.client.renderer.*;
-import net.minecraftforge.client.event.*;
+import java.util.*;
+
+import com.google.common.collect.*;
+
 import org.lwjgl.opengl.*;
 
-import java.util.*;
+import net.minecraft.client.*;
+import net.minecraft.client.renderer.*;
+
+import cpw.mods.fml.common.eventhandler.*;
+
+import net.minecraftforge.client.event.*;
+
+import jk_5.nailed.map.*;
 
 /**
  * Created by matthias on 24-5-14.
@@ -48,6 +53,7 @@ public class CustomsRenderer {
                     break;
             }
         }
+        GL11.glPopMatrix();
     }
 
     public void renderPoint(RenderPoint[] points, double dx, double dy, double dz) {
