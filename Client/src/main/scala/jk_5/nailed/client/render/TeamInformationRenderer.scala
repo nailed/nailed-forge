@@ -236,11 +236,12 @@ object TeamInformationRenderer {
   }
 
   def getTeamRenderList(team: List[String]): List[PlayerHeadRenderer] = {
-    val pHRl: List[PlayerHeadRenderer] = List()
+    /*val pHRl: List[PlayerHeadRenderer] = List()
     for(player <- team){
       pHRl += getRenderer(player)
     }
-    pHRl
+    pHRl*/
+    List()
   }
 
   def dropAll(){
