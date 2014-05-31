@@ -36,7 +36,7 @@ nailed {
 
     loadingMavenUrl = 'http://maven.reening.nl/'
 
-    deploy artifact: 'nailedClient', project: 'Client', load: true, reobf: true, coremod: 'jk_5.nailed.client.coremod.NailedFMLPlugin'
+    deploy artifact: 'nailedClient', project: 'Client', load: true, reobf: true
     deploy artifact: 'worldEditCUI', project: 'WorldEditCUI', load: true, reobf: true
     deploy artifact: 'nailedCommon', project: 'Common', load: true, reobf: true
     //deploy artifact: 'nailedMumbleLink', project: 'MumbleLink', load: true

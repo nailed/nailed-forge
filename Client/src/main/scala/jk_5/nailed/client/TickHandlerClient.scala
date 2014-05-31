@@ -21,10 +21,11 @@ object TickHandlerClient {
   private var ellapsedTicks = 0
   private var totalTicks = 0l
   private final val sendFpsInterval = 40
+  private var fpsCounter = 0
+  private var fps = 0
+  private var fpsUpdateTime = Minecraft.getSystemTime
 
-  @SubscribeEvent
-  @SuppressWarnings(Array("unused"))
-  def onClientTick(event: TickEvent.ClientTickEvent){
+  @SubscribeEvent def onClientTick(event: TickEvent.ClientTickEvent){
     if(event.phase eq TickEvent.Phase.START) return
     val player = mc.thePlayer
     val world = mc.theWorld
@@ -47,12 +48,21 @@ object TickHandlerClient {
     }
     if(this.sendFpsInterval > 0){
       if(this.ellapsedTicks >= this.sendFpsInterval){
-        ClientNetworkHandler.sendPacketToServer(new NailedPacket.FPSSummary(Minecraft.debugFPS))
+        ClientNetworkHandler.sendPacketToServer(new NailedPacket.FPSSummary(this.fps))
         this.ellapsedTicks = -1
       }
       this.ellapsedTicks += 1
     }
     totalTicks += 1
+  }
+
+  @SubscribeEvent def onRender(event: TickEvent.RenderTickEvent) = if(event.phase == TickEvent.Phase.END){
+    fpsCounter += 1
+    while(Minecraft.getSystemTime >= this.fpsUpdateTime + 1000){
+      this.fps = this.fpsCounter
+      this.fpsCounter = 0
+      this.fpsUpdateTime += 1000
+    }
   }
 
   def blinkOn = totalTicks / 6 % 2 == 0
