@@ -33,7 +33,6 @@ import jk_5.nailed.chat.joinmessage.*;
 import jk_5.nailed.ipc.*;
 import jk_5.nailed.irc.*;
 import jk_5.nailed.map.*;
-import jk_5.nailed.map.gen.*;
 import jk_5.nailed.map.mappack.*;
 import jk_5.nailed.map.stat.*;
 import jk_5.nailed.map.teleport.*;
@@ -59,7 +58,6 @@ public class NailedServer {
 
     protected static final String modid = "Nailed";
     private static JsonObject config;
-    private static int providerID;
 
     private static IrcBot ircBot;
     private static NailedPermissionFactory permissionFactory;
@@ -155,20 +153,6 @@ public class NailedServer {
         NailedLog.info("Registering blocks");
         NailedBlocks.init();
 
-        NailedLog.info("Registering Nailed WorldProvider");
-        NailedServer.providerID = config.get("providerId").getAsInt();
-        DimensionManager.registerProviderType(NailedServer.providerID, NailedWorldProvider.class, false);
-
-        NailedLog.info("Overriding Default WorldProviders");
-        DimensionManager.unregisterProviderType(-1);
-        DimensionManager.unregisterProviderType(0);
-        DimensionManager.unregisterProviderType(1);
-        DimensionManager.registerProviderType(-1, NailedWorldProvider.class, false);
-        DimensionManager.registerProviderType(0, NailedWorldProvider.class, true);
-        DimensionManager.registerProviderType(1, NailedWorldProvider.class, false);
-        DimensionManager.unregisterDimension(-1);
-        DimensionManager.unregisterDimension(1);
-
         NailedLog.info("Registering permissionmanager");
         permissionFactory = new NailedPermissionFactory();
         PermissionsManager.setPermFactory(permissionFactory, NailedServer.modid);
@@ -233,10 +217,6 @@ public class NailedServer {
 
     public static JsonObject getConfig() {
         return NailedServer.config;
-    }
-
-    public static int getProviderID() {
-        return NailedServer.providerID;
     }
 
     public void loadPlugins() {

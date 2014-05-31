@@ -21,6 +21,9 @@ public class DimensionManagerTransformer implements IClassTransformer {
             MethodNode mnode = ASMHelper.findMethod(new Mapping("net/minecraftforge/common/DimensionManager", "init", "()V"), cnode);
 
             int offset = 0;
+            while(mnode.instructions.get(offset).getOpcode() != Opcodes.LDC) offset++;
+            LdcInsnNode ldc = (LdcInsnNode) mnode.instructions.get(offset);
+            ldc.cst = Type.getType("Ljk_5/nailed/map/gen/NailedWorldProvider;");
             while(mnode.instructions.get(offset).getOpcode() != Opcodes.POP) offset++;
             offset++;
             while(mnode.instructions.get(offset).getOpcode() != Opcodes.POP) mnode.instructions.remove(mnode.instructions.get(offset));

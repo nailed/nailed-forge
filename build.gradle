@@ -39,7 +39,6 @@ nailed {
     deploy artifact: 'nailedClient', project: 'Client', load: true, reobf: true
     deploy artifact: 'worldEditCUI', project: 'WorldEditCUI', load: true, reobf: true
     deploy artifact: 'nailedCommon', project: 'Common', load: true, reobf: true
-    //deploy artifact: 'nailedMumbleLink', project: 'MumbleLink', load: true
     deploy artifact: 'nailedCrashReporter', project: 'CrashReporter', load: true, reobf: true, coremod: 'jk_5.nailed.crashreporter.CorePlugin'
     deploy artifact: 'nailedUpdater', project: 'Updater', restart: 'game', mclib: true
     deploy artifact: 'forge', maven: 'net.minecraftforge:forge:1.7.2-10.12.1.1101:universal', load: true, server: 'http://files.minecraftforge.net/maven/'

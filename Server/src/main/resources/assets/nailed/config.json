@@ -1,5 +1,4 @@
 {
-    "providerId": 10,
     "ipc": {
         "enabled": false,
         "host": "127.0.0.1",
