@@ -188,7 +188,7 @@ public abstract class NailedCommand implements ICommand {
         for(Player player : map.getPlayers()){
             ret.add(player.getUsername());
         }
-        return ret;
+        return getOptions(args, ret);
     }
 
     public final String getCommandName() {
