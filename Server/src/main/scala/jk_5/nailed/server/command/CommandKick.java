@@ -27,7 +27,7 @@ public class CommandKick extends NailedCommand {
     @Override
     public void processCommandWithMap(ICommandSender sender, Map map, String[] args) {
         if(args.length == 0){
-            throw new WrongUsageException("Usage: /kick <player> [reason]");
+            throw new WrongUsageException("/kick <player> [reason]");
         }
         Player target = NailedAPI.getPlayerRegistry().getPlayerByUsername(args[0]);
         String reason = "No reason given";
