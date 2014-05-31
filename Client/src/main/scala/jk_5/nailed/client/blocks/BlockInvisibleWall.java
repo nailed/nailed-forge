@@ -3,6 +3,7 @@ package jk_5.nailed.client.blocks;
 import java.util.*;
 
 import net.minecraft.block.material.*;
+import net.minecraft.client.renderer.texture.*;
 import net.minecraft.creativetab.*;
 import net.minecraft.init.*;
 import net.minecraft.item.*;
@@ -115,5 +116,10 @@ public class BlockInvisibleWall extends BlockMulti {
     @Override
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z){
         return new ItemStack(Item.getItemFromBlock(this), 1, world.getBlockMetadata(x, y, z));
+    }
+
+    @Override
+    public void registerBlockIcons(IIconRegister registry) {
+
     }
 }

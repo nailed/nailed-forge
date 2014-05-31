@@ -1,12 +1,13 @@
 package jk_5.nailed.client.blocks;
 
-import net.minecraft.block.material.Material;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import java.util.*;
 
-import java.util.Random;
+import net.minecraft.block.material.*;
+import net.minecraft.client.renderer.texture.*;
+import net.minecraft.util.*;
+import net.minecraft.world.*;
+
+import net.minecraftforge.common.util.*;
 
 /**
  * No description given
@@ -63,5 +64,10 @@ public class BlockLight extends NailedBlock {
     @Override
     public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side){
         return false;
+    }
+
+    @Override
+    public void registerBlockIcons(IIconRegister registry) {
+
     }
 }
