@@ -18,7 +18,7 @@ import scala.util.Random
  *
  * @author jk-5
  */
-object TeamInformationRenderer extends Gui {
+object TeamInformationRenderer {
   val random = new Random()
   val left = List(getRenderer("jk_5"), getRenderer("Dabadooba"), getRenderer("ikzelf1248"))
   val topRight = List(getRenderer("Dinnerbone"), getRenderer("Grumm"), getRenderer("Jeb_"))
