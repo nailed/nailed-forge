@@ -7,6 +7,7 @@ import org.objectweb.asm.tree.*;
 
 import net.minecraft.launchwrapper.*;
 
+import jk_5.nailed.coremod.*;
 import jk_5.nailed.coremod.asm.*;
 
 /**
@@ -20,10 +21,12 @@ public class MinecraftServerTransformer implements IClassTransformer {
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] bytes) {
-        if(name.equals(TransformerData.minecraftServerObfuscated.get("className"))){
-            return transformMinecraftServer(bytes, TransformerData.minecraftServerObfuscated);
-        }else if(name.equals(TransformerData.minecraftServerDeobfuscated.get("className"))){
-            return transformMinecraftServer(bytes, TransformerData.minecraftServerDeobfuscated);
+        if(transformedName.equals("net.minecraft.server.MinecraftServer")){
+            if(NailedFMLPlugin.obfuscated){
+                return transformMinecraftServer(bytes, TransformerData.minecraftServerObfuscated);
+            }else{
+                return transformMinecraftServer(bytes, TransformerData.minecraftServerDeobfuscated);
+            }
         }else{
             return bytes;
         }
