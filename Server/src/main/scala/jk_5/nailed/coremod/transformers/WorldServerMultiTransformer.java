@@ -35,15 +35,11 @@ public class WorldServerMultiTransformer implements IClassTransformer {
         MethodNode mnode = ASMHelper.findMethod(new Mapping(data.get("className").replace('.', '/'), "<init>", data.get("constructorSig")), cnode);
         int offset = 0;
 
-        while(mnode.instructions.get(offset).getOpcode() != Opcodes.NEW){
-            offset++;
-        }
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.NEW) offset++;
         TypeInsnNode tn = (TypeInsnNode) mnode.instructions.get(offset);
         tn.desc = "jk_5/nailed/map/gen/NailedWorldInfo";
 
-        while(mnode.instructions.get(offset).getOpcode() != Opcodes.ALOAD){
-            offset++;
-        }
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.ALOAD) offset++;
         mnode.instructions.remove(mnode.instructions.get(offset));
         mnode.instructions.remove(mnode.instructions.get(offset));
         MethodInsnNode mn = (MethodInsnNode) mnode.instructions.get(offset);

@@ -67,9 +67,7 @@ public class VanillaSupportTransformer implements IClassTransformer {
         ClassNode cnode = ASMHelper.createClassNode(bytes);
         MethodNode mnode = ASMHelper.findMethod(timeoutMapping, cnode);
         int offset = 0;
-        while(mnode.instructions.get(offset).getOpcode() != Opcodes.GETSTATIC){
-            offset++;
-        }
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.GETSTATIC) offset++;
         FieldInsnNode node = (FieldInsnNode) mnode.instructions.get(offset);
         node.name = "SECONDS";
         return ASMHelper.createBytes(cnode, ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
@@ -79,20 +77,12 @@ public class VanillaSupportTransformer implements IClassTransformer {
         ClassNode cnode = ASMHelper.createClassNode(bytes);
         MethodNode mnode = ASMHelper.findMethod(modListMapping, cnode);
         int offset = 0;
-        while(mnode.instructions.get(offset).getOpcode() != Opcodes.ANEWARRAY){
-            offset++;
-        }
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.ANEWARRAY) offset++;
         offset++;
-        while(mnode.instructions.get(offset).getOpcode() != Opcodes.ANEWARRAY){
-            offset++;
-        }
-        while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKESTATIC){
-            offset++;
-        }
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.ANEWARRAY) offset++;
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKESTATIC) offset++;
         offset++;
-        while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKESTATIC){
-            offset++;
-        }
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKESTATIC) offset++;
         AbstractInsnNode hook = mnode.instructions.get(offset);
 
         InsnList list = new InsnList();

@@ -129,6 +129,9 @@ public class NailedMapLoader implements MapLoader {
     @Override
     @Nullable
     public Map getMap(int id) {
+        if(id == 0){
+            return this.getLobby();
+        }
         for(Map map : this.maps){
             if(map.getID() == id){
                 return map;
@@ -369,6 +372,12 @@ public class NailedMapLoader implements MapLoader {
 
     @Nonnull
     public Map getLobby() {
+        if(this.lobby == null){
+            this.lobby = new NailedMap(NailedAPI.getMappackLoader().getMappack("lobby"), 0);
+            if(this.lobby.getMappack() != null){
+                this.lobby.getMappack().prepareWorld(this.lobby.getSaveFolder(), null);
+            }
+        }
         return lobby;
     }
 
