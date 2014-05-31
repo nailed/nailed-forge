@@ -46,6 +46,7 @@ public class MotdManager {
     public void onEvent(TickEvent.ServerTickEvent event) {
         if(firstTick){
             MinecraftServer.getServer().func_147134_at().func_151315_a(this.motd);
+            firstTick = false;
         }
         if(event.phase == TickEvent.Phase.START){
             String comment = this.comments.get(this.rand.nextInt(this.comments.size()));
