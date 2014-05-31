@@ -145,8 +145,8 @@ public class NailedMap implements Map {
             player.setMinHealth(mappack.getMappackMetadata().getMinHealth());
         }else{
             playerFoodStats.setMinFoodLevel(0);
-            playerFoodStats.setMaxFoodLevel(15);
-            player.setMinHealth(1);
+            playerFoodStats.setMaxFoodLevel(20);
+            player.setMinHealth(0);
             player.setMaxHealth(20);
         }
         player.getEntity().foodStats = playerFoodStats;
