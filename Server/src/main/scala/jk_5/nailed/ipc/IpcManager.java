@@ -32,12 +32,12 @@ public class IpcManager {
     private final int port;
 
     public IpcManager() {
-        if(NailedServer.getConfig() == null){
+        if(NailedServer.config() == null){
             this.enabled = true;
             this.host = "127.0.0.1";
             this.port = 9001;
         }else{
-            JsonObject cfg = NailedServer.getConfig().getAsJsonObject("ipc");
+            JsonObject cfg = NailedServer.config().getAsJsonObject("ipc");
             this.enabled = cfg.get("enabled").getAsBoolean();
             this.host = cfg.get("host").getAsString();
             this.port = cfg.get("port").getAsInt();

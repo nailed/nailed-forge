@@ -58,7 +58,7 @@ public class IrcBot extends PircBot {
     private String channelPassword;
 
     public IrcBot() {
-        JsonObject cfg = NailedServer.getConfig().getAsJsonObject("irc");
+        JsonObject cfg = NailedServer.config().getAsJsonObject("irc");
         this.enabled = cfg.get("enabled").getAsBoolean();
         this.host = cfg.get("host").getAsString();
         this.port = cfg.get("port").getAsInt();
