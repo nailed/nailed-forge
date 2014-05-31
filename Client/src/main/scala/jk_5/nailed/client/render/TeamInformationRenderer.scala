@@ -10,7 +10,6 @@ import org.lwjgl.opengl.GL11
 import scala.collection.mutable
 import net.minecraft.client.entity.AbstractClientPlayer
 import net.minecraft.client.renderer.Tessellator
-import net.minecraft.client.Minecraft
 import scala.util.Random
 
 /**
@@ -21,6 +20,8 @@ import scala.util.Random
 object TeamInformationRenderer {
   val random = new Random()
   val left = List(getRenderer("jk_5"), getRenderer("Dabadooba"), getRenderer("ikzelf1248"))
+  val topLeft: List[PlayerHeadRenderer] = List()
+  val top: List[PlayerHeadRenderer] = List()
   val topRight = List(getRenderer("Dinnerbone"), getRenderer("Grumm"), getRenderer("Jeb_"))
   val right = List(getRenderer("Docm77"),getRenderer("Etho"),getRenderer("AnderZEL"))
 
@@ -70,6 +71,7 @@ object TeamInformationRenderer {
   }
 
   def renderTopMiddle(players: List[PlayerHeadRenderer], resolution: ScaledResolution) {
+    if(players.isEmpty) return
     import GL11._
 
     val start = resolution.getScaledWidth / 7
@@ -96,6 +98,7 @@ object TeamInformationRenderer {
   }
 
   def renderTopLeft(players: List[PlayerHeadRenderer], resolution: ScaledResolution) {
+    if(players.isEmpty) return
     import GL11._
 
     val start = resolution.getScaledWidth / 7
@@ -122,6 +125,7 @@ object TeamInformationRenderer {
   }
 
   def renderTopRight(players: List[PlayerHeadRenderer], resolution: ScaledResolution) {
+    if(players.isEmpty) return
     import GL11._
 
     val f = resolution.getScaledWidth / 7
@@ -149,6 +153,7 @@ object TeamInformationRenderer {
   }
 
   def renderLeft(players: List[PlayerHeadRenderer], resolution: ScaledResolution) {
+    if(players.isEmpty) return
     import GL11._
 
     val f = resolution.getScaledHeight / 7
@@ -176,6 +181,7 @@ object TeamInformationRenderer {
   }
 
   def renderRight(players: List[PlayerHeadRenderer], resolution: ScaledResolution) {
+    if(players.isEmpty) return
     import GL11._
 
     val f = resolution.getScaledHeight / 7
@@ -201,5 +207,46 @@ object TeamInformationRenderer {
     }
     glDisable(GL_TEXTURE_2D)
     glPopMatrix()
+  }
+
+  def setTeamRenderer(teams: Array[List[String]]){
+    teams.length match{
+      case 0 =>
+        dropAll()
+      case 1 =>
+        dropAll()
+        getTeamRenderList(teams(0)) ::: top
+      case 2 =>
+        dropAll()
+        getTeamRenderList(teams(0)) ::: left
+        getTeamRenderList(teams(1)) ::: right
+      case 3 =>
+        dropAll()
+        getTeamRenderList(teams(0)) ::: left
+        getTeamRenderList(teams(1)) ::: top
+        getTeamRenderList(teams(2)) ::: right
+      case 4 =>
+        dropAll()
+        getTeamRenderList(teams(0)) ::: left
+        getTeamRenderList(teams(1)) ::: topLeft
+        getTeamRenderList(teams(2)) ::: topRight
+        getTeamRenderList(teams(3)) ::: right
+    }
+  }
+
+  def getTeamRenderList(team: List[String]): List[PlayerHeadRenderer] = {
+    val pHRl: List[PlayerHeadRenderer] = List()
+    for(player <- team){
+      pHRl.add(getRenderer(player))
+    }
+    pHRl
+  }
+
+  def dropAll(){
+    left.drop(0)
+    topLeft.drop(0)
+    top.drop(0)
+    topRight.drop(0)
+    right.drop(0)
   }
 }
