@@ -41,7 +41,7 @@ nailed {
     deploy artifact: 'nailedCommon', project: 'Common', load: true, reobf: true
     deploy artifact: 'nailedCrashReporter', project: 'CrashReporter', load: true, reobf: true, coremod: 'jk_5.nailed.crashreporter.CorePlugin'
     deploy artifact: 'nailedUpdater', project: 'Updater', restart: 'game', mclib: true
-    deploy artifact: 'forge', maven: 'net.minecraftforge:forge:1.7.2-10.12.1.1101:universal', load: true, server: 'http://files.minecraftforge.net/maven/'
+    deploy artifact: 'forge', maven: 'net.minecraftforge:forge:1.7.2-10.12.1.1103:universal', load: true, server: 'http://files.minecraftforge.net/maven/'
     deploy artifact: 'minecraft', maven: 'versions::1.7.2', localmaven: 'net.minecraft:minecraft:1.7.2', load: true, server: 'https://s3.amazonaws.com/Minecraft.Download/'
 
     tweaker = 'cpw.mods.fml.common.launcher.FMLTweaker'

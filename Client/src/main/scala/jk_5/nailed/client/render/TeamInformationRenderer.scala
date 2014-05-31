@@ -28,6 +28,7 @@ object TeamInformationRenderer {
   val textures = mutable.HashMap[String, ResourceLocation]()
 
   @SubscribeEvent def render(event: RenderGameOverlayEvent.Post): Unit = if(event.`type` == ElementType.ALL) {
+    if(true) return
     renderTopRight(topRight, event.resolution)
     renderLeft(left, event.resolution)
     renderRight(right, event.resolution)
@@ -237,7 +238,7 @@ object TeamInformationRenderer {
   def getTeamRenderList(team: List[String]): List[PlayerHeadRenderer] = {
     val pHRl: List[PlayerHeadRenderer] = List()
     for(player <- team){
-      pHRl.add(getRenderer(player))
+      pHRl += getRenderer(player)
     }
     pHRl
   }
