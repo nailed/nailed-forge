@@ -112,9 +112,9 @@ public class FileSystem {
 
         int lastSlash = path.lastIndexOf('/');
         if(lastSlash >= 0){
-            return path.substring(lastSlash + 1);
+            return FilenameUtils.removeExtension(path.substring(lastSlash + 1));
         }
-        return path;
+        return FilenameUtils.removeExtension(path);
     }
 
     public synchronized long getSize(String path) throws FileSystemException {

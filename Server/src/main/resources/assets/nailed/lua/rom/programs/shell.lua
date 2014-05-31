@@ -123,9 +123,11 @@ function shell.resolveProgram(_sCommand)
  	-- Otherwise, look on the path variable
     for sPath in string.gmatch(sPath, "[^:]+") do
     	sPath = fs.combine(shell.resolve(sPath), _sCommand)
-    	if fs.exists(sPath) and not fs.isDir(sPath) then
-			return sPath
-    	end
+        if fs.exists(sPath) and not fs.isDir(sPath) then
+            return sPath
+        elseif fs.exists(sPath .. ".lua") and not fs.isDir(sPath .. ".lua") then
+            return sPath .. ".lua"
+        end
     end
 	
 	-- Not found

@@ -354,7 +354,13 @@ loadfile = function(_sFile)
 		local func, err = loadstring(file.readAll(), fs.getName(_sFile))
 		file.close()
 		return func, err
-	end
+    end
+    file = fs.open(_sFile .. ".lua", "r")
+    if file then
+        local func, err = loadstring(file.readAll(), fs.getName(_sFile .. ".lua"))
+        file.close()
+        return func, err
+    end
 	return nil, "File not found"
 end
 
