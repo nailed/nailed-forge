@@ -214,6 +214,8 @@ public class NailedServer {
         permissionFactory.readConfig();
 
         ((NailedMappackLoader) NailedAPI.getMappackLoader()).loadASync = true;
+
+        MotdManager.firstTick = true;
     }
 
     @SubscribeEvent

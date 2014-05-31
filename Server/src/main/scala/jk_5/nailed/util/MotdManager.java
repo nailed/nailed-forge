@@ -4,9 +4,7 @@ import java.util.*;
 
 import com.google.common.collect.*;
 
-import net.minecraft.network.*;
 import net.minecraft.server.*;
-import net.minecraft.util.*;
 
 import cpw.mods.fml.common.eventhandler.*;
 import cpw.mods.fml.common.gameevent.*;
@@ -41,17 +39,17 @@ public class MotdManager {
             "1.7.2 now!"
     );
     private final Random rand = new Random();
-    private final ServerStatusResponse data = MinecraftServer.getServer().func_147134_at();
-    private ChatComponentText motd;
+    private MotdChatComponent motd = new MotdChatComponent("");
+    public static boolean firstTick = false;
 
     @SubscribeEvent
     public void onEvent(TickEvent.ServerTickEvent event) {
+        if(firstTick){
+            MinecraftServer.getServer().func_147134_at().func_151315_a(this.motd);
+        }
         if(event.phase == TickEvent.Phase.START){
-            if(this.motd == null){
-                this.motd = (ChatComponentText) data.func_151317_a();
-            }
             String comment = this.comments.get(this.rand.nextInt(this.comments.size()));
-            this.motd.text = ChatColor.AQUA + "Nailed " + ChatColor.GOLD + "| " + ChatColor.WHITE + "Quakecraft is up and running again!\n" + ChatColor.GRAY + comment;
+            this.motd.setText(ChatColor.AQUA + "Nailed " + ChatColor.GOLD + "| " + ChatColor.WHITE + "Quakecraft is up and running again!\n" + ChatColor.GRAY + comment);
         }
     }
 }
