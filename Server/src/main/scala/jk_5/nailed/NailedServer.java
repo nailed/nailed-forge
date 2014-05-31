@@ -71,9 +71,6 @@ public class NailedServer {
             throw new RuntimeException("Nailed-Server is server-only, don\'t use it on the client!");
         }
 
-        NailedCommandManager commandManager = new NailedCommandManager();
-        MinecraftServer.getServer().commandManager = commandManager;
-
         NailedAPI.setMapLoader(new NailedMapLoader());
         NailedAPI.setMappackLoader(new NailedMappackLoader());
         NailedAPI.setPlayerRegistry(new NailedPlayerRegistry());
@@ -81,7 +78,7 @@ public class NailedServer {
         NailedAPI.setTeleporter(new NailedTeleporter());
         NailedAPI.setZoneRegistry(new NailedZoneRegistry());
         NailedAPI.setMovementHandler(new MovementHandler());
-        NailedAPI.setCommandRegistry(commandManager);
+        NailedAPI.setCommandRegistry((NailedCommandManager) MinecraftServer.getServer().getCommandManager());
 
         FMLCommonHandler.instance().bus().register(NailedAPI.getScheduler());
 

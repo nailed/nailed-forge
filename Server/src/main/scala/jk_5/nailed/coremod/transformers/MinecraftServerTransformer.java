@@ -18,6 +18,7 @@ import jk_5.nailed.coremod.asm.*;
 public class MinecraftServerTransformer implements IClassTransformer {
 
     private static final String MAP_CLASS = "jk_5/nailed/map/LobbyMap";
+    private static final String CMDMAN_CLASS = "jk_5/nailed/server/command/NailedCommandManager";
 
     @Override
     public byte[] transform(String name, String transformedName, byte[] bytes) {
@@ -38,18 +39,26 @@ public class MinecraftServerTransformer implements IClassTransformer {
         //Find the constructor
         MethodNode mnode = ASMHelper.findMethod(new Mapping(data.get("className").replace('.', '/'), "<init>", data.get("constructorSig")), cnode);
 
+        //Find "this.commandManager = new ServerCommandManager();"
         int offset = 0;
         int numOfNews = 0;
-        while(numOfNews != 9){
+        while(numOfNews != 8){
             while(mnode.instructions.get(offset).getOpcode() != Opcodes.NEW){
                 offset++;
             }
             offset++;
             numOfNews++;
         }
-        while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKESPECIAL){
-            offset++;
-        }
+        //Replace vanilla's ServerCommandManager with our own NailedCommandManager
+        TypeInsnNode newNode = (TypeInsnNode) mnode.instructions.get(offset);
+        newNode.desc = CMDMAN_CLASS;
+        offset += 2;
+        MethodInsnNode cstrNode = (MethodInsnNode) mnode.instructions.get(offset);
+        cstrNode.owner = CMDMAN_CLASS;
+
+        //Find "this.anvilConverterForAnvilFile = new AnvilSaveConverter(p_i45281_1_);"
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.NEW) offset++;
+        while(mnode.instructions.get(offset).getOpcode() != Opcodes.INVOKESPECIAL) offset++;
 
         /*
          *  Inject:
