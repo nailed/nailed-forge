@@ -168,8 +168,13 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
             }
 
             String owner = commandOwners.get(icommand);
-            if(!hasPermission && PermissionsManager.getPerm(sname, owner + ".commands." + icommand.getCommandName()).check()){
-                hasPermission = true;
+            if(!hasPermission){
+                if(icommand instanceof SubpermissionCommand){
+                    SubpermissionCommand sub = (SubpermissionCommand) icommand;
+                    hasPermission = sub.hasPermission(sname, args);
+                }else{
+                    hasPermission = PermissionsManager.getPerm(sname, owner + ".commands." + icommand.getCommandName()).check();
+                }
             }
 
             if(!hasPermission){
@@ -229,8 +234,17 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
         if(container != null){
             modid = container.getModId().toLowerCase();
         }
-        commandOwners.put(command, modid);
-        PermissionsManager.registerPermission(modid + ".commands." + command.getCommandName(), RegisteredPermValue.OP);
+        return this.registerCommand(command, modid);
+    }
+
+    public ICommand registerCommand(ICommand command, String owner) {
+        commandOwners.put(command, owner);
+        if(command instanceof SubpermissionCommand){
+            SubpermissionCommand sub = (SubpermissionCommand) command;
+            sub.registerPermissions(owner);
+        }else{
+            PermissionsManager.registerPermission(owner + ".commands." + command.getCommandName(), RegisteredPermValue.OP);
+        }
         return super.registerCommand(command);
     }
 

@@ -8,6 +8,8 @@ import net.minecraft.command.*;
 import net.minecraft.event.*;
 import net.minecraft.util.*;
 
+import net.minecraftforge.permissions.api.*;
+
 import jk_5.nailed.api.*;
 import jk_5.nailed.api.concurrent.*;
 import jk_5.nailed.api.map.Map;
@@ -18,16 +20,40 @@ import jk_5.nailed.api.map.*;
  *
  * @author jk-5
  */
-public class CommandMap extends NailedCommand {
+public class CommandMap extends NailedCommand implements SubpermissionCommand {
+
+    private String createPerm;
+    private String removePerm;
+    private String listPerm;
 
     public CommandMap() {
         super("map");
     }
 
     @Override
+    public void registerPermissions(String owner) {
+        PermissionsManager.registerPermission(createPerm = owner + ".commands.map.create", RegisteredPermValue.OP);
+        PermissionsManager.registerPermission(removePerm = owner + ".commands.map.remove", RegisteredPermValue.OP);
+        PermissionsManager.registerPermission(listPerm = owner + ".commands.map.list", RegisteredPermValue.TRUE);
+    }
+
+    @Override
+    public boolean hasPermission(String sender, String[] args) {
+        if(args.length == 0) return true;
+        if(args[0].equalsIgnoreCase("create")){
+            PermissionsManager.getPerm(sender, createPerm).check();
+        }else if(args[0].equalsIgnoreCase("remove")){
+            PermissionsManager.getPerm(sender, removePerm).check();
+        }else if(args[0].equalsIgnoreCase("list")){
+            PermissionsManager.getPerm(sender, listPerm).check();
+        }
+        return true;
+    }
+
+    @Override
     public void processCommandWithMap(final ICommandSender sender, Map currentMap, String[] args) {
         if(args.length == 0){
-            throw new WrongUsageException("/map <create:remove>");
+            throw new WrongUsageException("/map <create:remove:list>");
         }
         if("create".equalsIgnoreCase(args[0])){
             if(args.length == 1){
@@ -72,15 +98,31 @@ public class CommandMap extends NailedCommand {
             IChatComponent component = new ChatComponentText("Removed " + map.getSaveFileName());
             component.getChatStyle().setColor(EnumChatFormatting.GREEN);
             sender.addChatMessage(component);
+        }else if("list".equalsIgnoreCase(args[0])){
+            IChatComponent base = new ChatComponentText("");
+            IChatComponent c = new ChatComponentText("Loaded maps: ");
+            c.getChatStyle().setColor(EnumChatFormatting.GREEN);
+            base.getChatStyle().setColor(EnumChatFormatting.GRAY);
+            base.appendSibling(c);
+            boolean first = true;
+            for(Map map : NailedAPI.getMapLoader().getMaps()){
+                if(!first) base.appendText(", ");
+                IChatComponent comp = new ChatComponentText(map.getSaveFileName());
+                comp.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText("Click to teleport")));
+                comp.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/goto " + map.getSaveFileName()));
+                base.appendSibling(comp);
+                first = false;
+            }
+            sender.addChatMessage(base);
         }else{
-            throw new WrongUsageException("/map <create:remove>");
+            throw new WrongUsageException("/map <create:remove:list>");
         }
     }
 
     @Override
     public List<String> addAutocomplete(ICommandSender sender, String[] args) {
         if(args.length == 1){
-            return getOptions(args, "create", "remove");
+            return getOptions(args, "create", "remove", "list");
         }else if(args.length == 2){
             if("create".equalsIgnoreCase(args[0])){
                 List<String> ret = Lists.newArrayList();
@@ -96,6 +138,6 @@ public class CommandMap extends NailedCommand {
                 return getOptions(args, ret);
             }
         }
-        return Arrays.asList();
+        return null;
     }
 }

@@ -40,14 +40,20 @@ public class IpcMappack implements Mappack {
         if(metadata.getName() == null){
             ((JsonMappackMetadata) metadata).name = this.id;
         }
-        this.filestore.files = gson.fromJson(json.get("worldFiles"), new TypeToken<List<MappackFile>>() {
-        }.getType());
-        this.luaFilestore.files = gson.fromJson(json.get("luaFiles"), new TypeToken<List<MappackFile>>() {
-        }.getType());
+        this.filestore.files = gson.fromJson(json.get("worldFiles"), new TypeToken<List<MappackFile>>() {}.getType());
+        this.luaFilestore.files = gson.fromJson(json.get("luaFiles"), new TypeToken<List<MappackFile>>() {}.getType());
         this.filestore.refresh();
         this.luaFilestore.refresh();
-        this.statConfig = new jk_5.nailed.map.stat.StatConfig(json.get("stats").getAsJsonArray());
-        this.zoneConfig = new DefaultZoneConfig(json.get("zones").getAsJsonArray());
+        if(json.has("stats")){
+            this.statConfig = new jk_5.nailed.map.stat.StatConfig(json.get("stats").getAsJsonArray());
+        }else{
+            this.statConfig = new jk_5.nailed.map.stat.StatConfig();
+        }
+        if(json.has("zones")){
+            this.zoneConfig = new DefaultZoneConfig(json.get("zones").getAsJsonArray());
+        }else{
+            this.zoneConfig = new DefaultZoneConfig();
+        }
     }
 
     @Override
