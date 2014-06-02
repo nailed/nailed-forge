@@ -1,11 +1,12 @@
 package jk_5.nailed.network;
 
-import io.netty.buffer.*;
-import io.netty.channel.*;
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerContext;
 
-import cpw.mods.fml.common.network.*;
+import cpw.mods.fml.common.network.FMLIndexedMessageToMessageCodec;
 
-import jk_5.nailed.map.script.*;
+import jk_5.nailed.map.script.ScriptPacket;
 
 /**
  * No description given
@@ -16,7 +17,7 @@ import jk_5.nailed.map.script.*;
 public class NailedPacketCodec extends FMLIndexedMessageToMessageCodec<NailedPacket> {
 
     public NailedPacketCodec() {
-        //0
+        this.addDiscriminator(0, NailedPacket.TeamInformation.class);
         //1
         this.addDiscriminator(2, NailedPacket.GuiReturnDataPacket.class);
         this.addDiscriminator(3, NailedPacket.GuiOpen.class);

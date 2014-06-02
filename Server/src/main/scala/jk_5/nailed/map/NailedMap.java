@@ -1,41 +1,49 @@
 package jk_5.nailed.map;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.List;
 
-import com.google.common.base.*;
-import com.google.common.collect.*;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 
-import io.netty.channel.embedded.*;
+import io.netty.channel.embedded.EmbeddedChannel;
 
-import net.minecraft.network.*;
-import net.minecraft.server.*;
-import net.minecraft.util.*;
-import net.minecraft.world.*;
+import net.minecraft.network.Packet;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.world.GameRules;
+import net.minecraft.world.WorldServer;
 
-import cpw.mods.fml.common.gameevent.*;
-import cpw.mods.fml.common.network.*;
-import cpw.mods.fml.relauncher.*;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.common.network.FMLOutboundHandler;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.relauncher.Side;
 
-import net.minecraftforge.common.*;
-import net.minecraftforge.common.network.*;
+import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.network.ForgeMessage;
 
-import jk_5.nailed.*;
-import jk_5.nailed.api.*;
-import jk_5.nailed.api.concurrent.scheduler.*;
-import jk_5.nailed.api.map.*;
+import jk_5.nailed.NailedLog;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.concurrent.scheduler.NailedRunnable;
+import jk_5.nailed.api.map.GameManager;
 import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.teleport.*;
-import jk_5.nailed.api.player.*;
-import jk_5.nailed.api.scripting.*;
-import jk_5.nailed.api.zone.*;
-import jk_5.nailed.map.game.*;
-import jk_5.nailed.map.scoreboard.*;
-import jk_5.nailed.map.script.*;
-import jk_5.nailed.map.sign.*;
-import jk_5.nailed.map.stat.*;
-import jk_5.nailed.permissions.zone.*;
-import jk_5.nailed.util.*;
+import jk_5.nailed.api.map.Mappack;
+import jk_5.nailed.api.map.MappackMetadata;
+import jk_5.nailed.api.map.teleport.TeleportOptions;
+import jk_5.nailed.api.player.Player;
+import jk_5.nailed.api.scripting.IMount;
+import jk_5.nailed.api.zone.ZoneManager;
+import jk_5.nailed.map.game.NailedGameManager;
+import jk_5.nailed.map.scoreboard.NailedScoreboardManager;
+import jk_5.nailed.map.script.FileSystemException;
+import jk_5.nailed.map.script.MachineRegistry;
+import jk_5.nailed.map.script.ServerMachine;
+import jk_5.nailed.map.script.Terminal;
+import jk_5.nailed.map.sign.SignCommandHandler;
+import jk_5.nailed.map.stat.StatManager;
+import jk_5.nailed.permissions.zone.DefaultZoneManager;
+import jk_5.nailed.util.NailedFoodStats;
 
 /**
  * No description given
@@ -133,7 +141,6 @@ public class NailedMap implements Map {
     @Override
     public void onPlayerJoined(Player player) {
         player.sendTimeUpdate("");
-        player.sendTeamInformation(this.getTeamManager().getPlayerNames());
         this.scoreboardManager.onPlayerJoinedMap(player);
         this.teamManager.onPlayerJoinedMap(player);
         this.players.add(player);

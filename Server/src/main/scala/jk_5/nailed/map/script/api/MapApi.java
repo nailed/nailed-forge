@@ -1,28 +1,36 @@
 package jk_5.nailed.map.script.api;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
 
-import com.google.common.collect.*;
-import com.google.gson.*;
+import com.google.common.collect.Maps;
+import com.google.gson.JsonParseException;
 
-import org.luaj.vm2.*;
+import org.luaj.vm2.LuaClosure;
+import org.luaj.vm2.LuaFunction;
+import org.luaj.vm2.LuaValue;
 
-import net.minecraft.util.*;
-import net.minecraft.world.*;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.world.EnumDifficulty;
+import net.minecraft.world.World;
 
-import jk_5.nailed.api.*;
+import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.stat.*;
-import jk_5.nailed.api.map.team.*;
-import jk_5.nailed.api.map.teleport.*;
+import jk_5.nailed.api.map.stat.IStatType;
+import jk_5.nailed.api.map.stat.Stat;
+import jk_5.nailed.api.map.team.Team;
+import jk_5.nailed.api.map.teleport.TeleportOptions;
 import jk_5.nailed.api.map.teleport.Teleporter;
-import jk_5.nailed.api.player.*;
-import jk_5.nailed.api.scripting.*;
-import jk_5.nailed.map.*;
-import jk_5.nailed.map.script.*;
-import jk_5.nailed.map.stat.*;
-import jk_5.nailed.map.stat.types.*;
-import jk_5.nailed.util.*;
+import jk_5.nailed.api.player.Player;
+import jk_5.nailed.api.scripting.ILuaAPI;
+import jk_5.nailed.api.scripting.ILuaContext;
+import jk_5.nailed.api.scripting.ILuaObject;
+import jk_5.nailed.map.Location;
+import jk_5.nailed.map.script.IAPIEnvironment;
+import jk_5.nailed.map.script.LuaMachine;
+import jk_5.nailed.map.stat.DefaultStat;
+import jk_5.nailed.map.stat.types.StatTypeModifiable;
+import jk_5.nailed.util.NailedFoodStats;
 
 /**
  * No description given
@@ -88,7 +96,8 @@ public class MapApi implements ILuaAPI {
                 "setMaxFood",
                 "setMinFood",
                 "setMaxHealth",
-                "setMinHealth"
+                "setMinHealth",
+                "displayTeamList"
         };
     }
 
@@ -319,6 +328,13 @@ public class MapApi implements ILuaAPI {
                     }
                 }else{
                     throw new Exception("Expected 1 integer argument");
+                }
+                break;
+            case 27: //displayTeamList
+                if(arguments.length == 1 && arguments[0] instanceof Boolean){
+                    this.map.getGameManager().setTeamListVisible((Boolean) arguments[0]);
+                }else{
+                    throw new Exception("Expected 1 boolean argument");
                 }
                 break;
         }

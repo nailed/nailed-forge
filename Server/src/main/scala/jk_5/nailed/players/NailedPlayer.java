@@ -1,41 +1,62 @@
 package jk_5.nailed.players;
 
-import java.util.*;
+import java.util.List;
+import java.util.Random;
 
-import com.google.common.collect.*;
-import com.google.gson.*;
-import com.mojang.authlib.*;
+import com.google.common.collect.Lists;
+import com.google.gson.JsonParseException;
+import com.mojang.authlib.GameProfile;
 
-import io.netty.buffer.*;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 
-import net.minecraft.entity.player.*;
-import net.minecraft.item.*;
-import net.minecraft.network.*;
-import net.minecraft.network.play.server.*;
-import net.minecraft.potion.*;
-import net.minecraft.server.*;
-import net.minecraft.util.*;
-import net.minecraft.world.*;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerCapabilities;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.network.NetHandlerPlayServer;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S2BPacketChangeGameState;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.FoodStats;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.world.WorldSettings;
 
-import cpw.mods.fml.common.network.*;
-import cpw.mods.fml.relauncher.*;
+import cpw.mods.fml.common.network.ByteBufUtils;
+import cpw.mods.fml.relauncher.ReflectionHelper;
 
-import net.minecraftforge.permissions.api.*;
+import net.minecraftforge.permissions.api.PermissionsManager;
 
-import jk_5.nailed.api.*;
-import jk_5.nailed.api.camera.*;
+import jk_5.nailed.api.Gamemode;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.camera.IMovement;
 import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.*;
-import jk_5.nailed.api.map.team.*;
-import jk_5.nailed.api.player.*;
-import jk_5.nailed.api.scripting.*;
-import jk_5.nailed.chat.joinmessage.*;
-import jk_5.nailed.ipc.*;
-import jk_5.nailed.map.*;
-import jk_5.nailed.network.*;
-import jk_5.nailed.permissions.*;
-import jk_5.nailed.util.*;
-import jk_5.nailed.web.auth.*;
+import jk_5.nailed.api.map.Mappack;
+import jk_5.nailed.api.map.MappackMetadata;
+import jk_5.nailed.api.map.team.Team;
+import jk_5.nailed.api.player.IncompatibleClientException;
+import jk_5.nailed.api.player.NailedWebUser;
+import jk_5.nailed.api.player.Player;
+import jk_5.nailed.api.player.PlayerClient;
+import jk_5.nailed.api.scripting.ILuaContext;
+import jk_5.nailed.api.scripting.ILuaObject;
+import jk_5.nailed.chat.joinmessage.JoinMessageSender;
+import jk_5.nailed.ipc.IpcManager;
+import jk_5.nailed.map.Location;
+import jk_5.nailed.map.NailedMap;
+import jk_5.nailed.map.RenderPoint;
+import jk_5.nailed.network.NailedNetworkHandler;
+import jk_5.nailed.network.NailedPacket;
+import jk_5.nailed.permissions.Group;
+import jk_5.nailed.permissions.NailedPermissionFactory;
+import jk_5.nailed.permissions.User;
+import jk_5.nailed.util.ChatColor;
+import jk_5.nailed.util.NailedFoodStats;
+import jk_5.nailed.web.auth.WebUser;
 
 /**
  * No description given
@@ -296,30 +317,37 @@ public class NailedPlayer implements Player, ILuaObject {
         this.webUser = webUser;
     }
 
+    @Override
     public void teleportToLobby() {
         this.teleportToMap(NailedAPI.getMapLoader().getLobby());
     }
 
+    @Override
     public void setMaxHealth(int max) {
         this.maxHealth = max;
     }
 
+    @Override
     public int getMaxHealth() {
         return this.maxHealth;
     }
 
+    @Override
     public void setMinHealth(int min) {
         this.minHealth = min;
     }
 
+    @Override
     public int getMinHealth() {
         return this.minHealth;
     }
 
+    @Override
     public List<Player> getPlayersVisible() {
         return this.playersVisible;
     }
 
+    @Override
     public void addPlayerVisible(Player player) {
         if(this.playersVisible.contains(player)){
             return;
@@ -327,6 +355,7 @@ public class NailedPlayer implements Player, ILuaObject {
         this.playersVisible.add(player);
     }
 
+    @Override
     public void replacePlayerVisible(Player player, List<Player> players, Random random) {
         players.removeAll(this.playersVisible);
         this.playersVisible.remove(player);
@@ -338,26 +367,31 @@ public class NailedPlayer implements Player, ILuaObject {
         return this.playerClient;
     }
 
+    @Override
     public void removePlayerVisible(Player player) {
         if(this.playersVisible.contains(player)){
             this.playersVisible.remove(player);
         }
     }
 
+    @Override
     public int getNumPlayersVisible() {
         return this.playersVisible.size();
     }
 
+    @Override
     public void setPlayersVisible(List<Player> list) {
         if(list != null){
             this.playersVisible = list;
         }
     }
 
+    @Override
     public void setClient(PlayerClient client) {
         this.playerClient = client;
     }
 
+    @Override
     public void setMoving(IMovement movement) {
         this.getEntity().isAirBorne = true;
         this.setGameMode(Gamemode.CREATIVE);
@@ -367,10 +401,6 @@ public class NailedPlayer implements Player, ILuaObject {
     @Override
     public void kick(String reason) {
         this.netHandler.kickPlayerFromServer(reason);
-    }
-
-    public void sendTeamInformation(List<List<String>> tNames){
-        NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.TeamInformation(tNames), this.getEntity());
     }
 
     @Override

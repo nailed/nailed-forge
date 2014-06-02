@@ -1,17 +1,19 @@
 package jk_5.nailed.network;
 
-import java.util.*;
+import java.util.List;
 
-import com.google.common.base.*;
-import com.google.common.collect.*;
+import com.google.common.base.Charsets;
+import com.google.common.collect.Lists;
 
-import io.netty.buffer.*;
+import io.netty.buffer.ByteBuf;
 
-import cpw.mods.fml.common.network.*;
+import cpw.mods.fml.common.network.ByteBufUtils;
 
-import jk_5.nailed.map.*;
+import jk_5.nailed.map.RenderPoint;
+import jk_5.nailed.map.teamlist.TeamInfo;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 /**
  * No description given
@@ -342,28 +344,28 @@ public abstract class NailedPacket {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class TeamInformation extends NailedPacket {
-        public List<List<String>> teams = Lists.newArrayList();
+
+        public boolean display;
+        public List<TeamInfo> teams;
 
         public void encode(ByteBuf buffer){
-            buffer.writeByte(teams.size());
-            for(List<String> team : teams){
-                buffer.writeInt(team.size());
-                for(String name : team){
-                    ByteBufUtils.writeUTF8String(buffer, name);
+            buffer.writeBoolean(this.display);
+            if(this.display){
+                ByteBufUtils.writeVarShort(buffer, teams.size());
+                for(TeamInfo team : teams){
+                    team.write(buffer);
                 }
             }
         }
 
         public void decode(ByteBuf buffer){
-            int tSize = buffer.readByte();
-            this.teams = Lists.newArrayList();
-            for(int i = 0; i < tSize; ++i){
-                List<String> tTeam = Lists.newArrayList();
-                int pSize = buffer.readInt();
-                for(int j = 0; j < pSize; ++j){
-                    tTeam.add(ByteBufUtils.readUTF8String(buffer));
+            this.display = buffer.readBoolean();
+            if(this.display){
+                int size = ByteBufUtils.readVarShort(buffer);
+                this.teams = Lists.newArrayListWithCapacity(size);
+                for(int i = 0; i < size; i++){
+                    teams.add(TeamInfo.read(buffer));
                 }
-                this.teams.add(tTeam);
             }
         }
     }

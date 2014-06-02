@@ -16,6 +16,7 @@ public interface GameManager {
     void startGame();
     void stopGame();
     boolean isGameRunning();
+    void setTeamListVisible(boolean teamListVisible);
 
     void onStarted();
     void onStopped(boolean finished);

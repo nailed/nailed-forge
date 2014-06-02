@@ -1,16 +1,29 @@
 package jk_5.nailed.map.game;
 
-import jk_5.nailed.api.*;
-import jk_5.nailed.api.concurrent.scheduler.*;
-import jk_5.nailed.api.map.*;
-import jk_5.nailed.api.map.scoreboard.*;
-import jk_5.nailed.api.map.teleport.*;
-import jk_5.nailed.api.player.*;
-import jk_5.nailed.map.*;
-import jk_5.nailed.map.script.*;
-import jk_5.nailed.map.stat.*;
-import jk_5.nailed.map.stat.types.*;
-import jk_5.nailed.util.*;
+import com.google.common.collect.Lists;
+
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.concurrent.scheduler.NailedRunnable;
+import jk_5.nailed.api.map.GameManager;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.Mappack;
+import jk_5.nailed.api.map.PossibleWinner;
+import jk_5.nailed.api.map.scoreboard.DisplayType;
+import jk_5.nailed.api.map.team.Team;
+import jk_5.nailed.api.map.team.TeamManager;
+import jk_5.nailed.api.map.teleport.TeleportOptions;
+import jk_5.nailed.api.player.Player;
+import jk_5.nailed.map.NailedMap;
+import jk_5.nailed.map.script.ServerMachine;
+import jk_5.nailed.map.stat.StatTypeManager;
+import jk_5.nailed.map.stat.types.StatTypeGameHasWinner;
+import jk_5.nailed.map.stat.types.StatTypeGameloopRunning;
+import jk_5.nailed.map.stat.types.StatTypeGameloopStopped;
+import jk_5.nailed.map.stat.types.StatTypeIsWinner;
+import jk_5.nailed.map.teamlist.TeamInfo;
+import jk_5.nailed.network.NailedNetworkHandler;
+import jk_5.nailed.network.NailedPacket;
+import jk_5.nailed.util.ChatColor;
 
 /**
  * No description given
@@ -24,8 +37,8 @@ public class NailedGameManager implements GameManager {
     private boolean winnerInterrupt = false;
     private boolean gameRunning;
     private PossibleWinner winner = null;
+    private boolean teamListVisible = false;
 
-    @java.beans.ConstructorProperties({"map"})
     public NailedGameManager(Map map) {
         this.map = map;
     }
@@ -92,6 +105,7 @@ public class NailedGameManager implements GameManager {
         this.map.getScoreboardManager().setDisplay(DisplayType.BELOW_NAME, null);
         this.map.getScoreboardManager().setDisplay(DisplayType.SIDEBAR, null);
         this.map.getScoreboardManager().setDisplay(DisplayType.BELOW_NAME, null);
+        this.setTeamListVisible(false);
 
         Mappack mappack = this.map.getMappack();
         if(mappack != null){
@@ -113,14 +127,17 @@ public class NailedGameManager implements GameManager {
         }
     }
 
+    @Override
     public boolean isWatchUnready() {
         return this.watchUnready;
     }
 
+    @Override
     public boolean isWinnerInterrupt() {
         return this.winnerInterrupt;
     }
 
+    @Override
     public boolean isGameRunning() {
         return this.gameRunning;
     }
@@ -129,11 +146,29 @@ public class NailedGameManager implements GameManager {
         return this.winner;
     }
 
+    @Override
     public void setWatchUnready(boolean watchUnready) {
         this.watchUnready = watchUnready;
     }
 
+    @Override
     public void setWinnerInterrupt(boolean winnerInterrupt) {
         this.winnerInterrupt = winnerInterrupt;
+    }
+
+    @Override
+    public void setTeamListVisible(boolean teamListVisible) {
+        this.teamListVisible = teamListVisible;
+
+        NailedPacket.TeamInformation packet = new NailedPacket.TeamInformation();
+        packet.display = teamListVisible;
+        packet.teams = Lists.newArrayList();
+        if(teamListVisible){
+            TeamManager manager = this.map.getTeamManager();
+            for(Team team : manager.getTeams()){
+                packet.teams.add(new TeamInfo(team.getName(), team.getMembers()));
+            }
+        }
+        NailedNetworkHandler.sendPacketToAllPlayersInDimension(packet, this.map.getID());
     }
 }

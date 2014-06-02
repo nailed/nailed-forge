@@ -8,10 +8,11 @@ import net.minecraft.client.Minecraft.{getMinecraft => mc}
 import net.minecraft.util.ResourceLocation
 import org.lwjgl.opengl.GL11
 import scala.collection.mutable
-import scala.collection.JavaConverters._
 import net.minecraft.client.entity.AbstractClientPlayer
-import net.minecraft.client.renderer.Tessellator
+import net.minecraft.client.renderer.Tessellator.{instance => tess}
 import scala.util.Random
+import java.util
+import jk_5.nailed.map.teamlist.TeamInfo
 
 /**
  * No description given
@@ -19,7 +20,11 @@ import scala.util.Random
  * @author jk-5
  */
 object TeamInformationRenderer {
+
+  var display = false
+
   val random = new Random()
+
   val left = mutable.ArrayBuffer(getRenderer("jk_5"), getRenderer("Dabadooba"), getRenderer("ikzelf1248"))
   val topLeft = mutable.ArrayBuffer[PlayerHeadRenderer]()
   val top = mutable.ArrayBuffer[PlayerHeadRenderer]()
@@ -29,34 +34,35 @@ object TeamInformationRenderer {
   val textures = mutable.HashMap[String, ResourceLocation]()
 
   @SubscribeEvent def render(event: RenderGameOverlayEvent.Post): Unit = if(event.`type` == ElementType.ALL) {
-    if(false) return
+    if(!display) return
     renderTopRight(topRight, event.resolution)
+    renderTopLeft(topLeft, event.resolution)
+    renderTopMiddle(top, event.resolution)
     renderLeft(left, event.resolution)
     renderRight(right, event.resolution)
   }
 
-  def getRenderer(name: String): PlayerHeadRenderer = new PlayerHeadRenderer(name, random)
+  @inline def getRenderer(name: String) = new PlayerHeadRenderer(name, random)
 
   def renderHead(x: Int, y: Int, username: String){
     import GL11._
 
     mc.getTextureManager.bindTexture(this.getTexture(username))
 
-    @inline val width = 16
-    @inline val height = 16
-    @inline val uMin = 0.125f
-    @inline val vMin = 0.25f
-    @inline val uMax = 0.25f
-    @inline val vMax = 0.5f
-    @inline val tessellator = Tessellator.instance
+    val width = 16
+    val height = 16
+    val uMin = 0.125f
+    val vMin = 0.25f
+    val uMax = 0.25f
+    val vMax = 0.5f
 
-    tessellator.setColorOpaque(255, 255, 255)
-    tessellator.startDrawingQuads()
-    tessellator.addVertexWithUV(x, y + height, 0, uMin, vMax)
-    tessellator.addVertexWithUV(x + width, y + height, 0, uMax, vMax)
-    tessellator.addVertexWithUV(x + width, y, 0, uMax, vMin)
-    tessellator.addVertexWithUV(x, y, 0, uMin, vMin)
-    tessellator.draw()
+    tess.setColorOpaque(255, 255, 255)
+    tess.startDrawingQuads()
+    tess.addVertexWithUV(x, y + height, 0, uMin, vMax)
+    tess.addVertexWithUV(x + width, y + height, 0, uMax, vMax)
+    tess.addVertexWithUV(x + width, y, 0, uMax, vMin)
+    tess.addVertexWithUV(x, y, 0, uMin, vMin)
+    tess.draw()
 
     glPushMatrix()
     glScalef(0.5f, 0.5f, 1)
@@ -72,7 +78,7 @@ object TeamInformationRenderer {
     tex
   }
 
-  def renderTopMiddle(players: List[PlayerHeadRenderer], resolution: ScaledResolution) {
+  def renderTopMiddle(players: mutable.ArrayBuffer[PlayerHeadRenderer], resolution: ScaledResolution) {
     if(players.isEmpty) return
     import GL11._
 
@@ -99,7 +105,7 @@ object TeamInformationRenderer {
     glPopMatrix()
   }
 
-  def renderTopLeft(players: List[PlayerHeadRenderer], resolution: ScaledResolution) {
+  def renderTopLeft(players: mutable.ArrayBuffer[PlayerHeadRenderer], resolution: ScaledResolution) {
     if(players.isEmpty) return
     import GL11._
 
@@ -211,38 +217,38 @@ object TeamInformationRenderer {
     glPopMatrix()
   }
 
-  def setTeamRenderer(teams: mutable.Buffer[java.util.List[String]]){
-    teams.size match{
-      case 0 =>
-        dropAll()
-      case 1 =>
-        dropAll()
-        top ++= getTeamRenderList(teams(0) asScala)
+  def setTeamInfo(list: util.List[TeamInfo]){
+    clearAll()
+    list.size() match {
+      case 1 => top ++= teamInfoToHeadRenderList(list.get(0))
       case 2 =>
-        dropAll()
-        left ++= getTeamRenderList(teams(0) asScala)
-        right ++= getTeamRenderList(teams(1) asScala)
+        topLeft ++= teamInfoToHeadRenderList(list.get(0))
+        topRight ++= teamInfoToHeadRenderList(list.get(1))
       case 3 =>
-        dropAll()
-        left ++= getTeamRenderList(teams(0) asScala)
-        top ++= getTeamRenderList(teams(1) asScala)
-        right ++= getTeamRenderList(teams(2) asScala)
+        left ++= teamInfoToHeadRenderList(list.get(0))
+        top ++= teamInfoToHeadRenderList(list.get(1))
+        right ++= teamInfoToHeadRenderList(list.get(2))
       case 4 =>
-        dropAll()
-        left ++= getTeamRenderList(teams(0) asScala)
-        topLeft ++= getTeamRenderList(teams(1) asScala)
-        topRight ++= getTeamRenderList(teams(2) asScala)
-        right ++= getTeamRenderList(teams(3) asScala)
+        left ++= teamInfoToHeadRenderList(list.get(0))
+        topLeft ++= teamInfoToHeadRenderList(list.get(1))
+        topRight ++= teamInfoToHeadRenderList(list.get(2))
+        right ++= teamInfoToHeadRenderList(list.get(3))
+      case 5 =>
+        left ++= teamInfoToHeadRenderList(list.get(0))
+        topLeft ++= teamInfoToHeadRenderList(list.get(1))
+        top ++= teamInfoToHeadRenderList(list.get(2))
+        topRight ++= teamInfoToHeadRenderList(list.get(3))
+        right ++= teamInfoToHeadRenderList(list.get(4))
     }
   }
 
-  def getTeamRenderList(team: mutable.Buffer[String]): mutable.ArrayBuffer[PlayerHeadRenderer] = {
+  @inline def teamInfoToHeadRenderList(info: TeamInfo) = {
     val ret = mutable.ArrayBuffer[PlayerHeadRenderer]()
-    team.foreach(p => ret += getRenderer(p))
+    info.players.foreach(p => ret += getRenderer(p))
     ret
   }
 
-  def dropAll(){
+  def clearAll(){
     left.clear()
     topLeft.clear()
     top.clear()

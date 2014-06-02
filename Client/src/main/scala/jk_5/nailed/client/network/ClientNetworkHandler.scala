@@ -27,6 +27,7 @@ object ClientNetworkHandler {
     pipeline.addAfter(targetName, "LoginResponseHandler", LoginResponseHandler)
     pipeline.addAfter(targetName, "FieldStatusHandler", FieldStatusHandler)
     pipeline.addAfter(targetName, "MachineUpdateHandler", MachineUpdateHandler)
+    pipeline.addAfter(targetName, "TeamInformationHandler", TeamInformationHandler)
   }
 
   def sendPacketToServer(packet: NailedPacket){

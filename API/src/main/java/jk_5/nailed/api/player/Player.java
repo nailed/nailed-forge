@@ -1,20 +1,22 @@
 package jk_5.nailed.api.player;
 
-import java.util.*;
+import java.util.List;
+import java.util.Random;
 
-import com.mojang.authlib.*;
+import com.mojang.authlib.GameProfile;
 
-import net.minecraft.entity.player.*;
-import net.minecraft.network.*;
-import net.minecraft.util.*;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.NetHandlerPlayServer;
+import net.minecraft.network.Packet;
+import net.minecraft.util.IChatComponent;
 
-import jk_5.nailed.api.*;
-import jk_5.nailed.api.camera.*;
+import jk_5.nailed.api.Gamemode;
+import jk_5.nailed.api.camera.IMovement;
 import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.*;
-import jk_5.nailed.api.map.team.*;
-import jk_5.nailed.api.scripting.*;
-import jk_5.nailed.map.*;
+import jk_5.nailed.api.map.PossibleWinner;
+import jk_5.nailed.api.map.team.Team;
+import jk_5.nailed.api.scripting.ILuaObject;
+import jk_5.nailed.map.Location;
 
 /**
  * No description given
@@ -72,5 +74,4 @@ public interface Player extends PossibleWinner, ILuaObject {
     void setClient(PlayerClient client);
     void setMoving(IMovement movement);
     void kick(String reason);
-    void sendTeamInformation(List<List<String>> tNames);
 }

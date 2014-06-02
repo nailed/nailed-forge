@@ -1,16 +1,17 @@
 package jk_5.nailed.map;
 
-import java.util.*;
+import java.util.List;
 
-import com.google.common.collect.*;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
-import jk_5.nailed.api.map.team.Team;
-import net.minecraft.entity.player.*;
+import net.minecraft.entity.player.EntityPlayer;
 
 import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.team.*;
-import jk_5.nailed.api.player.*;
-import jk_5.nailed.players.*;
+import jk_5.nailed.api.map.team.Team;
+import jk_5.nailed.api.map.team.TeamBuilder;
+import jk_5.nailed.api.player.Player;
+import jk_5.nailed.players.TeamUndefined;
 
 /**
  * No description given
@@ -98,13 +99,5 @@ public class TeamManager implements jk_5.nailed.api.map.team.TeamManager {
 
     public List<Team> getTeams() {
         return this.teams;
-    }
-
-    public List<List<String>> getPlayerNames(){
-        List<List<String>> tNames = Lists.newArrayList();
-        for(Team team : this.teams){
-            tNames.add(team.getMemberNames());
-        }
-        return tNames;
     }
 }
