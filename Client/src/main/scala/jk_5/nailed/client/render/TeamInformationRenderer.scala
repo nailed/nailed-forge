@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft.{getMinecraft => mc}
 import net.minecraft.util.ResourceLocation
 import org.lwjgl.opengl.GL11
 import scala.collection.mutable
+import scala.collection.JavaConverters._
 import net.minecraft.client.entity.AbstractClientPlayer
 import net.minecraft.client.renderer.Tessellator
 import scala.util.Random
@@ -19,11 +20,11 @@ import scala.util.Random
  */
 object TeamInformationRenderer {
   val random = new Random()
-  val left = List(getRenderer("jk_5"), getRenderer("Dabadooba"), getRenderer("ikzelf1248"))
-  val topLeft: List[PlayerHeadRenderer] = List()
-  val top: List[PlayerHeadRenderer] = List()
-  val topRight = List(getRenderer("Dinnerbone"), getRenderer("Grumm"), getRenderer("Jeb_"))
-  val right = List(getRenderer("Docm77"),getRenderer("Etho"),getRenderer("AnderZEL"))
+  val left = mutable.ArrayBuffer(getRenderer("jk_5"), getRenderer("Dabadooba"), getRenderer("ikzelf1248"))
+  val topLeft = mutable.ArrayBuffer[PlayerHeadRenderer]()
+  val top = mutable.ArrayBuffer[PlayerHeadRenderer]()
+  val topRight = mutable.ArrayBuffer(getRenderer("Dinnerbone"), getRenderer("Grumm"), getRenderer("Jeb_"))
+  val right = mutable.ArrayBuffer(getRenderer("Docm77"),getRenderer("Etho"),getRenderer("AnderZEL"))
 
   val textures = mutable.HashMap[String, ResourceLocation]()
 
@@ -125,7 +126,7 @@ object TeamInformationRenderer {
     glPopMatrix()
   }
 
-  def renderTopRight(players: List[PlayerHeadRenderer], resolution: ScaledResolution) {
+  def renderTopRight(players: mutable.ArrayBuffer[PlayerHeadRenderer], resolution: ScaledResolution) {
     if(players.isEmpty) return
     import GL11._
 
@@ -153,7 +154,7 @@ object TeamInformationRenderer {
     glPopMatrix()
   }
 
-  def renderLeft(players: List[PlayerHeadRenderer], resolution: ScaledResolution) {
+  def renderLeft(players: mutable.ArrayBuffer[PlayerHeadRenderer], resolution: ScaledResolution) {
     if(players.isEmpty) return
     import GL11._
 
@@ -181,7 +182,7 @@ object TeamInformationRenderer {
     glPopMatrix()
   }
 
-  def renderRight(players: List[PlayerHeadRenderer], resolution: ScaledResolution) {
+  def renderRight(players: mutable.ArrayBuffer[PlayerHeadRenderer], resolution: ScaledResolution) {
     if(players.isEmpty) return
     import GL11._
 
@@ -210,45 +211,42 @@ object TeamInformationRenderer {
     glPopMatrix()
   }
 
-  def setTeamRenderer(teams: List[List[String]]){
+  def setTeamRenderer(teams: mutable.Buffer[java.util.List[String]]){
     teams.size match{
       case 0 =>
         dropAll()
       case 1 =>
         dropAll()
-        top += getTeamRenderList(teams(0))
+        top ++= getTeamRenderList(teams(0) asScala)
       case 2 =>
         dropAll()
-        left += getTeamRenderList(teams(0))
-        right += getTeamRenderList(teams(1))
+        left ++= getTeamRenderList(teams(0) asScala)
+        right ++= getTeamRenderList(teams(1) asScala)
       case 3 =>
         dropAll()
-        left += getTeamRenderList(teams(0))
-        top += getTeamRenderList(teams(1))
-        right += getTeamRenderList(teams(2))
+        left ++= getTeamRenderList(teams(0) asScala)
+        top ++= getTeamRenderList(teams(1) asScala)
+        right ++= getTeamRenderList(teams(2) asScala)
       case 4 =>
         dropAll()
-        left += getTeamRenderList(teams(0))
-        topLeft += getTeamRenderList(teams(1))
-        topRight += getTeamRenderList(teams(2))
-        right += getTeamRenderList(teams(3))
+        left ++= getTeamRenderList(teams(0) asScala)
+        topLeft ++= getTeamRenderList(teams(1) asScala)
+        topRight ++= getTeamRenderList(teams(2) asScala)
+        right ++= getTeamRenderList(teams(3) asScala)
     }
   }
 
-  def getTeamRenderList(team: List[String]): List[PlayerHeadRenderer] = {
-    /*val pHRl: List[PlayerHeadRenderer] = List()
-    for(player <- team){
-      pHRl += getRenderer(player)
-    }
-    pHRl*/
-    List()
+  def getTeamRenderList(team: mutable.Buffer[String]): mutable.ArrayBuffer[PlayerHeadRenderer] = {
+    val ret = mutable.ArrayBuffer[PlayerHeadRenderer]()
+    team.foreach(p => ret += getRenderer(p))
+    ret
   }
 
   def dropAll(){
-    left.drop(0)
-    topLeft.drop(0)
-    top.drop(0)
-    topRight.drop(0)
-    right.drop(0)
+    left.clear()
+    topLeft.clear()
+    top.clear()
+    topRight.clear()
+    right.clear()
   }
 }

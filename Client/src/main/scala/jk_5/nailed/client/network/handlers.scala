@@ -13,6 +13,7 @@ import jk_5.nailed.client.gui.{GuiCreateAccount, GuiLogin, GuiTerminal}
 import jk_5.nailed.client.scripting.ClientMachine
 import jk_5.nailed.client.NailedClient
 import jk_5.nailed.map.script.ScriptPacket
+import scala.collection.JavaConverters._
 
 object MapEditHandler extends SimpleChannelInboundHandler[NailedPacket.EditMode] {
   override def channelRead0(ctx: ChannelHandlerContext, msg: NailedPacket.EditMode){
@@ -79,7 +80,7 @@ object RenderListHandler extends SimpleChannelInboundHandler[NailedPacket.Render
 
 object TeamInformationHandler extends SimpleChannelInboundHandler[NailedPacket.TeamInformation]{
   override def channelRead0(ctx: ChannelHandlerContext, msg: NailedPacket.TeamInformation){
-    TeamInformationRenderer.setTeamRenderer(msg.teams)
+    TeamInformationRenderer.setTeamRenderer(msg.teams asScala)
   }
 }
 
