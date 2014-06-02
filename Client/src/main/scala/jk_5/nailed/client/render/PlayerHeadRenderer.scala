@@ -18,6 +18,8 @@ class PlayerHeadRenderer(name: String, xx: Double, yy: Double, random: Random) {
   var yaw: Double = 0
   var dPitch: Double = 0
   var dYaw: Double = 0
+  var ddPitch: Double = 0
+  var ddYaw: Double = 0
   var hasTexture: Boolean = false
   var tex: ResourceLocation = null
   var mc: Minecraft = Minecraft.getMinecraft
@@ -134,10 +136,12 @@ class PlayerHeadRenderer(name: String, xx: Double, yy: Double, random: Random) {
   }
 
   def tick(){
-    this.pitch += this.dPitch
-    this.yaw += this.dYaw
-    this.dPitch = (this.dPitch + (if (random.nextBoolean()) -Math.random() else Math.random())) * Math.pow(1 - Math.abs(this.yaw) / 45, 2) // randomizing yaw movement
-    this.dYaw = (this.dYaw + (if (random.nextBoolean()) -Math.random() else Math.random())) * Math.pow(1 - Math.abs(this.yaw) / 45, 2) // randomizing pitch movement
+    this.pitch = cap(this.pitch + this.dPitch - this.pitch / 30, -45, 45)
+    this.yaw = cap(this.yaw + this.dYaw - this.yaw / 30, -45, 45)
+    this.dPitch = cap(this.dPitch * .9d + this.ddPitch, -3, 3) // randomizing yaw movement
+    this.dYaw = cap(this.dYaw * .9d + ddYaw, -3, 3) // randomizing pitch movement
+    this.ddPitch = cap(this.ddPitch * .5d + (if (random.nextBoolean()) -Math.random()*2 else Math.random()*2), -.3d, .3d)
+    this.ddYaw = cap(this.ddYaw * .5d + (if (random.nextBoolean()) -Math.random()*2 else Math.random()*2), -.3d, .3d)
   }
 
   def setLocation(x: Int, y: Int){
@@ -155,4 +159,9 @@ class PlayerHeadRenderer(name: String, xx: Double, yy: Double, random: Random) {
 
   def translateY(x: Int, y: Int, z: Int, pitch: Double, yaw: Double): Double = (y * Math.cos(Math.toRadians(yaw)) - z * Math.sin(Math.toRadians(yaw))).toDouble
 
+  def cap(value: Double, min: Double, max: Double): Double = {
+    if(value < min) return min
+    if(value > max) return max
+    value
+  }
 }
