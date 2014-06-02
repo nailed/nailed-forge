@@ -1,15 +1,20 @@
 package jk_5.nailed.map.stat;
 
-import java.util.*;
+import java.util.Map;
 
-import com.google.common.collect.*;
+import com.google.common.collect.Maps;
 
-import cpw.mods.fml.common.eventhandler.*;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
-import net.minecraftforge.common.*;
+import net.minecraftforge.common.MinecraftForge;
 
-import jk_5.nailed.api.map.stat.*;
-import jk_5.nailed.map.stat.types.*;
+import jk_5.nailed.api.map.stat.IStatType;
+import jk_5.nailed.map.stat.types.StatTypeGameHasWinner;
+import jk_5.nailed.map.stat.types.StatTypeGameloopPaused;
+import jk_5.nailed.map.stat.types.StatTypeGameloopRunning;
+import jk_5.nailed.map.stat.types.StatTypeGameloopStopped;
+import jk_5.nailed.map.stat.types.StatTypeIsWinner;
+import jk_5.nailed.map.stat.types.StatTypeModifiable;
 
 /**
  * No description given
@@ -31,7 +36,6 @@ public class StatTypeManager {
     }
 
     @SubscribeEvent
-    @SuppressWarnings("unused")
     public void addStatTypesFromEvent(RegisterStatTypeEvent event) {
         event.register("gameloopRunning", new StatTypeGameloopRunning());
         event.register("gameloopStopped", new StatTypeGameloopStopped());

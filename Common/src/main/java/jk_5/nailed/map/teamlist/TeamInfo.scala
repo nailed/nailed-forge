@@ -20,11 +20,11 @@ object TeamInfo {
     (0 until size) foreach(i => list += ByteBufUtils.readUTF8String(buffer))
     new TeamInfo(name, list)
   }
+
+  def create(name: String, players: util.List[String]) = new TeamInfo(name, players asScala)
 }
 
-case class TeamInfo(name: String, players: mutable.ArrayBuffer[String] = mutable.ArrayBuffer[String]()) {
-
-  def this(name: String, players: util.List) = this(name, players asScala)
+case class TeamInfo(name: String, players: mutable.Buffer[String] = mutable.ArrayBuffer[String]()) {
 
   def write(buffer: ByteBuf){
     ByteBufUtils.writeUTF8String(buffer, this.name)
