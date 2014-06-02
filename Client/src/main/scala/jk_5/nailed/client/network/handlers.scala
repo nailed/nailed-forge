@@ -6,7 +6,7 @@ import jk_5.nailed.network.NailedPacket._
 import net.minecraft.client.Minecraft.{getMinecraft => mc}
 import net.minecraft.client.Minecraft
 import jk_5.nailed.client.map.edit.MapEditManager
-import jk_5.nailed.client.render.TimeUpdateRenderer
+import jk_5.nailed.client.render.{TeamInformationRenderer, TimeUpdateRenderer}
 import jk_5.nailed.client.blocks.tileentity.{NailedTileEntity, IGuiTileEntity}
 import jk_5.nailed.client.particle.ParticleHelper
 import jk_5.nailed.client.gui.{GuiCreateAccount, GuiLogin, GuiTerminal}
@@ -67,13 +67,19 @@ object TerminalGuiHandler extends SimpleChannelInboundHandler[NailedPacket.OpenT
   }
 }
 
-object RenderListhandler extends SimpleChannelInboundHandler[NailedPacket.RenderList]{
+object RenderListHandler extends SimpleChannelInboundHandler[NailedPacket.RenderList]{
   override def channelRead0(ctx: ChannelHandlerContext, msg: NailedPacket.RenderList){
     msg.func match {
       case 0 => NailedClient.renderer.setRenderList(msg.points)
       case 1 => NailedClient.renderer.addRenderList(msg.points)
       case 2 => NailedClient.renderer.clearRenderList()
     }
+  }
+}
+
+object TeamInformationHandler extends SimpleChannelInboundHandler[NailedPacket.TeamInformation]{
+  override def channelRead0(ctx: ChannelHandlerContext, msg: NailedPacket.TeamInformation){
+    TeamInformationRenderer.setTeamRenderer(msg.teams)
   }
 }
 

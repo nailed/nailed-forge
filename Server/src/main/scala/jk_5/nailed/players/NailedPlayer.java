@@ -369,6 +369,10 @@ public class NailedPlayer implements Player, ILuaObject {
         this.netHandler.kickPlayerFromServer(reason);
     }
 
+    public void sendTeamInformation(List<List<String>> tNames){
+        NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.TeamInformation(tNames), this.getEntity());
+    }
+
     @Override
     public String[] getMethodNames() {
         return new String[]{

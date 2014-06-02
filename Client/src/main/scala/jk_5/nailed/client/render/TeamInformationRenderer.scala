@@ -28,7 +28,7 @@ object TeamInformationRenderer {
   val textures = mutable.HashMap[String, ResourceLocation]()
 
   @SubscribeEvent def render(event: RenderGameOverlayEvent.Post): Unit = if(event.`type` == ElementType.ALL) {
-    if(true) return
+    if(false) return
     renderTopRight(topRight, event.resolution)
     renderLeft(left, event.resolution)
     renderRight(right, event.resolution)
@@ -210,28 +210,28 @@ object TeamInformationRenderer {
     glPopMatrix()
   }
 
-  def setTeamRenderer(teams: Array[List[String]]){
-    teams.length match{
+  def setTeamRenderer(teams: List[List[String]]){
+    teams.size match{
       case 0 =>
         dropAll()
       case 1 =>
         dropAll()
-        getTeamRenderList(teams(0)) ::: top
+        top += getTeamRenderList(teams(0))
       case 2 =>
         dropAll()
-        getTeamRenderList(teams(0)) ::: left
-        getTeamRenderList(teams(1)) ::: right
+        left += getTeamRenderList(teams(0))
+        right += getTeamRenderList(teams(1))
       case 3 =>
         dropAll()
-        getTeamRenderList(teams(0)) ::: left
-        getTeamRenderList(teams(1)) ::: top
-        getTeamRenderList(teams(2)) ::: right
+        left += getTeamRenderList(teams(0))
+        top += getTeamRenderList(teams(1))
+        right += getTeamRenderList(teams(2))
       case 4 =>
         dropAll()
-        getTeamRenderList(teams(0)) ::: left
-        getTeamRenderList(teams(1)) ::: topLeft
-        getTeamRenderList(teams(2)) ::: topRight
-        getTeamRenderList(teams(3)) ::: right
+        left += getTeamRenderList(teams(0))
+        topLeft += getTeamRenderList(teams(1))
+        topRight += getTeamRenderList(teams(2))
+        right += getTeamRenderList(teams(3))
     }
   }
 

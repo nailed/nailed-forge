@@ -100,6 +100,15 @@ public class NailedTeam implements Team, ILuaObject {
     }
 
     @Override
+    public List<String> getMemberNames(){
+        List<String> names = Lists.newArrayList();
+        for(Player player: this.getMembers()){
+            names.add(player.getChatPrefix());
+        }
+        return names;
+    }
+
+    @Override
     public void onAddPlayer(Player player) {
         this.addPlayerToScoreboardTeam(player);
     }

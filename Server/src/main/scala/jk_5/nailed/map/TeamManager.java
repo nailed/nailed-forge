@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.google.common.collect.*;
 
+import jk_5.nailed.api.map.team.Team;
 import net.minecraft.entity.player.*;
 
 import jk_5.nailed.api.map.Map;
@@ -97,5 +98,13 @@ public class TeamManager implements jk_5.nailed.api.map.team.TeamManager {
 
     public List<Team> getTeams() {
         return this.teams;
+    }
+
+    public List<List<String>> getPlayerNames(){
+        List<List<String>> tNames = Lists.newArrayList();
+        for(Team team : this.teams){
+            tNames.add(team.getMemberNames());
+        }
+        return tNames;
     }
 }

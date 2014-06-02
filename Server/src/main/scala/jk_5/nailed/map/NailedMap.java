@@ -133,6 +133,7 @@ public class NailedMap implements Map {
     @Override
     public void onPlayerJoined(Player player) {
         player.sendTimeUpdate("");
+        player.sendTeamInformation(this.getTeamManager().getPlayerNames());
         this.scoreboardManager.onPlayerJoinedMap(player);
         this.teamManager.onPlayerJoinedMap(player);
         this.players.add(player);

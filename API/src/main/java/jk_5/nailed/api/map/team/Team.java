@@ -47,4 +47,5 @@ public interface Team extends PossibleWinner, ILuaObject {
     boolean shouldOverrideDefaultSpawnpoint();
 
     List<Player> getMembers();
+    List<String> getMemberNames();
 }

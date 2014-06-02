@@ -338,4 +338,33 @@ public abstract class NailedPacket {
             }
         }
     }
+
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class TeamInformation extends NailedPacket {
+        public List<List<String>> teams = Lists.newArrayList();
+
+        public void encode(ByteBuf buffer){
+            buffer.writeByte(teams.size());
+            for(List<String> team : teams){
+                buffer.writeInt(team.size());
+                for(String name : team){
+                    ByteBufUtils.writeUTF8String(buffer, name);
+                }
+            }
+        }
+
+        public void decode(ByteBuf buffer){
+            int tSize = buffer.readByte();
+            this.teams = Lists.newArrayList();
+            for(int i = 0; i < tSize; ++i){
+                List<String> tTeam = Lists.newArrayList();
+                int pSize = buffer.readInt();
+                for(int j = 0; j < pSize; ++j){
+                    tTeam.add(ByteBufUtils.readUTF8String(buffer));
+                }
+                this.teams.add(tTeam);
+            }
+        }
+    }
 }
