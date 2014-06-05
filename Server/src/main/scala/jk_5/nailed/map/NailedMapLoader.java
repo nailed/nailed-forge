@@ -193,8 +193,10 @@ public class NailedMapLoader implements MapLoader {
     @SubscribeEvent
     public void onChangeDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
         Player p = NailedAPI.getPlayerRegistry().getPlayer(event.player);
-        Map oldMap = p.getCurrentMap();
-        Map newMap = this.getMap(event.player.worldObj);
+        Map oldMap = this.getMap(event.fromDim);
+        Map newMap = this.getMap(event.toDim);
+        assert oldMap != null;
+        assert newMap != null;
         oldMap.onPlayerLeft(p);
         newMap.onPlayerJoined(p);
         for(Map map : this.maps){
