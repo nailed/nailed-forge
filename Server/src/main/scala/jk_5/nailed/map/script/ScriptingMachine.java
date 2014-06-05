@@ -1,18 +1,26 @@
 package jk_5.nailed.map.script;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.InputStream;
+import java.util.List;
 
-import com.google.common.collect.*;
+import com.google.common.collect.Lists;
 
-import org.apache.commons.io.*;
+import org.apache.commons.io.IOUtils;
 
-import net.minecraftforge.common.*;
+import net.minecraftforge.common.MinecraftForge;
 
-import jk_5.nailed.api.*;
-import jk_5.nailed.api.events.*;
-import jk_5.nailed.api.scripting.*;
-import jk_5.nailed.map.script.api.*;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.events.RegisterLuaApiEvent;
+import jk_5.nailed.api.scripting.ILuaAPI;
+import jk_5.nailed.api.scripting.IMount;
+import jk_5.nailed.api.scripting.IWritableMount;
+import jk_5.nailed.map.script.api.EventApi;
+import jk_5.nailed.map.script.api.FileSystemApi;
+import jk_5.nailed.map.script.api.MapApi;
+import jk_5.nailed.map.script.api.OSApi;
+import jk_5.nailed.map.script.api.ScoreboardApi;
+import jk_5.nailed.map.script.api.TermApi;
 
 /**
  * No description given
@@ -22,7 +30,6 @@ import jk_5.nailed.map.script.api.*;
 public class ScriptingMachine {
 
     private static IMount romMount = null;
-    private static final String ALLOWED_CHARS = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_'abcdefghijklmnopqrstuvwxyz{|}~⌂ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜø£Ø×ƒáíóúñÑªº¿®¬½¼¡«»";
 
     private boolean isUnloaded = false;
 
@@ -109,6 +116,7 @@ public class ScriptingMachine {
                 this.startupRequested = false;
             }
             if(this.state == MachineState.RUNNING){
+                //noinspection SynchronizeOnNonFinalField
                 synchronized(this.apis){
                     for(ILuaAPI api : this.apis){
                         api.advance(dT);
@@ -117,6 +125,7 @@ public class ScriptingMachine {
             }
         }
 
+        //noinspection SynchronizeOnNonFinalField
         synchronized(this.terminal){
             boolean blinking = this.terminal.isCursorBlink() && this.terminal.getCursorX() >= 0 && this.terminal.getCursorX() < this.terminal.getWidth() && this.terminal.getCursorY() >= 0 && this.terminal.getCursorY() < this.terminal.getHeight();
             if(blinking != this.blinking){
@@ -125,16 +134,10 @@ public class ScriptingMachine {
         }
     }
 
-    public boolean isBlinking() {
-        synchronized(this.terminal){
-            return isOn() && this.blinking;
-        }
-    }
-
     private boolean initFileSystem() {
         int id = this.getID();
         try{
-            ServerMachine machine = (ServerMachine) this.machine;
+            ServerMachine machine = this.machine;
             File dir = machine.getPreferredSaveDir();
             IWritableMount saveDirMount;
             if(dir == null){
@@ -155,10 +158,6 @@ public class ScriptingMachine {
             e.printStackTrace();
         }
         return false;
-    }
-
-    public void addAPI(ILuaAPI api) {
-        this.apis.add(api);
     }
 
     private void createAPIs() {
@@ -234,6 +233,7 @@ public class ScriptingMachine {
                         return;
                     }
 
+                    //noinspection SynchronizeOnNonFinalField
                     synchronized(ScriptingMachine.this.terminal){
                         ScriptingMachine.this.terminal.setTextColor(15);
                         ScriptingMachine.this.terminal.setBackgroundColor(0);
@@ -298,6 +298,7 @@ public class ScriptingMachine {
                         return;
                     }
 
+                    //noinspection SynchronizeOnNonFinalField
                     synchronized(ScriptingMachine.this.apis){
                         for(ILuaAPI api : ScriptingMachine.this.apis){
                             api.shutdown();
@@ -310,6 +311,7 @@ public class ScriptingMachine {
                     }
 
                     if(ScriptingMachine.this.luaMachine != null){
+                        //noinspection SynchronizeOnNonFinalField
                         synchronized(ScriptingMachine.this.terminal){
                             ScriptingMachine.this.terminal.setTextColor(15);
                             ScriptingMachine.this.terminal.setBackgroundColor(0);
@@ -318,6 +320,7 @@ public class ScriptingMachine {
                             ScriptingMachine.this.terminal.setCursorBlink(false);
                         }
 
+                        //noinspection SynchronizeOnNonFinalField
                         synchronized(ScriptingMachine.this.luaMachine){
                             ScriptingMachine.this.luaMachine.unload();
                             ScriptingMachine.this.luaMachine = null;
@@ -353,6 +356,7 @@ public class ScriptingMachine {
                     }
                 }
 
+                //noinspection SynchronizeOnNonFinalField
                 synchronized(ScriptingMachine.this.luaMachine){
                     ScriptingMachine.this.luaMachine.handleEvent(event, arguments);
                     if(ScriptingMachine.this.luaMachine.isFinished()){

@@ -1,14 +1,29 @@
 package jk_5.nailed.map.script;
 
-import java.io.*;
-import java.util.*;
-import java.util.regex.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
+import java.util.regex.Pattern;
 
-import com.google.common.collect.*;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
-import org.apache.commons.io.*;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 
-import jk_5.nailed.api.scripting.*;
+import jk_5.nailed.api.scripting.IMount;
+import jk_5.nailed.api.scripting.IWritableMount;
 
 /**
  * No description given
@@ -20,6 +35,7 @@ public class FileSystem {
     private Map<String, MountWrapper> mounts = Maps.newHashMap();
     private Set<IMountedFile> openFiles = Sets.newHashSet();
 
+    @SuppressWarnings("unused")
     public FileSystem(String rootLabel, IMount rootMount) throws FileSystemException {
         mount(rootLabel, "", rootMount);
     }
@@ -29,6 +45,7 @@ public class FileSystem {
     }
 
     public void unload() {
+        //noinspection SynchronizeOnNonFinalField
         synchronized(this.openFiles){
             while(this.openFiles.size() > 0){
                 IMountedFile file = this.openFiles.iterator().next();
@@ -71,6 +88,7 @@ public class FileSystem {
         this.mounts.put(location, wrapper);
     }
 
+    @SuppressWarnings("unused")
     public synchronized void unmount(String path) {
         path = sanitizePath(path);
         if(this.mounts.containsKey(path)){
@@ -143,6 +161,7 @@ public class FileSystem {
 
     private void findIn(String dir, List<String> matches, Pattern wildPattern) throws FileSystemException {
         String[] list = list(dir);
+        //noinspection ForLoopReplaceableByForEach
         for(int i = 0; i < list.length; i++){
             String entry = list[i];
             String entryPath = dir + "/" + entry;
@@ -158,12 +177,9 @@ public class FileSystem {
     public synchronized String[] find(String wildPath) throws FileSystemException {
         wildPath = sanitizePath(wildPath, true);
         Pattern wildPattern = Pattern.compile("^\\Q" + wildPath.replaceAll("\\*", "\\\\E[^\\\\/]*\\\\Q") + "\\E$");
-        List matches = new ArrayList();
+        List<String> matches = Lists.newArrayList();
         findIn("", matches, wildPattern);
-
-        String[] array = new String[matches.size()];
-        matches.toArray(array);
-        return array;
+        return matches.toArray(new String[matches.size()]);
     }
 
     public synchronized boolean exists(String path) throws FileSystemException {
@@ -283,29 +299,27 @@ public class FileSystem {
         if(stream != null){
             final BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
             IMountedFileNormal file = new IMountedFileNormal() {
-                public String readLine()
-                        throws IOException {
+                public String readLine() throws IOException {
                     return reader.readLine();
                 }
 
-                public void write(String s, int off, int len, boolean newLine)
-                        throws IOException {
+                public void write(String s, int off, int len, boolean newLine) throws IOException {
                     throw new UnsupportedOperationException();
                 }
 
-                public void close()
-                        throws IOException {
+                public void close() throws IOException {
+                    //noinspection SynchronizeOnNonFinalField
                     synchronized(FileSystem.this.openFiles){
                         FileSystem.this.openFiles.remove(this);
                         reader.close();
                     }
                 }
 
-                public void flush()
-                        throws IOException {
+                public void flush() throws IOException {
                     throw new UnsupportedOperationException();
                 }
             };
+            //noinspection SynchronizeOnNonFinalField
             synchronized(this.openFiles){
                 this.openFiles.add(file);
             }
@@ -321,32 +335,30 @@ public class FileSystem {
         if(stream != null){
             final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(stream));
             IMountedFileNormal file = new IMountedFileNormal() {
-                public String readLine()
-                        throws IOException {
+                public String readLine() throws IOException {
                     throw new UnsupportedOperationException();
                 }
 
-                public void write(String s, int off, int len, boolean newLine)
-                        throws IOException {
+                public void write(String s, int off, int len, boolean newLine) throws IOException {
                     writer.write(s, off, len);
                     if(newLine){
                         writer.newLine();
                     }
                 }
 
-                public void close()
-                        throws IOException {
+                public void close() throws IOException {
+                    //noinspection SynchronizeOnNonFinalField
                     synchronized(FileSystem.this.openFiles){
                         FileSystem.this.openFiles.remove(this);
                         writer.close();
                     }
                 }
 
-                public void flush()
-                        throws IOException {
+                public void flush() throws IOException {
                     writer.flush();
                 }
             };
+            //noinspection SynchronizeOnNonFinalField
             synchronized(this.openFiles){
                 this.openFiles.add(file);
             }
@@ -361,18 +373,16 @@ public class FileSystem {
         final InputStream stream = mount.openForRead(path);
         if(stream != null){
             IMountedFileBinary file = new IMountedFileBinary() {
-                public int read()
-                        throws IOException {
+                public int read() throws IOException {
                     return stream.read();
                 }
 
-                public void write(int i)
-                        throws IOException {
+                public void write(int i) throws IOException {
                     throw new UnsupportedOperationException();
                 }
 
-                public void close()
-                        throws IOException {
+                public void close() throws IOException {
+                    //noinspection SynchronizeOnNonFinalField
                     synchronized(FileSystem.this.openFiles){
                         FileSystem.this.openFiles.remove(this);
                         stream.close();
@@ -384,6 +394,7 @@ public class FileSystem {
                     throw new UnsupportedOperationException();
                 }
             };
+            //noinspection SynchronizeOnNonFinalField
             synchronized(this.openFiles){
                 this.openFiles.add(file);
             }
@@ -398,29 +409,27 @@ public class FileSystem {
         final OutputStream stream = append ? mount.openForAppend(path) : mount.openForWrite(path);
         if(stream != null){
             IMountedFileBinary file = new IMountedFileBinary() {
-                public int read()
-                        throws IOException {
+                public int read() throws IOException {
                     throw new UnsupportedOperationException();
                 }
 
-                public void write(int i)
-                        throws IOException {
+                public void write(int i) throws IOException {
                     stream.write(i);
                 }
 
-                public void close()
-                        throws IOException {
+                public void close() throws IOException {
+                    //noinspection SynchronizeOnNonFinalField
                     synchronized(FileSystem.this.openFiles){
                         FileSystem.this.openFiles.remove(this);
                         stream.close();
                     }
                 }
 
-                public void flush()
-                        throws IOException {
+                public void flush() throws IOException {
                     stream.flush();
                 }
             };
+            //noinspection SynchronizeOnNonFinalField
             synchronized(this.openFiles){
                 this.openFiles.add(file);
             }
@@ -476,6 +485,7 @@ public class FileSystem {
 
         String[] parts = path.split("/");
         Stack<String> outputParts = new Stack<String>();
+        //noinspection ForLoopReplaceableByForEach
         for(int n = 0; n < parts.length; n++){
             String part = parts[n];
             if((part.length() != 0) && (!".".equals(part))){
@@ -515,20 +525,7 @@ public class FileSystem {
         pathA = sanitizePath(pathA);
         pathB = sanitizePath(pathB);
 
-        if("..".equals(pathB)){
-            return false;
-        }
-        if(pathB.startsWith("../")){
-            return false;
-        }
-        if(pathB.equals(pathA)){
-            return true;
-        }
-        if(pathA.length() == 0){
-            return true;
-        }
-
-        return pathB.startsWith(pathA + "/");
+        return !"..".equals(pathB) && !pathB.startsWith("../") && (pathB.equals(pathA) || pathA.length() == 0 || pathB.startsWith(pathA + "/"));
     }
 
     public static String toLocal(String path, String location) {
@@ -569,18 +566,16 @@ public class FileSystem {
 
             try{
                 return this.writableMount.getRemainingSpace();
-            }catch(IOException e){
+            }catch(IOException ignored){
             }
             return 0L;
         }
 
-        public boolean isReadOnly(String path)
-                throws FileSystemException {
+        public boolean isReadOnly(@SuppressWarnings("unused") String path) throws FileSystemException {
             return this.writableMount == null;
         }
 
-        public boolean exists(String path)
-                throws FileSystemException {
+        public boolean exists(String path) throws FileSystemException {
             path = toLocal(path);
             try{
                 return this.mount.exists(path);

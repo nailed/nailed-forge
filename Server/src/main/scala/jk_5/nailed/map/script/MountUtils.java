@@ -1,15 +1,18 @@
 package jk_5.nailed.map.script;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.List;
 
-import com.google.common.collect.*;
+import com.google.common.collect.Lists;
 
-import cpw.mods.fml.common.*;
+import cpw.mods.fml.common.FMLCommonHandler;
 
-import jk_5.nailed.*;
-import jk_5.nailed.api.scripting.*;
+import jk_5.nailed.NailedLog;
+import jk_5.nailed.api.scripting.IMount;
 
 /**
  * No description given
@@ -22,7 +25,7 @@ public final class MountUtils {
 
     }
 
-    public static IMount createResourceMount(Class modClass, String domain, String subPath) {
+    public static IMount createResourceMount(Class<?> modClass, String domain, String subPath) {
         try{
             File jar = getLoadingJar(modClass);
             if(jar != null){
@@ -53,7 +56,7 @@ public final class MountUtils {
                                     mounts.add(resourcePackMount);
                                 }
                             }
-                        }catch(IOException e){
+                        }catch(IOException ignored){
                         }
                     }
                 }
@@ -74,7 +77,7 @@ public final class MountUtils {
         return null;
     }
 
-    private static File getLoadingJar(Class modClass) {
+    private static File getLoadingJar(Class<?> modClass) {
         String path = modClass.getProtectionDomain().getCodeSource().getLocation().getPath();
         int bangIndex = path.indexOf("!");
         if(bangIndex >= 0){

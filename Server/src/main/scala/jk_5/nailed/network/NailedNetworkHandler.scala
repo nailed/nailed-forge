@@ -23,7 +23,7 @@ import jk_5.nailed.api.concurrent.scheduler.NailedRunnable
 object NailedNetworkHandler {
   var channel: FMLEmbeddedChannel = _
 
-  def registerClient(){
+  def registerChannel(){
     this.channel = NetworkRegistry.INSTANCE.newChannel("nailed", new NailedPacketCodec).get(Side.SERVER)
 
     val pipeline = channel.pipeline

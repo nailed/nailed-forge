@@ -1,17 +1,29 @@
 package jk_5.nailed.map.script;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Map;
 
-import com.google.common.collect.*;
+import com.google.common.collect.Maps;
 
-import org.luaj.vm2.*;
-import org.luaj.vm2.lib.*;
-import org.luaj.vm2.lib.jse.*;
+import org.luaj.vm2.LuaError;
+import org.luaj.vm2.LuaTable;
+import org.luaj.vm2.LuaThread;
+import org.luaj.vm2.LuaValue;
+import org.luaj.vm2.OrphanedThread;
+import org.luaj.vm2.Varargs;
+import org.luaj.vm2.lib.OneArgFunction;
+import org.luaj.vm2.lib.VarArgFunction;
+import org.luaj.vm2.lib.ZeroArgFunction;
+import org.luaj.vm2.lib.jse.JsePlatform;
 
-import jk_5.nailed.*;
-import jk_5.nailed.api.scripting.*;
-import jk_5.nailed.map.script.api.*;
+import jk_5.nailed.NailedLog;
+import jk_5.nailed.api.scripting.ILuaAPI;
+import jk_5.nailed.api.scripting.ILuaContext;
+import jk_5.nailed.api.scripting.ILuaObject;
+import jk_5.nailed.map.script.api.EventApi;
 
 /**
  * No description given
@@ -21,7 +33,6 @@ import jk_5.nailed.map.script.api.*;
 public class LuaMachine {
 
     private static Map<LuaTable, Map> processing;
-    private static List<LuaValue> tree;
 
     private LuaValue luaGlobals;
     private LuaValue luaMainRoutine = null;
@@ -222,7 +233,7 @@ public class LuaMachine {
                     public Varargs invoke(Varargs args) {
                         LuaMachine.this.tryAbort();
                         Object[] arguments = LuaMachine.toObjects(args, 1);
-                        Object[] results = null;
+                        Object[] results;
                         try{
                             results = apiObject.callMethod(new ILuaContext() {
 
@@ -247,9 +258,8 @@ public class LuaMachine {
                                         Varargs results = LuaMachine.this.luaCoroutineYield.invoke(LuaValue.varargsOf(yieldValues));
                                         return LuaMachine.toObjects(results, 1);
                                     }catch(OrphanedThread e){
-                                        throw new InterruptedException(); //FIXME: is this correct?
+                                        throw new InterruptedException();
                                     }
-                                    //Maybe here?
                                 }
 
                                 @Override
@@ -296,6 +306,7 @@ public class LuaMachine {
                 LuaValue table = new LuaTable();
                 this.processingValue.put((Map) object, table);
 
+                //noinspection unchecked
                 for(Map.Entry<Object, Object> e : ((Map<Object, Object>) object).entrySet()){
                     LuaValue key = toValue(e.getKey());
                     LuaValue value = toValue(e.getValue());
@@ -350,8 +361,10 @@ public class LuaMachine {
                     if(processing == null){
                         processing = Maps.newIdentityHashMap();
                         clearProcessing = true;
-                    }else if(processing.containsKey(value)){
-                        return processing.get(value);
+                    }else //noinspection SuspiciousMethodCalls
+                        if(processing.containsKey(value)){
+                            //noinspection SuspiciousMethodCalls
+                            return processing.get(value);
                     }
                     Map<Object, Object> ret = Maps.newHashMap();
                     processing.put((LuaTable) value, ret);

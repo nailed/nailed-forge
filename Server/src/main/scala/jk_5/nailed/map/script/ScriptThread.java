@@ -1,11 +1,14 @@
 package jk_5.nailed.map.script;
 
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
 
-import com.google.common.collect.*;
+import com.google.common.collect.Lists;
 
-import jk_5.nailed.*;
+import jk_5.nailed.NailedLog;
 
 /**
  * No description given
@@ -20,7 +23,6 @@ public final class ScriptThread {
     private static Thread thread;
     private static boolean running = false;
     private static boolean stopped = false;
-    private static boolean busy = false;
 
     private static List<LinkedBlockingQueue<Task>> pendingTasks = Lists.newArrayList();
     private static List<LinkedBlockingQueue<Task>> activeTasks = Lists.newArrayList();
@@ -42,6 +44,7 @@ public final class ScriptThread {
                 @Override
                 public void run() {
                     while(true){
+                        //noinspection SynchronizeOnNonFinalField
                         synchronized(pendingTasks){
                             if(!pendingTasks.isEmpty()){
                                 Iterator<LinkedBlockingQueue<Task>> it = pendingTasks.iterator();
@@ -62,15 +65,14 @@ public final class ScriptThread {
                             if(queue != null && !queue.isEmpty()){
                                 synchronized(lock){
                                     if(stopped){
-                                        running = false; //FIXME
-                                        thread = null; //FIXME
+                                        running = false;
+                                        thread = null;
                                         return;
                                     }
                                 }
 
                                 try{
                                     final Task task = queue.take();
-                                    busy = true; //FIXME
                                     Thread worker = new Thread() {
                                         @Override
                                         public void run() {
@@ -98,15 +100,14 @@ public final class ScriptThread {
                                             worker.stop();
                                         }
                                     }
-                                }catch(InterruptedException e){
-                                    busy = false;
-                                    continue;
+                                }catch(InterruptedException ignored){
+
                                 }finally{
-                                    busy = false;
-                                }
-                                synchronized(queue){
-                                    if(queue.isEmpty()){
-                                        it.remove();
+                                    //noinspection SynchronizationOnLocalVariableOrMethodParameter
+                                    synchronized(queue){
+                                        if(queue.isEmpty()){
+                                            it.remove();
+                                        }
                                     }
                                 }
                             }
@@ -146,6 +147,7 @@ public final class ScriptThread {
         if(queue == null){
             machineTasks.put(queueObject, queue = new LinkedBlockingQueue<Task>(256));
         }
+        //noinspection SynchronizeOnNonFinalField
         synchronized(pendingTasks){
             boolean added = queue.offer(task);
             if(!pendingTasks.contains(queue)){

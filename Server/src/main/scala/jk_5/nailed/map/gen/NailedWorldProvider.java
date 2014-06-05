@@ -1,22 +1,20 @@
 package jk_5.nailed.map.gen;
 
-import io.netty.buffer.*;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.world.WorldProvider;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.IChunkProvider;
 
-import net.minecraft.entity.player.*;
-import net.minecraft.util.*;
-import net.minecraft.world.*;
-import net.minecraft.world.chunk.*;
-
-import jk_5.nailed.api.*;
-import jk_5.nailed.api.map.*;
-import jk_5.nailed.map.*;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.map.Map;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-public class NailedWorldProvider extends WorldProvider implements MappackContainingWorldProvider {
+public class NailedWorldProvider extends WorldProvider {
 
     private int mapID;
     private Map map;
@@ -31,10 +29,6 @@ public class NailedWorldProvider extends WorldProvider implements MappackContain
     protected void registerWorldChunkManager() {
         this.map = NailedAPI.getMapLoader().getMap(this.dimensionId);
         this.worldChunkMgr = new VoidWorldChunkManager(this.worldObj);
-    }
-
-    public void writeData(ByteBuf buffer) {
-
     }
 
     @Override
@@ -64,7 +58,7 @@ public class NailedWorldProvider extends WorldProvider implements MappackContain
 
     @Override
     public String getDimensionName() {
-        return "Nailed " + (this.hasMappack() ? this.getMappack().getMappackMetadata().getName() : "") + " " + this.mapID;
+        return "Nailed " + (this.map.getMappack() != null ? this.map.getMappack().getMappackMetadata().getName() : "") + " " + this.mapID;
     }
 
     @Override
@@ -73,18 +67,8 @@ public class NailedWorldProvider extends WorldProvider implements MappackContain
     }
 
     @Override
-    public boolean hasMappack() {
-        return this.map.getMappack() != null;
-    }
-
-    @Override
-    public Mappack getMappack() {
-        return this.map.getMappack();
-    }
-
-    @Override
     public ChunkCoordinates getRandomizedSpawnPoint() {
-        if(this.hasMappack()){
+        if(this.map.getMappack() != null){
             return this.map.getMappack().getMappackMetadata().getSpawnPoint().toChunkCoordinates();
         }else{
             return new ChunkCoordinates(0, 64, 0);

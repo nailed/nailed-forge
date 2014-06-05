@@ -1,9 +1,12 @@
 package jk_5.nailed.map.script;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 
-import jk_5.nailed.api.scripting.*;
+import jk_5.nailed.api.scripting.IMount;
 
 /**
  * No description given
@@ -12,7 +15,6 @@ import jk_5.nailed.api.scripting.*;
  */
 public class ReadOnlyMount implements IMount {
 
-    private static int MINIMUM_FILE_SIZE = 512;
     private File rootPath;
 
     public ReadOnlyMount(File rootPath) {

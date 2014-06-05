@@ -1,12 +1,18 @@
 package jk_5.nailed.map.script;
 
-import java.io.*;
-import java.util.*;
-import java.util.zip.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
-import com.google.common.collect.*;
+import com.google.common.collect.Maps;
 
-import jk_5.nailed.api.scripting.*;
+import jk_5.nailed.api.scripting.IMount;
 
 /**
  * No description given
@@ -62,18 +68,12 @@ public class JarMount implements IMount {
 
     public boolean exists(String path) throws IOException {
         FileInZip file = this.root.getFile(path);
-        if(file != null){
-            return true;
-        }
-        return false;
+        return file != null;
     }
 
     public boolean isDirectory(String path) throws IOException {
         FileInZip file = this.root.getFile(path);
-        if(file != null){
-            return file.isDirectory();
-        }
-        return false;
+        return file != null && file.isDirectory();
     }
 
     public void list(String path, List<String> contents) throws IOException {
@@ -105,7 +105,7 @@ public class JarMount implements IMount {
                 if(entry != null){
                     return this.zipFile.getInputStream(entry);
                 }
-            }catch(Exception e){
+            }catch(Exception ignored){
             }
         }
 
@@ -159,7 +159,7 @@ public class JarMount implements IMount {
                 localPath = localPath.substring(0, slash);
             }
 
-            FileInZip subFile = (FileInZip) this.children.get(localPath);
+            FileInZip subFile = this.children.get(localPath);
             if(subFile != null){
                 return subFile.getFile(path);
             }

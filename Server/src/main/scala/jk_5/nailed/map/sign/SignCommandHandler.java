@@ -1,19 +1,23 @@
 package jk_5.nailed.map.sign;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Set;
 
-import com.google.common.collect.*;
+import com.google.common.collect.Sets;
 
-import net.minecraft.tileentity.*;
-import net.minecraft.world.*;
-import net.minecraft.world.chunk.*;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntitySign;
+import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 
-import net.minecraftforge.event.entity.player.*;
-import net.minecraftforge.event.world.*;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.world.ChunkEvent;
+import net.minecraftforge.event.world.ChunkWatchEvent;
 
 import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.sign.*;
-import jk_5.nailed.api.player.*;
+import jk_5.nailed.api.map.sign.Sign;
+import jk_5.nailed.api.map.sign.SignMappack;
+import jk_5.nailed.api.player.Player;
 
 /**
  * No description given
@@ -25,7 +29,6 @@ public class SignCommandHandler implements jk_5.nailed.api.map.sign.SignCommandH
     private final Map map;
     private final Set<Sign> signs = Sets.newHashSet();
 
-    @java.beans.ConstructorProperties({"map"})
     public SignCommandHandler(Map map) {
         this.map = map;
     }

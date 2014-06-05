@@ -1,11 +1,14 @@
 package jk_5.nailed.map.script;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Set;
 
-import com.google.common.collect.*;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
-import jk_5.nailed.api.scripting.*;
+import jk_5.nailed.api.scripting.IMount;
 
 /**
  * No description given
@@ -61,6 +64,7 @@ public class ComboMount implements IMount {
             contents.addAll(foundFiles);
         }else if(foundDirs > 1){
             Set<String> seen = Sets.newHashSet();
+            assert foundFiles != null;
             for(String foundFile : foundFiles){
                 if(seen.add(foundFile)){
                     contents.add(foundFile);

@@ -1,9 +1,15 @@
 package jk_5.nailed.map.script;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.List;
+import javax.annotation.Nonnull;
 
-import jk_5.nailed.api.scripting.*;
+import jk_5.nailed.api.scripting.IWritableMount;
 
 /**
  * No description given
@@ -128,8 +134,8 @@ public class FileMount implements IWritableMount {
     private void deleteRecursively(File file) throws IOException {
         if(file.isDirectory()){
             String[] children = file.list();
-            for(int i = 0; i < children.length; i++){
-                deleteRecursively(new File(file, children[i]));
+            for(String child : children){
+                deleteRecursively(new File(file, child));
             }
         }
 
@@ -207,8 +213,8 @@ public class FileMount implements IWritableMount {
         if(file.isDirectory()){
             long size = MINIMUM_FILE_SIZE;
             String[] contents = file.list();
-            for(int i = 0; i < contents.length; i++){
-                size += measureUsedSpace(new File(file, contents[i]));
+            for(String content : contents){
+                size += measureUsedSpace(new File(file, content));
             }
             return size;
         }
@@ -237,13 +243,13 @@ public class FileMount implements IWritableMount {
         }
 
         @Override
-        public void write(byte[] b) throws IOException {
+        public void write(@Nonnull byte[] b) throws IOException {
             count(b.length);
             this.innerStream.write(b);
         }
 
         @Override
-        public void write(byte[] b, int off, int len) throws IOException {
+        public void write(@Nonnull byte[] b, int off, int len) throws IOException {
             count(len);
             this.innerStream.write(b, off, len);
         }
