@@ -107,6 +107,9 @@ public class NailedScheduler implements Scheduler {
 
     @Override
     public Task runTaskAsynchronously(NailedRunnable runnable) {
+        if(this.currentTick == -1){
+            this.executor.execute(runnable);
+        }
         return runTaskLaterAsynchronously(runnable, 0L);
     }
 
@@ -411,9 +414,6 @@ public class NailedScheduler implements Scheduler {
 
     @Override
     public void execute(@Nonnull final Runnable command) {
-        if(this.currentTick == -1){
-            executor.execute(command);
-        }
         this.runTaskAsynchronously(new NailedRunnable() {
             @Override
             public void run() {

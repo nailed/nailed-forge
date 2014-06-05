@@ -70,8 +70,8 @@ public interface Player extends PossibleWinner, ILuaObject {
     int getNumPlayersVisible();
     void setPlayersVisible(List<Player> list);
     void replacePlayerVisible(Player player, List<Player> players, Random random);
-    PlayerClient getClient();
-    void setClient(PlayerClient client);
+    ClientType getClientType();
+    void setClientType(ClientType client);
     void setMoving(IMovement movement);
     void kick(String reason);
 }

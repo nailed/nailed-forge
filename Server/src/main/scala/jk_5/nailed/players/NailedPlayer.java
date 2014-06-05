@@ -38,10 +38,10 @@ import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.Mappack;
 import jk_5.nailed.api.map.MappackMetadata;
 import jk_5.nailed.api.map.team.Team;
+import jk_5.nailed.api.player.ClientType;
 import jk_5.nailed.api.player.IncompatibleClientException;
 import jk_5.nailed.api.player.NailedWebUser;
 import jk_5.nailed.api.player.Player;
-import jk_5.nailed.api.player.PlayerClient;
 import jk_5.nailed.api.scripting.ILuaContext;
 import jk_5.nailed.api.scripting.ILuaObject;
 import jk_5.nailed.chat.joinmessage.JoinMessageSender;
@@ -75,7 +75,7 @@ public class NailedPlayer implements Player, ILuaObject {
     private int maxHealth = 20;
     private int minHealth = 0;
     private List<Player> playersVisible = Lists.newArrayList();
-    private PlayerClient playerClient = PlayerClient.VANILLA; // standard = vanilla, no problems with idconflicts;
+    private ClientType clientType = ClientType.VANILLA; // standard = vanilla, no problems with idconflicts;
     private List<RenderPoint[]> renderList;
 
     private NailedWebUser webUser;
@@ -223,7 +223,7 @@ public class NailedPlayer implements Player, ILuaObject {
 
     @Override
     public void sendTimeUpdate(String msg) {
-        if(this.playerClient == PlayerClient.NAILED){
+        if(this.clientType == ClientType.NAILED){
             NailedNetworkHandler.sendPacketToPlayer(new NailedPacket.TimeUpdate(msg), this.getEntity());
         }else{
             if(!msg.isEmpty()){
@@ -363,8 +363,8 @@ public class NailedPlayer implements Player, ILuaObject {
     }
 
     @Override
-    public PlayerClient getClient() {
-        return this.playerClient;
+    public ClientType getClientType() {
+        return this.clientType;
     }
 
     @Override
@@ -387,8 +387,8 @@ public class NailedPlayer implements Player, ILuaObject {
     }
 
     @Override
-    public void setClient(PlayerClient client) {
-        this.playerClient = client;
+    public void setClientType(ClientType client) {
+        this.clientType = client;
     }
 
     @Override

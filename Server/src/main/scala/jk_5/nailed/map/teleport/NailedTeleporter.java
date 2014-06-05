@@ -1,33 +1,41 @@
 package jk_5.nailed.map.teleport;
 
-import java.util.*;
-import javax.annotation.*;
+import java.util.List;
+import javax.annotation.Nonnull;
 
-import com.google.common.base.*;
+import com.google.common.base.Preconditions;
 
-import net.minecraft.entity.*;
-import net.minecraft.entity.player.*;
-import net.minecraft.nbt.*;
-import net.minecraft.network.play.server.*;
-import net.minecraft.potion.*;
-import net.minecraft.server.*;
-import net.minecraft.server.management.*;
-import net.minecraft.world.*;
-import net.minecraft.world.chunk.*;
-import net.minecraft.world.demo.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.play.server.S05PacketSpawnPosition;
+import net.minecraft.network.play.server.S07PacketRespawn;
+import net.minecraft.network.play.server.S1DPacketEntityEffect;
+import net.minecraft.network.play.server.S1FPacketSetExperience;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.management.ItemInWorldManager;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.demo.DemoWorldManager;
 
-import cpw.mods.fml.common.*;
+import cpw.mods.fml.common.FMLCommonHandler;
 
-import net.minecraftforge.common.*;
+import net.minecraftforge.common.MinecraftForge;
 
-import jk_5.nailed.api.*;
+import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.*;
-import jk_5.nailed.api.map.teleport.*;
+import jk_5.nailed.api.map.Mappack;
+import jk_5.nailed.api.map.teleport.TeleportEvent;
+import jk_5.nailed.api.map.teleport.TeleportOptions;
 import jk_5.nailed.api.map.teleport.Teleporter;
-import jk_5.nailed.api.player.*;
-import jk_5.nailed.map.*;
-import jk_5.nailed.players.*;
+import jk_5.nailed.api.player.ClientType;
+import jk_5.nailed.api.player.Player;
+import jk_5.nailed.map.Location;
+import jk_5.nailed.players.TeamUndefined;
 
 public class NailedTeleporter implements Teleporter {
 
@@ -89,7 +97,7 @@ public class NailedTeleporter implements Teleporter {
             if(changingworlds){
                 player.dimension = dimension;
                 Player np = NailedAPI.getPlayerRegistry().getPlayer(player);
-                if(np.getClient() == PlayerClient.NAILED || np.getClient() == PlayerClient.FORGE){
+                if(np.getClientType() == ClientType.NAILED || np.getClientType() == ClientType.FORGE){
                     player.playerNetServerHandler.sendPacket(new S07PacketRespawn(player.dimension, player.worldObj.difficultySetting, destWorld.getWorldInfo().getTerrainType(), player.theItemInWorldManager.getGameType()));
                 }else{
                     player.playerNetServerHandler.sendPacket(new S07PacketRespawn(1, player.worldObj.difficultySetting, destWorld.getWorldInfo().getTerrainType(), player.theItemInWorldManager.getGameType()));
@@ -232,7 +240,7 @@ public class NailedTeleporter implements Teleporter {
         newPlayer.setLocationAndAngles(pos.getX(), pos.getY(), pos.getZ(), pos.getYaw(), pos.getPitch());
         destMap.getWorld().theChunkProviderServer.loadChunk((int) newPlayer.posX >> 4, (int) newPlayer.posZ >> 4);
 
-        if(player.getClient() == PlayerClient.NAILED || player.getClient() == PlayerClient.FORGE){
+        if(player.getClientType() == ClientType.NAILED || player.getClientType() == ClientType.FORGE){
             player.sendPacket(new S07PacketRespawn(newPlayer.dimension, destMap.getWorld().difficultySetting, destMap.getWorld().getWorldInfo().getTerrainType(), worldManager.getGameType()));
         }else{
             player.sendPacket(new S07PacketRespawn(0, destMap.getWorld().difficultySetting, destMap.getWorld().getWorldInfo().getTerrainType(), worldManager.getGameType()));

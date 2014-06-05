@@ -9,7 +9,7 @@ import net.minecraft.entity.player.EntityPlayer
 import io.netty.channel.ChannelHandlerContext
 import net.minecraft.network.NetHandlerPlayServer
 import jk_5.nailed.api.NailedAPI
-import jk_5.nailed.api.player.PlayerClient
+import jk_5.nailed.api.player.ClientType
 import jk_5.nailed.NailedLog
 import jk_5.nailed.network.minecraft.MinecraftPacketAdapter
 import com.google.common.base.Joiner
@@ -77,18 +77,18 @@ object NailedNetworkHandler {
     val mods = clientMods.get(dispatcher)
     try{
       if("VANILLA".equals(connectionType)){
-        player.setClient(PlayerClient.VANILLA)
+        player.setClientType(ClientType.VANILLA)
       }else{
         if(mods == null){
           dispatcher.rejectHandshake("Not a vanilla client but no modlist was sent? Wtf are you?")
           return
         }
         if(mods.containsKey("Nailed")){
-          player.setClient(PlayerClient.NAILED)
+          player.setClientType(ClientType.NAILED)
         }else if(mods.containsKey("Forge")){
-          player.setClient(PlayerClient.FORGE)
+          player.setClientType(ClientType.FORGE)
         }else if(mods.containsKey("FML")){
-          player.setClient(PlayerClient.FML)
+          player.setClientType(ClientType.FML)
         }else{
           dispatcher.rejectHandshake("Unsupported client. Use FML, Forge or the Nailed client")
           return
@@ -97,7 +97,7 @@ object NailedNetworkHandler {
     }finally{
       clientMods.remove(dispatcher)
     }
-    NailedLog.info("{} client connected", player.getClient.name)
+    NailedLog.info("{} client connected", player.getClientType.name)
 
     val pipeline = dispatcher.manager.channel.pipeline
     pipeline.get("NailedPacketAdapter").asInstanceOf[MinecraftPacketAdapter].player = playerEnt

@@ -1,26 +1,32 @@
 package jk_5.nailed.irc;
 
-import java.util.*;
+import java.util.Map;
 
-import com.google.common.collect.*;
-import com.google.gson.*;
+import com.google.common.collect.ImmutableMap;
+import com.google.gson.JsonObject;
 
-import org.jibble.pircbot.*;
+import org.jibble.pircbot.Colors;
+import org.jibble.pircbot.PircBot;
 
-import net.minecraft.event.*;
-import net.minecraft.server.*;
-import net.minecraft.server.management.*;
-import net.minecraft.util.*;
+import net.minecraft.event.HoverEvent;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.management.ServerConfigurationManager;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 
-import cpw.mods.fml.common.*;
-import cpw.mods.fml.common.eventhandler.*;
-import cpw.mods.fml.common.gameevent.*;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
 
-import net.minecraftforge.common.*;
-import net.minecraftforge.event.*;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.ServerChatEvent;
 
-import jk_5.nailed.*;
-import jk_5.nailed.util.*;
+import jk_5.nailed.NailedLog;
+import jk_5.nailed.NailedServer;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.concurrent.scheduler.NailedRunnable;
+import jk_5.nailed.util.Utils;
 
 /**
  * No description given
@@ -100,7 +106,7 @@ public class IrcBot extends PircBot {
 
     public void connect() {
         if(this.enabled){
-            new ConnectThread().start();
+            NailedAPI.getScheduler().runTaskAsynchronously(new Connector());
         }
     }
 
@@ -261,7 +267,7 @@ public class IrcBot extends PircBot {
         MinecraftServer.getServer().getConfigurationManager().sendChatMsg(component);
     }
 
-    private class ConnectThread extends Thread {
+    private class Connector extends NailedRunnable {
 
         @Override
         public void run() {
