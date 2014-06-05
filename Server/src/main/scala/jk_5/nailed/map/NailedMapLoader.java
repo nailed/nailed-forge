@@ -421,6 +421,7 @@ public class NailedMapLoader implements MapLoader {
         while(true){
             next = dimensionIds.nextClearBit(next);
             dimensionIds.set(next);
+            if(next == -1 || next == 0 || next == 1) continue;
             if(!dimensions.containsKey(next)){
                 return next;
             }
