@@ -20,7 +20,9 @@ import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.concurrent.Callback;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.Mappack;
+import jk_5.nailed.ipc.IpcManager;
 import jk_5.nailed.ipc.mappack.IpcMappackRegistry;
+import jk_5.nailed.ipc.packet.PacketRequestMappackLoad;
 
 /**
  * No description given
@@ -70,26 +72,31 @@ public class CommandMap extends NailedCommand implements SubpermissionCommand {
             Mappack mappack = NailedAPI.getMappackLoader().getMappack(name);
             if(mappack == null){
                 if(IpcMappackRegistry.getRemoteMappacks().contains(name)){
-                    //TODO
-                    throw new CommandException("Gameserver-requested IPC mappack loading is not yet implemented");
-                }
-                throw new CommandException("Mappack does not exist");
-            }
-            IChatComponent component = new ChatComponentText("Loading " + mappack.getMappackID());
-            component.getChatStyle().setColor(EnumChatFormatting.GREEN);
-            sender.addChatMessage(component);
-            NailedAPI.getMapLoader().createMapServer(mappack, new Callback<Map>() {
-                @Override
-                public void callback(Map obj) {
-                    IChatComponent component = new ChatComponentText("Loaded ");
+                    IpcManager.instance().sendPacket(new PacketRequestMappackLoad(name));
+
+                    IChatComponent component = new ChatComponentText("Sent load request to IPC server");
                     component.getChatStyle().setColor(EnumChatFormatting.GREEN);
-                    IChatComponent comp = new ChatComponentText(obj.getSaveFileName());
-                    comp.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText("Teleport to the map")));
-                    comp.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/goto " + obj.getSaveFileName()));
-                    component.appendSibling(comp);
                     sender.addChatMessage(component);
+                }else{
+                    throw new CommandException("Mappack does not exist");
                 }
-            });
+            }else{
+                IChatComponent component = new ChatComponentText("Loading " + mappack.getMappackID());
+                component.getChatStyle().setColor(EnumChatFormatting.GREEN);
+                sender.addChatMessage(component);
+                NailedAPI.getMapLoader().createMapServer(mappack, new Callback<Map>() {
+                    @Override
+                    public void callback(Map obj) {
+                        IChatComponent component = new ChatComponentText("Loaded ");
+                        component.getChatStyle().setColor(EnumChatFormatting.GREEN);
+                        IChatComponent comp = new ChatComponentText(obj.getSaveFileName());
+                        comp.getChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText("Teleport to the map")));
+                        comp.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/goto " + obj.getSaveFileName()));
+                        component.appendSibling(comp);
+                        sender.addChatMessage(component);
+                    }
+                });
+            }
         }else if("remove".equalsIgnoreCase(args[0])){
             if(args.length == 1){
                 throw new WrongUsageException("/map remove <mapid>");

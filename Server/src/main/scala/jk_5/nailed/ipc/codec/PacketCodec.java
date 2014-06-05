@@ -22,6 +22,7 @@ import jk_5.nailed.ipc.packet.PacketPlayerDeath;
 import jk_5.nailed.ipc.packet.PacketPlayerJoin;
 import jk_5.nailed.ipc.packet.PacketPlayerLeave;
 import jk_5.nailed.ipc.packet.PacketPromptLogin;
+import jk_5.nailed.ipc.packet.PacketRequestMappackLoad;
 import jk_5.nailed.ipc.packet.PacketUserdata;
 
 import gnu.trove.map.hash.TByteObjectHashMap;
@@ -54,6 +55,7 @@ public class PacketCodec extends ByteToMessageCodec<IpcPacket> {
         this.registerPacket(13, PacketChatIn.class);
         this.registerPacket(14, PacketChat.class);
         this.registerPacket(15, PacketListMappacks.class);
+        this.registerPacket(16, PacketRequestMappackLoad.class);
     }
 
     private PacketCodec registerPacket(int id, Class<? extends IpcPacket> packet) {
