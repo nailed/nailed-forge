@@ -1,14 +1,31 @@
 package jk_5.nailed.ipc.codec;
 
-import java.util.*;
+import java.util.List;
 
-import io.netty.buffer.*;
-import io.netty.channel.*;
-import io.netty.handler.codec.*;
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.ByteToMessageCodec;
 
-import jk_5.nailed.ipc.packet.*;
+import jk_5.nailed.ipc.packet.IpcPacket;
+import jk_5.nailed.ipc.packet.PacketChat;
+import jk_5.nailed.ipc.packet.PacketChatIn;
+import jk_5.nailed.ipc.packet.PacketCheckAccount;
+import jk_5.nailed.ipc.packet.PacketCreateAccount;
+import jk_5.nailed.ipc.packet.PacketIdentify;
+import jk_5.nailed.ipc.packet.PacketInitConnection;
+import jk_5.nailed.ipc.packet.PacketKill;
+import jk_5.nailed.ipc.packet.PacketListMappacks;
+import jk_5.nailed.ipc.packet.PacketLoadMappackMeta;
+import jk_5.nailed.ipc.packet.PacketLoginPlayer;
+import jk_5.nailed.ipc.packet.PacketLoginResponse;
+import jk_5.nailed.ipc.packet.PacketPlayerDeath;
+import jk_5.nailed.ipc.packet.PacketPlayerJoin;
+import jk_5.nailed.ipc.packet.PacketPlayerLeave;
+import jk_5.nailed.ipc.packet.PacketPromptLogin;
+import jk_5.nailed.ipc.packet.PacketUserdata;
 
-import gnu.trove.map.hash.*;
+import gnu.trove.map.hash.TByteObjectHashMap;
+import gnu.trove.map.hash.TObjectByteHashMap;
 
 /**
  * No description given
@@ -36,6 +53,7 @@ public class PacketCodec extends ByteToMessageCodec<IpcPacket> {
         this.registerPacket(12, PacketLoadMappackMeta.class);
         this.registerPacket(13, PacketChatIn.class);
         this.registerPacket(14, PacketChat.class);
+        this.registerPacket(15, PacketListMappacks.class);
     }
 
     private PacketCodec registerPacket(int id, Class<? extends IpcPacket> packet) {

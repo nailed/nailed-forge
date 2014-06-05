@@ -1,19 +1,26 @@
 package jk_5.nailed.server.command;
 
-import java.util.*;
+import java.util.List;
 
-import com.google.common.collect.*;
+import com.google.common.collect.Lists;
 
-import net.minecraft.command.*;
-import net.minecraft.event.*;
-import net.minecraft.util.*;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.command.WrongUsageException;
+import net.minecraft.event.ClickEvent;
+import net.minecraft.event.HoverEvent;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 
-import net.minecraftforge.permissions.api.*;
+import net.minecraftforge.permissions.api.PermissionsManager;
+import net.minecraftforge.permissions.api.RegisteredPermValue;
 
-import jk_5.nailed.api.*;
-import jk_5.nailed.api.concurrent.*;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.concurrent.Callback;
 import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.*;
+import jk_5.nailed.api.map.Mappack;
+import jk_5.nailed.ipc.mappack.IpcMappackRegistry;
 
 /**
  * No description given
@@ -62,6 +69,10 @@ public class CommandMap extends NailedCommand implements SubpermissionCommand {
             String name = args[1];
             Mappack mappack = NailedAPI.getMappackLoader().getMappack(name);
             if(mappack == null){
+                if(IpcMappackRegistry.getRemoteMappacks().contains(name)){
+                    //TODO
+                    throw new CommandException("Gameserver-requested IPC mappack loading is not yet implemented");
+                }
                 throw new CommandException("Mappack does not exist");
             }
             IChatComponent component = new ChatComponentText("Loading " + mappack.getMappackID());
@@ -129,6 +140,7 @@ public class CommandMap extends NailedCommand implements SubpermissionCommand {
                 for(Mappack mappack : NailedAPI.getMappackLoader().getMappacks()){
                     ret.add(mappack.getMappackID());
                 }
+                ret.addAll(IpcMappackRegistry.getRemoteMappacks());
                 return getOptions(args, ret);
             }else if("remove".equalsIgnoreCase(args[0])){
                 List<String> ret = Lists.newArrayList();
