@@ -12,6 +12,7 @@ import jk_5.nailed.ipc.PacketUtils;
 public class PacketRequestMappackLoad extends IpcPacket {
 
     private String name;
+    private boolean autoload = true;
 
     public PacketRequestMappackLoad() {
 
@@ -21,9 +22,15 @@ public class PacketRequestMappackLoad extends IpcPacket {
         this.name = name;
     }
 
+    public PacketRequestMappackLoad(String name, boolean autoload) {
+        this.name = name;
+        this.autoload = autoload;
+    }
+
     @Override
     public void encode(ByteBuf buffer) {
         PacketUtils.writeString(this.name, buffer);
+        buffer.writeBoolean(this.autoload);
     }
 
     @Override

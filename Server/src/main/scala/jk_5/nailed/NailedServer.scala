@@ -152,6 +152,8 @@ object NailedServer {
 
     NailedLog.info("Registering zone types")
     NailedAPI.getZoneRegistry.registerZones()
+
+    IpcManager.instance.start()
   }
 
   @EventHandler def postInit(event: FMLPostInitializationEvent){
@@ -162,7 +164,6 @@ object NailedServer {
   }
 
   @EventHandler def serverAboutToStart(event: FMLServerAboutToStartEvent){
-    IpcManager.instance.start()
     NailedAPI.getZoneRegistry.lockZones()
   }
 

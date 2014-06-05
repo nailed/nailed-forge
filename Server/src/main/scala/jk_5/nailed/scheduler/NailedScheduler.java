@@ -1,21 +1,33 @@
 package jk_5.nailed.scheduler;
 
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.*;
-import javax.annotation.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
+import javax.annotation.Nonnull;
 
-import com.google.common.util.concurrent.*;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
-import org.apache.commons.lang3.*;
+import org.apache.commons.lang3.Validate;
 
-import net.minecraft.server.*;
+import net.minecraft.server.MinecraftServer;
 
-import cpw.mods.fml.common.eventhandler.*;
-import cpw.mods.fml.common.gameevent.*;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 
-import jk_5.nailed.*;
-import jk_5.nailed.api.concurrent.scheduler.*;
+import jk_5.nailed.NailedLog;
+import jk_5.nailed.api.concurrent.scheduler.NailedRunnable;
+import jk_5.nailed.api.concurrent.scheduler.Scheduler;
+import jk_5.nailed.api.concurrent.scheduler.Task;
+import jk_5.nailed.api.concurrent.scheduler.Worker;
 
 /**
  * The fundamental concepts for this implementation:
@@ -304,9 +316,7 @@ public class NailedScheduler implements Scheduler {
      */
     @SubscribeEvent
     public void mainThreadHeartbeat(TickEvent.ServerTickEvent event) {
-        if(event.phase == TickEvent.Phase.END){
-            return;
-        }
+        if(event.phase == TickEvent.Phase.END) return;
         final int currentTick = MinecraftServer.getServer().getTickCounter();
         this.currentTick = currentTick;
         final List<NailedTask> temp = this.temp;
@@ -401,6 +411,9 @@ public class NailedScheduler implements Scheduler {
 
     @Override
     public void execute(@Nonnull final Runnable command) {
+        if(this.currentTick == -1){
+            executor.execute(command);
+        }
         this.runTaskAsynchronously(new NailedRunnable() {
             @Override
             public void run() {

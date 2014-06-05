@@ -1,15 +1,21 @@
 package jk_5.nailed.ipc.filestore;
 
-import java.io.*;
-import java.util.*;
-import java.util.concurrent.atomic.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
-import com.google.common.collect.*;
-import com.ning.http.client.*;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClientConfig;
 
-import org.apache.commons.io.*;
+import org.apache.commons.io.FileUtils;
 
-import jk_5.nailed.api.concurrent.*;
+import jk_5.nailed.api.concurrent.Callback;
 
 /**
  * No description given
@@ -20,7 +26,7 @@ public class MappackFilestore {
 
     public static final File storage = new File("mappacks");
     public static final File objects = new File(storage, "objects");
-    public static final AsyncHttpClient httpClient = new AsyncHttpClient();
+    public static final AsyncHttpClient httpClient = new AsyncHttpClient(new AsyncHttpClientConfig.Builder().setConnectionTimeoutInMs(10000).setRequestTimeoutInMs(10000).build());
 
     public List<MappackFile> files = Lists.newArrayList();
     public Map<String, MappackFile> paths = Maps.newHashMap();

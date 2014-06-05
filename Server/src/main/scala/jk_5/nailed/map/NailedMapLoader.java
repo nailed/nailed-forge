@@ -1,35 +1,56 @@
 package jk_5.nailed.map;
 
-import java.io.*;
-import java.lang.reflect.*;
-import java.util.*;
-import javax.annotation.*;
+import java.io.File;
+import java.lang.reflect.Field;
+import java.util.BitSet;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Random;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import com.google.common.base.*;
-import com.google.common.collect.*;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 
-import net.minecraft.entity.player.*;
-import net.minecraft.util.*;
-import net.minecraft.world.*;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.EntityDamageSource;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
-import cpw.mods.fml.common.eventhandler.*;
+import cpw.mods.fml.common.eventhandler.Event;
+import cpw.mods.fml.common.eventhandler.EventPriority;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
-import cpw.mods.fml.common.gameevent.*;
+import cpw.mods.fml.common.gameevent.TickEvent;
 
-import net.minecraftforge.common.*;
-import net.minecraftforge.event.entity.*;
-import net.minecraftforge.event.entity.living.*;
-import net.minecraftforge.event.entity.player.*;
-import net.minecraftforge.event.world.*;
+import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.world.ChunkEvent;
+import net.minecraftforge.event.world.ChunkWatchEvent;
+import net.minecraftforge.event.world.WorldEvent;
 
-import jk_5.nailed.*;
-import jk_5.nailed.api.*;
-import jk_5.nailed.api.concurrent.*;
-import jk_5.nailed.api.concurrent.scheduler.*;
-import jk_5.nailed.api.events.*;
+import jk_5.nailed.NailedLog;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.concurrent.Callback;
+import jk_5.nailed.api.concurrent.scheduler.NailedRunnable;
+import jk_5.nailed.api.events.MapCreatedEvent;
+import jk_5.nailed.api.events.MapRemovedEvent;
 import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.*;
-import jk_5.nailed.api.player.*;
+import jk_5.nailed.api.map.MapLoader;
+import jk_5.nailed.api.map.Mappack;
+import jk_5.nailed.api.map.MappackMetadata;
+import jk_5.nailed.api.map.PvpIgnoringDamageSource;
+import jk_5.nailed.api.player.Player;
+import jk_5.nailed.ipc.IpcManager;
+import jk_5.nailed.ipc.mappack.IpcMappackRegistry;
 
 /**
  * {@inheritDoc}
@@ -373,7 +394,11 @@ public class NailedMapLoader implements MapLoader {
     @Nonnull
     public Map getLobby() {
         if(this.lobby == null){
-            this.lobby = new NailedMap(NailedAPI.getMappackLoader().getMappack("lobby"), 0);
+            if(IpcManager.instance().isConnected()){
+                this.lobby = new NailedMap(IpcMappackRegistry.getLobbyMappack(), 0);
+            }else{
+                this.lobby = new NailedMap(NailedAPI.getMappackLoader().getMappack("lobby"), 0);
+            }
             if(this.lobby.getMappack() != null){
                 this.lobby.getMappack().prepareWorld(this.lobby.getSaveFolder(), null);
             }
