@@ -11,24 +11,28 @@ import java.util
  *
  * @author jk-5
  */
+
 object TeamInfo {
 
   def read(buffer: ByteBuf) = {
     val name = ByteBufUtils.readUTF8String(buffer)
     val size = ByteBufUtils.readVarShort(buffer)
-    val list = mutable.ArrayBuffer[String]()
-    (0 until size) foreach(i => list += ByteBufUtils.readUTF8String(buffer))
-    new TeamInfo(name, list)
+    val nList = mutable.ArrayBuffer[String]()
+    val dList = mutable.ArrayBuffer[String]()
+    (0 until size) foreach(i => nList += ByteBufUtils.readUTF8String(buffer)) // player (skin) names
+    (0 until size) foreach(i => dLlist += ByteBufUtils.readUTF8String(buffer)) // display names
+    new TeamInfo(name, nList, dList)
   }
 
-  def create(name: String, players: util.List[String]) = new TeamInfo(name, players asScala)
+  def create(name: String, pNames: util.List[String], dNames: util.List[String]) = new TeamInfo(name, pNames asScala, dNames asscala)
 }
 
-case class TeamInfo(name: String, players: mutable.Buffer[String] = mutable.ArrayBuffer[String]()) {
+case class TeamInfo(name: String, pNames: mutable.Buffer[String] = mutable.ArrayBuffer[String](), dNames:mutable.Buffer[String] = mutable.ArrayBuffer[String]()) {
 
   def write(buffer: ByteBuf){
     ByteBufUtils.writeUTF8String(buffer, this.name)
     ByteBufUtils.writeVarShort(buffer, this.players.size)
-    players.foreach(p => ByteBufUtils.writeUTF8String(buffer, p))
+    pNames.foreach(p => ByteBufUtils.writeUTF8String(buffer, p))
+    dNames.foreach(p => ByteBufUtils.writeUTF8String(buffer, p))
   }
 }

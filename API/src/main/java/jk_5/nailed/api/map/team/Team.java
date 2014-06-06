@@ -48,4 +48,5 @@ public interface Team extends PossibleWinner, ILuaObject {
 
     List<Player> getMembers();
     List<String> getMemberNames();
+    List<String> getPrefixNames();
 }

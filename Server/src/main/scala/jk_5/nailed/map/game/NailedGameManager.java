@@ -166,7 +166,7 @@ public class NailedGameManager implements GameManager {
         if(teamListVisible){
             TeamManager manager = this.map.getTeamManager();
             for(Team team : manager.getTeams()){
-                packet.teams.add(TeamInfo.create(team.getName(), team.getMemberNames()));
+                packet.teams.add(TeamInfo.create(team.getName(), team.getMemberNames(), team.getPrefixNames()));
             }
         }
         NailedNetworkHandler.sendPacketToAllPlayersInDimension(packet, this.map.getID());
