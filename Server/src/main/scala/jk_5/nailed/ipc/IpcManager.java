@@ -1,19 +1,23 @@
 package jk_5.nailed.ipc;
 
-import java.nio.channels.*;
+import java.nio.channels.UnresolvedAddressException;
 
-import com.google.gson.*;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.google.gson.JsonObject;
 
-import org.apache.logging.log4j.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import io.netty.bootstrap.*;
+import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
-import io.netty.channel.*;
-import io.netty.channel.nio.*;
-import io.netty.channel.socket.nio.*;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioSocketChannel;
 
-import jk_5.nailed.*;
-import jk_5.nailed.ipc.packet.*;
+import jk_5.nailed.NailedServer;
+import jk_5.nailed.ipc.packet.IpcPacket;
 
 /**
  * No description given
@@ -57,7 +61,7 @@ public class IpcManager {
             return;
         }
         logger.info("Starting IPC client");
-        final EventLoopGroup group = new NioEventLoopGroup();
+        final EventLoopGroup group = new NioEventLoopGroup(0, new ThreadFactoryBuilder().setNameFormat("IPC IOThread #%d").setDaemon(true).build());
         try{
             Bootstrap bootstrap = new Bootstrap().group(group).channel(NioSocketChannel.class);
             bootstrap.handler(new Pipeline());
