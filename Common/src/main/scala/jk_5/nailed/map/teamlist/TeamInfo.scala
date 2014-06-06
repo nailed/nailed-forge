@@ -24,7 +24,7 @@ object TeamInfo {
     new TeamInfo(name, nList, dList)
   }
 
-  def create(name: String, pNames: util.List[String], dNames: util.List[String]) = new TeamInfo(name, pNames asScala, dNames asscala)
+  def create(name: String, pNames: util.List[String], dNames: util.List[String]) = new TeamInfo(name, pNames asScala, dNames asScala)
 }
 
 case class TeamInfo(name: String, pNames: mutable.Buffer[String] = mutable.ArrayBuffer[String](), dNames:mutable.Buffer[String] = mutable.ArrayBuffer[String]()) {
