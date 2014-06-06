@@ -1,21 +1,26 @@
 package jk_5.nailed.players;
 
-import java.util.*;
+import java.util.List;
 
-import com.google.common.collect.*;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
-import org.luaj.vm2.*;
+import org.luaj.vm2.LuaClosure;
+import org.luaj.vm2.LuaValue;
 
-import net.minecraft.util.*;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 
-import jk_5.nailed.api.*;
+import jk_5.nailed.api.NailedAPI;
 import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.scoreboard.*;
-import jk_5.nailed.api.map.team.*;
-import jk_5.nailed.api.player.*;
-import jk_5.nailed.api.scripting.*;
-import jk_5.nailed.map.*;
-import jk_5.nailed.util.*;
+import jk_5.nailed.api.map.scoreboard.ScoreboardTeam;
+import jk_5.nailed.api.map.team.Team;
+import jk_5.nailed.api.player.Player;
+import jk_5.nailed.api.scripting.ILuaContext;
+import jk_5.nailed.api.scripting.ILuaObject;
+import jk_5.nailed.map.Location;
+import jk_5.nailed.util.ChatColor;
+import jk_5.nailed.util.NailedFoodStats;
 
 /**
  * No description given
@@ -97,24 +102,6 @@ public class NailedTeam implements Team, ILuaObject {
             }
         }
         return ret;
-    }
-
-    @Override
-    public List<String> getMemberNames(){
-        List<String> names = Lists.newArrayList();
-        for(Player player: this.getMembers()){
-            names.add(player.getUsername());
-        }
-        return names;
-    }
-
-    @Override
-    public List<String> getPrefixNames(){
-        List<String> names = Lists.newArrayList();
-        for(Player player: this.getMembers()){
-            names.add(player.getChatPrefix());
-        }
-        return names;
     }
 
     @Override

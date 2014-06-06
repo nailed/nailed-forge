@@ -1,5 +1,7 @@
 package jk_5.nailed.map.game;
 
+import java.util.List;
+
 import com.google.common.collect.Lists;
 
 import jk_5.nailed.api.NailedAPI;
@@ -166,7 +168,12 @@ public class NailedGameManager implements GameManager {
         if(teamListVisible){
             TeamManager manager = this.map.getTeamManager();
             for(Team team : manager.getTeams()){
-                packet.teams.add(TeamInfo.create(team.getName(), team.getMemberNames(), team.getPrefixNames()));
+                List<String> names = Lists.newArrayList();
+                for(Player player : team.getMembers()){
+                    names.add(player.getUsername());
+                }
+                TeamInfo info = TeamInfo.create(team.getName(), names);
+                packet.teams.add(info);
             }
         }
         NailedNetworkHandler.sendPacketToAllPlayersInDimension(packet, this.map.getID());

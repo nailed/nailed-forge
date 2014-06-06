@@ -1,14 +1,14 @@
 package jk_5.nailed.api.map.team;
 
-import java.util.*;
+import java.util.List;
 
 import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.*;
-import jk_5.nailed.api.map.scoreboard.*;
-import jk_5.nailed.api.player.*;
-import jk_5.nailed.api.scripting.*;
-import jk_5.nailed.map.*;
-import jk_5.nailed.util.*;
+import jk_5.nailed.api.map.PossibleWinner;
+import jk_5.nailed.api.map.scoreboard.ScoreboardTeam;
+import jk_5.nailed.api.player.Player;
+import jk_5.nailed.api.scripting.ILuaObject;
+import jk_5.nailed.map.Location;
+import jk_5.nailed.util.ChatColor;
 
 /**
  * No description given
@@ -47,6 +47,4 @@ public interface Team extends PossibleWinner, ILuaObject {
     boolean shouldOverrideDefaultSpawnpoint();
 
     List<Player> getMembers();
-    List<String> getMemberNames();
-    List<String> getPrefixNames();
 }

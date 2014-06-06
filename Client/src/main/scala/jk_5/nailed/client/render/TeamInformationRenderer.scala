@@ -244,7 +244,7 @@ object TeamInformationRenderer {
 
   @inline def teamInfoToHeadRenderList(info: TeamInfo) = {
     val ret = mutable.ArrayBuffer[PlayerHeadRenderer]()
-    info.players.foreach(p => ret += getRenderer(p))
+    info.usernames.foreach(p => ret += getRenderer(p))
     ret
   }
 
