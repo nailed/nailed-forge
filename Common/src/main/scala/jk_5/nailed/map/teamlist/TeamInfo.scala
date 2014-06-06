@@ -20,7 +20,7 @@ object TeamInfo {
     val nList = mutable.ArrayBuffer[String]()
     val dList = mutable.ArrayBuffer[String]()
     (0 until size) foreach(i => nList += ByteBufUtils.readUTF8String(buffer)) // player (skin) names
-    (0 until size) foreach(i => dLlist += ByteBufUtils.readUTF8String(buffer)) // display names
+    (0 until size) foreach(i => dList += ByteBufUtils.readUTF8String(buffer)) // display names
     new TeamInfo(name, nList, dList)
   }
 
@@ -31,7 +31,7 @@ case class TeamInfo(name: String, pNames: mutable.Buffer[String] = mutable.Array
 
   def write(buffer: ByteBuf){
     ByteBufUtils.writeUTF8String(buffer, this.name)
-    ByteBufUtils.writeVarShort(buffer, this.players.size)
+    ByteBufUtils.writeVarShort(buffer, this.pNames.size)
     pNames.foreach(p => ByteBufUtils.writeUTF8String(buffer, p))
     dNames.foreach(p => ByteBufUtils.writeUTF8String(buffer, p))
   }
