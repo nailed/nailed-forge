@@ -1,23 +1,37 @@
 package jk_5.nailed.map.mappack;
 
-import java.io.*;
-import java.util.*;
-import java.util.zip.*;
-import javax.annotation.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import com.google.gson.*;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
-import org.apache.commons.io.*;
+import org.apache.commons.io.IOUtils;
 
-import jk_5.nailed.*;
-import jk_5.nailed.api.concurrent.*;
+import jk_5.nailed.NailedLog;
+import jk_5.nailed.api.concurrent.Callback;
 import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.*;
-import jk_5.nailed.api.scripting.*;
-import jk_5.nailed.api.zone.*;
-import jk_5.nailed.map.*;
-import jk_5.nailed.map.stat.*;
-import jk_5.nailed.permissions.zone.*;
+import jk_5.nailed.api.map.MapBuilder;
+import jk_5.nailed.api.map.Mappack;
+import jk_5.nailed.api.map.MappackMetadata;
+import jk_5.nailed.api.scripting.IMount;
+import jk_5.nailed.api.zone.ZoneConfig;
+import jk_5.nailed.map.DiscardedMappackInitializationException;
+import jk_5.nailed.map.MappackInitializationException;
+import jk_5.nailed.map.stat.DefaultStatConfig;
+import jk_5.nailed.permissions.zone.DefaultZoneConfig;
 
 /**
  * No description given
@@ -29,7 +43,7 @@ public final class ZipMappack implements Mappack {
     private final String mappackID;
     private final File mappackFile;
     private final MappackMetadata mappackMetadata;
-    private StatConfig statConfig;
+    private DefaultStatConfig statConfig;
     private ZoneConfig zoneConfig;
 
     private ZipMappack(File mappackFile, JsonMappackMetadata metadata) {
@@ -43,7 +57,7 @@ public final class ZipMappack implements Mappack {
 
     public static Mappack create(File file) throws MappackInitializationException {
         ZipMappack pack = null;
-        StatConfig stats = new StatConfig();
+        DefaultStatConfig stats = new DefaultStatConfig();
         ZoneConfig zones = new DefaultZoneConfig();
         ZipInputStream zipStream = null;
         try{
@@ -53,7 +67,7 @@ public final class ZipMappack implements Mappack {
                 if("mappack.json".equals(entry.getName())){
                     pack = new ZipMappack(file, new JsonMappackMetadata((JsonObject) new JsonParser().parse(new InputStreamReader(zipStream))));
                 }else if("stats.json".equals(entry.getName())){
-                    stats = new StatConfig(new JsonParser().parse(new InputStreamReader(zipStream)).getAsJsonArray());
+                    stats = new DefaultStatConfig(new JsonParser().parse(new InputStreamReader(zipStream)).getAsJsonArray());
                 }else if("zones.json".equals(entry.getName())){
                     zones = new DefaultZoneConfig(new JsonParser().parse(new InputStreamReader(zipStream)).getAsJsonArray());
                 }

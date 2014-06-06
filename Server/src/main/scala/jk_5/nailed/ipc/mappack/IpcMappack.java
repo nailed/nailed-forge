@@ -1,21 +1,28 @@
 package jk_5.nailed.ipc.mappack;
 
-import java.io.*;
-import java.util.*;
-import javax.annotation.*;
+import java.io.File;
+import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import com.google.gson.*;
-import com.google.gson.reflect.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
-import jk_5.nailed.api.concurrent.*;
+import jk_5.nailed.api.concurrent.Callback;
 import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.*;
-import jk_5.nailed.api.map.stat.*;
-import jk_5.nailed.api.scripting.*;
-import jk_5.nailed.api.zone.*;
-import jk_5.nailed.ipc.filestore.*;
-import jk_5.nailed.map.mappack.*;
-import jk_5.nailed.permissions.zone.*;
+import jk_5.nailed.api.map.MapBuilder;
+import jk_5.nailed.api.map.Mappack;
+import jk_5.nailed.api.map.MappackMetadata;
+import jk_5.nailed.api.map.stat.StatConfig;
+import jk_5.nailed.api.scripting.IMount;
+import jk_5.nailed.api.zone.ZoneConfig;
+import jk_5.nailed.ipc.filestore.FilestoreMount;
+import jk_5.nailed.ipc.filestore.MappackFile;
+import jk_5.nailed.ipc.filestore.MappackFilestore;
+import jk_5.nailed.map.mappack.JsonMappackMetadata;
+import jk_5.nailed.map.stat.DefaultStatConfig;
+import jk_5.nailed.permissions.zone.DefaultZoneConfig;
 
 /**
  * No description given
@@ -45,9 +52,9 @@ public class IpcMappack implements Mappack {
         this.filestore.refresh();
         this.luaFilestore.refresh();
         if(json.has("stats")){
-            this.statConfig = new jk_5.nailed.map.stat.StatConfig(json.get("stats").getAsJsonArray());
+            this.statConfig = new DefaultStatConfig(json.get("stats").getAsJsonArray());
         }else{
-            this.statConfig = new jk_5.nailed.map.stat.StatConfig();
+            this.statConfig = new DefaultStatConfig();
         }
         if(json.has("zones")){
             this.zoneConfig = new DefaultZoneConfig(json.get("zones").getAsJsonArray());

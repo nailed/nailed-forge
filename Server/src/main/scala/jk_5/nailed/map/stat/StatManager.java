@@ -1,12 +1,13 @@
 package jk_5.nailed.map.stat;
 
-import java.util.*;
+import java.util.List;
 
-import com.google.common.base.*;
-import com.google.common.collect.*;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 
 import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.stat.*;
+import jk_5.nailed.api.map.stat.IStatTileEntity;
+import jk_5.nailed.api.map.stat.Stat;
 
 /**
  * No description given
@@ -23,7 +24,7 @@ public class StatManager implements jk_5.nailed.api.map.stat.StatManager {
             Preconditions.checkNotNull(map.getMappack().getStatConfig(), "StatConfig may not be null!");
             this.stats = map.getMappack().getStatConfig().copy();
         }else{
-            this.stats = new StatConfig();
+            this.stats = new DefaultStatConfig();
         }
     }
 

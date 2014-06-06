@@ -1,26 +1,37 @@
 package jk_5.nailed.map.mappack;
 
-import java.io.*;
-import java.text.*;
-import java.util.*;
-import javax.annotation.*;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileReader;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import com.google.gson.*;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
-import org.apache.commons.io.*;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
-import net.minecraft.server.*;
-import net.minecraft.world.*;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.MinecraftException;
+import net.minecraft.world.WorldServer;
 
-import jk_5.nailed.api.concurrent.*;
+import jk_5.nailed.api.concurrent.Callback;
 import jk_5.nailed.api.map.Map;
-import jk_5.nailed.api.map.*;
-import jk_5.nailed.api.scripting.*;
-import jk_5.nailed.api.zone.*;
-import jk_5.nailed.map.*;
-import jk_5.nailed.map.script.*;
-import jk_5.nailed.map.stat.*;
-import jk_5.nailed.permissions.zone.*;
+import jk_5.nailed.api.map.MapBuilder;
+import jk_5.nailed.api.map.Mappack;
+import jk_5.nailed.api.map.MappackMetadata;
+import jk_5.nailed.api.scripting.IMount;
+import jk_5.nailed.api.zone.ZoneConfig;
+import jk_5.nailed.map.DiscardedMappackInitializationException;
+import jk_5.nailed.map.MappackInitializationException;
+import jk_5.nailed.map.script.ReadOnlyMount;
+import jk_5.nailed.map.stat.DefaultStatConfig;
+import jk_5.nailed.permissions.zone.DefaultZoneConfig;
 
 /**
  * No description given
@@ -34,7 +45,7 @@ public final class DirectoryMappack implements Mappack {
     private final String mappackID;
     private final File mappackFolder;
     private final MappackMetadata mappackMetadata;
-    private StatConfig statConfig = new StatConfig();
+    private DefaultStatConfig statConfig = new DefaultStatConfig();
     private ZoneConfig zoneConfig = new DefaultZoneConfig();
 
     private DirectoryMappack(File directory, JsonMappackMetadata metadata) {
@@ -48,7 +59,7 @@ public final class DirectoryMappack implements Mappack {
 
     public static DirectoryMappack create(File directory) throws MappackInitializationException {
         DirectoryMappack pack;
-        StatConfig statConfig = new StatConfig();
+        DefaultStatConfig statConfig = new DefaultStatConfig();
         ZoneConfig zoneConfig = new DefaultZoneConfig();
         File mappackConfig = new File(directory, "mappack.json");
         File statConfigFile = new File(directory, "stats.json");
@@ -70,7 +81,7 @@ public final class DirectoryMappack implements Mappack {
             FileReader fr = null;
             try{
                 fr = new FileReader(statConfigFile);
-                statConfig = new StatConfig(new JsonParser().parse(fr).getAsJsonArray());
+                statConfig = new DefaultStatConfig(new JsonParser().parse(fr).getAsJsonArray());
             }catch(Exception e){
                 throw new MappackInitializationException("Exception while reading stats.json", e);
             }finally{
