@@ -1,11 +1,11 @@
 package jk_5.nailed.util;
 
-import java.util.*;
-import java.util.regex.*;
+import java.util.Map;
+import java.util.regex.Pattern;
 
-import com.google.common.collect.*;
+import com.google.common.collect.Maps;
 
-import org.apache.commons.lang3.*;
+import org.apache.commons.lang3.Validate;
 
 public enum ChatColor {
     BLACK('0', 0x00),

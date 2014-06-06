@@ -1,13 +1,13 @@
 package jk_5.nailed.map;
 
-import javax.annotation.*;
+import javax.annotation.Nonnull;
 
-import com.google.common.base.*;
-import com.google.gson.*;
+import com.google.common.base.Preconditions;
+import com.google.gson.JsonObject;
 
-import io.netty.buffer.*;
+import io.netty.buffer.ByteBuf;
 
-import net.minecraft.util.*;
+import net.minecraft.util.ChunkCoordinates;
 
 /**
  * Represents a 3-dimensional location in a world

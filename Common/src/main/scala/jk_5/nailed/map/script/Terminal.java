@@ -1,12 +1,12 @@
 package jk_5.nailed.map.script;
 
-import java.util.*;
+import java.util.Arrays;
 
-import io.netty.buffer.*;
+import io.netty.buffer.ByteBuf;
 
-import cpw.mods.fml.common.network.*;
+import cpw.mods.fml.common.network.ByteBufUtils;
 
-import lombok.*;
+import lombok.Getter;
 
 /**
  * No description given

@@ -1,8 +1,8 @@
 package jk_5.nailed.map.script;
 
-import io.netty.buffer.*;
+import io.netty.buffer.ByteBuf;
 
-import cpw.mods.fml.common.network.*;
+import cpw.mods.fml.common.network.ByteBufUtils;
 
 /**
  * No description given

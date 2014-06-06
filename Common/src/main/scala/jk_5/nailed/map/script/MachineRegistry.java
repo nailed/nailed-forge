@@ -1,8 +1,8 @@
 package jk_5.nailed.map.script;
 
-import java.util.concurrent.atomic.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
-import gnu.trove.map.hash.*;
+import gnu.trove.map.hash.TIntObjectHashMap;
 
 /**
  * No description given

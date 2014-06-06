@@ -1,17 +1,21 @@
 package jk_5.nailed.map.mappack;
 
-import java.io.*;
-import java.util.*;
-import javax.annotation.*;
+import java.io.File;
+import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import com.google.common.collect.*;
+import com.google.common.collect.Lists;
 
-import jk_5.nailed.*;
-import jk_5.nailed.api.*;
-import jk_5.nailed.api.concurrent.*;
-import jk_5.nailed.api.concurrent.scheduler.*;
-import jk_5.nailed.api.map.*;
-import jk_5.nailed.map.*;
+import jk_5.nailed.NailedLog;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.concurrent.Callback;
+import jk_5.nailed.api.concurrent.scheduler.NailedRunnable;
+import jk_5.nailed.api.map.Mappack;
+import jk_5.nailed.api.map.MappackLoader;
+import jk_5.nailed.api.map.MappackReloadListener;
+import jk_5.nailed.map.DiscardedMappackInitializationException;
+import jk_5.nailed.map.MappackInitializationException;
 
 /**
  * No description given
@@ -34,6 +38,8 @@ public class NailedMappackLoader implements MappackLoader {
                 return pack;
             }
         }
+        //IpcMappackRegistry.getRemoteMappacks().contains(mappackID); //It is available on the server. Somehow rewrite this to request it.
+        //Something with callbacks/futures instead of returning a plain mappack
         return null;
     }
 

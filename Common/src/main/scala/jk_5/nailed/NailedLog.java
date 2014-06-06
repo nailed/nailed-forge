@@ -1,7 +1,11 @@
 package jk_5.nailed;
 
-import org.apache.logging.log4j.*;
-import org.apache.logging.log4j.message.*;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.message.Message;
+import org.apache.logging.log4j.message.MessageFactory;
 
 /**
  * No description given
