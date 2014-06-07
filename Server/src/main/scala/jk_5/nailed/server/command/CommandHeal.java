@@ -9,7 +9,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 
 import jk_5.nailed.api.map.Map;
-import jk_5.nailed.util.NailedFoodStats;
 
 /**
  * Created by matthias on 5/8/14.
@@ -31,7 +30,6 @@ public class CommandHeal extends NailedCommand {
                 }
                 EntityPlayer p = (EntityPlayer) sender;
                 p.setHealth(20);
-                ((NailedFoodStats)p.getFoodStats()).setFood(20);
             }else{
                 throw new CommandException("Usage: /heal <player>");
             }

@@ -30,8 +30,7 @@ public class CommandFeed extends NailedCommand {
                     throw new CommandException("You may not feed people while a game is running");
                 }
                 EntityPlayer p = (EntityPlayer) sender;
-                p.setHealth(20);
-                ((NailedFoodStats)p.getFoodStats()).setFood(20);
+                ((NailedFoodStats) p.getFoodStats()).setFood(20);
             }else{
                 throw new CommandException("Usage: /feed <player>");
             }
