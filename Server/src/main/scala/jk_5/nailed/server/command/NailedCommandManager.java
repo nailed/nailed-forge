@@ -1,24 +1,73 @@
 package jk_5.nailed.server.command;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
-import com.google.common.collect.*;
+import com.google.common.collect.Maps;
 
-import org.apache.logging.log4j.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import net.minecraft.command.*;
-import net.minecraft.command.server.*;
-import net.minecraft.entity.player.*;
-import net.minecraft.server.*;
-import net.minecraft.util.*;
+import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandClearInventory;
+import net.minecraft.command.CommandDebug;
+import net.minecraft.command.CommandEnchant;
+import net.minecraft.command.CommandException;
+import net.minecraft.command.CommandGive;
+import net.minecraft.command.CommandHandler;
+import net.minecraft.command.CommandHelp;
+import net.minecraft.command.CommandKill;
+import net.minecraft.command.CommandNotFoundException;
+import net.minecraft.command.CommandPlaySound;
+import net.minecraft.command.CommandSetPlayerTimeout;
+import net.minecraft.command.CommandSetSpawnpoint;
+import net.minecraft.command.CommandShowSeed;
+import net.minecraft.command.CommandSpreadPlayers;
+import net.minecraft.command.CommandXP;
+import net.minecraft.command.IAdminCommand;
+import net.minecraft.command.ICommand;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.command.PlayerSelector;
+import net.minecraft.command.WrongUsageException;
+import net.minecraft.command.server.CommandAchievement;
+import net.minecraft.command.server.CommandBanIp;
+import net.minecraft.command.server.CommandBanPlayer;
+import net.minecraft.command.server.CommandBlockLogic;
+import net.minecraft.command.server.CommandBroadcast;
+import net.minecraft.command.server.CommandDeOp;
+import net.minecraft.command.server.CommandEmote;
+import net.minecraft.command.server.CommandListBans;
+import net.minecraft.command.server.CommandListPlayers;
+import net.minecraft.command.server.CommandMessage;
+import net.minecraft.command.server.CommandMessageRaw;
+import net.minecraft.command.server.CommandOp;
+import net.minecraft.command.server.CommandPardonIp;
+import net.minecraft.command.server.CommandPardonPlayer;
+import net.minecraft.command.server.CommandSaveAll;
+import net.minecraft.command.server.CommandSaveOff;
+import net.minecraft.command.server.CommandSaveOn;
+import net.minecraft.command.server.CommandScoreboard;
+import net.minecraft.command.server.CommandSetBlock;
+import net.minecraft.command.server.CommandStop;
+import net.minecraft.command.server.CommandSummon;
+import net.minecraft.command.server.CommandTestFor;
+import net.minecraft.command.server.CommandTestForBlock;
+import net.minecraft.command.server.CommandWhitelist;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.EnumChatFormatting;
 
-import cpw.mods.fml.common.*;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.ModContainer;
 
-import net.minecraftforge.common.*;
-import net.minecraftforge.event.*;
-import net.minecraftforge.permissions.api.*;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.CommandEvent;
+import net.minecraftforge.permissions.api.PermissionsManager;
+import net.minecraftforge.permissions.api.RegisteredPermValue;
 
-import jk_5.nailed.api.command.*;
+import jk_5.nailed.api.command.Command;
+import jk_5.nailed.api.command.CommandRegistry;
 
 /**
  * No description given
@@ -64,6 +113,7 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
         this.registerCommand(new CommandWhereAmI());
         this.registerCommand(new CommandEffect());
         this.registerCommand(new CommandKick());
+        this.registerCommand(new CommandFeed());
 
         this.registerCommand(new CommandKill());
         this.registerCommand(new CommandXP());

@@ -12,14 +12,14 @@ import jk_5.nailed.api.map.Map;
 import jk_5.nailed.util.NailedFoodStats;
 
 /**
- * Created by matthias on 5/8/14.
- * <p/>
- * heal command
+ * No description given
+ *
+ * @author jk-5
  */
-public class CommandHeal extends NailedCommand {
+public class CommandFeed extends NailedCommand {
 
-    public CommandHeal() {
-        super("heal");
+    public CommandFeed() {
+        super("feed");
     }
 
     @Override
@@ -27,25 +27,25 @@ public class CommandHeal extends NailedCommand {
         if(args.length == 0){
             if(sender instanceof EntityPlayer){
                 if(map.getGameManager().isGameRunning()){
-                    throw new CommandException("You may not heal people while a game is running");
+                    throw new CommandException("You may not feed people while a game is running");
                 }
                 EntityPlayer p = (EntityPlayer) sender;
                 p.setHealth(20);
                 ((NailedFoodStats)p.getFoodStats()).setFood(20);
             }else{
-                throw new CommandException("Usage: /heal <player>");
+                throw new CommandException("Usage: /feed <player>");
             }
             return;
         }else if(args.length > 1){
             if(sender instanceof EntityPlayer){
-                throw new CommandException("Usage: /heal [player]");
+                throw new CommandException("Usage: /feed [player]");
             }else{
-                throw new CommandException("Usage: /heal <player>");
+                throw new CommandException("Usage: /feed <player>");
             }
         }
         EntityPlayerMP[] healed = NailedCommand.getPlayersList(sender, args[0]);
         for(EntityPlayerMP p : healed){
-            p.setHealth(20);
+            p.getFoodStats().setFoodLevel(20);
         }
     }
 
