@@ -133,12 +133,11 @@ public class NailedPlayerRegistry implements PlayerRegistry {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onPlayerHurt(LivingHurtEvent event) {
         if(event.entity instanceof EntityPlayer){
-            event.setCanceled(true);
             float ammount = event.ammount;
             Player player = this.getPlayer((EntityPlayer) event.entity);
-            if(event.source == DamageSource.outOfWorld) { player.getEntity().setHealth(-1f); return; }
+            if(event.source == DamageSource.outOfWorld) return;
             if(player.getEntity().getHealth() - ammount < player.getMinHealth()){
-                player.getEntity().setHealth(player.getMinHealth());
+                event.ammount = player.getEntity().getHealth() - player.getMinHealth();
             }
         }
     }
