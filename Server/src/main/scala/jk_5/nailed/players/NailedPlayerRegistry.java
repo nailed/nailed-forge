@@ -11,6 +11,7 @@ import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.eventhandler.*;
 import cpw.mods.fml.common.gameevent.*;
 
+import net.minecraft.util.DamageSource;
 import net.minecraftforge.event.entity.living.*;
 
 import jk_5.nailed.*;
@@ -135,6 +136,7 @@ public class NailedPlayerRegistry implements PlayerRegistry {
             event.setCanceled(true);
             float ammount = event.ammount;
             Player player = this.getPlayer((EntityPlayer) event.entity);
+            if(event.source == DamageSource.outOfWorld) { player.getEntity().setHealth(-1f); return; }
             if(player.getEntity().getHealth() - ammount < player.getMinHealth()){
                 player.getEntity().setHealth(player.getMinHealth());
             }
