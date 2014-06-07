@@ -2,6 +2,7 @@ package jk_5.nailed.server.command;
 
 import java.util.*;
 
+import jk_5.nailed.util.NailedFoodStats;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.*;
 import net.minecraft.server.*;
@@ -28,7 +29,7 @@ public class CommandHeal extends NailedCommand {
                 }
                 EntityPlayer p = (EntityPlayer) sender;
                 p.setHealth(20);
-                p.getFoodStats().setFoodLevel(20);
+                ((NailedFoodStats)p.getFoodStats()).setFood(20);
             }else{
                 throw new CommandException("Usage: /heal <player>");
             }

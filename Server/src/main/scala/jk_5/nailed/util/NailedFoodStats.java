@@ -41,8 +41,7 @@ public class NailedFoodStats extends FoodStats {
         return this.maxFoodLevel;
     }
 
-    @Override
-    public void setFoodLevel(int level) {
+    public void setFood(int level) {
         this.foodLevel = level;
     }
 }
