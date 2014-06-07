@@ -22,7 +22,6 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.FoodStats;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.WorldSettings;
 
@@ -432,9 +431,7 @@ public class NailedPlayer implements Player, ILuaObject {
                 "setMinFood",
                 "setMinHealth",
                 "setMaxFood",
-                "setMaxHealth",
-                "setFood",
-                "setHealth"
+                "setMaxHealth"
         };
     }
 
@@ -479,8 +476,7 @@ public class NailedPlayer implements Player, ILuaObject {
                 break;
             case 6: //setFood
                 if(arguments.length == 1 && arguments[0] instanceof Double){
-                    FoodStats foodStats = this.getEntity().getFoodStats();
-                    foodStats.addStats(((Double) arguments[0]).intValue() - foodStats.getFoodLevel(), 0);
+                    ((NailedFoodStats) this.getEntity().getFoodStats()).setFood(((Double) arguments[0]).intValue());
                 }else{
                     throw new Exception("Expected 1 int argument");
                 }
@@ -632,18 +628,6 @@ public class NailedPlayer implements Player, ILuaObject {
                     throw new Exception("Expected 1 int argument");
                 }
                 break;
-            case 21: // setFood
-                if(arguments.length == 1 && arguments[0] instanceof Double){
-                    ((NailedFoodStats) this.getEntity().getFoodStats()).setFoodLevel(((Double) arguments[0]).intValue());
-                }else{
-                    throw new Exception("Expected 1 int argument");
-                }
-            case 22: // setHealth
-                if(arguments.length == 1 && arguments[0] instanceof Double){
-                    this.getEntity().setHealth(((Double) arguments[0]).intValue());
-                }else{
-                    throw new Exception("Expected 1 int argument");
-                }
         }
         return null;
     }
