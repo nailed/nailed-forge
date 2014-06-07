@@ -358,6 +358,7 @@ public class NailedMapLoader implements MapLoader {
             ((NailedMap) map).getMachine().destroy();
         }
         DimensionManager.unloadWorld(map.getID());
+        DimensionManager.unregisterDimension(map.getID());
         this.maps.remove(map);
         this.releaseDimensionId(map.getID());
         MinecraftForge.EVENT_BUS.post(new MapRemovedEvent(map));
@@ -432,7 +433,5 @@ public class NailedMapLoader implements MapLoader {
 
     public void releaseDimensionId(int id) {
         dimensionIds.clear(id);
-        dimensions.remove(id);
-        DimensionManager.unregisterDimension(id);
     }
 }
