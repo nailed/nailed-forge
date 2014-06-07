@@ -146,16 +146,15 @@ public class NailedPlayerRegistry implements PlayerRegistry {
     public void onPlayerFall(LivingFallEvent event) {
         if(event.entity instanceof EntityPlayer){
             Player player = this.getPlayer((EntityPlayer) event.entity);
-            float damageTaken = event.distance - 4;
             if(player.getCurrentMap().getMappack() != null){
                 Mappack mappack = player.getCurrentMap().getMappack();
                 if(mappack.getMappackMetadata().isFallDamageDisabled()){
-                    damageTaken = 0;
+                    event.distance = 0;
                 }
             }
+            float damageTaken = event.distance > 4 ? event.distance - 4 : 0;
             if(player.getEntity().getHealth() - damageTaken < player.getMinHealth()){
-                event.setCanceled(true);
-                player.getEntity().setHealth(player.getMinHealth());
+                event.distance = 4 + player.getEntity().getHealth() - player.getMinHealth();
             }
         }
     }
