@@ -139,16 +139,7 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
         }else if(msg instanceof S33PacketUpdateSign){
             S33PacketUpdateSign signPacket = (S33PacketUpdateSign) msg;
             String[] lines = signPacket.field_149349_d;
-            if("$mappack".equalsIgnoreCase(lines[0])){
-                Map map = NailedAPI.getMapLoader().getMap(player.worldObj);
-                Sign sign = map.getSignCommandHandler().getSign(signPacket.field_149352_a, signPacket.field_149350_b, signPacket.field_149351_c);
-                if(sign == null){
-                    ctx.write(msg, promise);
-                    return;
-                }
-                ctx.write(sign.getUpdatePacket(), promise);
-                return;
-            }else if("$command".equalsIgnoreCase(lines[0])){
+            if("$mappack".equalsIgnoreCase(lines[0]) || "$command".equalsIgnoreCase(lines[0])){
                 Map map = NailedAPI.getMapLoader().getMap(player.worldObj);
                 Sign sign = map.getSignCommandHandler().getSign(signPacket.field_149352_a, signPacket.field_149350_b, signPacket.field_149351_c);
                 if(sign == null){

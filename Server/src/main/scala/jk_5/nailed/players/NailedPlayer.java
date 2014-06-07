@@ -10,7 +10,6 @@ import com.mojang.authlib.GameProfile;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
-import jk_5.nailed.server.command.NailedCommandManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.PlayerCapabilities;
@@ -55,6 +54,7 @@ import jk_5.nailed.network.NailedPacket;
 import jk_5.nailed.permissions.Group;
 import jk_5.nailed.permissions.NailedPermissionFactory;
 import jk_5.nailed.permissions.User;
+import jk_5.nailed.server.command.NailedCommandManager;
 import jk_5.nailed.util.ChatColor;
 import jk_5.nailed.util.NailedFoodStats;
 import jk_5.nailed.web.auth.WebUser;
@@ -406,7 +406,7 @@ public class NailedPlayer implements Player, ILuaObject {
 
     @Override
     public void executeCommand(String command){
-        ((NailedCommandManager)NailedAPI.getCommandRegistry()).executeCommand(this.getEntity(), command);
+        ((NailedCommandManager) NailedAPI.getCommandRegistry()).executeCommand(this.getEntity(), command);
     }
 
     @Override

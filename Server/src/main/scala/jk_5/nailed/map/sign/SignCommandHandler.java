@@ -5,7 +5,6 @@ import java.util.Set;
 
 import com.google.common.collect.Sets;
 
-import jk_5.nailed.api.map.sign.SignCommand;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.world.World;
@@ -17,6 +16,7 @@ import net.minecraftforge.event.world.ChunkWatchEvent;
 
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.sign.Sign;
+import jk_5.nailed.api.map.sign.SignCommand;
 import jk_5.nailed.api.map.sign.SignMappack;
 import jk_5.nailed.api.player.Player;
 
@@ -101,8 +101,7 @@ public class SignCommandHandler implements jk_5.nailed.api.map.sign.SignCommandH
         Sign sign = null;
         if("$mappack".equalsIgnoreCase(lines[0])){
             sign = new SignMappack(this.map, x, y, z, lines);
-        }
-        if("$command".equalsIgnoreCase(lines[0])){
+        }else if("$command".equalsIgnoreCase(lines[0])){
             sign = new SignCommand(this.map, x, y, z, lines);
         }
         if(sign != null){
