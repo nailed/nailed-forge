@@ -432,5 +432,7 @@ public class NailedMapLoader implements MapLoader {
 
     public void releaseDimensionId(int id) {
         dimensionIds.clear(id);
+        dimensions.remove(id);
+        DimensionManager.unregisterDimension(id);
     }
 }

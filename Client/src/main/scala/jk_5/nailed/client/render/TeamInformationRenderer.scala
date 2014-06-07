@@ -25,11 +25,11 @@ object TeamInformationRenderer {
 
   val random = new Random()
 
-  val left = mutable.ArrayBuffer(getRenderer("jk_5"), getRenderer("Dabadooba"), getRenderer("ikzelf1248"))
+  val left = mutable.ArrayBuffer[PlayerHeadRenderer]()
   val topLeft = mutable.ArrayBuffer[PlayerHeadRenderer]()
   val top = mutable.ArrayBuffer[PlayerHeadRenderer]()
-  val topRight = mutable.ArrayBuffer(getRenderer("Dinnerbone"), getRenderer("Grumm"), getRenderer("Jeb_"))
-  val right = mutable.ArrayBuffer(getRenderer("Docm77"),getRenderer("Etho"),getRenderer("AnderZEL"))
+  val topRight = mutable.ArrayBuffer[PlayerHeadRenderer]()
+  val right = mutable.ArrayBuffer[PlayerHeadRenderer]()
 
   val textures = mutable.HashMap[String, ResourceLocation]()
 
