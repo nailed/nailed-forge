@@ -1,24 +1,31 @@
 package jk_5.nailed.blocks;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
-import com.google.common.collect.*;
+import com.google.common.collect.Lists;
+import com.google.common.collect.MapMaker;
 
-import net.minecraft.block.*;
-import net.minecraft.block.material.*;
-import net.minecraft.client.*;
-import net.minecraft.client.renderer.texture.*;
-import net.minecraft.entity.*;
-import net.minecraft.init.*;
-import net.minecraft.tileentity.*;
-import net.minecraft.util.*;
-import net.minecraft.world.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.Entity;
+import net.minecraft.init.Blocks;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 
-import cpw.mods.fml.relauncher.*;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
-import jk_5.nailed.api.*;
-import jk_5.nailed.api.map.teleport.*;
-import jk_5.nailed.blocks.tileentity.*;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.map.teleport.TeleportOptions;
+import jk_5.nailed.blocks.tileentity.TileEntityPortalController;
 
 /**
  * No description given
@@ -26,6 +33,8 @@ import jk_5.nailed.blocks.tileentity.*;
  * @author jk-5
  */
 public class BlockPortal extends NailedBlock {
+
+    private static final Map<Entity, Long> teleportCooldown = new MapMaker().weakKeys().makeMap();
 
     public BlockPortal() {
         super("portal", Material.portal);
@@ -138,9 +147,9 @@ public class BlockPortal extends NailedBlock {
 
     @Override
     public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
-        if(world.isRemote){
-            return;
-        }
+        if(world.isRemote) return;
+        if(teleportCooldown.containsKey(entity) && teleportCooldown.get(entity) == world.getTotalWorldTime()) return;
+        teleportCooldown.remove(entity);
         TileEntity tileentity = BlockPortalController.getTileEntity(world, x, y, z);
         if((tileentity == null) || (!(tileentity instanceof TileEntityPortalController))){
             world.setBlockToAir(x, y, z);
@@ -155,6 +164,7 @@ public class BlockPortal extends NailedBlock {
         options.setMaintainMomentum(true);
         options.setSound("nailed:teleport.portal");
         NailedAPI.getTeleporter().teleportEntity(entity, options);
+        teleportCooldown.put(entity, world.getTotalWorldTime());
     }
 
     @Override

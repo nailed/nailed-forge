@@ -119,7 +119,6 @@ public class NailedTeleporter implements Teleporter {
                 entity.isDead = false;
                 entity.writeToNBTOptional(entityNBT);
                 entity.isDead = true;
-                entity.worldObj.removeEntity(entity);
                 entity = EntityList.createEntityFromNBT(entityNBT, destWorld);
                 if(entity == null){
                     return null;
