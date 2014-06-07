@@ -10,6 +10,7 @@ import com.mojang.authlib.GameProfile;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
+import jk_5.nailed.server.command.NailedCommandManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.PlayerCapabilities;
@@ -401,6 +402,11 @@ public class NailedPlayer implements Player, ILuaObject {
     @Override
     public void kick(String reason) {
         this.netHandler.kickPlayerFromServer(reason);
+    }
+
+    @Override
+    public void executeCommand(String command){
+        ((NailedCommandManager)NailedAPI.getCommandRegistry()).executeCommand(this.getEntity(), command);
     }
 
     @Override

@@ -148,6 +148,15 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
                 }
                 ctx.write(sign.getUpdatePacket(), promise);
                 return;
+            }else if("$command".equalsIgnoreCase(lines[0])){
+                Map map = NailedAPI.getMapLoader().getMap(player.worldObj);
+                Sign sign = map.getSignCommandHandler().getSign(signPacket.field_149352_a, signPacket.field_149350_b, signPacket.field_149351_c);
+                if(sign == null){
+                    ctx.write(msg, promise);
+                    return;
+                }
+                ctx.write(sign.getUpdatePacket(), promise);
+                return;
             }
         }else if(msg instanceof S38PacketPlayerListItem){
             S38PacketPlayerListItem playerList = (S38PacketPlayerListItem) msg;

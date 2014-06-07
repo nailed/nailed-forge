@@ -74,4 +74,5 @@ public interface Player extends PossibleWinner, ILuaObject {
     void setClientType(ClientType client);
     void setMoving(IMovement movement);
     void kick(String reason);
+    void executeCommand(String command);
 }
