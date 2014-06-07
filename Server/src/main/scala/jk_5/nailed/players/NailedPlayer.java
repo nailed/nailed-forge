@@ -432,7 +432,9 @@ public class NailedPlayer implements Player, ILuaObject {
                 "setMinFood",
                 "setMinHealth",
                 "setMaxFood",
-                "setMaxHealth"
+                "setMaxHealth",
+                "setFood",
+                "setHealth"
         };
     }
 
@@ -630,6 +632,18 @@ public class NailedPlayer implements Player, ILuaObject {
                     throw new Exception("Expected 1 int argument");
                 }
                 break;
+            case 21: // setFood
+                if(arguments.length == 1 && arguments[0] instanceof Double){
+                    ((NailedFoodStats) this.getEntity().getFoodStats()).setFoodLevel(((Double) arguments[0]).intValue());
+                }else{
+                    throw new Exception("Expected 1 int argument");
+                }
+            case 22: // setHealth
+                if(arguments.length == 1 && arguments[0] instanceof Double){
+                    this.getEntity().setHealth(((Double) arguments[0]).intValue());
+                }else{
+                    throw new Exception("Expected 1 int argument");
+                }
         }
         return null;
     }
