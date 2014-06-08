@@ -1,9 +1,0 @@
-Todo:
-- Add transformer obf mappings
-- World and zone specific permissions
-- Add a lot of chat commands - When nailed-web is stable and running
-
-Bugs:
-- PULSE_OFF pulses on enable
-- Teamwon stat type doesn't work
-- NailedPlayer.netHandler is null sometimes
