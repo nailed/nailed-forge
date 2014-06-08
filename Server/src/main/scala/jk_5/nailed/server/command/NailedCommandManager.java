@@ -83,37 +83,37 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
         PermissionsManager.registerPermission(commandWarningsPerm, RegisteredPermValue.OP);
 
         //Nailed commands
-        this.registerCommand(new CommandHeal());
-        this.registerCommand(new CommandGoto());
+        this.registerCommand(CommandGoto$.MODULE$);
         this.registerCommand(new CommandTeam());
-        this.registerCommand(new CommandStartGame());
+        this.registerCommand(CommandStartGame$.MODULE$);
         this.registerCommand(new CommandMap());
         this.registerCommand(new CommandSetWinner());
         this.registerCommand(new CommandReload());
         this.registerCommand(new CommandTime());
         this.registerCommand(new CommandSudo());
         this.registerCommand(new CommandInvsee());
-        this.registerCommand(new CommandFirework());
-        this.registerCommand(new CommandLobby());
-        this.registerCommand(new CommandKickall());
+        this.registerCommand(CommandFirework$.MODULE$);
+        this.registerCommand(CommandLobby$.MODULE$);
+        this.registerCommand(CommandKickall$.MODULE$);
         this.registerCommand(new CommandSaveMappack());
         this.registerCommand(new CommandSafehouse());
         this.registerCommand(new CommandTps());
-        this.registerCommand(new CommandFps());
+        this.registerCommand(CommandFps$.MODULE$);
         this.registerCommand(new CommandTerminal());
         this.registerCommand(new CommandRandomSpawnpoint());
-        this.registerCommand(new CommandEdit());
+        this.registerCommand(CommandEdit$.MODULE$);
         this.registerCommand(new CommandTP());
         this.registerCommand(new CommandGamemode());
         this.registerCommand(new CommandGamerule());
-        this.registerCommand(new CommandDifficulty());
+        this.registerCommand(CommandDifficulty$.MODULE$);
         this.registerCommand(new CommandZone());
+        this.registerCommand(CommandHeal$.MODULE$);
         this.registerCommand(new CommandWayPoint());
         this.registerCommand(new CommandMove());
-        this.registerCommand(new CommandWhereAmI());
-        this.registerCommand(new CommandEffect());
+        this.registerCommand(CommandWhereAmI$.MODULE$);
+        this.registerCommand(CommandEffect$.MODULE$);
         this.registerCommand(new CommandKick());
-        this.registerCommand(new CommandFeed());
+        this.registerCommand(CommandFeed$.MODULE$);
         this.registerCommand(CommandSeed$.MODULE$);
 
         //Normal vanilla commands
