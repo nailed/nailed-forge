@@ -86,16 +86,16 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
         this.registerCommand(CommandGoto$.MODULE$);
         this.registerCommand(new CommandTeam());
         this.registerCommand(CommandStartGame$.MODULE$);
-        this.registerCommand(new CommandMap());
-        this.registerCommand(new CommandSetWinner());
-        this.registerCommand(new CommandReload());
+        this.registerCommand(CommandMap$.MODULE$);
+        this.registerCommand(CommandSetWinner$.MODULE$);
+        this.registerCommand(CommandReload$.MODULE$);
         this.registerCommand(new CommandTime());
-        this.registerCommand(new CommandSudo());
-        this.registerCommand(new CommandInvsee());
+        this.registerCommand(CommandSudo$.MODULE$);
+        this.registerCommand(CommandInvsee$.MODULE$);
         this.registerCommand(CommandFirework$.MODULE$);
         this.registerCommand(CommandLobby$.MODULE$);
         this.registerCommand(CommandKickall$.MODULE$);
-        this.registerCommand(new CommandSaveMappack());
+        this.registerCommand(CommandSaveMappack$.MODULE$);
         this.registerCommand(CommandSafehouse$.MODULE$);
         this.registerCommand(new CommandTps());
         this.registerCommand(CommandFps$.MODULE$);
@@ -104,7 +104,7 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
         this.registerCommand(CommandEdit$.MODULE$);
         this.registerCommand(new CommandTP());
         this.registerCommand(CommandGamemode$.MODULE$);
-        this.registerCommand(new CommandGamerule());
+        this.registerCommand(CommandGamerule$.MODULE$);
         this.registerCommand(CommandDifficulty$.MODULE$);
         this.registerCommand(CommandZone$.MODULE$);
         this.registerCommand(CommandHeal$.MODULE$);
@@ -112,7 +112,7 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
         this.registerCommand(new CommandMove());
         this.registerCommand(CommandWhereAmI$.MODULE$);
         this.registerCommand(CommandEffect$.MODULE$);
-        this.registerCommand(new CommandKick());
+        this.registerCommand(CommandKick$.MODULE$);
         this.registerCommand(CommandFeed$.MODULE$);
         this.registerCommand(CommandSeed$.MODULE$);
 
