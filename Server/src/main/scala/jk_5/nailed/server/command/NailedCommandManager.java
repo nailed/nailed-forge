@@ -21,7 +21,6 @@ import net.minecraft.command.CommandNotFoundException;
 import net.minecraft.command.CommandPlaySound;
 import net.minecraft.command.CommandSetPlayerTimeout;
 import net.minecraft.command.CommandSetSpawnpoint;
-import net.minecraft.command.CommandShowSeed;
 import net.minecraft.command.CommandSpreadPlayers;
 import net.minecraft.command.CommandXP;
 import net.minecraft.command.IAdminCommand;
@@ -114,13 +113,13 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
         this.registerCommand(new CommandEffect());
         this.registerCommand(new CommandKick());
         this.registerCommand(new CommandFeed());
+        this.registerCommand(CommandSeed$.MODULE$);
 
         this.registerCommand(new CommandKill());
         this.registerCommand(new CommandXP());
         this.registerCommand(new CommandGive());
         this.registerCommand(new CommandEnchant());
         this.registerCommand(new CommandEmote());
-        this.registerCommand(new CommandShowSeed());
         this.registerCommand(new CommandHelp());
         this.registerCommand(new CommandDebug());
         this.registerCommand(new CommandMessage());
