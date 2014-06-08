@@ -10,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer
 import jk_5.nailed.api.player.Player
 import jk_5.nailed.api.map.Map
 import net.minecraft.server.MinecraftServer
+import org.apache.logging.log4j.LogManager
 
 /**
  * No description given
@@ -21,6 +22,8 @@ abstract class ScalaCommand extends ComparedCommand {
   val name: String
   val usage: String
   def aliases: Array[String] = Array.empty
+
+  val logger = LogManager.getLogger
 
   final override def getCommandName = this.name
   final override def getCommandUsage(sender: ICommandSender) = this.usage
