@@ -82,6 +82,7 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
     public NailedCommandManager() {
         PermissionsManager.registerPermission(commandWarningsPerm, RegisteredPermValue.OP);
 
+        //Nailed commands
         this.registerCommand(new CommandHeal());
         this.registerCommand(new CommandGoto());
         this.registerCommand(new CommandTeam());
@@ -115,6 +116,7 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
         this.registerCommand(new CommandFeed());
         this.registerCommand(CommandSeed$.MODULE$);
 
+        //Normal vanilla commands
         this.registerCommand(new CommandKill());
         this.registerCommand(new CommandXP());
         this.registerCommand(new CommandGive());
@@ -136,6 +138,7 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
         this.registerCommand(new CommandTestForBlock());
         this.registerCommand(new CommandMessageRaw());
 
+        //Server-only vanilla commands
         this.registerCommand(new CommandOp());
         this.registerCommand(new CommandDeOp());
         this.registerCommand(new CommandStop());
