@@ -1,4 +1,4 @@
-package jk_5.nailed.server.command;
+/*package jk_5.nailed.server.command;
 
 import java.util.*;
 
@@ -12,9 +12,6 @@ import jk_5.nailed.api.player.*;
 import jk_5.nailed.camera.movements.*;
 import jk_5.nailed.map.*;
 
-/**
- * Created by matthias on 16-5-14.
- */
 public class CommandMove extends NailedCommand {
 
     public CommandMove() {
@@ -55,4 +52,4 @@ public class CommandMove extends NailedCommand {
             throw new WrongUsageException(this.getCommandUsage(player.getEntity()));
         }
     }
-}
+}*/

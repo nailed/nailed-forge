@@ -1,4 +1,4 @@
-package jk_5.nailed.server.command;
+/*package jk_5.nailed.server.command;
 
 import java.util.*;
 
@@ -9,9 +9,6 @@ import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.player.*;
 import jk_5.nailed.map.*;
 
-/**
- * Created by matthias on 16-5-14.
- */
 public class CommandWayPoint extends NailedCommand {
 
     public CommandWayPoint() {
@@ -98,4 +95,4 @@ public class CommandWayPoint extends NailedCommand {
             throw new WrongUsageException(this.getCommandUsage(sender));
         }
     }
-}
+}*/

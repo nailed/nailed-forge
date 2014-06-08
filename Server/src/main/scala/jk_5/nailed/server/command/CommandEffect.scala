@@ -44,7 +44,7 @@ object CommandEffect extends ScalaCommand {
   )
 
   override def processCommandWithMap(sender: ICommandSender, map: Map, args: Array[String]){
-    val targets = NailedCommand.getPlayersList(sender, args(0))
+    val targets = getPlayersList(sender, args(0))
     if(args(1).equalsIgnoreCase("clear")){
       targets.foreach(_.clearActivePotions())
 

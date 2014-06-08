@@ -19,9 +19,7 @@ object CommandHeal extends ScalaCommand {
       case _: EntityPlayer if map.getGameManager.isGameRunning => throw new CommandException("You may not heal people while a game is running")
       case p: EntityPlayer => p.setHealth(20)
       case _ => throw new WrongUsageException("Usage: /heal <player>")
-    }else if(args.length > 1){
-      NailedCommand.getPlayersList(sender, args(0)).foreach(_.setHealth(20))
-    }
+    }else if(args.length > 1) getPlayersList(sender, args(0)).foreach(_.setHealth(20))
 
   override def addAutocomplete(sender: ICommandSender, args: Array[String]) = if(args.length == 1) getUsernameOptions(args) else null
 }

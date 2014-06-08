@@ -3,25 +3,4 @@ itemGroup.nailed=Nailed
 tile.nailed.invisibleWall.name=Invisible Wall
 tile.nailed.light.newLevel=Current light level: %s
 
-commands.nailed.goto.usage=/goto <mapname> - Go to another map
-commands.nailed.invsee.usage=/invsee <username> - Look at the inventory of another player
-commands.nailed.irc.usage=/irc - Commands for interacting with irc
-commands.nailed.kickall.usage=/irc - Commands for interacting with irc
-commands.nailed.lobby.usage=/lobby - Teleports you to the lobby
-commands.nailed.map.usage=/map <create:remove>
-commands.nailed.reloadmap.usage=/reloadmap <mapname> - Restores the map from the mappack
-commands.nailed.reloadmappacks.usage=/reloadmappacks - Reloads the mappacks from the mappacks folder
-commands.nailed.setwinner.usage=/setwinner <team> - Sets the winner of the game in your current map
-commands.nailed.startgame.usage=/startgame - Starts the game in your current map
-commands.nailed.sudo.usage=/sudo <player> <command> - Execute a command as another player
-commands.nailed.team.usage=/team join <username> <team>
-commands.nailed.time.usage=/time - Change the time
-commands.nailed.savemappack.usage=/time - Change the time
-commands.nailed.error.notValid=You can't use this command!
-
-commands.nailed.tp.usage=/tp [teleportingPlayer] <targetPlayer | targetDim [x y z]>
-
-death.attack.railgun=%s was gibbed by %s
-quakecraft.message.winner=The winner is %s
-
 nailed.noPermission=You do not have permission to do that!

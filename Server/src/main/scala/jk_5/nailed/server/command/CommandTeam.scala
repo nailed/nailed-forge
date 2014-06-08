@@ -20,7 +20,7 @@ object CommandTeam extends ScalaCommand {
   override def processCommandWithMap(sender: ICommandSender, map: Map, args: Array[String]) = if(args.length != 0) caseInsensitiveMatch(args(0)) {
     case "join" =>
       if(args.length == 1) throw new WrongUsageException("/team join <username> <team>")
-      val player = NailedAPI.getPlayerRegistry.getPlayer(NailedCommand.getTargetPlayer(sender, args(1)))
+      val player = NailedAPI.getPlayerRegistry.getPlayer(getTargetPlayer(sender, args(1)))
       if(player == null) throw new CommandException("Unknown username " + args(1))
       if(args.length == 2) throw new WrongUsageException(s"/team join ${args(1)} <team>")
       Option(map.getTeamManager.getTeam(args(2))) match {

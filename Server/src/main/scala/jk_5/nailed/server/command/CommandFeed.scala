@@ -21,7 +21,7 @@ object CommandFeed extends ScalaCommand {
       case p: EntityPlayer => p.getFoodStats.asInstanceOf[NailedFoodStats].setFood(20)
       case _ => throw new WrongUsageException("Usage: /feed <player>")
     }else if(args.length > 1){
-      NailedCommand.getPlayersList(sender, args(0)).foreach(_.getFoodStats.asInstanceOf[NailedFoodStats].setFood(20))
+      getPlayersList(sender, args(0)).foreach(_.getFoodStats.asInstanceOf[NailedFoodStats].setFood(20))
     }
 
   override def addAutocomplete(sender: ICommandSender, args: Array[String]) = if(args.length == 1) getUsernameOptions(args) else null

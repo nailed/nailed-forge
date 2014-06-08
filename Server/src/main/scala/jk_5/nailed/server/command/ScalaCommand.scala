@@ -1,12 +1,12 @@
 package jk_5.nailed.server.command
 
-import net.minecraft.command.ICommandSender
+import net.minecraft.command.{CommandBase, PlayerSelector, ICommandSender}
 import java.util
 import scala.collection.JavaConverters._
 import scala.collection.JavaConversions._
 import scala.collection.mutable
 import jk_5.nailed.api.NailedAPI
-import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.entity.player.{EntityPlayerMP, EntityPlayer}
 import jk_5.nailed.api.player.Player
 import jk_5.nailed.api.map.Map
 import net.minecraft.server.MinecraftServer
@@ -64,4 +64,40 @@ abstract class ScalaCommand extends ComparedCommand {
 
   @inline def getUsernameOptions(args: Array[String]): List[String] = getOptions(args, MinecraftServer.getServer.getAllUsernames)
   @inline def getUsernameOptions(args: Array[String], map: Map): List[String] = getOptions(args, map.getPlayers.map(_.getUsername))
+
+  def getTargetPlayer(sender: ICommandSender, target: String): EntityPlayerMP = {
+    var entityplayermp = PlayerSelector.matchOnePlayer(sender, target)
+    if(entityplayermp == null) entityplayermp = MinecraftServer.getServer.getConfigurationManager.getPlayerForUsername(target)
+    if(entityplayermp == null) throw new PlayerNotFoundException
+    entityplayermp
+  }
+
+  @inline def handleRelativeNumber(sender: ICommandSender, origin: Double, arg: String) = handleRelativeNumber(sender, origin, arg, -30000000, 30000000)
+
+  def handleRelativeNumber(par1ICommandSender: ICommandSender, origin: Double, arg: String, min: Int, max: Int): Double = {
+    var a = arg
+    val isRelative = a.startsWith("~")
+    var value = if (isRelative) origin else 0.0D
+    if(!isRelative || a.length > 1){
+      val isDouble = a.contains(".")
+      if(isRelative) a = a.substring(1)
+      value += CommandBase.parseDouble(par1ICommandSender, a)
+      if(!isDouble && !isRelative) value += 0.5D
+    }
+    if(min != 0 || max != 0){
+      if(value < min) throw new NumberInvalidException("commands.generic.double.tooSmall", value, min)
+      if(value > max) throw new NumberInvalidException("commands.generic.double.tooBig", value, max)
+    }
+    value
+  }
+
+  def getPlayersList(sender: ICommandSender, pattern: String): Array[EntityPlayerMP] = {
+    var players = PlayerSelector.matchPlayers(sender, pattern)
+    if(players == null){
+      val p = NailedAPI.getPlayerRegistry.getPlayerByUsername(pattern)
+      if(p == null) throw new CommandException("Player not found")
+      players = Array[EntityPlayerMP](p.getEntity)
+    }
+    players
+  }
 }

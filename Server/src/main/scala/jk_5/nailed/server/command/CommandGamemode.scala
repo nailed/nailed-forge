@@ -28,7 +28,7 @@ object CommandGamemode extends ScalaCommand {
         NailedAPI.getPlayerRegistry.getPlayer(e).setGameMode(mode.get)
       case _ => throw new CommandException("You are not a player")
     }else if(args.length == 2){
-      val players = NailedCommand.getPlayersList(sender, args(1))
+      val players = getPlayersList(sender, args(1))
       val newmode = fromString(args(0))
       if(newmode.isEmpty) throw new CommandException("Unknown gamemode")
       for(p <- players){

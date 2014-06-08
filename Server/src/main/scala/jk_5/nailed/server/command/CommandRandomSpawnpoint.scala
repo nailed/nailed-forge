@@ -27,7 +27,7 @@ object CommandRandomSpawnpoint extends ScalaCommand {
 
   override def processCommandWithMap(sender: ICommandSender, map: Map, args: Array[String]) =
     if(args.length == 1){
-      val players = NailedCommand.getPlayersList(sender, args(0))
+      val players = getPlayersList(sender, args(0))
       for(player <- players){
         val options = new TeleportOptions
         options.setLocation(map.getRandomSpawnpoint)

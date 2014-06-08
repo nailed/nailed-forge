@@ -27,6 +27,6 @@ object CommandFps extends ScalaCommand {
         count += 1
         total += player.getFps
       }
-      sender.addChatMessage(new ChatComponentText("Average: " + (total / count) + " FPS"));
+      sender.addChatMessage(new ChatComponentText("Average: " + (total / count) + " FPS"))
     }
 }
