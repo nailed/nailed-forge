@@ -75,7 +75,7 @@ public class NailedPlayer implements Player, ILuaObject {
     private int maxHealth = 20;
     private int minHealth = 0;
     private List<Player> playersVisible = Lists.newArrayList();
-    private ClientType clientType = ClientType.VANILLA; // standard = vanilla, no problems with idconflicts;
+    private ClientType clientType = ClientType.VANILLA;
     private List<RenderPoint[]> renderList;
 
     private NailedWebUser webUser;
