@@ -84,12 +84,12 @@ public class NailedCommandManager extends CommandHandler implements IAdminComman
 
         //Nailed commands
         this.registerCommand(CommandGoto$.MODULE$);
-        this.registerCommand(new CommandTeam());
+        this.registerCommand(CommandTeam$.MODULE$);
         this.registerCommand(CommandStartGame$.MODULE$);
         this.registerCommand(CommandMap$.MODULE$);
         this.registerCommand(CommandSetWinner$.MODULE$);
         this.registerCommand(CommandReload$.MODULE$);
-        this.registerCommand(new CommandTime());
+        this.registerCommand(CommandTime$.MODULE$);
         this.registerCommand(CommandSudo$.MODULE$);
         this.registerCommand(CommandInvsee$.MODULE$);
         this.registerCommand(CommandFirework$.MODULE$);

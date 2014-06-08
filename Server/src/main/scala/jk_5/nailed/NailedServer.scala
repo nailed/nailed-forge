@@ -39,6 +39,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.event.entity.EntityJoinWorldEvent
 import jk_5.nailed.api.events.RegisterZoneEvent
 import cpw.mods.fml.common.network.NetworkCheckHandler
+import java.util.{Map => JMap}
 
 /**
  * No description given
@@ -125,7 +126,7 @@ object NailedServer {
     MinecraftForge.EVENT_BUS.register(new TeleportEventListenerMotion)
     MinecraftForge.EVENT_BUS.register(new PermissionEventHandler)
     MinecraftForge.EVENT_BUS.register(ipcEventListener)
-    MinecraftForge.EVENT_BUS.register(new LoggingCommandListener)
+    MinecraftForge.EVENT_BUS.register(LoggingCommandListener)
     FMLCommonHandler.instance.bus.register(NailedAPI.getPlayerRegistry)
     FMLCommonHandler.instance.bus.register(NailedAPI.getMapLoader)
     FMLCommonHandler.instance.bus.register(new InvSeeTicker)
@@ -208,5 +209,5 @@ object NailedServer {
     }
   }
 
-  @NetworkCheckHandler def accepts(mods: Map[String, String], side: Side) = true
+  @NetworkCheckHandler def accepts(mods: JMap[String, String], side: Side) = true
 }

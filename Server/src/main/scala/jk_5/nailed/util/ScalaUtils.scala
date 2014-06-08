@@ -9,6 +9,6 @@ import java.util.Locale
  */
 object ScalaUtils {
 
-  def caseInsensitiveMatch(input: String)(cb: (String) => Unit) = cb(input.toLowerCase(Locale.US))
-  //def caseInsensitiveMatch[T](input: String)(cb: (String) => T): T = cb(input.toLowerCase(Locale.US))
+  //def caseInsensitiveMatch(input: String)(cb: (String) => Unit) = cb(input.toLowerCase(Locale.US))
+  def caseInsensitiveMatch[T](input: String)(cb: (String) => T): T = cb(input.toLowerCase(Locale.US))
 }
