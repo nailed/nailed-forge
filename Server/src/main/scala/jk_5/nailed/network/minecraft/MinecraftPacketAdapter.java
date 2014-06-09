@@ -11,6 +11,7 @@ import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
 
+import jk_5.nailed.blocks.ReplacedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
@@ -36,7 +37,6 @@ import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 
 import jk_5.nailed.NailedLog;
 import jk_5.nailed.api.NailedAPI;
-import jk_5.nailed.api.block.INailedBlock;
 import jk_5.nailed.api.map.Map;
 import jk_5.nailed.api.map.sign.Sign;
 import jk_5.nailed.api.map.sign.SignCommandHandler;
@@ -311,9 +311,9 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
                         for(int y = 0; y < 16; ++y){
                             for(int z = 0; z < 16; ++z){
                                 Block block = extendedBlockStorage.getBlockByExtId(x, y, z);
-                                if(block instanceof INailedBlock){
-                                    extendedBlockStorage.func_150818_a(x, y, z, ((INailedBlock) block).getReplacementBlock());
-                                    extendedBlockStorage.setExtBlockMetadata(x, y, z, ((INailedBlock) block).getReplacementMetadata());
+                                if(block instanceof ReplacedBlock){
+                                    extendedBlockStorage.func_150818_a(x, y, z, ((ReplacedBlock) block).getReplacementBlock());
+                                    extendedBlockStorage.setExtBlockMetadata(x, y, z, ((ReplacedBlock) block).getReplacementMetadata());
                                 }
                             }
                         }
@@ -394,9 +394,9 @@ public class MinecraftPacketAdapter extends ChannelDuplexHandler {
         if(stack == null){
             return null;
         }
-        if(stack.field_151002_e instanceof ItemBlock && ((ItemBlock) stack.field_151002_e).field_150939_a instanceof INailedBlock){
+        if(stack.field_151002_e instanceof ItemBlock && ((ItemBlock) stack.field_151002_e).field_150939_a instanceof ReplacedBlock){
             Item item = stack.field_151002_e;
-            INailedBlock nailedBlock = (INailedBlock) ((ItemBlock) item).field_150939_a;
+            ReplacedBlock nailedBlock = (ReplacedBlock) ((ItemBlock) item).field_150939_a;
             ItemBlock newItem = new ItemBlock(nailedBlock.getReplacementBlock());
             ItemStack newItemStack = new ItemStack(newItem, stack.stackSize, nailedBlock.getReplacementMetadata());
             newItemStack.setStackDisplayName(((Block) nailedBlock).getUnlocalizedName());
