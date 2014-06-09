@@ -1,25 +1,25 @@
 package jk_5.nailed.blocks.tileentity;
 
-import io.netty.buffer.*;
+import io.netty.buffer.ByteBuf;
 
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.NBTTagCompound;
 
-import cpw.mods.fml.common.network.*;
+import cpw.mods.fml.common.network.ByteBufUtils;
 
-import jk_5.nailed.api.*;
-import jk_5.nailed.api.map.*;
-import jk_5.nailed.api.map.teleport.*;
-import jk_5.nailed.api.player.*;
-import jk_5.nailed.blocks.*;
-import jk_5.nailed.gui.*;
-import jk_5.nailed.util.*;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.map.Map;
+import jk_5.nailed.api.map.teleport.TeleportOptions;
+import jk_5.nailed.api.player.Player;
+import jk_5.nailed.blocks.BlockPortalController;
+import jk_5.nailed.gui.IGuiReturnHandler;
+import jk_5.nailed.util.SynchronizedTileEntity;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-public class TileEntityPortalController extends NailedTileEntity implements IGuiTileEntity, IGuiReturnHandler, ISynchronizedTileEntity {
+public class TileEntityPortalController extends NailedTileEntity implements GuiTileEntity, IGuiReturnHandler, SynchronizedTileEntity {
 
     public String title = "";
     public short yaw;

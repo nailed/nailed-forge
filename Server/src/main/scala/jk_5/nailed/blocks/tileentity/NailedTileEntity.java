@@ -1,15 +1,17 @@
 package jk_5.nailed.blocks.tileentity;
 
-import io.netty.buffer.*;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 
-import net.minecraft.entity.player.*;
-import net.minecraft.network.*;
-import net.minecraft.tileentity.*;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.Packet;
+import net.minecraft.tileentity.TileEntity;
 
-import jk_5.nailed.api.*;
-import jk_5.nailed.api.player.*;
-import jk_5.nailed.network.*;
-import jk_5.nailed.util.*;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.player.Player;
+import jk_5.nailed.network.NailedNetworkHandler;
+import jk_5.nailed.network.NailedPacket;
+import jk_5.nailed.util.SynchronizedTileEntity;
 
 /**
  * No description given
@@ -19,8 +21,8 @@ import jk_5.nailed.util.*;
 public abstract class NailedTileEntity extends TileEntity {
 
     public boolean onBlockActivated(EntityPlayer entity, int side, float hitX, float hitY, float hitZ) {
-        if(this instanceof IGuiTileEntity){
-            IGuiTileEntity tile = (IGuiTileEntity) this;
+        if(this instanceof GuiTileEntity){
+            GuiTileEntity tile = (GuiTileEntity) this;
             if(this.worldObj.isRemote){
                 return true;
             }else{
@@ -41,11 +43,11 @@ public abstract class NailedTileEntity extends TileEntity {
 
     @Override
     public Packet getDescriptionPacket() {
-        if(!(this instanceof ISynchronizedTileEntity)){
+        if(!(this instanceof SynchronizedTileEntity)){
             return null;
         }
         ByteBuf buffer = Unpooled.buffer();
-        ((ISynchronizedTileEntity) this).writeData(buffer);
+        ((SynchronizedTileEntity) this).writeData(buffer);
         if(buffer.readableBytes() == 0){
             buffer.release();
             return null;

@@ -1,23 +1,22 @@
 package jk_5.nailed.blocks;
 
-import net.minecraft.block.*;
-import net.minecraft.block.material.*;
-import net.minecraft.entity.player.*;
-import net.minecraft.init.*;
-import net.minecraft.tileentity.*;
-import net.minecraft.world.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 
-import jk_5.nailed.api.block.*;
-import jk_5.nailed.blocks.tileentity.*;
+import jk_5.nailed.blocks.tileentity.NailedTileEntity;
 
-import lombok.*;
+import lombok.Getter;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-public class NailedBlock extends Block implements INailedBlock {
+public class NailedBlock extends Block implements ReplacedBlock {
 
     @Getter
     private final String registeredName;

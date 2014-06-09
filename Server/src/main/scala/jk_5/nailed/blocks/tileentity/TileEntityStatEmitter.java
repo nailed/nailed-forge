@@ -1,29 +1,31 @@
 package jk_5.nailed.blocks.tileentity;
 
-import io.netty.buffer.*;
+import io.netty.buffer.ByteBuf;
 
-import net.minecraft.nbt.*;
-import net.minecraft.util.*;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.EnumChatFormatting;
 
-import cpw.mods.fml.common.*;
-import cpw.mods.fml.common.network.*;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.network.ByteBufUtils;
 
-import net.minecraftforge.permissions.api.*;
+import net.minecraftforge.permissions.api.PermissionsManager;
 
-import jk_5.nailed.api.*;
-import jk_5.nailed.api.map.stat.*;
+import jk_5.nailed.api.NailedAPI;
+import jk_5.nailed.api.map.stat.IStatTileEntity;
+import jk_5.nailed.api.map.stat.Stat;
 import jk_5.nailed.api.map.stat.StatManager;
-import jk_5.nailed.api.player.*;
-import jk_5.nailed.blocks.*;
-import jk_5.nailed.gui.*;
-import jk_5.nailed.map.stat.*;
+import jk_5.nailed.api.player.Player;
+import jk_5.nailed.blocks.NailedBlocks;
+import jk_5.nailed.gui.IGuiReturnHandler;
+import jk_5.nailed.map.stat.StatMode;
 
 /**
  * No description given
  *
  * @author jk-5
  */
-public class TileEntityStatEmitter extends NailedTileEntity implements IStatTileEntity, IGuiTileEntity, IGuiReturnHandler {
+public class TileEntityStatEmitter extends NailedTileEntity implements IStatTileEntity, GuiTileEntity, IGuiReturnHandler {
 
     public static final String PERMNODE = "nailed.statEmitter.edit";
 
